@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<title th:text="#{voucher.page.title}">Voucher Entry</title>
+		<meta th:remove="tag" th:include="commons :: common-meta" />
+		<meta th:remove="tag" th:include="commons :: common-css" />
+		<meta th:remove="tag" th:include="commons :: common-js" />
+		<style type="text/css">
+			.select2{
+				width: 200px;
+			}
+
+			.right-panel{
+				width: 0%;
+				height: 73%;
+				background: #fff;
+				z-index : 9999;
+				display: block;
+				position: fixed;
+				top: 23%;
+				right: 0;
+				border: 1px solid #ddd;
+				box-shadow: 0px 0px 15px #ddd;
+				border-top-left-radius: 8px;
+				border-bottom-left-radius: 8px; 
+			}
+			.right-panel-content-area{
+				width: 100%;
+				height: 100%;
+				padding: 5px;
+				box-sizing: border-box;
+			}
+			.right-panel-content{
+				width: 100%;
+				height: 100%;
+				padding: 10px;
+				box-sizing: border-box;
+				border: 1px solid #ddd;
+				border-radius: 8px;
+				overflow-y: auto;
+				overflow-x: hidden;
+			}
+			.right-panel-content::-webkit-scrollbar-track {
+				border: 1px solid #961b39;
+				background-color: #F5F5F5;
+			}
+			
+			.right-panel-content::-webkit-scrollbar {
+				width: 10px;
+				background-color: #F5F5F5;
+			}
+			
+			.right-panel-content::-webkit-scrollbar-thumb {
+				background-color: #961b39;	
+			}
+			.right-panel-toggler{
+				background: #760823;
+				top: 25%;
+				right: 0%;
+				position: fixed;
+				z-index: 9999;
+				padding: 10px 5px;
+				margin: 0;
+				overflow: hidden;
+				border-top-left-radius: 5px;
+				border-bottom-left-radius: 5px;
+				color: #fff;
+				font-size: 25px;
+				cursor: pointer;
+				opacity: .5;
+			}
+			
+			.search-suggest-table-container{
+				max-height: 180px;
+				background: red;
+				z-index: 99999;
+				position: absolute;
+				background: #fff;
+				overflow-y: auto;
+				overflow-x: auto;
+				border-radius: 3px;
+				display: none;
+				padding: 2px !important;
+				border: 1px solid #ddd;
+			}
+			.search-suggest-table-container::-webkit-scrollbar-track {
+				border: 1px solid #ddd;
+				background-color: #ddd;
+			}
+			
+			.search-suggest-table-container::-webkit-scrollbar {
+				width: 10px;
+				height: 10px;
+				background-color: #ddd;
+			}
+			
+			.search-suggest-table-container::-webkit-scrollbar-thumb {
+				background-color: #961b39;	
+			}
+			.search-suggest-table{
+				padding: 0px;
+				margin: 0px;
+			}
+			tr.search-item{
+				cursor: pointer;
+			}
+			tr.search-item:hover{
+				background: #29af70 !important;
+				color: #fff;
+			}
+			tr.selected-search-item{
+				background: #29af70 !important;
+				color: #fff;
+			}
+		</style>
+	</head>
+	<body>
+		<!-- Header section -->
+		<div class="header-section" th:include="commons :: header-section"></div>
+
+		<!-- Menu section -->
+		<div th:if="${menuVersion != null and menuVersion eq 'MENU_V2'}" class="menuv2" th:include="commons :: main-menu"></div>
+
+		<div th:if="${menuVersion == null or menuVersion eq 'MENU_V1'}" class="navbar-inverse menu-section">
+			<div class="container-fluid">
+				<div class="row">
+					<nav class="navbar navbar-inverse">
+						<div class="container-fluid">
+							<div class="row">
+								<div class="navbar-header">
+									<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+										<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+									</button>
+								</div>
+								<div class="collapse navbar-collapse" id="myNavbar">
+									<div class="nav navbar-nav">
+										<li><a th:href="@{/}"><i class="fas fa-home"></i> Home</a></li>
+										<li class="active"><a th:href="@{/account/voucher}">Voucher Entry</a></li>
+									</div>
+									<ul class="nav navbar-nav navbar-right" th:include="ckbigmenu :: dashboard-menu"></ul>
+								</div>
+							</div>
+						</div>
+					</nav>
+				</div>
+			</div>
+		</div>
+
+		<!-- Content section -->
+		<div>
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-md-12 content-area">
+						<div class="row">
+							<h2 class="text-center" th:text="#{voucher.page.heading}">Voucher Entry</h2>
+						</div>
+
+						<div class="row">
+							<div class="col-md-12">
+								<!-- Section list head -->
+								<section id="data-maintenance" style="margin-top: 30px;">
+									<div id="voucherform" th:fragment="voucherform">
+										<div class="section-header sectionbartoggle"></div>
+										<div class="form-action-button">
+											<a th:href="@{/account/voucher}" class="btn btn-sm btn-default"><i class="fas fa-redo-alt"></i> <span style="margin-left:2px;" th:text="#{button.value.xclear}"> Clear</span></a>
+											<a th:if="${#strings.isEmpty(acheader.xvoucher)}" href="#" class="btn btn-sm btn-success voucher-confirm-btn"><i class="fas fa-save"></i> <span style="margin-left:2px;" th:text="#{button.value.xsave}"> Save</span></a>
+											<a th:if="${not #strings.isEmpty(acheader.xvoucher) and acheader.zactive == true and acheader.xstatusjv ne 'Posted'}" href="#" class="btn btn-sm btn-success voucher-confirm-btn"><i class="fas fa-edit"></i> <span style="margin-left:2px;" th:text="#{button.value.xupdate}"> Update</span></a>
+											<a th:if="${not #strings.isEmpty(acheader.xvoucher) and acheader.zactive == true and acheader.xstatusjv ne 'Posted'}" th:href="@{/account/voucher/archive/} + ${acheader.xvoucher}" class="btn btn-sm btn-danger archive-btn-link"><i class="fas fa-trash-alt"></i> <span style="margin-left:2px;" th:text="#{button.value.xdelete}"> Delete</span></a>
+											<a th:if="${not #strings.isEmpty(acheader.xvoucher) and acheader.zactive == true and acheader.xstatusjv eq 'Balanced'}" th:href="@{/account/voucher/posted/} + ${acheader.xvoucher}" class="btn btn-sm btn-primary archive-btn-link"><i class="fas fa-paper-plane"></i> <span style="margin-left:2px;" th:text="#{button.value.xpost}"> Post</span></a>
+											<a th:if="${not #strings.isEmpty(acheader.xvoucher) and acheader.zactive == true and acheader.xstatusjv eq 'Posted'}" th:href="@{/account/voucher/unposted/} + ${acheader.xvoucher}" class="btn btn-sm btn-primary archive-btn-link"><i class="fas fa-paper-plane"></i> <span style="margin-left:2px;" th:text="#{button.value.xunpost}"> Un-Post</span></a>
+											<a th:if="${not #strings.isEmpty(acheader.xvoucher)}" th:href="@{/account/voucher/print/} + ${acheader.xvoucher}" class="btn btn-sm btn-primary print-btn-link" target="_blank"><i class="fas fa-print"></i> Print</a>
+										</div>
+
+										<div class="section-body section-border">
+											<form id="mainform" class="form-horizontal voucher-header-form" th:action="@{/account/voucher/save}" th:object="${acheader}" method="POST" th:with="df=${'E, dd-MMM-yyyy'}">
+												<input type="hidden" th:field="*{xtypetrn}"/>
+												<div class="row">
+													<div class="col-md-4">
+														<div class="form-group" th:if="${#strings.isEmpty(acheader.xvoucher)}">
+															<label class="control-label col-md-4" for="xtrn" th:text="#{voucher.form.label.xtrn}">Code</label>
+															<div class="col-md-4">
+																<select class="form-control" th:field="*{xtrn}">
+																	<option th:each="prefix : ${voucherprefix}" th:value="${prefix.xtrn}" th:text="${prefix.xtrn}"></option>
+																</select>
+															</div>
+														</div>
+
+														<div class="form-group" th:if="${not #strings.isEmpty(acheader.xvoucher)}">
+															<label class="control-label col-md-4" for="xvoucher" th:text="#{voucher.form.label.xvoucher}">Voucher No.</label>
+															<div class="col-md-8">
+																<input type="hidden" class="form-control" th:field="*{xvoucher}">
+																<input type="text" class="form-control" th:value="*{xvoucher}" disabled="disabled">
+															</div>
+														</div>
+													</div>
+													<div class="col-md-4">
+														<div class="form-group datepicker">
+															<label class="control-label col-md-4" for="xdate" th:text="#{voucher.form.label.xdate}">Date</label>
+															<div class="input-group date col-md-7 datepicker">
+																<input 	type="datepicker" 
+																		class="form-control" 
+																		id="xdate"
+																		name="xdate"
+																		th:value="${acheader.xdate == null ? #dates.format(#dates.createNow(), df) : #dates.format(acheader.xdate, df)}"/>
+																<div class="input-group-addon">
+																	<span class="glyphicon glyphicon-calendar"></span>
+																</div>
+															</div>
+														</div>
+													</div>
+
+													<div class="col-md-4">
+														<div class="form-group">
+															<label class="control-label col-md-4" for="xwh">Project / Business</label>
+															<div class="col-md-8">
+																<select class="form-control select2 project-xwh" th:field="*{xwh}" required="required">
+																	<option th:each="p : ${projects}" th:value="${p.xcode}" th:text="${p.xcode + ' - ' + p.xlong}">-- Select --</option>
+																</select>
+															</div>
+														</div>
+													</div>
+												</div>
+												
+												<div class="row">
+													<div class="col-md-4">
+														<div class="form-group">
+															<label class="control-label col-md-4" for="xref" th:text="#{voucher.form.label.xref}">Reference</label>
+															<div class="col-md-8">
+																<input type="text" class="form-control" th:field="*{xref}">
+															</div>
+														</div>
+													</div>
+
+													<div class="col-md-4">
+														<div class="form-group">
+															<label class="control-label col-sm-4" for="xlcno" th:text="#{voucher.form.label.xlcno}">LC No.</label>
+															<div class="col-sm-8">
+																<input 	type="text" 
+																		class="form-control searchsuggest" 
+																		placeholder="Search..."
+																		th:value="*{xlcno}" 
+																		th:attr="search-url='search/lcinfo'"/>
+																<input type="hidden" id="search-val" th:field="*{xlcno}" class="search-xitem"/>
+																<input type="hidden" id="search-des" th:value="*{xlcno}"/>
+															</div>
+														</div>
+													</div>
+													<div class="col-md-4">
+														<div class="form-group">
+															<label class="control-label col-md-4" for="xchequeno" >Cheque No.</label>
+															<div class="col-md-8">
+																<input type="text" class="form-control" th:field="*{xchequeno}">
+															</div>
+														</div>
+													</div>
+												</div>
+	
+												<div class="row">
+													<div class="col-md-4">
+														<div class="form-group">
+															<label class="control-label col-md-4" for="xbin" >Bin No.</label>
+															<div class="col-md-8">
+																<select class="form-control" th:field="*{xbin}">
+																	<option value="">-- Select --</option>
+																	<option th:each="b : ${bins}" th:text="${b.xcode}" th:value="${b.xcode}"></option>
+																</select>
+															</div>
+														</div>
+													</div>
+													<div class="col-md-4">
+														<div class="form-group">
+															<label class="control-label col-md-4" for="xlong">Narration</label>
+															<div class="col-md-8">
+																<textarea class="form-control" rows="2" th:field="*{xlong}"></textarea>
+															</div>
+														</div>
+													</div>
+													<div class="col-md-4">
+														<div class="form-group" th:if="${not #strings.isEmpty(acheader.xvoucher)}">
+															<label class="control-label col-md-4" for="xyear" th:text="#{voucher.form.label.xyear}">Year </label>
+															<div class="col-md-8">
+																<input type="number" class="form-control" th:value="*{xyear}" disabled="disabled">
+															</div>
+														</div>
+													</div>
+												</div>
+												<div class="row">
+													<div class="col-md-4">
+														<div class="form-group" th:if="${not #strings.isEmpty(acheader.xvoucher)}">
+															<label class="control-label col-md-4" for="xper" th:text="#{voucher.form.label.xper}">Period</label>
+															<div class="col-md-8">
+																<input type="number" class="form-control" th:value="*{xper}" disabled="disabled">
+															</div>
+														</div>
+													</div>
+													<div class="col-md-4">
+														<div class="form-group" th:if="${not #strings.isEmpty(acheader.xvoucher)}">
+															<label class="control-label col-md-4" for="xstatusjv" th:teext="#{voucher.form.label.xstatusjv}">Status</label>
+															<div class="col-md-8">
+																<input type="hidden" class="form-control" th:field="*{xstatusjv}">
+																<input type="text" class="form-control" th:value="*{xstatusjv}" disabled="disabled">
+															</div>
+														</div>
+													</div>
+												</div>
+											</form>
+										</div>
+										<script type="text/javascript">
+											$(document).ready(function(){
+												ck.ui.config.editmode();
+												ck.ui.config.dateAndTimepicker();
+											})
+										</script>
+									</div>
+								</section>
+							</div>
+
+
+							<div class="col-md-12">
+								<section id="data-maintenance" style="margin-top: 30px;">
+									<div class="section-body">
+										<table class="table table-striped table-bordered normal-table nowrap" id="voucherdetailtable" th:fragment="voucherdetailtable">
+											<thead>
+												<tr>
+													<th style="text-align: center;">SN.</th>
+													<th>Account</th>
+													<th>Sub Account</th>
+													<th>Store / Site</th>
+													<th>Particular</th>
+													<th class="text-right">Debit</th>
+													<th class="text-right">Credit</th>
+													<th data-nosort="Y" style="text-align: center;" th:if="${acheader.xstatusjv != 'Posted'}">
+														<a href="#" class="row-creator btn btn-success"><i class="fas fa-plus-square"></i></a>
+													</th>
+												</tr>
+											</thead>
+											<tbody id="voucherdetailbody">
+												<tr th:attr="data-rowindex=${n.count}, data-xwh=${d.xwh}" th:each="d,n : ${acdetails}">
+													<td style="text-align: center;" th:text="${n.count}"></td>
+													<td>
+														<div class="form-group">
+															<div class="row">
+																<div class="col-md-12">
+																	<select class="form-control select2 xacc" name="xacc">
+																		<option th:each="ac : ${accounts}" th:value="${ac.xacc}" th:text="${ac.xacc + ' - ' + ac.xdesc}" th:selected="${d.xacc eq ac.xacc}"></option>
+																	</select>
+																</div>
+															</div>
+														</div>
+													</td>
+													<td>
+														<div class="form-group">
+															<select class="form-control select2 xsub">
+																<option value="">-- Select --</option>
+																<option th:each="subac : ${d.subAccounts}" th:value="${subac.xsub}" th:text="${subac.xsub + ' - ' + subac.xorg}" th:selected="${d.xsub eq subac.xsub}"></option>
+															</select>
+														</div>
+													</td>
+													<td>
+														<div class="form-group">
+															<select class="form-control select2 details-store xwh">
+																<option value="">-- Select --</option>
+																<option th:each="store : ${selectedStores}" th:value="${store.xcode}" th:text="${store.xcode + ' - ' + store.xcodename}" th:selected="${d.xwh eq store.xcode}"></option>
+															</select>
+														</div>
+													</td>
+													<td>
+														<div class="form-group">
+															<textarea rows="1" cols="" class="form-control xlong" th:text="${d.xlong}"></textarea>
+														</div>
+													</td>
+													<td>
+														<div class="form-group">
+															<input type="number" class="form-control xdebit" th:value="${d.xdebit}" min="0"/>
+														</div>
+													</td>
+													<td>
+														<div class="form-group">
+															<input type="number" class="form-control xcredit" th:value="${d.xcredit}" min="0"/>
+														</div>
+													</td>
+													<td style="text-align: center;">
+														<button type="button" class="btn btn-danger row-remover"><i class="fas fa-trash"></i></button>
+													</td>
+												</tr>
+											</tbody>
+											<tfoot>
+												<!-- <th colspan="3" class="text-right">Total</th>
+												<th></th>
+												<th class="text-right" th:text="${totalDebit}">0</th>
+												<th class="text-right" th:text="${totalCredit}">0</th>
+												<th colspan="2"></th> -->
+											</tfoot>
+										</table>
+									</div>
+								</section>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Right Panel -->
+		<div class="right-panel menu-close">
+			<div class="right-panel-content-area">
+				<div class="right-panel-content">
+					<section id="list-manager" style="margin: 10px 0px;">
+						<div class="section-header sectionbartoggle">
+							<h1>Un-posted Voucher List</h1>
+						</div>
+						<div class="section-body">
+							<table class="table table-striped table-bordered datatable nowrap" th:with="df=${'E, dd-MMM-yyyy'}">
+								<thead>
+									<tr>
+										<th th:text="#{voucher.table.heading.xvoucher}">Voucher No.</th>
+										<th th:text="#{voucher.table.heading.xdate}">Date</th>
+										<th th:text="#{voucher.table.heading.xlcno}">LC No.</th>
+										<th th:text="#{voucher.table.heading.xyear}">Year</th>
+										<th th:text="#{voucher.table.heading.xper}">Period</th>
+										<th th:text="#{voucher.table.heading.xstatusjv}">Status</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr th:if="${v.xstatusjv ne 'Posted'}" th:each="v : ${vouchers}">
+										<td>
+											<a th:href="@{/account/voucher/} + ${v.xvoucher}" th:text="${v.xvoucher}"></a>
+										</td>
+										<td th:text="${#dates.format(v.xdate, df)}"></td>
+										<td th:text="${v.xlcno}"></td>
+										<td th:text="${v.xyear}"></td>
+										<td th:text="${v.xper}"></td>
+										<td th:text="${v.xstatusjv}"></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</section>
+
+					<section id="list-manager" style="margin: 10px 0px;">
+						<div class="section-header sectionbartoggle">
+							<h1>Posted Vouchers</h1>
+						</div>
+						<div class="section-body">
+							<table class="table table-striped table-bordered datatable nowrap" th:with="df=${'E, dd-MMM-yyyy'}">
+								<thead>
+									<tr>
+										<th th:text="#{voucher.table.heading.xvoucher}">Voucher No.</th>
+										<th th:text="#{voucher.table.heading.xdate}">Date</th>
+										<th th:text="#{voucher.table.heading.xlcno}">LC No.</th>
+										<th th:text="#{voucher.table.heading.xyear}">Year</th>
+										<th th:text="#{voucher.table.heading.xper}">Period</th>
+										<th th:text="#{voucher.table.heading.xstatusjv}">Status</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr th:if="${v.xstatusjv eq 'Posted'}" th:each="v : ${vouchers}">
+										<td>
+											<a th:href="@{/account/voucher/} + ${v.xvoucher}" th:text="${v.xvoucher}"></a>
+										</td>
+										<td th:text="${#dates.format(v.xdate, df)}"></td>
+										<td th:text="${v.xlcno}"></td>
+										<td th:text="${v.xyear}"></td>
+										<td th:text="${v.xper}"></td>
+										<td th:text="${v.xstatusjv}"></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</section>
+				</div>
+			</div>
+		</div>
+		<div class="right-panel-toggler">
+			<i class="fas fa-caret-left"></i>
+		</div>
+
+		<!-- Footer section -->
+		<div class="footer-section" th:include="commons :: footer-section"></div>
+
+		<script type="text/javascript" th:src="@{/assets/js/ck-ui/ck-search-suggest.js}"></script>
+		<script type="text/javascript" th:src="@{/assets/pages/account/voucher/voucher2.js}"></script>
+	</body>
+</html>

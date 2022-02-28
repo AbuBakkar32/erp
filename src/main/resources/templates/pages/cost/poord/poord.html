@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<title th:text="#{lcmpo.page.title}">Purchase Order (LCM)</title>
+		<meta th:remove="tag" th:include="commons :: common-meta" />
+		<meta th:remove="tag" th:include="commons :: common-css" />
+		<meta th:remove="tag" th:include="commons :: common-js" />
+	</head>
+	<body>
+		<!-- Header section -->
+		<div class="header-section" th:include="commons :: header-section"></div>
+
+		<!-- Menu section -->
+		<div th:if="${menuVersion != null and menuVersion eq 'MENU_V2'}" class="menuv2" th:include="commons :: main-menu"></div>
+
+		<div th:if="${menuVersion == null or menuVersion eq 'MENU_V1'}" class="navbar-inverse menu-section">
+			<div class="container-fluid">
+				<div class="row">
+					<nav class="navbar navbar-inverse">
+						<div class="container-fluid">
+							<div class="row">
+								<div class="navbar-header">
+									<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+										<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+									</button>
+								</div>
+								<div class="collapse navbar-collapse" id="myNavbar">
+									<div class="nav navbar-nav">
+										<li><a th:href="@{/}"><i class="fas fa-home"></i> Home</a></li>
+										<li class="active"><a th:href="@{/procurements/poord}">Purchase Order (LCM)</a></li>
+									</div>
+									<ul class="nav navbar-nav navbar-right" th:include="ckbigmenu :: dashboard-menu"></ul>
+								</div>
+							</div>
+						</div>
+					</nav>
+				</div>
+			</div>
+		</div>
+
+		<!-- Content section -->
+		<div>
+			<div class="container-fluid">
+				<div class="row">
+					<h1 class="text-center" th:text="#{lcmpo.page.heading}">Purchase Order (LCM)</h1>
+				</div>
+
+				<div class="row">
+					<div class="col-md-6 content-area">
+						<div class="row">
+							<div class="col-md-12">
+								<!-- Section list head -->
+								<section id="data-maintenance" style="margin-top: 30px;">
+									<div id="poordheaderform" th:fragment="poordheaderform">
+										<div class="section-header sectionbartoggle"></div>
+										<div class="form-action-button">
+											<a th:href="@{/cost/poordheader}" class="btn btn-sm btn-default" data-reloadurl="/cost/poordheader/clear" data-reloadelementid="poordheaderform"><i class="fas fa-redo-alt"></i> <span style="margin-left:2px;" th:text="#{button.value.xclear}"> Clear</span></a>
+											<a th:if="${#strings.isEmpty(poordheader.xpornum)}" th:href="@{/procurements/poord}" class="btn btn-sm btn-success confirm-btn"><i class="fas fa-save"></i> <span style="margin-left:2px;" th:text="#{button.value.xsave}"> Save</span></a>
+											<a th:if="${not #strings.isEmpty(poordheader.xpornum) and poordheader.xstatuspor eq 'Open'}" href="#" class="btn btn-sm btn-success update-btn"><i class="fas fa-edit"></i> <span style="margin-left:2px;" th:text="#{button.value.xupdate}"> Update</span></a>
+											<a th:if="${not #strings.isEmpty(poordheader.xpornum) and poordheader.xstatuspor eq 'Open'}" th:href="@{/cost/poordheader/archive/} + ${poordheader.xpornum}" class="btn btn-sm btn-danger archive-btn-link"><i class="fas fa-trash-alt"></i> <span style="margin-left:2px;" th:text="#{button.value.xdelete}"> Delete</span></a>
+											<a th:if="${not #strings.isEmpty(poordheader.xpornum) and poordheader.xstatuspor eq 'Open'}" th:href="@{/cost/poordheader/approve/} + ${poordheader.xpornum}" class="btn btn-sm btn-success confirm-btn-link"><i class="fas fa-check-square"></i> <span style="margin-left:2px;" th:text="#{button.value.xapprove}"> Approve</span></a>
+											<a th:if="${not #strings.isEmpty(poordheader.xpornum) and poordheader.xstatuspor eq 'Open'}" th:href="@{/cost/poordheader/confirm/} + ${poordheader.xpornum}" class="btn btn-sm btn-warning confirm-btn-link"><i class="fas fa-check-square"></i> <span style="margin-left:2px;" th:text="#{button.value.xconfirm}"> Confirm</span></a>
+											<a th:if="${not #strings.isEmpty(poordheader.xpornum) and poordheader.xstatuspor eq 'Open'}" th:href="@{/cost/poordheader/dismis/} + ${poordheader.xpornum}" class="btn btn-sm btn-danger archive-btn-link"><i class="fas fa-trash-alt"></i> Dismiss</a>
+											<a th:if="${not #strings.isEmpty(poordheader.xpornum) and (poordheader.xstatuspor eq 'Confirmed' or poordheader.xstatuspor eq 'GRN Created')}" th:href="@{/procurements/poord/creategrn/} + ${poordheader.xpornum}" class="btn btn-sm btn-warning confirm-btn-link"><i class="fas fa-check-square"></i> <span style="margin-left:2px;" th:text="#{button.value.xcgrn}"> Create GRN</span></a>
+											<a th:if="${not #strings.isEmpty(poordheader.xpornum) and poordheader.xstatuspor ne 'Open'}" th:href="@{/cost/poordheader/print/} + ${poordheader.xpornum}" class="btn btn-sm btn-primary print-btn-link" target="_blank"><i class="fas fa-print"></i> <span style="margin-left:2px;" th:text="#{button.value.xprint}"> Print</span> </a>
+										</div>
+										<div class="section-body section-border">
+											<div id="poordheaderform" th:fragment="poordheaderform">
+												<form id="mainform" class="form-horizontal" th:action="@{/cost/poordheader/save}" th:object="${poordheader}" method="post" th:with="df=${'E, dd-MMM-yyyy'}">
+													<input type="hidden" th:field="*{xtypetrn}"/>
+													<div class="row">
+														<div class="col-md-6">
+															<div class="form-group" th:if="${#strings.isEmpty(poordheader.xpornum)}">
+																<label class="control-label col-md-4" for="xtrn" th:text="#{lcmpo.form.label.xtrn}">PO Number</label>
+																<div class="col-md-4">
+																	<select class="form-control" id="xtrn" name="xtrn">
+																		<option th:each="p : ${prefix}" th:value="${p.xtrn}" th:text="${p.xtrn}"></option>
+																	</select>
+																</div>
+															</div>
+
+															<div class="form-group" th:if="${not #strings.isEmpty(poordheader.xpornum)}">
+																<label class="control-label col-md-4" for="xpornum" th:text="#{lcmpo.form.label.xpornum}">PO Number</label>
+																<div class="col-md-8">
+																	<input type="hidden" class="form-control" th:field="*{xpornum}">
+																	<input type="text" class="form-control" th:value="*{xpornum}" disabled="disabled">
+																</div>
+															</div>
+
+															<div class="form-group datepicker">
+																<label class="control-label col-md-4" for="xdate" th:text="#{lcmpo.form.label.xdate}">PO Date</label>
+																<div class="input-group date col-md-7 datepicker">
+																	<input 	type="datepicker" 
+																			class="form-control" 
+																			id="xdate"
+																			name="xdate"
+																			th:value="${poordheader.xdate == null ? #dates.format(#dates.createNow(), df) : #dates.format(poordheader.xdate, df)}"/>
+																	<div class="input-group-addon">
+																		<span class="glyphicon glyphicon-calendar"></span>
+																	</div>
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xtype" th:text="#{lcmpo.form.label.xtype}">Purchase Type</label>
+																<div class="col-md-6">
+																	<input type="hidden" class="form-control" th:field="*{xtype}">
+																	<input type="text" class="form-control" th:value="*{xtype}" disabled="disabled">
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xpiref" th:text="#{lcmpo.form.label.xpiref}">PI Reference</label>
+																<div class="col-md-8">
+																	<input type="text" class="form-control" th:field="*{xpiref}">
+																</div>
+															</div>
+
+															<div class="form-group datepicker">
+																<label class="control-label col-md-4" for="xpidate" th:text="#{lcmpo.form.label.xpidate}">PI Date</label>
+																<div class="input-group date col-md-7 datepicker">
+																	<input 	type="datepicker" 
+																			class="form-control" 
+																			id="xpidate"
+																			name="xpidate"
+																			th:value="${poordheader.xpidate == null ? #dates.format(#dates.createNow(), df) : #dates.format(poordheader.xpidate, df)}"/>
+																	<div class="input-group-addon">
+																		<span class="glyphicon glyphicon-calendar"></span>
+																	</div>
+																</div>
+															</div>
+
+															<div class="form-group datepicker">
+																<label class="control-label col-md-4" for="xshipdate" th:text="#{lcmpo.form.label.xshipdate}">Expected Delivery Date</label>
+																<div class="input-group date col-md-7 datepicker">
+																	<input 	type="datepicker" 
+																			class="form-control" 
+																			id="xshipdate"
+																			name="xshipdate"
+																			th:value="${poordheader.xshipdate == null ? #dates.format(#dates.createNow(), df) : #dates.format(poordheader.xshipdate, df)}"/>
+																	<div class="input-group-addon">
+																		<span class="glyphicon glyphicon-calendar"></span>
+																	</div>
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xdeliloc" th:text="#{lcmpo.form.label.xdeliloc}">Delivery Location</label>
+																<div class="col-md-8">
+																	<select class="form-control" th:field="*{xdeliloc}">
+																		<option th:each="dl : ${deliveryLocations}" th:value="${dl.xcode}" th:text="${dl.xcode}"></option>
+																	</select>
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xcus" th:text="#{lcmpo.form.label.xcus}">Supplier</label>
+																<div class="col-sm-8">
+																	<input 	type="text" 
+																			class="form-control searchsuggest" 
+																			placeholder="Search..." 
+																			th:value="${#strings.isEmpty(poordheader.xcus) ? '' : poordheader.xcus + ' - ' + poordheader.xorg}" 
+																			th:attr="search-url='search/supplier'"/>
+																	<input type="hidden" id="search-val" th:field="*{xcus}"/>
+																	<input type="hidden" id="search-des" th:value="*{xcus}"/>
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xlcno" th:text="#{lcmpo.form.label.xlcno}">LC No.</label>
+																<div class="col-md-8">
+																	<input type="hidden" class="form-control" th:field="*{xlcno}">
+																	<input type="text" class="form-control" th:value="*{xlcno}" disabled="disabled">
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xwh" th:text="#{lcmpo.form.label.xwh}">Store/Plant</label>
+																<div class="col-md-8">
+																	<select class="form-control" th:field="*{xwh}">
+																		<option th:each="b : ${branchs}" th:value="${b.xcode}" th:text="${b.xcode}"></option>
+																	</select>
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xcur" th:text="#{lcmpo.form.label.xcur}">Currency</label>
+																<div class="col-md-8">
+																	<select class="form-control" th:field="*{xcur}">
+																		<option th:each="c : ${currency}" th:value="${c.xcode}" th:text="${c.xcode}"></option>
+																	</select>
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xrem" th:text="#{lcmpo.form.label.xrem}">Remarks</label>
+																<div class="col-md-8">
+																	<textarea class="form-control" th:field="*{xrem}" rows="3"></textarea>
+																</div>
+															</div>
+
+														</div>
+
+														<div class="col-md-6">
+
+															<div class="form-group">
+																<label class="control-label col-sm-4" for="xexch" th:text="#{lcmpo.form.label.xexch}">Exchange Rate</label>
+																<div class="col-sm-8">
+																	<input type="text" class="form-control qty" th:field="*{xexch}" min="0"/>
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-sm-4" for="xvatrate" th:text="#{lcmpo.form.label.xvatrate}">Vat Rate</label>
+																<div class="col-sm-8">
+																	<input type="text" class="form-control" th:field="*{xvatrate}" min="0"/>
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-sm-4" for="xdisc" th:text="#{lcmpo.form.label.xdisc}">Discount</label>
+																<div class="col-sm-8">
+																	<input type="text" class="form-control" th:field="*{xdisc}" min="0"/>
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-sm-4" for="xdiscf" th:text="#{lcmpo.form.label.xdiscf}">Discount Fixed</label>
+																<div class="col-sm-8">
+																	<input type="text" class="form-control" th:field="*{xdiscf}" min="0"/>
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-sm-4" for="xtransport" th:text="#{lcmpo.form.label.xtransport}">Freight Cost</label>
+																<div class="col-sm-8">
+																	<input type="text" class="form-control" th:field="*{xtransport}" min="0"/>
+																</div>
+															</div>
+
+															<div class="form-group datepicker">
+																<label class="control-label col-md-4" for="xdateeta" th:text="#{lcmpo.form.label.xdateetd}">ETA Date</label>
+																<div class="input-group date col-md-7 datepicker">
+																	<input 	type="datepicker" 
+																			class="form-control" 
+																			id="xdateeta"
+																			name="xdateeta"
+																			th:value="${poordheader.xdateeta == null ? #dates.format(#dates.createNow(), df) : #dates.format(poordheader.xdateeta, df)}"/>
+																	<div class="input-group-addon">
+																		<span class="glyphicon glyphicon-calendar"></span>
+																	</div>
+																</div>
+															</div>
+
+															<div class="form-group datepicker">
+																<label class="control-label col-md-4" for="xdateetd" th:text="#{lcmpo.form.label.xdateetd}">ETD Date</label>
+																<div class="input-group date col-md-7 datepicker">
+																	<input 	type="datepicker" 
+																			class="form-control" 
+																			id="xdateetd"
+																			name="xdateetd"
+																			th:value="${poordheader.xdateetd == null ? #dates.format(#dates.createNow(), df) : #dates.format(poordheader.xdateetd, df)}"/>
+																	<div class="input-group-addon">
+																		<span class="glyphicon glyphicon-calendar"></span>
+																	</div>
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xstatus" th:text="#{lcmpo.form.label.xstatus}">Approval Status</label>
+																<div class="col-md-8">
+																	<input type="hidden" class="form-control" th:field="*{xstatus}">
+																	<input type="text" class="form-control" th:value="*{xstatus}" disabled="disabled">
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-sm-4" for="xporeqnum" th:text="#{lcmpo.form.label.xporeqnum}">PO Requsition</label>
+																<div class="col-sm-8">
+																	<input type="text" class="form-control" th:field="*{xporeqnum}"/>
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-sm-4" for="xnote1" th:text="#{lcmpo.form.label.xnote1}">Reject Note</label>
+																<div class="col-sm-8">
+																	<input type="text" class="form-control" th:field="*{xnote1}" disabled="disabled"/>
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-sm-4" for="xpreparer" th:text="#{lcmpo.form.label.xpreparer}">Preparer</label>
+																<div class="col-sm-8">
+																	<input type="hidden" class="form-control" th:field="*{xpreparer}">
+																	<input type="text" class="form-control" th:field="*{xpreparer}" disabled="disabled"/>
+																</div>
+															</div>
+
+															<!--<div class="form-group">
+																<label class="control-label col-md-4" for="xtotamt">Total Amount</label>
+																<div class="col-md-6">
+																	<input type="hidden" class="form-control" th:field="*{xtotamt}">
+																	<input type="text" class="form-control" th:value="*{xtotamt}" min="0" disabled="disabled">
+																</div>
+															</div>-->
+
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xstatuspor" th:text="#{lcmpo.form.label.xstatuspor}">PO Status</label>
+																<div class="col-md-8">
+																	<input type="hidden" class="form-control" th:field="*{xstatuspor}">
+																	<input type="text" class="form-control" th:value="*{xstatuspor}" disabled="disabled">
+																</div>
+															</div>
+
+														</div>
+													</div>
+												</form>
+												
+												
+											</div>
+										</div>
+										<script type="text/javascript" th:src="@{/assets/js/ck-ui/ck-search-suggest.js}"></script>
+										<script type="text/javascript">
+											$(document).ready(function(){
+												ck.ui.config.editmode();
+												ck.ui.config.dateAndTimepicker();
+											})
+										</script>
+									</div>
+								</section>
+							</div>
+						</div>
+						
+					</div>
+
+					<div class="col-md-6 content-area">
+						<div class="row">
+							<div class="col-md-12">
+								<section id="list-manager" style="margin-top: 30px;">
+									<div class="section-header sectionbartoggle">
+										<h1 th:text="#{lcmpo.table.heading.title}">All LCM Purchase Orders</h1>
+									</div>
+									<div class="section-body">
+										<div style="overflow-x: scroll;">
+											<table class="table table-striped table-bordered datatable nowrap" id="poordheadertable" th:fragment="poordheadertable">
+												<thead>
+													<tr>
+														<th th:text="#{lcmpo.table.heading.xpornum}">P.O. Number</th>
+														<th th:text="#{lcmpo.table.heading.xdate}">Purchase Date</th>
+														<th th:text="#{lcmpo.table.heading.xcus}">Supplier</th>
+														<th th:text="#{lcmpo.table.heading.xtype}">Purchase Type</th>
+														<th th:text="#{lcmpo.table.heading.xstatuspor}">Status</th>
+													</tr>
+												</thead>
+												<tbody th:with="df=${'E, dd-MMM-yyyy'}">
+													<tr th:each="poord : ${allPoordHeader}">
+														<td>
+															<a th:href="@{/cost/poordheader/} + ${poord.xpornum}" th:text="${poord.xpornum}"></a>
+														</td>
+														<td  th:text="${#dates.format(poord.xdate, df)}"></td>
+														<td th:text="${poord.xcus} + ' - ' + ${poord.xorg}"></td>
+														<td th:text="${poord.xtype}"></td>
+														<td th:text="${poord.xstatuspor}"></td>
+													</tr>
+												</tbody>
+												
+											</table>
+										</div>
+									</div>
+								</section>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md-12">
+						<section th:if="${not #strings.isEmpty(poordheader.xpornum)}" id="data-maintenance" style="margin-top: 30px;">
+							<a id="listlines-url" th:href="@{/cost/poordheader/poorddetails/} + ${poordheader.xpornum}"></a>
+							<div class="section-header sectionbartoggle">
+								<h1 th:text="'PO Details of ' + ${poordheader.xpornum}"></h1>
+							</div>
+							<div class="section-body">
+								<table class="table table-striped table-bordered normal-table nowrap" id="poorddetailtable" th:fragment="poorddetailtable">
+									<thead>
+										<tr>
+											<th th:text="#{lcmpo.modal.table.heading.xrow}">SL#</th>
+											<th th:text="#{lcmpo.modal.table.heading.xitem}">Item</th>
+											<th th:text="#{lcmpo.modal.table.heading.xqtypur}" class="text-right">Qty</th>
+											<th th:text="#{lcmpo.modal.table.heading.xrate}" class="text-right">Rate</th>
+											<th th:text="#{lcmpo.modal.table.heading.xunitpur}">Purchase Unit</th>
+											<th th:text="#{lcmpo.modal.table.heading.xlineamt}" class="text-right">Net Amount</th>
+											<th th:text="#{lcmpo.modal.table.heading.xnote}">Note</th>
+											<th data-nosort="Y" style="text-align: right;" th:if="${poordheader.xstatuspor == 'Open'}">
+												<button type="button" class="btn btn-success btn-add" th:attr="data-url=@{/cost/poordheader/} + ${poordheader.xpornum} + '/poorddetail/new/show', data-target-modal='poorddetailmodal'"><i class="fas fa-plus"></i></button>
+											</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr th:each="d,n : ${poorddetailsList}">
+											<td th:text="${d.xrow}"></td>
+											<td>
+												<a th:href="@{/mastersetup/caitem/} + ${d.xitem}" target="_blank" th:text="${d.xitem} + ' - ' + ${d.itemname}"></a>
+											</td>
+											<td class="text-right" th:text="${d.xqtypur}"></td>
+											<td class="text-right" th:text="${d.xrate}"></td>
+											<td th:text="${d.xunitpur}"></td>
+											<td class="text-right" th:text="${d.xlineamt}"></td>
+											<td th:text="${d.xnote}"></td>
+											<td data-nosort="Y" style="text-align: right; font-size: 11px;" th:if="${poordheader.xstatuspor == 'Open'}">
+												<button type="button" class="btn btn-default btn-edit editmode" th:attr="data-url=@{/cost/poordheader/} + ${poordheader.xpornum} + '/poorddetail/' + ${d.xrow} + '/show', data-target-modal='poorddetailmodal'"><i class="fas fa-edit"></i></button>
+												<button type="button" class="btn btn-danger btn-delete editmode" th:attr="data-url=@{/cost/poordheader/} + ${poordheader.xpornum} + '/poorddetail/' + ${d.xrow} + '/delete'"><i class="fas fa-trash"></i></button>
+											</td>
+										</tr>
+									</tbody>
+									<tfoot>
+										<th colspan="5" class="text-right">Total</th>
+										<th class="text-right" th:text="${totalNetAmount}">0</th>
+									</tfoot>
+								</table>
+							</div>
+						</section>
+					</div>
+
+					<div class="col-md-12">
+					<section th:if="${not #strings.isEmpty(poordheader.xpornum)}" id="data-maintenance" style="margin-top: 30px;">
+						<a id="listlines-url" th:href="@{/cost/poordheader/potermsdetail/} + ${poordheader.xpornum}"></a>
+							<div class="section-header sectionbartoggle">
+								<h1 th:text="'Terms & Coditions of ' + ${poordheader.xpornum}"></h1>
+							</div>
+						<div class="section-body" style="overflow-y:scroll;height:200px;">
+							<table class="table table-striped table-bordered normal-table" id="potermstable" th:fragment="potermstable">
+								<thead>
+									<tr>
+										<th th:text="#{lcmpo.modal1.table.heading.count}">SL#</th>
+										<th th:text="#{lcmpo.modal1.table.heading.xcode}">Terms Code</th>
+										<th th:text="#{lcmpo.modal1.table.heading.xnote}">Terms & Conditions</th>
+										<th data-nosort="Y" style="text-align: right;">
+											<button type="button" class="btn btn-success btn-add" th:attr="data-url=@{/cost/poordheader/} + ${poordheader.xpornum} + '/potermsdetail/new/show', data-target-modal='potermsmodal'"><i class="fas fa-plus"></i></button>
+										</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr th:each="d, n : ${lddlist}">
+										<td th:text="${n.count}"></td>
+										<td th:text="${d.xcode}"></td>
+										<td th:text="${d.xnote}"></td>
+										<td data-nosort="Y" style="text-align: right; font-size: 11px;">
+											<button type="button" class="btn btn-default btn-edit editmode" th:attr="data-url=@{/cost/poordheader/} + ${poordheader.xpornum} + '/potermsdetail/' + ${d.xrow} + '/show', data-target-modal='potermsmodal'"><i class="fas fa-edit"></i></button>
+											<button type="button" class="btn btn-danger btn-delete editmode" th:attr="data-url=@{/cost/poordheader/} + ${poordheader.xpornum} + '/potermsdetail/' + ${d.xrow} + '/delete'"><i class="fas fa-trash"></i></button>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</section>
+				</div>
+
+			</div>
+		</div>
+
+		<!-- Modal -->
+		<div id="poorddetailmodal-section"></div>
+		<div id="potermsmodal-section"></div>
+
+		<!-- Footer section -->
+		<div class="footer-section" th:include="commons :: footer-section"></div>
+
+		<script>
+			$(document).ready(function(){
+				$("input[name='xexch']").off('blur').on('blur', function(e){
+					if($(this).val() == '' || isNaN($(this).val())){
+						$(this).val(0);
+					}
+					calculate();
+				});
+
+				function calculate(){
+					var xexch = parseFloat($("input[name='xexch']").val());
+					
+					if($(".qty").val() == '') $(".qty").val('1.00');
+					
+				}
+
+				calculate();
+			});
+		</script>
+
+	</body>
+</html>

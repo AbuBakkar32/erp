@@ -1,0 +1,82 @@
+logging:
+  level:
+    com: 
+      asl: 
+        mapper: TRACE
+    root: INFO
+    org:
+      springframework:
+        web: INFO
+    hibernate: 
+      SQL: DEBUG
+      type: DEBUG
+
+server:
+  servlet:
+    context-path: /aju-erp/
+    session: 
+      persistent: true
+  port: 8083
+  error:
+    whitelabel:
+      enabled: false
+spring: 
+  application:
+    name: asl-erp
+  thymeleaf:
+    cache: false
+  datasource: 
+    driver-class-name: oracle.jdbc.OracleDriver
+#    url: jdbc:oracle:thin:@103.231.135.60:1521:orcl
+#    username: res_erp
+#    password: res_erp
+#    url: jdbc:oracle:thin:@62.171.179.61:1521:orcl
+#    username: RES_ERP
+#    password: Asl1234
+    url: jdbc:oracle:thin:@62.171.179.61:1521:orcl
+    username: aju_test
+    password: aju_test
+    tomcat:
+      max-wait: 20000
+      max-active: 50
+      max-idle: 20
+      min-idle: 15
+  jpa:
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    properties:
+      hibernate: 
+        dialect: org.hibernate.dialect.Oracle10gDialect
+        id:
+          new_generator_mappings: false
+  jackson:
+    serialization:
+      indent-output: true
+  banner:
+    location: banner.txt
+
+mybatis: 
+  config-location: classpath:mybatis-config.xml
+
+JNDIName: jdbcTemplate
+default: 
+  birtUrl: http://62.171.179.61:8080/birt/frameset?__report=khanas/
+#  birtUrl: http://localhost:8080/birt/frameset?__report=khanas/
+  #birtUrl: http://localhost:8080/birt/frameset?__report=Bosila/
+  allow-system-admin: Y
+  site-title: AJU <span class="title-divider">ERP</span>
+  logo-name: asl.png
+  copyright-text: Powered by <a href="http://www.automationservicesbd.com" target="_blank">ASL</a> &copy; Copyright
+  im-ex-path: D:/ASL/importexport
+  logging-path: D:/ASL/logs 
+  document-path: D:/ASL/documents
+  temp-directory: D:/ASL/tmp
+  businessId: 100000
+  report: 
+    template-path: D:/ASL/cr-reports
+    xsl-path: D:/ASL/xsl
+    saved-xml-path: D:/ASL/report/savedxml
+    logo: asl.png

@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.asl.mapper.BmbomMapper">
+
+	<insert id="saveBmBomHeader" parameterType="Bmbomheader">
+		<selectKey keyProperty="xbomkey" resultType="String" order="BEFORE">
+			SELECT Func_GetTrn('${zid}', '${xtypetrn}', '${xtrn}', 6) FROM DUAL
+		</selectKey>
+		INSERT INTO bmbomheader
+		(
+			xbomkey,
+			zemail,
+			xdesc,
+			xitem,
+			xdiv,
+			xqtybase,
+			xdate,
+			xpreferbatchqty,
+			xtrn,
+			xtypetrn,
+			zid,
+			zauserid,
+			zuuserid,
+			zaip,
+			zuip,
+			zactive,
+			ztime,
+			zutime
+		)
+		VALUES
+		(
+			#{xbomkey, jdbcType=VARCHAR},
+			#{zemail, jdbcType=VARCHAR},
+			#{xdesc, jdbcType=VARCHAR},
+			#{xitem, jdbcType=VARCHAR},
+			#{xdiv, jdbcType=VARCHAR},
+			#{xqtybase, jdbcType=INTEGER},
+			#{xdate, jdbcType=DATE},
+			#{xpreferbatchqty, jdbcType=INTEGER},
+			#{xtrn, jdbcType=VARCHAR},
+			#{xtypetrn, jdbcType=VARCHAR},
+			#{zid, jdbcType=VARCHAR},
+			#{zauserid, jdbcType=VARCHAR},
+			#{zuuserid, jdbcType=VARCHAR},
+			#{zaip, jdbcType=VARCHAR},
+			#{zuip, jdbcType=VARCHAR},
+			#{zactive, jdbcType=VARCHAR},
+			#{ztime, jdbcType=TIMESTAMP},
+			#{zutime, jdbcType=TIMESTAMP}
+		) 
+	</insert>
+
+	<update id="updateBmBomHeader" parameterType="Bmbomheader">
+		UPDATE 
+			bmbomheader
+		SET
+			zemail=#{zemail, jdbcType=VARCHAR},
+			xdesc=#{xdesc, jdbcType=VARCHAR},
+			xitem=#{xitem, jdbcType=VARCHAR},
+			xdiv=#{xdiv, jdbcType=VARCHAR},
+			xqtybase=#{xqtybase, jdbcType=INTEGER},
+			xdate=#{xdate, jdbcType=DATE},
+			xpreferbatchqty=#{xpreferbatchqty, jdbcType=INTEGER},
+			xtrn=#{xtrn, jdbcType=VARCHAR},
+			xtypetrn=#{xtypetrn, jdbcType=VARCHAR},
+			zuuserid=#{zuuserid, jdbcType=VARCHAR},
+			zaip=#{zaip, jdbcType=VARCHAR},
+			zuip=#{zuip, jdbcType=VARCHAR},
+			zactive=#{zactive, jdbcType=VARCHAR},
+			ztime=#{ztime, jdbcType=TIMESTAMP},
+			zutime=#{zutime, jdbcType=TIMESTAMP}
+		WHERE
+			xbomkey=#{xbomkey, jdbcType=VARCHAR}
+			AND zid=#{zid, jdbcType=VARCHAR}
+	</update>
+
+	<update id="archiveBmbomdetailByXbomkey" parameterType="Bmbomheader">
+		UPDATE 
+			bmbomheader
+		SET
+			zactive='0'
+		WHERE
+			xbomkey=#{xbomkey, jdbcType=VARCHAR}
+			AND zid=#{zid, jdbcType=VARCHAR}
+	</update>
+
+	<update id="updateBmBomDetail" parameterType="Bmbomdetail">
+		UPDATE 
+			bmbomdetail
+		SET
+			xstype=#{xstype, jdbcType=VARCHAR},
+			xqtymix=#{xqtymix, jdbcType=DECIMAL},
+			xbomcomp=#{xbomcomp, jdbcType=VARCHAR},
+			xdesc=#{xdesc, jdbcType=VARCHAR},
+			xqtymin=#{xqtymin, jdbcType=INTEGER},
+			xunit=#{xunit, jdbcType=VARCHAR},
+			xwh=#{xwh, jdbcType=VARCHAR},
+			xwhdesc=#{xwhdesc, jdbcType=VARCHAR},
+			xassembly=#{xassembly, jdbcType=VARCHAR},
+			xfixedqty=#{xfixedqty, jdbcType=VARCHAR},
+			zuuserid=#{zuuserid, jdbcType=VARCHAR},
+			zaip=#{zaip, jdbcType=VARCHAR},
+			zuip=#{zuip, jdbcType=VARCHAR},
+			zactive=#{zactive, jdbcType=VARCHAR},
+			ztime=#{ztime, jdbcType=TIMESTAMP},
+			zutime=#{zutime, jdbcType=TIMESTAMP}
+		WHERE
+			xbomkey=#{xbomkey, jdbcType=VARCHAR}
+			AND xbomrow=#{xbomrow, jdbcType=INTEGER}
+			AND zid=#{zid, jdbcType=VARCHAR}
+	</update>
+
+	<insert id="saveBmBomDetail" parameterType="Bmbomdetail">
+		<selectKey keyProperty="xbomrow" resultType="Integer" order="BEFORE">
+			SELECT COALESCE(Max(xbomrow), 0) + 1 FROM bmbomdetail WHERE xbomkey=#{xbomkey} AND zactive='1' AND zid=#{zid}
+		</selectKey>
+		INSERT INTO bmbomdetail
+		(
+			xbomrow,
+			xbomkey,
+			xstype,
+			xqtymix,
+			xbomcomp,
+			xdesc,
+			xqtymin,
+			xunit,
+			xwh,
+			xwhdesc,
+			xassembly,
+			xfixedqty,
+			zid,
+			zauserid,
+			zuuserid,
+			zaip,
+			zuip,
+			zactive,
+			ztime,
+			zutime
+		)
+		VALUES
+		(
+			#{xbomrow},
+			#{xbomkey, jdbcType=VARCHAR},
+			#{xstype, jdbcType=VARCHAR},
+			#{xqtymix, jdbcType=DECIMAL},
+			#{xbomcomp, jdbcType=VARCHAR},
+			#{xdesc, jdbcType=VARCHAR},
+			#{xqtymin, jdbcType=INTEGER},
+			#{xunit, jdbcType=VARCHAR},
+			#{xwh, jdbcType=VARCHAR},
+			#{xwhdesc, jdbcType=VARCHAR},
+			#{xassembly, jdbcType=VARCHAR},
+			#{xfixedqty, jdbcType=VARCHAR},
+			#{zid, jdbcType=VARCHAR},
+			#{zauserid, jdbcType=VARCHAR},
+			#{zuuserid, jdbcType=VARCHAR},
+			#{zaip, jdbcType=VARCHAR},
+			#{zuip, jdbcType=VARCHAR},
+			#{zactive, jdbcType=VARCHAR},
+			#{ztime, jdbcType=TIMESTAMP},
+			#{zutime, jdbcType=TIMESTAMP}
+		) 
+	</insert>
+
+	<select id="findBmBomHeaderByXbomkey" resultType="Bmbomheader">
+		SELECT * FROM bmbomheader WHERE xbomkey=#{xbomkey} AND zid=#{zid} AND zactive='1'
+	</select>
+
+	<select id="findBmBomHeaderByXitem" resultType="Bmbomheader">
+		SELECT * FROM bmbomheader WHERE xitem=#{xitem} AND zid=#{zid} AND zactive='1'
+	</select>
+
+	<select id="findBmBomdetailByXbomkeyAndXbomrow" resultType="BmbomDetail">
+		SELECT * FROM BmbomDetail WHERE xbomkey=#{xbomkey} AND xbomrow=#{xbomrow} AND zid=#{zid} AND zactive='1'
+	</select>
+
+	<select id="findBmBomdetailByXbomkey" resultType="Bmbomdetail">
+		SELECT * FROM bmbomdetail WHERE xbomkey=#{xbomkey} AND zid=#{zid} AND zactive='1'
+	</select>
+
+	<select id="getAllBmBomheader" resultType="Bmbomheader">
+		SELECT * FROM bmbomHeader WHERE zid=#{zid} AND zactive='1' order by xbomkey desc
+	</select>
+
+	<delete id="deleteBmbomdetailByXbomkeyAndXbomrow" parameterType="Bmbomdetail">
+		DELETE
+		FROM
+			bmbomdetail
+		WHERE
+			xbomkey=#{xbomkey}
+			AND xbomrow=#{xbomrow}
+			AND zid=#{zid}
+	</delete>
+
+	<select id = "explodeBom" statementType = "CALLABLE">
+		{call MO_ExplodeBOM(#{zid, jdbcType = VARCHAR, mode = IN}, #{user, jdbcType = VARCHAR, mode = IN}, #{batch, jdbcType = VARCHAR, mode = IN}, #{action, jdbcType = VARCHAR, mode = IN}, #{errseq, jdbcType = VARCHAR, mode = IN})}
+	</select>
+
+	<select id = "explodeBom2" statementType = "CALLABLE">
+		{call MO_ExplodeBOM2(#{zid, jdbcType = VARCHAR, mode = IN}, #{user, jdbcType = VARCHAR, mode = IN}, #{batch, jdbcType = VARCHAR, mode = IN}, #{xbomkey, jdbcType = VARCHAR, mode = IN}, #{action, jdbcType = VARCHAR, mode = IN}, #{errseq, jdbcType = VARCHAR, mode = IN})}
+	</select>
+
+	<select id="searchXbom" resultType="Bmbomheader">
+		SELECT * FROM BMBOMHEADER WHERE (UPPER(xbomkey) LIKE '%' || #{xbomkey} || '%') AND zid=#{zid} AND zactive='1'
+	</select>
+	
+	
+	
+</mapper>

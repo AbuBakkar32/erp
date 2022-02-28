@@ -1,0 +1,68 @@
+<!-- Modal -->
+<div id="othersbatchdetailmodal" th:fragment="othersbatchdetailmodal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="true" xmlns:th="http://www.thymeleaf.org">
+	<div class="modal-dialog modal-lg">
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h4 class="modal-title" th:text="#{pp.modal1.table.page.heading.xname}">Batch Detail</h4>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-md-12">
+						<table class="table table-striped table-bordered modal-datatable nowrap" id="defaultbatchdetailtable" th:fragment="defaultbatchdetailtable">
+							<thead>
+								<tr>
+									<th th:text="#{pp.modal1.table.heading.xrow}">SN.</th>
+									<th th:text="#{pp.modal1.table.heading.xbatch}">Batch</th>
+									<th th:text="#{pp.modal1.table.heading.xitem}">Item</th>
+									<th th:text="#{pp.modal1.table.heading.xqtyreq}">Req. Qty</th>
+									<th th:text="#{pp.modal1.table.heading.xunit}">Unit</th>
+									<th th:text="#{pp.modal1.table.heading.xtype}">Type</th>
+									<th data-nosort="Y" style="text-align:right;" th:if="${batch.xstatusmor ne 'Completed'}">
+										<button data-dismiss="modal" type="button" class="btn btn-success btn-add" th:attr="data-url=@{/production/batch/} + ${batch.xbatch} + '/batchdetail/new/show?withoutbom=' + ${withoutbom}, data-target-modal='batchdetailmodal'"><i class="fas fa-plus"></i></button>
+									</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:if="${b.xtype ne 'Default'}" th:each="b,n : ${batchdetails}">
+									<td th:text="${n.count}"></td>
+									<td th:text="${b.xbatch}"></td>
+									<td>
+										<a th:href="@{/mastersetup/caitem/} + ${b.xitem}" target="_blank" th:text="${b.xitem} + ' - ' +  ${b.xdesc}"></a>
+									</td>
+									<td th:text="${b.xqtyactual}"></td>
+									<td th:text="${b.xunit}"></td>
+									<td th:text="${b.xtype}"></td>
+									<td style="text-align:right;" th:if="${batch.xstatusmor ne 'Completed'}">
+										<button data-dismiss="modal" type="button" class="btn btn-default btn-edit editmode" th:attr="data-url=@{/production/batch/} + ${b.xbatch} + '/batchdetail/' + ${b.xrow} + '/show?withoutbom=' + ${withoutbom}, data-target-modal='batchdetailmodal'"><i class="fas fa-edit"></i></button>
+										<button data-dismiss="modal" type="button" class="btn btn-danger btn-delete-noconfirm editmode" th:attr="data-url=@{/production/batch/} + ${b.xbatch} + '/batchdetail/' + ${b.xrow} + '/delete?withoutbom=' + ${withoutbom}, data-target-modal='othersbatchdetailmodal'"><i class="fas fa-trash"></i></button>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default btn-sm reload-parent-window" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+
+		<!-- ck ui -->
+		<script type="text/javascript">
+			$(document).ready(function(){
+				// Init ui for modal
+				ck.ui.config.buttonevent();
+				modalDataTableInit();
+
+				$('.reload-parent-window').off('click').on('click', function(e){
+					e.preventDefault();
+					$('.query-submit-btn').trigger('click');
+				})
+				
+			})
+		</script>
+	</div>
+
+</div>

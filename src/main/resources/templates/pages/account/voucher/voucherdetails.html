@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<title>Voucher Details</title>
+		<meta th:remove="tag" th:include="commons :: common-meta" />
+		<meta th:remove="tag" th:include="commons :: common-css" />
+		<meta th:remove="tag" th:include="commons :: common-js" />
+	</head>
+	<body>
+		<!-- Header section -->
+		<div class="header-section" th:include="commons :: header-section"></div>
+
+		<!-- Menu section -->
+		<div th:if="${menuVersion != null and menuVersion eq 'MENU_V2'}" class="menuv2" th:include="commons :: main-menu"></div>
+		
+		<div th:if="${menuVersion == null or menuVersion eq 'MENU_V1'}" class="navbar-inverse menu-section">
+			<div class="container-fluid">
+				<div class="row">
+					<nav class="navbar navbar-inverse">
+						<div class="container-fluid">
+							<div class="row">
+								<div class="navbar-header">
+									<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+										<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+									</button>
+								</div>
+								<div class="collapse navbar-collapse" id="myNavbar">
+									<div class="nav navbar-nav">
+										<li><a th:href="@{/}">Dashboard</a></li>
+										<li><a th:href="@{/account}">General Accounts</a></li>
+										<li class="active"><a th:href="@{/account/voucherdetails}">Voucher details</a></li>
+									</div>
+									<ul class="nav navbar-nav navbar-right" th:include="ckbigmenu :: dashboard-menu"></ul>
+								</div>
+							</div>
+						</div>
+					</nav>
+				</div>
+			</div>
+		</div>
+		
+		
+		<!-- Content section -->
+		<div>
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-md-12 content-area">
+						<div class="row">
+							<div class="col-md-6">
+								<!-- Section list head -->
+								<section id="data-maintenance" style="margin-top: 30px;">
+									<div class="section-header sectionbartoggle">
+										<h1>Voucher Details</h1>
+									</div>
+									<div class="form-action-button">
+										<a th:href="@{/account/voucherdetails}" class="btn btn-sm btn-default"><i class="fas fa-redo-alt"></i> New</a>
+										<a href="#" class="btn btn-sm btn-success confirm-btn"><i class="fas fa-save"></i> Add</a>
+										<a href="#" class="btn btn-sm btn-success update-btn"><i class="fas fa-edit"></i> Update</a>
+										<a href="#" class="btn btn-sm btn-danger archive-btn-link"><i class="fas fa-trash-alt"></i> Delete</a>
+									</div>
+									<div class="section-body section-border">
+										<form id="mainform" class="form-horizontal"  th:with="df=${'E, dd-MMM-yyyy'}">
+											<div class="row">
+												<div class="col-md-6">
+													<div class="form-group">
+														<label class="control-label col-md-4">Voucher Row : </label>
+														<div class="col-md-8">
+															<input type="text" class="form-control">
+														</div>
+													</div>
+												   <div class="form-group">
+														<label class="control-label col-md-4">Division : </label>
+														<div class="col-md-8">
+															<select class="form-control">
+																<option value="Select">Select</option>
+															</select>
+														</div>
+													</div>
+													<div class="form-group">
+														<label class="control-label col-md-4">Section : </label>
+														<div class="col-md-8">
+															<select class="form-control">
+																<option value="Select">Select</option>
+															</select>
+														</div>
+													</div>
+													<div class="form-group">
+														<label class="control-label col-md-4">Project : </label>
+														<div class="col-md-8">
+															<select class="form-control">
+																<option value="Select">Select</option>
+															</select>
+														</div>
+													</div>
+													<div class="form-group">
+														<label class="control-label col-md-4">Account : </label>
+														<div class="col-md-8">
+															<input type="text" value="search..." class="form-control">
+														</div>
+													</div>
+													<div class="form-group">
+														<label class="control-label col-md-4">Account Usage: </label>
+														<div class="col-md-8">
+															<input type="text" class="form-control">
+														</div>
+													</div>
+													<div class="form-group">
+														<label class="control-label col-md-4">Account Source: </label>
+														<div class="col-md-8">
+															<input type="text" class="form-control">
+														</div>
+													</div>
+													<div class="form-group">
+														<label class="control-label col-md-4">Currency : </label>
+														<div class="col-md-8">
+															<select class="form-control">
+																<option value="BDT">BDT</option>
+															</select>
+														</div>
+													</div>
+													<div class="form-group">
+														<label class="control-label col-md-4">Exchange rate : </label>
+														<div class="col-md-8">
+															<input type="text" class="form-control" value="1000.00" disabled>
+														</div>
+													</div>
+													<div class="form-group">
+														<label class="control-label col-md-4">Prime DR : </label>
+														<div class="col-md-8">
+															<input type="text" class="form-control" value="0.00" disabled>
+														</div>
+													</div>
+													<div class="form-group">
+														<label class="control-label col-md-4">Prime CR : </label>
+														<div class="col-md-8">
+															<input type="text" class="form-control" value="2000.00" disabled>
+														</div>
+													</div>
+													<div class="form-group">
+														<label class="control-label col-md-4">Cheque/ Ref No : </label>
+														<div class="col-md-8">
+															<input type="text" class="form-control" value="CHK00010" disabled>
+														</div>
+													</div>
+													<div class="form-group">
+														<label class="control-label col-md-4">Description : </label>
+														<div class="col-md-8">
+															<textarea class="form-control" rows="3" style="resize: none;"></textarea>
+														</div>
+													</div>	
+												</div>
+												
+												<div class="col-md-6">
+													<div class="form-group">
+														<label class="control-label col-md-4">Payment Code : </label>
+														<div class="col-md-8">
+															<select class="form-control">
+																<option value="Select">Select</option>
+															</select>
+														</div>
+													</div>
+													<div class="form-group">
+														<label class="control-label col-md-4">Balance : </label>
+														<div class="col-md-8">
+															<input type="text" class="form-control" value="2000.00" disabled>
+														</div>
+													</div>
+													<div class="form-group">
+														<label class="control-label col-md-4">Invoice Number : </label>
+														<div class="col-md-8">
+															<input type="text" class="form-control" value="2000.00" disabled>
+														</div>
+													</div>
+													<div class="form-group">
+														<label class="control-label col-md-4">Date Due : </label>
+														<div class="col-md-8">
+															<input type="text" class="form-control" value="2 Days" disabled>
+														</div>
+													</div>
+													<div class="form-group">
+														<label class="control-label col-md-4">Invoice No : </label>
+														<div class="col-md-8">
+															<input type="text" class="form-control" value="IN0000100" disabled>
+														</div>
+													</div>
+													<div class="form-group datepicker">
+														<label class="control-label col-md-4">Invoice Date : </label>
+														<div class="input-group date col-md-6 datepicker">
+															<input 	type="datepicker" 
+																	class="form-control" 
+																	th:value="${#dates.format(#dates.createNow(), df)}"/>
+															<div class="input-group-addon">
+																<span class="glyphicon glyphicon-calendar"></span>
+															</div>
+														</div>
+													</div>
+													<div class="form-group">
+														<label class="control-label col-md-4">Date Approve : </label>
+														<div class="col-md-8">
+															<input type="text" class="form-control" value="Zubayer" disabled>
+														</div>
+													</div>
+													<div class="form-group">
+														<label class="control-label col-md-4">Original Inv No : </label>
+														<div class="col-md-8">
+															<input type="text" class="form-control" value="None" disabled>
+														</div>
+													</div>
+													<div class="form-group datepicker">
+														<label class="control-label col-md-4">Date of Clearing : </label>
+														<div class="input-group date col-md-6 datepicker">
+															<input 	type="datepicker" 
+																	class="form-control"
+																	th:value="${#dates.format(#dates.createNow(), df)}"/>
+															<div class="input-group-addon">
+																<span class="glyphicon glyphicon-calendar"></span>
+															</div>
+														</div>
+													</div>
+													<div class="form-group">
+														<label class="control-label col-md-4">Flag : </label>
+														<div class="col-md-8">
+															<input type="text" class="form-control" value="Unknown" disabled>
+														</div>
+													</div>
+													<div class="form-group">
+														<label class="control-label col-md-4">Valuation Key : </label>
+														<div class="col-md-8">
+															<input type="text" class="form-control" value="Unknown" disabled>
+														</div>
+													</div>
+													<div class="form-group">
+														<label class="control-label col-md-4">Realized Key : </label>
+														<div class="col-md-8">
+															<input type="text" class="form-control" value="Unknown" disabled>
+														</div>
+													</div>
+											</div>
+										</div>
+									</form>
+								</div>
+							</section>
+						</div>
+							<div class="col-md-6">
+								<section id="list-manager" style="margin-top: 30px;">
+									<div class="section-header sectionbartoggle">
+										<h1>Details List</h1>
+									</div>
+									<div class="section-body" style="overflow-x: scroll; overflow-y: none;">
+										<table class="table table-striped table-bordered datatable nowrap">
+											<thead>
+												<tr>
+													<th>Voucher Row</th>
+													<th>Account</th>
+													<th>Division</th>
+													<th>Description</th>
+													<th>Account Usage</th>
+													<th>Account Source</th>
+													<th>Section</th>
+													<th>Project</th>
+													<th>Currency</th>
+													<th>Exchange Rate</th>
+													<th>Prime DR</th>
+													<th>Prime CR</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr>
+													<td>
+														<a href="#">10</a>
+													</td>
+													<td>1000010</td>
+													<td>Dhaka</td>
+													<td>Cash On Hand</td>
+													<td>Bank</td>
+													<td>NA</td>
+													<td>NA</td>
+													<td>NA</td>
+													<td>1000.00</td>
+													<td>1.000000</td>
+													<td>2000.00</td>
+													<td>00.00</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</section>
+							</div>
+					</div>			
+				</div>
+			</div>
+		</div>
+	</div>
+
+		<!-- Footer section -->
+		<div class="footer-section" th:include="commons :: footer-section"></div>
+
+		<script type="text/javascript" th:src="@{/assets/js/ck-ui/ck-search-suggest.js}"></script>
+		
+	</body>
+</html>

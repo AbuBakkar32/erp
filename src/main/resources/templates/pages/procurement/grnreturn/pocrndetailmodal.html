@@ -1,0 +1,77 @@
+<!-- Modal -->
+<div id="pocrndetailmodal" th:fragment="pocrndetailmodal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="true" xmlns:th="http://www.thymeleaf.org">
+	<div class="modal-dialog modal-lg">
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h4 class="modal-title">Add/Update Item</h4>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<form id="mainform-modal" th:action="@{/procurements/purchasereturn/pocrndetail/save}" method="post" class="form-horizontal" th:object="${pocrndetail}">
+						<input type="hidden" th:field="*{xcrnnum}"/>
+						<input type="hidden" th:field="*{xdocrow}"/>
+						<input type="hidden" th:field="*{xrow}"/>
+						<input type="hidden" th:field="*{prevqty}"/>
+						<div class="col-md-6">
+							<div class="form-group">
+								<label class="control-label col-sm-4" for="xitem" th:text="#{pr.modal.form.label.xitem}">Item</label>
+								<div class="col-sm-8">
+									<input type="hidden" th:field="*{xitem}" class="form-control"/>
+									<input type="text" th:value="${#strings.isEmpty(pocrndetail.xitem) ? '' : pocrndetail.xitem + ' - ' + pocrndetail.xitemname}" class="form-control" disabled="disabled"/>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="control-label col-sm-4" for="xqtyord" th:text="#{pr.modal.form.label.xqtyord}">Qty</label>
+								<div class="col-sm-8">
+									<input type="text"  class="form-control" th:field="*{xqtyord}" min="0"/>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="control-label col-sm-4" for="xrate" th:text="#{pr.modal.form.label.xrate}">Rate</label>
+								<div class="col-sm-8">
+									<input type="hidden" th:field="*{xrate}" class="form-control"/>
+									<input type="text" th:value="*{xrate}" class="form-control" disabled="disabled"/>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="control-label col-sm-4" for="xunit" th:text="#{pr.modal.form.label.xunit}">Unit</label>
+								<div class="col-sm-8">
+									<input type="hidden" th:field="*{xunit}" class="form-control"/>
+									<input type="text" th:value="*{xunit}" class="form-control" disabled="disabled"/>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="form-group">
+								<label class="control-label col-sm-4" for="xcfpur">Conv. Factor (Purchase)</label>
+								<div class="col-sm-8">
+									<input type="hidden" th:field="*{xcfpur}"/>
+									<input type="text" th:value="${pocrndetail.xcfpur}" class="form-control xcfpur-display" disabled="disabled"/>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="control-label col-sm-4" for="xlong" th:text="#{pr.modal.form.label.xlong}">Note</label>
+								<div class="col-sm-8">
+									<textarea rows="6" cols="" class="form-control" th:field="*{xlong}"></textarea>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-success btn-sm confirm-btn-modal">Submit</button>
+				<button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+		<script type="text/javascript" th:src="@{/assets/js/ck-ui/ck-search-suggest.js}"></script>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				// Init ui for modal
+				ck.ui.config.buttonevent();
+			});
+		</script>
+	</div>
+</div>

@@ -1,0 +1,109 @@
+<!-- Modal -->
+<div id="ownermodal" th:fragment="ownermodal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="true" xmlns:th="http://www.thymeleaf.org">
+	<div class="modal-dialog modal-lg">
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h4 class="modal-title">Add/Update Owner Details</h4>
+			</div>
+			
+			<div class="modal-body">
+				<div class="row">
+				<form id="mainform-modal" class="form-horizontal"  method="post" th:action="@{/landinfo/owner/save}" th:object="${lpe}">
+				<input type="hidden" th:if="${xrow ne 0}" th:field="*{xrow}"/>
+				<input type="hidden" th:field="*{xland}"/>
+					<div class="row">
+						<div class="col-md-12">
+							<div class="row">
+								<div class="col-md-12">
+									<div class="section-header sectionbartoggle">
+										<h1></h1>
+									</div>
+								</div>
+							</div>
+						</div>
+						</div><br>
+						<div class="row">
+							<div class="col-md-12">
+								<div class="row">
+									<div class="col-md-6">
+
+										<!--<div class="form-group" >
+											<label class="control-label col-md-4" for="xland">Land Id:</label>
+											<div class="col-md-7">
+												<input type="hidden" class="form-control" th:field="*{xland}"/>
+												<input type="text" class="form-control" th:value="*{xland}" disabled="disabled" />
+											</div>
+										</div>-->
+										
+										<div class="form-group" >
+											<label class="control-label col-md-4" for="xperson" th:text="#{li.modal.label.xperson}">Person Id:</label>
+											<div class="col-sm-7">
+												<input 	type="text" 
+														class="form-control searchsuggest" 
+														placeholder="Search..." 
+														th:value="${#strings.isEmpty(lpe.xperson) ? '' : lpe.xperson + ' - ' + lpe.xpername}"
+														th:attr="search-url='search/personId'"/>
+												<input type="hidden" id="search-val" th:field="*{xperson}"/>
+												<input type="hidden" id="search-des" th:value="*{xperson}"/>
+											</div>
+										</div>
+
+										<div class="form-group">
+											<label class="control-label col-md-4" for="xtype" th:text="#{li.modal.label.xtype}">Owner Type:</label>
+											<div class="col-md-7">
+												<select class="form-control" th:field="*{xtype}">
+													<option th:each="d : ${ownerTypes}" th:value="${d.xcode}" th:text="${d.xcode}"></option>
+												</select>
+											</div>
+										</div>
+
+									</div>
+
+									<div class="col-md-6">
+
+										<div class="form-group">
+											<label class="control-label col-md-3" for="xqty" th:text="#{li.modal.label.xqty}">Land Amt:</label>
+											<div class="col-md-7">
+												<input type="text" class="form-control" th:field="*{xqty}" maxlength="100"/>
+											</div>
+										</div>
+
+										<div class="form-group">
+											<label class="control-label col-md-3" for="xunit" th:text="#{li.modal.label.xunit}">Land Unit:</label>
+											<div class="col-md-7">
+												<select class="form-control" th:field="*{xunit}">
+													<option th:each="d : ${landUnitTypes}" th:value="${d.xcode}" th:text="${d.xcode}"></option>
+												</select>
+											</div>
+										</div>
+
+										<div class="form-group">
+											<label class="control-label col-md-3" for="xnote" th:text="#{li.modal.label.xnote}">Note:</label>
+											<div class="col-md-7">
+												<textarea class="form-control" rows="3" th:field="*{xnote}" placeholder="Note"></textarea>
+											</div>
+										</div>
+									</div>
+									
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-success btn-sm confirm-btn-modal">Submit</button>
+				<button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript" th:src="@{/assets/js/ck-ui/ck-search-suggest.js}"></script>
+	<script type="text/javascript">
+			$(document).ready(function(){
+				// Init ui for modal
+				ck.ui.config.buttonevent();
+			});
+		</script>
+</div>

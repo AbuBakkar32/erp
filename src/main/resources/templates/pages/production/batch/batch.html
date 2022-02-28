@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<title th:text="#{pp.page.title}">Production Process</title>
+		<meta th:remove="tag" th:include="commons :: common-meta" />
+		<meta th:remove="tag" th:include="commons :: common-css" />
+		<meta th:remove="tag" th:include="commons :: common-js" />
+		<style type="text/css">
+			#batchdetailtable{
+				background: #f1eaea;
+			}
+			#batchdetailtable th{
+				background: #29af70;
+				color: #fff;
+			}
+		</style>
+	</head>
+	<body>
+		<!-- Header section -->
+		<div class="header-section" th:include="commons :: header-section"></div>
+
+		<!-- Menu section -->
+		<div th:if="${menuVersion != null and menuVersion eq 'MENU_V2'}" class="menuv2" th:include="commons :: main-menu"></div>
+
+		<div th:if="${menuVersion == null or menuVersion eq 'MENU_V1'}" class="navbar-inverse menu-section">
+			<div class="container-fluid">
+				<div class="row">
+					<nav class="navbar navbar-inverse">
+						<div class="container-fluid">
+							<div class="row">
+								<div class="navbar-header">
+									<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+										<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+									</button>
+								</div>
+								<div class="collapse navbar-collapse" id="myNavbar">
+									<div class="nav navbar-nav">
+										<li><a th:href="@{/}"><i class="fas fa-home"></i> Home</a></li>
+										<li class="active"><a th:href="@{/production/batch/} + ${chalan.xordernum}">Production Process</a></li>
+									</div>
+									<ul class="nav navbar-nav navbar-right" th:include="ckbigmenu :: dashboard-menu"></ul>
+								</div>
+							</div>
+						</div>
+					</nav>
+				</div>
+			</div>
+		</div>
+
+		<!-- Content section -->
+		<div>
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-md-12 content-area">
+						<!-- <div class="row">
+							<h1 class="text-center" th:text="#{pp.page.heading}">Production Process</h1>
+						</div> -->
+
+						<div class="row">
+							<div class="col-md-12">
+								<section id="data-maintenance">
+									<div class="section-header sectionbartoggle">
+										
+									</div>
+									<div class="section-body">
+										<form id="mainform" th:action="@{/production/batch/search/chalan}" method="post" class="form-horizontal">
+											<div class="col-md-6" th:if="${#strings.isEmpty(chalan.xordernum)}">
+												<div class="form-group">
+													<label class="control-label col-sm-4" for="chalanNumber" th:text="#{pp.form.label.chalannumber}">Chalan Number : </label>
+													<div class="col-sm-8">
+														<input 	type="text" 
+																class="form-control searchsuggest" 
+																placeholder="Search..." 
+																required="required"
+																th:value="${chalan.xordernum}" 
+																th:attr="search-url='search/salesorderchalan/confirmed'"/>
+														<input type="hidden" id="search-val" name="chalanNumber" th:value="${chalan.xordernum}"/>
+														<input type="hidden" id="search-des" value=""/>
+													</div>
+												</div>
+											</div>
+											<input type="hidden" name="chalanNumber" th:value="${chalan.xordernum}" th:if="${not #strings.isEmpty(chalan.xordernum)}">
+											<div class="col-md-6">
+												<div class="">
+													<button class="btn btn-sm btn-success query-submit-btn" th:classappend="${#strings.isEmpty(chalan.xordernum) ? '' : 'nodisplay'}" type="submit"><i class="fas fa-search"></i></button>
+												</div>
+											</div>
+										</form>
+									</div>
+								</section>
+							</div>
+
+							<div class="col-md-12">
+								<section id="data-maintenance" style="margin-top: 10px;">
+									<div class="section-header sectionbartoggle">
+									</div>
+									<div class="section-body">
+										<table class="table table-bordered" id="batchdetailtable" th:fragment="batchdetailtable">
+											<h1 th:if="${not #lists.isEmpty(batchList)}" style="text-align: center; font-size: 25px;">
+												Batch Details of Production Chalan : <a th:href="@{/salesninvoice/salesorderchalan/} + ${chalan.xordernum}" target="_blank" th:text="${chalan.xordernum}"></a>
+												<a target="_blank" th:href="@{/production/batch/print/dailyproduction/} + ${chalan.xordernum}" class="btn btn-sm btn-primary pull-right"><i class="fas fa-print"></i> Print</a>
+												<!-- <a th:if="${allBatchBomExploaded}" th:href="@{/salesninvoice/salesorderchalan/tofinishedfromchalan/} + ${chalan.xordernum}" target="_blank" class="btn btn-sm btn-primary pull-right archive-btn-link" style="margin-right: 10px;"><i class="fas fa-random"></i><span style="margin-left:2px;" th:text="#{button.value.xpt}"> PROD TO</span></a> -->
+											</h1>
+											<thead th:if="${not #lists.isEmpty(batchList)}">
+												<tr th:if="${not productioncompleted}">
+													<th style="text-align: right;" colspan="7" th:text="#{pp.table.heading.bprocess}">Bulk Process</th>
+													<th style="text-align: center;">
+														<button title="Process Production" 
+																type="button" 
+																class="btn btn-warning btn-confirm editmode" 
+																th:if="${allBatchBomExploaded}"
+																th:attr="data-url=@{/production/batch/bulkprocessproduction/} + ${chalan.xordernum}">
+															<i class="fas fa-mortar-pestle"></i>
+														</button>
+													</th>
+												</tr>
+												<tr>
+													<th th:text="#{pp.table.heading.count}">SN.</th>
+													<th th:text="#{pp.table.heading.xbatch}">Batch</th>
+													<th th:text="#{pp.table.heading.xitem}">Item</th>
+													<th th:text="#{pp.table.heading.xproduction}">
+														Production (KG)
+														
+													</th>
+													<th th:text="#{pp.table.heading.xqtyprd}">Default production</th>
+													<th th:text="#{pp.table.heading.xqtycom}">Final production</th>
+													<th th:text="#{pp.table.heading.xviewd}" style="text-align: center; width: 25px;">View Detail</th>
+													<th th:text="#{pp.table.heading.xprocessp}" style="text-align: center; width: 25px;">Process Production</th>
+												</tr>
+											</thead>
+											<tbody th:with="df=${'E, dd-MMM-yyyy'}">
+												<tr th:each="b, n : ${batchList}">
+													<td th:text="${n.count}"></td>
+													<td th:text="${b.xbatch}"></td>
+													<td th:text="${b.xitem} + ' - ' +  ${b.xitemdesc}"></td>
+													<td>
+														<form th:if="${not #strings.isEmpty(b.xbomkey)}" class="form-horizontal" th:id="${b.xbatch}" th:action="@{/production/batch/update/xproduction/} + ${b.xbatch}" method="post">
+															<input th:disabled="${b.xstatusmor eq 'Completed'}" style="width:100px; float: left; margin-right: 10px;" type="text" name="xproduction" th:value="${b.xproduction}" class="form-control"/>
+															<button th:if="${b.xstatusmor ne 'Completed'}" th:id="${b.xbatch}" type="submit" class="btn btn-sm btn-success batch-submit" title="Submit"><i class="fas fa-paper-plane"></i></button>
+															<span style="line-height: 27px;">KG</span>
+														</form>
+														<span th:if="${#strings.isEmpty(b.xbomkey)}" th:text="${b.xproduction} + ' KG'"></span>
+													</td>
+													<td>
+														<form th:if="${#strings.isEmpty(b.xbomkey)}" class="form-horizontal" th:id="${b.xbatch}" th:action="@{/production/batch/update/xqtyprd/} + ${b.xbatch}" method="post">
+															<input th:disabled="${b.xstatusmor eq 'Completed'}" style="width:100px; float: left; margin-right: 10px;" type="text" name="xqtyprd" th:value="${b.xqtyprd}" class="form-control"/>
+															<button th:if="${b.xstatusmor ne 'Completed'}" th:id="${b.xbatch}" type="submit" class="btn btn-sm btn-success batch-submit" title="Submit"><i class="fas fa-paper-plane"></i></button>
+															<span style="line-height: 27px;"  th:text="${b.xqtyprdunit}"></span>
+														</form>
+														<span th:if="${b.xqtyprd ne null and not #strings.isEmpty(b.xbomkey)}" th:text="${b.xqtyprd} + ' ' + ${b.xqtyprdunit}"></span>
+													</td>
+													<td>
+														<form th:if="${b.bomexploaded and not #strings.isEmpty(b.xbomkey)}" class="form-horizontal" th:id="${b.xbatch}" th:action="@{/production/batch/update/xqtycom/} + ${b.xbatch}" method="post">
+															<input th:disabled="${b.xstatusmor eq 'Completed'}" style="width:100px; float: left; margin-right: 10px;" type="text" name="xqtycom" th:value="${b.xqtycom}" class="form-control"/>
+															<button th:if="${b.xstatusmor ne 'Completed'}" th:id="${b.xbatch}" type="submit" class="btn btn-sm btn-success batch-submit" title="Submit"><i class="fas fa-paper-plane"></i></button>
+															<span style="line-height: 27px;"  th:text="${b.xqtyprdunit}"></span>
+														</form>
+														<form th:if="${#strings.isEmpty(b.xbomkey)}" class="form-horizontal" th:id="${b.xbatch}" th:action="@{/production/batch/update/xqtycom/} + ${b.xbatch}" method="post">
+															<input th:disabled="${b.xstatusmor eq 'Completed'}" style="width:100px; float: left; margin-right: 10px;" type="text" name="xqtycom" th:value="${b.xqtycom}" class="form-control"/>
+															<button th:if="${b.xstatusmor ne 'Completed'}" th:id="${b.xbatch}" type="submit" class="btn btn-sm btn-success batch-submit" title="Submit"><i class="fas fa-paper-plane"></i></button>
+															<span style="line-height: 27px;"  th:text="${b.xqtyprdunit}"></span>
+														</form>
+													</td>
+													<td style="text-align: center">
+														<button title="Add/Edit items" th:if="${b.bomexploaded and not #strings.isEmpty(b.xbomkey)}" type="button" class="btn btn-success btn-edit editmode" th:attr="data-url=@{/production/batch/batchdetail/} + ${b.xbatch} + '/others/show?withoutbom=false', data-target-modal='othersbatchdetailmodal'"><i class="fas fa-plus"></i></button>
+														<button title="Add/Edit items" th:if="${#strings.isEmpty(b.xbomkey)}" type="button" class="btn btn-success btn-edit editmode" th:attr="data-url=@{/production/batch/batchdetail/} + ${b.xbatch} + '/others/show?withoutbom=true', data-target-modal='othersbatchdetailmodal'"><i class="fas fa-plus"></i></button>
+													</td>
+													<td style="text-align: center">
+														<!-- <button th:if="${#strings.isEmpty(chalan.rawxtornum) and b.bomexploaded and b.xstatusmor eq 'Open'}" title="Process Production" type="button" class="btn btn-warning btn-confirm editmode" th:attr="data-url=@{/production/batch/processproduction/} + ${b.xbatch}"><i class="fas fa-mortar-pestle"></i></button> -->
+														<span th:if="${b.xstatusmor eq 'Completed'}">Process completed</span>
+													</td>
+												</tr>
+											</tbody>
+											<script>
+												$(document).ready(function(){
+													bindTableButtonsEvent($('#batchdetailtable'));
+
+													$('.batch-submit').off('click').on('click', function(e){
+														e.preventDefault();
+														var form = $(this).parent('form');
+														submitMainForm($(form).attr('action'), $(form));
+													})
+												});
+											</script>
+										</table>
+									</div>
+								</section>
+							</div>
+						</div>
+						
+					</div>
+
+					
+
+					
+				</div>
+			</div>
+		</div>
+
+		<!-- Modal -->
+		<div id="defaultbatchdetailmodal-section"></div>
+		<div id="othersbatchdetailmodal-section"></div>
+
+		<!-- Batch detail add modal -->
+		<div id="batchdetailmodal-section"></div>
+
+		<!-- Footer section -->
+		<div class="footer-section" th:include="commons :: footer-section"></div>
+
+		<script type="text/javascript">
+			$(document).ready(function(){
+
+				$('.query-submit-btn').on('click', function(e){
+					e.preventDefault();
+					submitMainForm();
+				})
+
+				$('.batch-submit').off('click').on('click', function(e){
+					e.preventDefault();
+					var form = $(this).parent('form');
+					submitMainForm($(form).attr('action'), $(form));
+				})
+
+				$('.query-submit-btn').trigger('click');
+			})
+		</script>
+	</body>
+</html>

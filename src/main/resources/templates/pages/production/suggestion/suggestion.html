@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<title>Production Planning</title>
+		<meta th:remove="tag" th:include="commons :: common-meta" />
+		<meta th:remove="tag" th:include="commons :: common-css" />
+		<meta th:remove="tag" th:include="commons :: common-js" />
+	</head>
+	<body>
+		<!-- Header section -->
+		<div class="header-section" th:include="commons :: header-section"></div>
+
+		<!-- Menu section -->
+		<div th:if="${menuVersion != null and menuVersion eq 'MENU_V2'}" class="menuv2" th:include="commons :: main-menu"></div>
+
+		<div th:if="${menuVersion == null or menuVersion eq 'MENU_V1'}" class="navbar-inverse menu-section">
+			<div class="container-fluid">
+				<div class="row">
+					<nav class="navbar navbar-inverse">
+						<div class="container-fluid">
+							<div class="row">
+								<div class="navbar-header">
+									<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+										<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+									</button>
+								</div>
+								<div class="collapse navbar-collapse" id="myNavbar">
+									<div class="nav navbar-nav">
+										<li><a th:href="@{/}"><i class="fas fa-home"></i> Home</a></li>
+										<li class="active"><a th:href="@{/production/suggestion}">Production Planning</a></li>
+									</div>
+									<ul class="nav navbar-nav navbar-right" th:include="ckbigmenu :: dashboard-menu"></ul>
+								</div>
+							</div>
+						</div>
+					</nav>
+				</div>
+			</div>
+		</div>
+		
+		
+		<!-- Content section -->
+		<div>
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-md-12">
+						<!-- rqls list section -->
+						<section id="data-maintenance" style="margin-top: 30px;" th:if="${not #lists.isEmpty(suggestions.value)}" th:each="suggestions : ${allSuggestions}">
+							<div class="section-header sectionbartoggle">
+								<h1>
+									<span>Estimated Required Materials of Chalan - <a th:href="@{/salesninvoice/salesorderchalan/} + ${suggestions.key}" target="_blank" th:text="${suggestions.key}"></a></span>
+								</h1>
+								<a style="margin-bottom: 10px;" th:href="@{/production/suggestion/print/} + ${suggestions.key}" class="btn btn-sm btn-primary print-btn-link pull-right" target="_blank"><i class="fas fa-print"></i> <span style="margin-left:2px;" th:text="#{button.value.xprint}"> Print</span></a>
+							</div>
+							<div class="section-body">
+								<table class="table table-striped table-bordered datatable nowrap" id="salesordertable" th:fragment="salesordertable">
+									<thead>
+										<tr>
+											<th>FG Item</th>
+											<th>FG Qty. / Unit</th>
+											<th>Required Material</th>
+											<th>Required Qty. / Unit</th>
+										</tr>
+									</thead>
+									<tbody th:with="df=${'E, dd-MMM-yyyy'}">
+										<tr th:each="s : ${suggestions.value}">
+											<td th:text="${s.xitem} + ' - ' + ${s.xitemdes}"></td>
+											<td th:text="${s.xqtyord} + ' / ' + ${s.xitemunit} + ''"></td>
+											<td th:text="${s.xrawitem} + ' - ' + ${s.xrawdes}"></td>
+											<td th:text="${s.xrawqty} + ' / ' + ${s.xrawunit} + ''"></td>
+										</tr>
+									</tbody>
+								</table>
+
+								
+								<div class="section-header sectionbartoggle">
+									<h1 class="text-center">
+										<span>Summary View</span>
+									</h1>
+								</div>
+								<table class="table table-striped table-bordered datatable">
+									<thead>
+										<tr>
+											<th>Required Material</th>
+											<th>Qty.</th>
+										</tr>
+									</thead>
+									<tbody th:if="${mp.key eq suggestions.key}" th:each="mp : ${totalMap}">
+										<tr th:each="m : ${mp.value}">
+											<td th:text="${m.key}">1</td>
+											<td th:text="${m.value}">2</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</section>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Footer section -->
+		<div class="footer-section" th:include="commons :: footer-section"></div>
+
+		<script type="text/javascript">
+			$(document).ready(function(){
+				
+				$('.query-submit-btn').on('click', function(e){
+					e.preventDefault();
+					submitMainForm();
+				})
+				
+			})
+		</script>
+	</body>
+</html>

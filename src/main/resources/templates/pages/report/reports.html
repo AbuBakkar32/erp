@@ -1,0 +1,133 @@
+<!-- Report Form -->
+<div th:fragment="report-fields" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+	<div th:each="field : ${fieldsList}" th:if="${field.fieldType.name() eq 'HIDDEN'}" th:switch="${field.fieldType + ''}">
+		<div th:replace="pages/report/reports :: display-argument(${field})"></div>
+	</div>
+	<div class="col-md-6" th:each="field : ${fieldsList}" th:if="${field.fieldType.name() ne 'HIDDEN'}" th:switch="${field.fieldType + ''}">
+		<div th:replace="pages/report/reports :: display-argument(${field})"></div>
+	</div>
+</div>
+
+<div th:fragment="display-argument(field)" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+	<div th:switch="${field.fieldType + ''}">
+		<!-- HIDDEN -->
+		<div th:case="'HIDDEN'">
+			<input 	type="hidden" 
+					class="form-control" 
+					th:id="${field.fieldId}" 
+					th:name="${field.fieldName}" 
+					th:value="${field.defaultInputValue}"/>
+		</div>
+
+		<!-- INPUT -->
+		<div th:case="'INPUT'">
+			<div class="form-group">
+				<label class="control-label col-sm-4" th:for="${field.fieldId}" th:text="${field.prompt}">List code: </label>
+				<div class="col-sm-6">
+					<input 	type="text" 
+							class="form-control" 
+							th:id="${field.fieldId}" 
+							th:name="${field.fieldName}" 
+							th:value="${field.defaultInputValue}" 
+							th:required="${field.required}"
+							th:disabled="${field.disabled}"/>
+				</div>
+			</div>
+		</div>
+
+		<!-- NUMBER -->
+		<div th:case="'NUMBER'">
+			<div class="form-group">
+				<label class="control-label col-sm-4" th:for="${field.fieldId}" th:text="${field.prompt}">List code: </label>
+				<div class="col-sm-6">
+					<input 	type="number" 
+							class="form-control" 
+							th:id="${field.fieldId}" 
+							th:name="${field.fieldName}" 
+							th:value="${field.defaultInputValue}" 
+							th:required="${field.required}"
+							th:disabled="${field.disabled}"/>
+				</div>
+			</div>
+		</div>
+
+		<!-- DATE FIELD -->
+		<div th:case="'DATE'">
+			<div class="form-group datepicker">
+				<label class="control-label col-sm-4" th:for="${field.fieldId}" th:text="${field.prompt}">Prompt : </label>
+				<div class="input-group date col-md-5 datepicker">
+					<input 	type="datepicker" 
+							class="form-control" 
+							th:id="${field.fieldId}" 
+							th:name="${field.fieldName}" 
+							th:value="${field.defaultDateValue == null ? #dates.format(#dates.createNow(), df) : #dates.format(field.defaultDateValue, df)}"
+							th:required="${field.required}"
+							th:disabled="${field.disabled}"
+							th:attr="con-start=${field.startDate}"/>
+					<div class="input-group-addon">
+						<i class="fas fa-calendar-alt"></i>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- DROPDOWN -->
+		<div th:case="'DROPDOWN'">
+			<div class="form-group">
+				<label class="control-label col-sm-4" th:for="${field.fieldId}" th:text="${field.prompt}">Dropdown : </label>
+				<div class="col-sm-6">
+					<select class="form-control selectpicker"
+							th:classappend="${field.cssClass}"
+							th:id="${field.fieldId}" 
+							th:name="${field.fieldName}" 
+							th:required="${field.required}"
+							th:disabled="${field.disabled}">
+						<option th:each="o : ${field.options}" 
+								th:value="${o.value}" 
+								th:text="${o.prompt}"
+								th:selected="${o.value eq field.selectedOption}">Value</option>
+					</select>
+				</div>
+			</div>
+		</div>
+
+		<!-- SEARCH -->
+		<div th:case="'SEARCH'">
+			<div class="form-group">
+				<label class="control-label col-sm-4" th:for="${field.fieldId}" th:text="${field.prompt}">Dropdown : </label>
+				<div class="col-sm-6">
+					<input 	type="text" 
+							class="form-control searchsuggest" 
+							th:classappend="${field.cssClass}"
+							placeholder="Search..." 
+							th:id="${field.fieldId}"
+							th:attr="search-url=${field.searchUrl}, dependent-search=${field.dependentUrl}">
+					<input type="hidden" id="search-val" th:name="${field.fieldName}" value=""/>
+					<input type="hidden" id="search-des" value=""/>
+				</div>
+			</div>
+		</div>
+
+		<!-- TIME -->
+		<div th:case="'TIME'">
+			<div class="form-group timerange">
+				<label class="control-label col-sm-4" th:for="${field.fieldId}" th:text="${field.prompt}">Time: </label>
+				<div class="input-group time col-sm-6 date-time-wrapper timepicker">
+					<input 	class="form-control" 
+							data-type="timepicker" 
+							th:id="${field.fieldId}"
+							th:name="${field.fieldName}" 
+							placeholder="Start" 
+							th:required="${field.required}"
+							th:value="${field.defaultTime}"/>
+					<span class="input-group-append input-group-addon">
+						<span class="input-group-text">
+							<i class="fa fa-clock"></i>
+						</span>
+					</span>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+	

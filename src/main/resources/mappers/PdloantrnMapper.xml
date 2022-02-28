@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.asl.mapper.PdloantrnMapper">
+
+	<insert id="savePdloantrn" parameterType="Pdloantrn">
+		<selectKey keyProperty="xvoucher" resultType="String" order="BEFORE">
+			SELECT Func_GetTrn('${zid}', '${xtypetrn}', '${xtrn}', 6) FROM DUAL
+		</selectKey>
+		
+		INSERT INTO pdloantrn
+		(
+			xvoucher,
+			xdate,
+			xstaff,
+			xloanamt,
+			xinstallment, 
+			xinsamt, 
+			xtype, 
+			xdateeff,
+			xyear, 
+			xper, 
+			xstatus,
+			xlastinsamt, 
+			xpaidinstallment, 
+			xpaid, 
+			xamount, 
+			xstatustag,
+			xnote,  
+			xtypetrn,
+			xtrn,
+			zactive,
+			zauserid,
+			zid,
+			ztime,
+			zutime,
+			zuuserid
+		)
+		VALUES
+		(
+			#{xvoucher, jdbcType=VARCHAR},
+			#{xdate, jdbcType=DATE},
+			#{xstaff, jdbcType=VARCHAR},
+			#{xloanamt, jdbcType=DECIMAL},
+			#{xinstallment, jdbcType=INTEGER},
+			#{xinsamt, jdbcType=DECIMAL},
+			#{xtype, jdbcType=VARCHAR},
+			#{xdateeff, jdbcType=DATE},
+			#{xyear, jdbcType=INTEGER},
+			#{xper, jdbcType=INTEGER},
+			#{xstatus, jdbcType=VARCHAR},
+			#{xlastinsamt, jdbcType=DECIMAL},
+			#{xpaidinstallment, jdbcType=DECIMAL},
+			#{xpaid, jdbcType=DECIMAL},
+			#{xamount, jdbcType=DECIMAL},
+			#{xstatustag, jdbcType=VARCHAR},
+			#{xnote, jdbcType=VARCHAR},
+			#{xtypetrn, jdbcType=VARCHAR},
+			#{xtrn, jdbcType=VARCHAR},
+			#{zactive, jdbcType=VARCHAR},
+			#{zauserid, jdbcType=VARCHAR},
+			#{zid, jdbcType=VARCHAR},
+			#{ztime, jdbcType=TIMESTAMP},
+			#{zutime, jdbcType=TIMESTAMP},
+			#{zuuserid, jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<update id="updatePdloantrn" parameterType="Pdloantrn">
+		UPDATE 
+			pdloantrn
+		SET
+			xdate=#{xdate, jdbcType=DATE},
+			xstaff=#{xstaff, jdbcType=VARCHAR},
+			xloanamt=#{xloanamt, jdbcType=DECIMAL},
+			xinstallment=#{xinstallment, jdbcType=INTEGER},
+			xinsamt=#{xinsamt, jdbcType=DECIMAL},
+			xtype=#{xtype, jdbcType=VARCHAR},
+			xdateeff=#{xdateeff, jdbcType=DATE},
+			xyear=#{xyear, jdbcType=INTEGER},
+			xper=#{xper, jdbcType=INTEGER},
+			xstatus=#{xstatus, jdbcType=VARCHAR},
+			xlastinsamt=#{xlastinsamt, jdbcType=DECIMAL},
+			xpaidinstallment=#{xpaidinstallment, jdbcType=DECIMAL},
+			xpaid=#{xpaid, jdbcType=DECIMAL},
+			xamount=#{xamount, jdbcType=DECIMAL},
+			xstatustag=#{xstatustag, jdbcType=VARCHAR},
+			xnote=#{xnote, jdbcType=VARCHAR},
+			xtypetrn=#{xtypetrn, jdbcType=VARCHAR},
+			xtrn=#{xtrn, jdbcType=VARCHAR},
+			zactive=#{zactive, jdbcType=VARCHAR},
+			zauserid=#{zauserid, jdbcType=VARCHAR},
+			ztime=#{ztime, jdbcType=TIMESTAMP},
+			zutime=#{zutime, jdbcType=TIMESTAMP},
+			zuuserid=#{zuuserid, jdbcType=VARCHAR}
+		WHERE
+			xvoucher=#{xvoucher, jdbcType=VARCHAR}
+			AND zid=#{zid, jdbcType=VARCHAR}
+	</update>
+
+	<delete id="deletePdloantrn" parameterType="Pdloantrn">
+		DELETE FROM pdloantrn WHERE  xvoucher=#{xvoucher} AND zactive='1' AND zid=#{zid}
+	</delete>
+	
+	<select id="getAllPdloantrn" resultType="Pdloantrn">
+		SELECT 
+			pdloantrn.*,
+			pdmst.xname as xename
+		FROM 
+			pdloantrn 
+			left join pdmst on pdmst.xstaff = pdloantrn.xstaff and pdmst.zid=pdloantrn.zid and pdmst.zactive='1'
+		WHERE 
+			pdloantrn.zid=#{zid} 
+			AND pdloantrn.zactive='1'
+		order by 
+			pdloantrn.ztime desc
+	</select>
+
+	<select id="findByPdloantrn" resultType="Pdloantrn">
+		SELECT 
+			pdloantrn.*,
+			pdmst.xname as xename
+		FROM 
+			pdloantrn 
+			left join pdmst on pdmst.xstaff = pdloantrn.xstaff and pdmst.zid=pdloantrn.zid and pdmst.zactive='1'
+		WHERE 
+			pdloantrn.zid=#{zid} 
+			AND pdloantrn.xvoucher=#{xvoucher}
+	</select>
+	
+	<!-- For LoanWriteOff-->
+	<insert id="savePdloanwriteoff" parameterType="Pdloanwriteoff">
+	
+		<selectKey keyProperty="xrow" resultType="Integer" order="BEFORE">
+			SELECT COALESCE(Max(xrow), 0) + 1 FROM pdloanwriteoff WHERE zactive='1' AND zid=#{zid}
+		</selectKey>
+		INSERT INTO pdloanwriteoff
+		(
+			xvoucher,
+			xrow,
+			xdate, 
+			xloanamt, 
+			xnote, 
+			xstatus, 
+			xstatustag,
+			zactive,
+			zauserid,
+			zid,
+			ztime,
+			zutime,
+			zuuserid
+		)
+		VALUES
+		(
+			#{xvoucher, jdbcType=VARCHAR},
+			#{xrow},
+			#{xdate, jdbcType=DATE},
+			#{xloanamt, jdbcType=DECIMAL},
+			#{xnote, jdbcType=VARCHAR},
+			#{xstatus, jdbcType=VARCHAR},
+			#{xstatustag, jdbcType=VARCHAR},
+			#{zactive, jdbcType=VARCHAR},
+			#{zauserid, jdbcType=VARCHAR},
+			#{zid, jdbcType=VARCHAR},
+			#{ztime, jdbcType=TIMESTAMP},
+			#{zutime, jdbcType=TIMESTAMP},
+			#{zuuserid, jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<update id="updatePdloanwriteoff" parameterType="Pdloanwriteoff">
+		UPDATE 
+			pdloanwriteoff
+		SET
+			xdate=#{xdate, jdbcType=DATE},
+			xloanamt=#{xloanamt, jdbcType=DECIMAL},
+			xnote=#{xnote, jdbcType=VARCHAR},
+			xstatus=#{xstatus, jdbcType=VARCHAR},
+			xstatustag=#{xstatustag, jdbcType=VARCHAR},
+			zactive=#{zactive, jdbcType=VARCHAR},
+			zauserid=#{zauserid, jdbcType=VARCHAR},
+			zid=#{zid, jdbcType=VARCHAR},
+			ztime=#{ztime, jdbcType=TIMESTAMP},
+			zutime=#{zutime, jdbcType=TIMESTAMP},
+			zuuserid=#{zuuserid, jdbcType=VARCHAR}
+		WHERE
+			xvoucher=#{xvoucher, jdbcType=VARCHAR}
+			AND xrow=#{xrow, jdbcType=INTEGER}
+			AND zid=#{zid, jdbcType=VARCHAR}
+	</update>
+
+	<select id="getAllPdloanwriteoff" resultType="Pdloanwriteoff">
+		SELECT 
+			* 
+		FROM 
+			pdloanwriteoff 
+		WHERE 
+			zid=#{zid} 
+			AND zactive='1'
+		order by 
+			ztime desc
+	</select>
+
+	<select id="findByPdloanwriteoff" resultType="Pdloanwriteoff">
+	SELECT * FROM pdloanwriteoff WHERE xvoucher=#{xvoucher} AND zid=#{zid} AND zactive='1'
+	</select>
+
+	<select id="findPdloanwriteoffByXvoucherAndXrow" resultType="Pdloanwriteoff">
+		SELECT * FROM pdloanwriteoff WHERE xvoucher=#{xvoucher} AND xrow=#{xrow} AND zid=#{zid} AND zactive='1'
+	</select>
+
+	<delete id="deletePdloanwriteoff" parameterType="Pdloanwriteoff">
+		DELETE FROM pdloanwriteoff WHERE xrow=#{xrow} AND xvoucher=#{xvoucher} AND zactive='1' AND zid=#{zid}
+	</delete>
+</mapper>

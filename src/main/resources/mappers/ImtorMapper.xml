@@ -1,0 +1,457 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.asl.mapper.ImtorMapper">
+
+	<insert id="saveImtorHeader" parameterType="ImtorHeader">
+		<selectKey keyProperty="xtornum" resultType="String" order="BEFORE">
+			SELECT Func_GetTrn('${zid}', '${xtypetrn}', '${xtrn}', 6) FROM DUAL
+		</selectKey>
+		INSERT INTO ImtorHeader
+		(
+			xtornum,
+			xchalanref,
+			xdate,
+			xref,
+			xdatecom,
+			xfwh,
+			xtwh,
+			xstatustor,
+			xtrn,
+			xtypetrn,
+			xlong,
+			xcus,
+			xtranfer,
+			xpreparer,
+			xstatus,
+			xreqdate,
+			xsignatory1,
+			xsignatorydate1,
+			xsignatorynote1,
+			xacknowledge,
+			xacknowledgenote,
+			xdaterec,
+			xfhwh,
+			xthwh,
+			xtotamt,
+			xstaff,
+			xdocnum,
+			
+			zid,
+			zauserid,
+			zaip,
+			zactive,
+			ztime
+		)
+		VALUES
+		(
+			#{xtornum},
+			#{xchalanref, jdbcType=VARCHAR},
+			#{xdate, jdbcType=DATE},
+			#{xref, jdbcType=VARCHAR},
+			#{xdatecom, jdbcType=DATE},
+			#{xfwh, jdbcType=VARCHAR},
+			#{xtwh, jdbcType=VARCHAR},	
+			#{xstatustor, jdbcType=VARCHAR},
+			#{xtrn, jdbcType=VARCHAR},
+			#{xtypetrn, jdbcType=VARCHAR},
+			#{xlong, jdbcType=VARCHAR},
+			#{xcus, jdbcType=VARCHAR},
+			#{xtranfer, jdbcType=VARCHAR},
+			#{xpreparer, jdbcType=VARCHAR},
+			#{xstatus, jdbcType=VARCHAR},
+			#{xreqdate, jdbcType=TIMESTAMP},
+			#{xsignatory1, jdbcType=VARCHAR},
+			#{xsignatorydate1, jdbcType=TIMESTAMP},
+			#{xsignatorynote1, jdbcType=VARCHAR},
+			#{xacknowledge, jdbcType=VARCHAR},
+			#{xacknowledgenote, jdbcType=VARCHAR},
+			#{xdaterec, jdbcType=TIMESTAMP},
+			#{xfhwh, jdbcType=VARCHAR},
+			#{xthwh, jdbcType=VARCHAR},
+			#{xtotamt, jdbcType=DECIMAL},
+			#{xstaff, jdbcType=VARCHAR},
+			#{xdocnum, jdbcType=VARCHAR},
+			
+			#{zid, jdbcType=VARCHAR},
+			#{zauserid, jdbcType=VARCHAR},
+			#{zaip, jdbcType=VARCHAR},
+			#{zactive, jdbcType=VARCHAR},
+			#{ztime, jdbcType=TIMESTAMP}
+		) 
+	</insert>
+
+	<insert id="saveImtorHeaderWithChalan" parameterType="ImtorHeader">
+		INSERT INTO ImtorHeader
+		(
+			xtornum,
+			xchalanref,
+			xdate,
+			xref,
+			xdatecom,
+			xfwh,
+			xtwh,
+			xstatustor,
+			xtrn,
+			xtypetrn,
+			xlong,
+			xtranfer,
+			xpreparer,
+			xstatus,
+			xreqdate,
+			xsignatory1,
+			xsignatorydate1,
+			xsignatorynote1,
+			xacknowledge,
+			xacknowledgenote,
+			xdaterec,
+			xfhwh,
+			xthwh,
+			xtotamt,
+			xstaff,
+			xdocnum,
+			
+			zid,
+			zuuserid,
+			zaip,
+			zuip,
+			zactive,
+			ztime,
+			zutime
+		)
+		VALUES
+		(
+			#{xtornum, jdbcType=VARCHAR},
+			#{xchalanref, jdbcType=VARCHAR},
+			#{xdate, jdbcType=DATE},
+			#{xref, jdbcType=VARCHAR},
+			#{xdatecom, jdbcType=DATE},
+			#{xfwh, jdbcType=VARCHAR},
+			#{xtwh, jdbcType=VARCHAR},	
+			#{xstatustor, jdbcType=VARCHAR},
+			#{xtrn, jdbcType=VARCHAR},
+			#{xtypetrn, jdbcType=VARCHAR},
+			#{xlong, jdbcType=VARCHAR},
+			#{xtranfer, jdbcType=VARCHAR},
+			#{xpreparer, jdbcType=VARCHAR},
+			#{xstatus, jdbcType=VARCHAR},
+			#{xreqdate, jdbcType=TIMESTAMP},
+			#{xsignatory1, jdbcType=VARCHAR},
+			#{xsignatorydate1, jdbcType=TIMESTAMP},
+			#{xsignatorynote1, jdbcType=VARCHAR},
+			#{xacknowledge, jdbcType=VARCHAR},
+			#{xacknowledgenote, jdbcType=VARCHAR},
+			#{xdaterec, jdbcType=TIMESTAMP},
+			#{xfhwh, jdbcType=VARCHAR},
+			#{xthwh, jdbcType=VARCHAR},
+			#{xtotamt, jdbcType=DECIMAL},
+			#{xstaff, jdbcType=VARCHAR},
+			#{xdocnum, jdbcType=VARCHAR},
+			
+			#{zid, jdbcType=VARCHAR},
+			#{zuuserid, jdbcType=VARCHAR},
+			#{zaip, jdbcType=VARCHAR},
+			#{zuip, jdbcType=VARCHAR},
+			#{zactive, jdbcType=VARCHAR},
+			#{ztime, jdbcType=TIMESTAMP},
+			#{zutime, jdbcType=TIMESTAMP}
+		) 
+	</insert>
+
+	<update id="updateImtorHeader" parameterType="ImtorHeader">
+		UPDATE
+			imtorHeader
+		SET
+			xchalanref=#{xchalanref, jdbcType=VARCHAR},
+			xdate=#{xdate, jdbcType=DATE},
+			xref=#{xref, jdbcType=VARCHAR},
+			xdatecom=#{xdatecom, jdbcType=DATE},
+			xfwh=#{xfwh, jdbcType=VARCHAR},
+			xtwh=#{xtwh, jdbcType=VARCHAR},	
+			xstatustor=#{xstatustor, jdbcType=VARCHAR},
+			xtrn=#{xtrn, jdbcType=VARCHAR},
+			xtypetrn=#{xtypetrn, jdbcType=VARCHAR},
+			xlong=#{xlong, jdbcType=VARCHAR},
+			xtranfer=#{xtranfer, jdbcType=VARCHAR},
+			xpreparer=#{xpreparer, jdbcType=VARCHAR},
+			xcus=#{xcus, jdbcType=VARCHAR},
+			xstatus=#{xstatus, jdbcType=VARCHAR},
+			xreqdate=#{xreqdate, jdbcType=TIMESTAMP},
+			xsignatory1=#{xsignatory1, jdbcType=VARCHAR},
+			xsignatorydate1=#{xsignatorydate1, jdbcType=TIMESTAMP},
+			xsignatorynote1=#{xsignatorynote1, jdbcType=VARCHAR},
+			xacknowledge=#{xacknowledge, jdbcType=VARCHAR},
+			xacknowledgenote=#{xacknowledgenote, jdbcType=VARCHAR},
+			xdaterec=#{xdaterec, jdbcType=TIMESTAMP},
+			xfhwh=#{xfhwh, jdbcType=VARCHAR},
+			xthwh=#{xthwh, jdbcType=VARCHAR},
+			xtotamt=#{xtotamt, jdbcType=DECIMAL},
+			xstaff=#{xstaff, jdbcType=VARCHAR},
+			xdocnum=#{xdocnum, jdbcType=VARCHAR},
+			
+			zauserid=#{zauserid, jdbcType=VARCHAR},
+			zuuserid=#{zuuserid, jdbcType=VARCHAR},
+			zaip=#{zaip, jdbcType=VARCHAR},
+			zuip=#{zuip, jdbcType=VARCHAR},
+			zactive=#{zactive, jdbcType=VARCHAR},
+			ztime=#{ztime, jdbcType=TIMESTAMP},
+			zutime=#{zutime, jdbcType=TIMESTAMP}
+		WHERE
+			xtornum=#{xtornum}
+			AND zid=#{zid}
+	</update>
+
+	<delete id="deleteImtorHeader" parameterType="ImtorHeader">
+		DELETE 
+		FROM 
+			imtorHeader 
+		WHERE 
+			xtornum=#{xtornum} 
+			AND zid=#{zid}
+	</delete>
+	
+	<insert id="saveImtorDetail" parameterType="ImtorDetail">
+		<selectKey keyProperty="xrow" resultType="Integer" order="BEFORE">
+			SELECT COALESCE(Max(xrow), 0) + 1 FROM ImtorDetail WHERE xtornum=#{xtornum} AND zid=#{zid}
+		</selectKey>
+		INSERT INTO ImtorDetail
+		(
+			xtornum,
+			xrow,
+			xchalanref,
+			xitem,
+			xunit,
+			xqtyord,
+			xrate,
+			xnote,
+			xlineamt,
+			
+			zid,
+			zauserid,
+			zuuserid,
+			zaip,
+			zuip,
+			zactive,
+			ztime,
+			zutime
+		)
+		VALUES
+		(
+			#{xtornum, jdbcType=VARCHAR},
+			#{xrow},
+			#{xchalanref, jdbcType=VARCHAR},
+			#{xitem, jdbcType=VARCHAR},
+			#{xunit, jdbcType=VARCHAR},
+			#{xqtyord, jdbcType=DECIMAL},
+			#{xrate, jdbcType=DECIMAL},
+			#{xnote, jdbcType=VARCHAR},
+			#{xlineamt, jdbcType=DECIMAL},
+			
+			#{zid, jdbcType=VARCHAR},
+			#{zauserid, jdbcType=VARCHAR},
+			#{zuuserid, jdbcType=VARCHAR},
+			#{zaip, jdbcType=VARCHAR},
+			#{zuip, jdbcType=VARCHAR},
+			#{zactive, jdbcType=VARCHAR},
+			#{ztime, jdbcType=TIMESTAMP},
+			#{zutime, jdbcType=TIMESTAMP}
+		) 
+	</insert>
+
+	<update id="updateImtorDetail" parameterType="ImtorDetail">
+		UPDATE 
+			ImtorDetail
+		SET
+			xchalanref=#{xchalanref, jdbcType=VARCHAR},
+			xitem=#{xitem, jdbcType=VARCHAR},
+			xunit=#{xunit, jdbcType=VARCHAR},
+			xqtyord=#{xqtyord, jdbcType=DECIMAL},
+			xrate=#{xrate, jdbcType=DECIMAL},
+			xnote=#{xnote, jdbcType=VARCHAR},
+			xlineamt=#{xlineamt, jdbcType=DECIMAL},
+			
+			zuuserid=#{zuuserid, jdbcType=VARCHAR},
+			zaip=#{zaip, jdbcType=VARCHAR},
+			zuip=#{zuip, jdbcType=VARCHAR},
+			zactive=#{zactive, jdbcType=VARCHAR},
+			ztime=#{ztime, jdbcType=TIMESTAMP},
+			zutime=#{zutime, jdbcType=TIMESTAMP}
+		WHERE
+			xtornum=#{xtornum, jdbcType=VARCHAR}
+			AND xrow=#{xrow, jdbcType=INTEGER}
+			AND zid=#{zid, jdbcType=VARCHAR}
+	</update>
+
+	<delete id="deleteImtorDetail" parameterType="ImtorDetail">
+		DELETE 
+		FROM 
+			ImtorDetail 
+		WHERE 
+			xrow=#{xrow} 
+			AND xtornum=#{xtornum} 
+			AND zid=#{zid}
+	</delete>
+
+	<delete id="deleteImtorDetailByXtornum">
+		DELETE 
+		FROM 
+			imtordetail 
+		WHERE 
+			xtypetrn=#{xtypetrn} 
+			AND zid=#{zid}
+	</delete>
+
+	<select id="findImtorHeaderByXtornum" resultType="ImtorHeader">
+		SELECT 
+			distinct
+			imtorheader.*,
+			x.xlong as xfwhdesc,
+			y.xlong as xtwhdesc,
+			z.xlong as fPojectName,
+			l.xlong as tPojectName,
+			m.xname as xstaffName,
+			p.xname as xpreparerName,
+			q.xname as xsignatory1Name,
+			r.xname as xacknowledgeName
+			
+		FROM 
+			imtorheader 
+			left join xcodes x ON x.xcode = imtorheader.xfwh AND x.zid = imtorheader.zid AND x.zactive='1'
+			left join xcodes y ON y.xcode = imtorheader.xtwh AND y.zid = imtorheader.zid AND y.zactive='1'
+			left join xcodes z on z.xcode = imtorheader.xfhwh and z.zid= imtorheader.zid and z.xtype='Project'
+			left join xcodes l on l.xcode = imtorheader.xthwh and l.zid= imtorheader.zid
+			left join pdmst m on m.xstaff = imtorheader.xstaff and m.zid= imtorheader.zid
+			left join pdmst p on p.xstaff = imtorheader.xpreparer and p.zid= imtorheader.zid
+			left join pdmst q on q.xstaff = imtorheader.xsignatory1 and q.zid= imtorheader.zid
+			left join pdmst r on r.xstaff = imtorheader.xacknowledge and r.zid= imtorheader.zid
+		WHERE 
+			imtorheader.xtornum=#{xtornum} 
+			AND imtorheader.zid=#{zid}
+	</select>
+	
+	<!-- <select id="findImtorHeaderByXtornum" resultType="ImtorHeader">
+		SELECT ImtorHeader.*, cacus.xorg as "xorg"
+		FROM
+			ImtorHeader 
+			JOIN cacus on cacus.xcus=ImtorHeader.xcus AND cacus.zid=#{zid}
+		WHERE  ImtorHeader.xtornum=#{xtornum} AND ImtorHeader.zid=#{zid} AND ImtorHeader.zactive='1'
+	</select> -->
+
+	<select id="findImtorHeaderByXchalanref" resultType="ImtorHeader">
+		SELECT 
+			* 
+		FROM 
+			imtorheader 
+		WHERE 
+			xchalanref=#{xchalanref} 
+			AND zid=#{zid}
+	</select>
+
+	<select id="findImtorHeaderByXchalanrefAndXfwhAndXtwh" resultType="ImtorHeader">
+		SELECT 
+			* 
+		FROM 
+			imtorheader 
+		WHERE 
+			xchalanref=#{xchalanref} 
+			AND zid=#{zid}
+			AND xfwh=#{xfwh}
+			AND xtwh=#{xtwh}
+	</select>
+
+	<select id="findImtorDetailByXtornum" resultType="ImtorDetail">
+		SELECT 
+			det.*, caitem.xdesc as "xitemdesc"
+		FROM 
+			ImtorDetail det
+			JOIN caitem on caitem.xitem=det.xitem AND caitem.zid=#{centralzid}
+			left join xcodes on xcodes.xcode = caitem.xcatitem and xcodes.zid = caitem.zid and xcodes.zactive='1' AND xcodes.xtype='Store'
+		WHERE 
+			det.xtornum=#{xtornum} 
+			AND det.zid=#{zid} 
+		ORDER BY 
+			xcodes.seqn, det.xrow 
+	</select>
+
+	<select id="findImtorDetailByXtornumAndXchalanref" resultType="ImtorDetail">
+		SELECT 
+			* 
+		FROM 
+			ImtorDetail 
+		WHERE 
+			xtornum=#{xtornum} 
+			AND xchalanref=#{xchalanref} 
+			AND zid=#{zid}
+	</select>
+
+	<select id="getAllImtorHeader" resultType="ImtorHeader">
+		SELECT 
+			*
+		FROM
+			ImtorHeader
+		WHERE 
+			zid=#{zid} 
+		ORDER BY 
+			xtornum DESC
+	</select> 
+	
+	<!-- <select id="getAllImtorHeaderbyPrefix" resultType="ImtorHeader">
+		SELECT ImtorHeader.*, cacus.xorg as "xorg"
+		FROM
+			ImtorHeader 
+			JOIN cacus on cacus.xcus=ImtorHeader.xcus AND cacus.zid=#{zid}
+		WHERE  ImtorHeader.xtypetrn=#{xtypetrn} AND ImtorHeader.zid=#{zid} AND ImtorHeader.zactive='1'
+		
+	</select> -->
+
+	<select id="getAllImtorHeaderbyPrefix" resultType="ImtorHeader">
+		SELECT 
+			distinct
+			imtorheader.*,
+			cacus.xorg,
+			x.xlong as xfwhdesc,
+			y.xlong as xtwhdesc,
+			z.xlong as fPojectName,
+			l.xlong as tPojectName
+		FROM
+			imtorheader
+			left join cacus on cacus.xcus = imtorheader.xcus and cacus.zid=imtorheader.zid and cacus.zactive='1'
+			left join xcodes x ON x.xcode = imtorheader.xfwh AND x.zid = imtorheader.zid AND x.zactive='1'
+			left join xcodes y ON y.xcode = imtorheader.xtwh AND y.zid = imtorheader.zid AND y.zactive='1'
+			left join xcodes z on z.xcode = imtorheader.xfhwh and z.zid= imtorheader.zid and z.xtype='Project'
+			left join xcodes l on l.xcode = imtorheader.xthwh and l.zid= imtorheader.zid
+		WHERE 
+			imtorheader.xtypetrn=#{xtypetrn} 
+			AND imtorheader.zid=#{zid} 
+		ORDER BY
+			imtorheader.ztime DESC 
+	</select>
+
+	<select id="findImtorDetailByXtornumAndXrow" resultType="ImtorDetail">
+		SELECT 
+			det.*, 
+			caitem.xdesc as "xitemdesc"
+		FROM 
+			ImtorDetail det
+			JOIN caitem on caitem.xitem=det.xitem AND caitem.zid=det.zid
+		WHERE 
+			det.xtornum=#{xtornum}
+			AND det.xrow=#{xrow} 
+			AND det.zid=#{zid}
+	</select>
+
+	<select id="findImtorDetailByXtornumAndXitem" resultType="ImtorDetail">
+		SELECT 
+			* 
+		FROM 
+			ImtorDetail 
+		WHERE 
+			xtornum=#{xtornum} 
+			AND xitem=#{xitem} 
+			AND zid=#{zid}
+	</select>
+
+	<select id = "procConfirmTO" statementType = "CALLABLE">
+		{call IM_confirmTO(#{zid, jdbcType = VARCHAR, mode = IN}, #{user, jdbcType = VARCHAR, mode = IN}, #{xtornum, jdbcType = VARCHAR, mode = IN}, #{p_action, jdbcType = VARCHAR, mode = IN}, #{p_seq, jdbcType = VARCHAR, mode = IN})}
+	</select>
+</mapper>

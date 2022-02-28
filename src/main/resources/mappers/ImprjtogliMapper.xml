@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.asl.mapper.ImprjtogliMapper">
+	<insert id="saveImprjtogli" parameterType="Imprjtogli">
+	
+		INSERT INTO imprjtogli
+		(
+			
+			xgitem,
+			xaccdr,
+			xacccr,
+			zid,
+			zauserid,
+			zuuserid,
+			zaip,
+			zuip,
+			zactive,
+			ztime,
+			zutime
+		)
+		VALUES
+		(
+			#{xgitem, jdbcType=VARCHAR},
+			#{xaccdr, jdbcType=VARCHAR},
+			#{xacccr, jdbcType=VARCHAR},
+			#{zid, jdbcType=VARCHAR},
+			#{zauserid, jdbcType=VARCHAR},
+			#{zuuserid, jdbcType=VARCHAR},
+			#{zaip, jdbcType=VARCHAR},
+			#{zuip, jdbcType=VARCHAR},
+			#{zactive, jdbcType=VARCHAR},
+			#{ztime, jdbcType=TIMESTAMP},
+			#{zutime, jdbcType=TIMESTAMP}
+		)
+	</insert>
+	
+	<update id="updateImprjtogli" parameterType="Imprjtogli">
+		UPDATE 
+			imprjtogli 
+		SET
+			xaccdr=#{xaccdr, jdbcType=VARCHAR},
+			xacccr=#{xacccr, jdbcType=VARCHAR},
+			zuuserid=#{zuuserid, jdbcType=VARCHAR},
+			zaip=#{zaip, jdbcType=VARCHAR},
+			zuip=#{zuip, jdbcType=VARCHAR},
+			zactive=#{zactive, jdbcType=VARCHAR},
+			ztime=#{ztime, jdbcType=TIMESTAMP},
+			zutime=#{zutime, jdbcType=TIMESTAMP}
+		WHERE
+			 xgitem=#{xgitem, jdbcType=VARCHAR}
+			AND zid=#{zid, jdbcType=VARCHAR}
+	</update>
+	
+	<delete id="deleteImprjtogli" parameterType="Imprjtogli">
+		DELETE
+		FROM
+			imprjtogli
+		WHERE
+			 xgitem=#{xgitem}
+			AND zid=#{zid}
+			AND zactive='1'
+	</delete>
+	
+	<select id="getAllImprjtogli" resultType="Imprjtogli">
+		SELECT
+			imprjtogli.*,
+			x.xdesc as xddesc,
+			y.xdesc as xcdesc
+		FROM
+			imprjtogli 
+			left join acmst x ON x.xacc = imprjtogli.xaccdr AND x.zid = imprjtogli.zid and x.zactive='1'
+			left join acmst y ON y.xacc = imprjtogli.xacccr AND y.zid = imprjtogli.zid and y.zactive='1'
+		WHERE
+			imprjtogli.zid=#{zid}
+		order by 
+			imprjtogli.ztime desc
+	</select>
+	
+	<select id="findByXgitem" resultType="Imprjtogli">
+		SELECT
+			imprjtogli.*,
+			x.xdesc as xddesc,
+			y.xdesc as xcdesc
+		FROM
+			imprjtogli 
+			left join acmst x ON x.xacc = imprjtogli.xaccdr AND x.zid = imprjtogli.zid and x.zactive='1'
+			left join acmst y ON y.xacc = imprjtogli.xacccr AND y.zid = imprjtogli.zid and y.zactive='1'
+		WHERE
+			imprjtogli.zid=#{zid}
+			AND imprjtogli.xgitem=#{xgitem}	
+	</select>
+</mapper>

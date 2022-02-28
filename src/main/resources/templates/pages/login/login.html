@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link th:href="@{/assets/img/favicon.ico}" rel="icon" type="image/x-icon" />
+<script src="https://kit.fontawesome.com/64d58efce2.js" crossorigin="anonymous"></script>
+<link rel="stylesheet" th:href="@{/login-assets/css/style.css}" />
+<title>Login</title>
+</head>
+<body>
+	<div class="container">
+		<div class="forms-container">
+			<div class="signin-signup">
+				<form action="#" class="sign-in-form" role="form" th:action="@{/login}" method="post" autocomplete="off">
+					<h2 class="title" style="color: #fff;">Sign in</h2>
+
+					<div th:if="${param.error}" style="color: red; margin-bottom: 10px; text-align: center; margin-top: -10px;">Wrong credential</div>
+					<div th:if="${param.logout}" style="color: #fff; margin-bottom: 10px; text-align: center; margin-top: -10px;">You have been logged out</div>
+
+					<div class="input-field" data-validate = "Valid username required">
+						<i class="fas fa-user"></i> 
+						<input type="text" name="username" id="username" placeholder="Username" autocomplete="off"/>
+					</div>
+					<div class="input-field" data-validate = "Password is required">
+						<i class="fas fa-lock"></i> 
+						<input type="password" name="password" id="password" placeholder="Password" autocomplete="off"/>
+					</div>
+					<input type="submit" value="Login" class="btn solid" />
+				</form>
+			</div>
+		</div>
+
+		<div class="panels-container">
+			<div class="panel left-panel">
+				<img th:src="@{/login-assets/img/asl.png}" style="width: 80%"/>
+			</div>
+		</div>
+	</div>
+
+	<script th:src="@{/login-assets/js/app.js}"></script>
+</body>
+</html>
+	

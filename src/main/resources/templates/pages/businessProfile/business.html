@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+	<head>
+		<title th:text="#{sabp.page.title}">Business Profile</title>
+		<meta th:remove="tag" th:include="commons :: common-meta"/>
+		<meta th:remove="tag" th:include="commons :: common-css"/>
+		<meta th:remove="tag" th:include="commons :: common-js"/>
+	</head>
+	<body>
+		<!-- Header section -->
+		<div class="header-section" th:include="commons :: header-section"></div>
+		<!-- Menu section -->
+		<div th:if="${menuVersion != null and menuVersion eq 'MENU_V2'}" class="menuv2" th:include="commons :: main-menu"></div>
+
+		<div th:if="${menuVersion == null or menuVersion eq 'MENU_V1'}" class="navbar-inverse menu-section">
+			<div class="container-fluid">
+				<div class="row">
+					<nav class="navbar navbar-inverse">
+						<div class="container-fluid">
+							<div class="row">
+								<div class="navbar-header">
+									<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+										<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+									</button>
+								</div>
+								<div class="collapse navbar-collapse" id="myNavbar">
+									<div class="nav navbar-nav">
+										<li><a th:href="@{/}"><i class="fas fa-home"></i> Home</a></li>
+										<li class="active"><a th:href="@{/system/businessprof}">Business Profile</a></li>
+									</div>
+									<ul class="nav navbar-nav navbar-right" th:include="ckbigmenu :: dashboard-menu"></ul>
+								</div>
+							</div>
+						</div>
+					</nav>
+				</div>
+			</div>
+		</div>
+		
+		<!-- Content section -->
+		<div>
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-md-12 content-area">
+						<div class="row">
+							<div class="col-md-12">
+								<!-- Section list head -->
+								<section id="data-maintenance" style="margin-top: 30px;">
+									<div class="row">
+										<div class="col-md-12">
+											<div class="row">
+												<div class="col-md-12">
+													<div class="section-header sectionbartoggle">
+														<h1 th:text="#{sabp.page.heading}">Business Profile</h1>
+													</div>
+													<div class="form-action-button">
+														<a th:if="${not #strings.isEmpty(business.zid)}" class="btn btn-sm btn-success confirm-btn"><i class="fas fa-save"></i> <span style="margin-left:2px;" th:text="#{button.value.xupdate}"> Update</span></a>
+													</div>
+												</div>
+											</div>
+										</div>
+										</div><br>
+									<div class="section-body section-border">
+									<form id="mainform" class="form-horizontal" method="post" th:action="@{/system/businessprof/save}" th:object="${business}" enctype="multipart/form-data">
+									<input type="hidden" th:field="*{zid}" maxlength="100"/>
+										<div class="row">
+											<div class="col-md-12">
+												<div class="row">
+													<div class="col-md-4">
+
+														<!-- <div class="form-group">
+																<label class="control-label col-md-5" for="xland">Business ID</label>
+																<div class="col-md-6">
+																	<input type="hidden" class="form-control" th:field="*{zid}" disabled="disabled"/>
+																</div>
+															</div> -->
+
+														<div class="form-group">
+															<label class="control-label col-md-5" for="zorg" th:text="#{sabp.form.label.zorg}">Company Name</label>
+															<div class="col-md-6">
+																<input type="text" class="form-control" th:field="*{zorg}" maxlength="100"/>
+															</div>
+														</div>
+
+														<div class="form-group">
+															<label class="control-label col-md-5" for="xmadd" th:text="#{sabp.form.label.xmadd}">Mailing Address</label>
+															<div class="col-md-6">
+																<textarea class="form-control" rows="3" th:field="*{xmadd}" placeholder="Your Address here.."></textarea>
+															</div>
+														</div>
+
+														<div class="form-group">
+															<label class="control-label col-md-5" for="xphone" th:text="#{sabp.form.label.xphone}">Phone</label>
+															<div class="col-md-6">
+																<input type="number" class="form-control" th:field="*{xphone}" maxlength="100"/>
+															</div>
+														</div>
+
+														<div class="form-group">
+															<label class="control-label col-md-5" for="xpadd" th:text="#{sabp.form.label.xpadd}">Permanent Address</label>
+															<div class="col-md-6">
+																<textarea class="form-control" rows="3" th:field="*{xpadd}" placeholder="Your Address here.."></textarea>
+															</div>
+														</div>
+
+														<div class="form-group">
+															<label class="control-label col-md-5" for="xfax" th:text="#{sabp.form.label.xfax}">Fax</label>
+															<div class="col-md-6">
+																<input type="text" class="form-control" th:field="*{xfax}" maxlength="100"/>
+															</div>
+														</div>
+
+														<div class="form-group">
+															<label class="control-label col-md-5" for="xcontact" th:text="#{sabp.form.label.xcontact}">Contact Name</label>
+															<div class="col-md-6">
+																<input type="text" class="form-control" th:field="*{xcontact}" maxlength="100"/>
+															</div>
+														</div>
+
+														<div class="form-group">
+															<label class="control-label col-md-5" for="xcity" th:text="#{sabp.form.label.xcity}">City</label>
+															<div class="col-md-6">
+																<input type="text" class="form-control" th:field="*{xcity}" maxlength="100"/>
+															</div>
+														</div>
+
+													</div>
+													<div class="col-md-4">
+
+														<div class="form-group">
+															<label class="control-label col-md-4" for="xemail" th:text="#{sabp.form.label.xemail}">Email</label>
+															<div class="col-md-6">
+																<input type="email" class="form-control" th:field="*{xemail}" maxlength="100"/>
+															</div>
+														</div>
+
+														<div class="form-group">
+															<label class="control-label col-md-4" for="xsignatory" th:text="#{sabp.form.label.xsignatory}">Name of Signatory</label>
+															<div class="col-md-6">
+																<input type="text" class="form-control" th:field="*{xsignatory}" maxlength="100"/>
+															</div>
+														</div>
+
+														<div class="form-group">
+															<label class="control-label col-md-4" for="xcur" th:text="#{sabp.form.label.xcur}">Currency</label>
+															<div class="col-md-6">
+																<input type="text" class="form-control" th:field="*{xcur}" maxlength="100"/>
+															</div>
+														</div>
+
+														<div class="form-group">
+															<label class="control-label col-md-4" for="xstate" th:text="#{sabp.form.label.xstate}">State/Province</label>
+															<div class="col-md-6">
+																<input type="text" class="form-control" th:field="*{xstate}" maxlength="100"/>
+															</div>
+														</div>
+
+														<div class="form-group">
+															<label class="control-label col-md-4" for="xurl" th:text="#{sabp.form.label.xurl}">URL</label>
+															<div class="col-md-6">
+																<input type="text" class="form-control" th:field="*{xurl}" maxlength="100"/>
+															</div>
+														</div>
+
+														<div class="form-group">
+															<label class="control-label col-md-4" for="xtin" th:text="#{sabp.form.label.xtin}">TIN No.</label>
+															<div class="col-md-6">
+																<input type="number" class="form-control" th:field="*{xtin}" maxlength="100"/>
+															</div>
+															
+														</div>
+
+														<div class="form-group">
+															<label class="control-label col-md-4" for="xcountry" th:text="#{sabp.form.label.xcountry}">Country</label>
+															<div class="col-md-6">
+																<input type="text" class="form-control" th:field="*{xcountry}" maxlength="100"/>
+															</div>
+														</div>
+
+														<div class="form-group">
+															<label class="control-label col-md-4" for="xvatregno" th:text="#{sabp.form.label.xvatregno}">VAT Reg. No.</label>
+															<div class="col-md-6">
+																<input type="number" class="form-control" th:field="*{xvatregno}" maxlength="100"/>
+															</div>
+														</div>
+
+														<!-- <div class="form-group">
+															<div class="col-sm-6 col-sm-offset-2">
+																<div class="radio" for="xdine">
+																	<label><input type="radio" class="form-control-input2" th:field="*{xdine}" th:value="${T(com.asl.enums.ProfileType).C}"  required="required"/>Casual Dine</label>
+																	<label><input type="radio" class="form-control-input2" th:field="*{xdine}" th:value="${T(com.asl.enums.ProfileType).F}"  required="required"/>Fine Dine</label>
+																</div>
+															</div>
+														</div> -->
+
+													</div>
+
+													<div class="col-md-4">
+														<div class="form-group">
+														<label class="control-label col-sm-3" for="xbimage" th:text="#{sabp.form.label.xbimage}">Company Image</label>
+														<div class="input-group col-sm-6">
+															<label class="input-group-btn">
+																<span class="btn btn-default brows-btn">
+																	Brows &hellip; <input type="file" name="file" id="fileuploader" style="display: none;">
+																</span>
+															</label>
+															<input type="text" class="form-control filepath-input" readonly="readonly">
+														</div>
+													</div>
+
+													<!--<div class="input-group col-sm-4">-->
+													<div class="input-group col-sm-8">
+														<img th:unless="${#strings.isEmpty(business.xbimage)}" th:src="@{/} + ${zbusiness.xresource} + ${zbusiness.xbimage}" style="height: 200px; float: right; padding: 20px;"/>
+													</div>
+
+												</div>
+
+											</div>
+										</div>
+									</div>
+								</div>
+							</form>
+						</div>
+					</section>
+				</div>
+<!-- 						<div class="col-md-6" style="margin-top:16px;">
+								<section id="list-manager" style="margin-top: 30px;">
+									<div class="section-header sectionbartoggle">
+										<h1>All Business Details</h1>
+									</div>
+									<div class="section-body">
+										<div style="overflow-x: scroll;">
+											<table class="table table-striped table-bordered datatable nowrap">
+												<thead>
+													<tr>
+														<th>Business ID</th>
+														<th>Business Name</th>
+														<th>Outlet No</th>
+														<th>Contact No</th>
+														<th>Address</th>
+													</tr>
+													
+												</thead>
+												<tbody>
+													<tr th:each="a: ${business}">
+														<td>
+															<a th:href="@{/system/businessprof/} + ${a.zid}" th:text="${a.zid}"></a>
+														</td>
+														<td th:text="${a.zorg}"></td>
+														<td th:text="${a.xoutlet}"></td>
+														<td th:text="${a.xcontact}"></td>
+														<td th:text="${a.xmadd}"></td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+									</div>
+							</section>
+					</div> -->
+				</div>
+			</div>
+		</div>
+		
+		  <!-- Footer section -->
+		<div class="footer-section" th:include="commons :: footer-section"></div>
+		
+		<script type="text/javascript">
+			$(document).ready(function(){
+				$(function () {
+					// We can attach the `fileselect` event to all file inputs on the page
+					$(document).on('change', ':file', function () {
+						var input = $(this),
+						numFiles = input.get(0).files ? input.get(0).files.length : 1,
+						label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+						input.trigger('fileselect', [numFiles, label]);
+					});
+					// We can watch for our custom `fileselect` event like this
+					$(document).ready(function () {
+						$(':file').on('fileselect', function (event, numFiles, label) {
+							var input = $(this).parents('.input-group').find(':text'),
+							log = numFiles > 1 ? numFiles + ' files selected' : label;
+							if (input.length) {
+								input.val(log);
+							} else {
+								if (log)
+								alert(log);
+							}
+						});
+					});
+				});
+			});
+			
+		</script>
+	</body>
+</html>

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<title th:text="#{aso.page.title}">Sales Order</title>
+<meta th:remove="tag" th:include="commons :: common-meta" />
+<meta th:remove="tag" th:include="commons :: common-css" />
+<meta th:remove="tag" th:include="commons :: common-js" />
+</head>
+<body>
+	<!-- Header section -->
+	<div class="header-section" th:include="commons :: header-section"></div>
+	
+	<!-- Menu section -->
+	<div th:if="${menuVersion != null and menuVersion eq 'MENU_V2'}" class="menuv2" th:include="commons :: main-menu"></div>
+
+	<div th:if="${menuVersion == null or menuVersion eq 'MENU_V1'}" class="navbar-inverse menu-section">
+		<div class="container-fluid">
+			<div class="row">
+				<nav class="navbar navbar-inverse">
+					<div class="container-fluid">
+						<div class="row">
+							<div class="navbar-header">
+								<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+									<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+								</button>
+							</div>
+							<div class="collapse navbar-collapse" id="myNavbar">
+								<div class="nav navbar-nav">
+									<li><a th:href="@{/}"><i class="fas fa-home"></i> Home</a></li>
+									<li class="active"><a th:href="@{/salesninvoice/opord}">Sales Order</a></li>
+								</div>
+								<ul class="nav navbar-nav navbar-right" th:include="ckbigmenu :: dashboard-menu"></ul>
+							</div>
+						</div>
+					</div>
+				</nav>
+			</div>
+		</div>
+	</div>
+
+	<!-- Content section -->
+	<div>
+		<div class="container-fluid">
+			<div class="row">
+
+				<div class="col-md-12">
+					<section th:if="${not #strings.isEmpty(opordheader.xordernum)}" id="data-maintenance" style="margin-top: 30px;">
+						<a id="listlines-url" th:href="@{/salesninvoice/opord/oporddetail/} + ${opordheader.xordernum}"></a>
+						<div class="section-header sectionbartoggle">
+							<h1 th:text="'Order Details of ' + ${opordheader.xordernum} + ' | Branch : ' + ${opordheader.xorg}">Order Details</h1>
+						</div>
+						<div class="section-body">
+							<table class="table table-striped table-bordered normal-table" id="oporddetailtable" th:fragment="oporddetailtable">
+								<thead>
+									<tr>
+										<th th:text="#{aso.table2.heading.xrow}">Row</th>
+										<th th:text="#{aso.table2.heading.xitem}">Item Code</th>
+										<th th:text="#{aso.table2.heading.xunitpur}">Unit</th>
+										<th th:text="#{aso.table2.heading.xqtygrn}" class="text-right">Qty</th>
+										<th th:text="#{aso.table2.heading.xrate}" class="text-right">Rate</th>
+										<th th:text="#{aso.table2.heading.xlineamt}" class="text-right">Amount</th>
+										<th th:text="#{aso.table2.heading.xnote}">Note</th>
+										<th th:if="${opordheader.xstatusord eq 'Open'}" data-nosort="Y" style="text-align: right;">
+											<button type="button" class="btn btn-success btn-add" th:attr="data-url=@{/salesninvoice/opord/} + ${opordheader.xordernum} + '/oporddetail/new/show', data-target-modal='oporddetailmodal'"><i class="fas fa-plus"></i></button>
+										</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr th:each="d, n : ${opordDetailsList}">
+										<td th:text="${d.xrow}"></td>
+										<td th:text="${d.xitem} +' - '+ ${d.itemname}"></td>
+										<td th:text="${d.xunit}"></td>
+										<td th:text="${d.xqtyord}" class="text-right"></td>
+										<td th:text="${d.xrate}" class="text-right"></td>
+										<td th:text="${d.xlineamt}" class="text-right"></td>
+										<td th:text="${d.xlong}"></td>
+										<td th:if="${opordheader.xstatusord eq 'Open'}" data-nosort="Y" style="text-align: right; font-size: 11px;">
+											<button type="button" class="btn btn-default btn-edit editmode" th:attr="data-url=@{/salesninvoice/opord/} + ${opordheader.xordernum} + '/oporddetail/' + ${d.xrow} + '/show', data-target-modal='oporddetailmodal'"><i class="fas fa-edit"></i></button>
+											<button type="button" class="btn btn-danger btn-delete editmode" th:attr="data-url=@{/salesninvoice/opord/} + ${opordheader.xordernum} + '/oporddetail/' + ${d.xrow} + '/delete'"><i class="fas fa-trash"></i></button>
+										</td>
+									</tr>
+								</tbody>
+								<tfoot>
+									<th colspan="5" class="text-right">Total</th>
+									<th class="text-right" th:text="${totalLineAmount}">0</th>
+								</tfoot>
+							</table>
+						</div>
+					</section>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Modal -->
+	<div id="oporddetailmodal-section"></div>
+
+	<!-- Footer section -->
+	<div class="footer-section" th:include="commons :: footer-section"></div>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			bindTableButtonsEvent($('#oporddetailtable'));
+		})
+	</script>
+</body>
+</html>

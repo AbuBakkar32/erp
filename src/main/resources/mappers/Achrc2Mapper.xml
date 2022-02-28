@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.asl.mapper.Achrc2Mapper">
+	<insert id="saveAchrc2" parameterType="Achrc2">
+	
+		INSERT INTO Achrc2
+		(
+			xhrc2,
+			xhrc1,
+			xdecs,
+			xrow,
+			xacctype,
+			zid,
+			ztime,
+			zutime,
+			zauserid,
+			zuuserid
+
+		)
+		VALUES
+		(
+			#{xhrc2, jdbcType=VARCHAR},
+			#{xhrc1, jdbcType=VARCHAR},
+			#{xdecs, jdbcType=VARCHAR},
+			#{xrow, jdbcType=INTEGER},
+			#{xacctype, jdbcType=VARCHAR},
+			#{zid, jdbcType=VARCHAR},
+			#{ztime, jdbcType=TIMESTAMP},
+			#{zutime, jdbcType=TIMESTAMP},
+			#{zauserid, jdbcType=VARCHAR},
+			#{zuuserid, jdbcType=VARCHAR}
+			
+		)
+	</insert>
+
+	<update id="updateAchrc2" parameterType="Achrc2">
+		UPDATE 
+			Achrc2 
+		SET
+			xhrc2=#{xhrc2, jdbcType=VARCHAR},
+			xhrc1=#{xhrc1, jdbcType=VARCHAR},
+			xdecs=#{xdecs, jdbcType=VARCHAR},
+			xrow=#{xrow, jdbcType=INTEGER},
+			xacctype=#{xacctype, jdbcType=VARCHAR},
+			zid=#{zid, jdbcType=VARCHAR},
+			ztime=#{ztime, jdbcType=TIMESTAMP},
+			zutime=#{zutime, jdbcType=TIMESTAMP},
+			zauserid=#{zauserid, jdbcType=VARCHAR},
+			zuuserid=#{zuuserid, jdbcType=VARCHAR}
+		WHERE
+			zid=#{zid, jdbcType=VARCHAR}
+	</update>
+
+</mapper>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+	<head>
+		<title>Home</title>
+		<meta th:remove="tag" th:include="commons :: common-meta"/>
+		<meta th:remove="tag" th:include="commons :: common-css"/>
+		<meta th:remove="tag" th:include="commons :: common-js"/>
+		<style>
+			.section-body{
+				text-align:center;
+			}
+			.central-box{
+				display:inline-block;
+				width:24%;
+				margin: 0 auto;
+				box-sizing: border-box;
+				margin-top: 10px;
+				padding: 10px;
+			}
+			.business-box{
+				display:inline-block;
+				width: 20%;
+				margin: 0 auto;
+				box-sizing: border-box;
+				margin-top: 10px;
+				padding: 10px;
+			}
+			.business-box a{
+				text-decoration: none;
+				width: 100%;
+				padding: 25px 0px;
+				text-align: center;
+				display: block;
+				border: none;
+				background: #17a261;
+				color: #fff;
+				font-size: 18px;
+				font-weight: bold;
+				border-radius: 5px;
+				transition: 0.5s;
+			}
+			.business-box a.active{
+				background: #064c2b;
+			}
+			.central-submit-button{
+				background: #7b0724;
+			}
+			.business-submit-button i, .central-submit-button i{
+				font-size: 45px;
+			}
+			.business-submit-button:hover{
+				box-shadow: 0px 0px 15px #d6cccc;
+			}
+
+			@media only screen and (max-width: 600px) {
+				.business-box{
+					width:49%;
+				}
+				.central-box{
+					width:49%;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<!-- Khanas Dashboard -->
+		<!-- Header section -->
+		<div class="header-section" th:include="commons :: header-section"></div>
+
+		<div class="menuv2" th:include="commons :: main-menu"></div>
+
+		<!-- Content section -->
+		<div>
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-md-12 content-area">
+						<!-- Section data maintenance -->
+
+						<section id="data-maintenance" style="margin-top: 30px;">
+							<div class="section-body">
+								<div 	class="business-box"
+										th:if="${m.roleHasAccess and (m != null and m.display and m.screenprompt != null) and ((isCentral and m.centralAccess) OR (isBranch and m.branchAccess))}" 
+										th:each="m : ${modules}">
+									<a 	th:href="@{/module/} + ${m.profilelinecode}" 
+										class="business-submit-button ck-module-button"
+										th:attr="data-menucode=${m.profilelinecode}, data-parentcode=${m.parent}" 
+										th:text="${m.screenprompt}"
+										th:classappend="${m.activeMenu ? 'active' : ''}">Accounting</a>
+								</div>
+							</div>
+						</section>
+
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Footer section -->
+		<div class="footer-section" th:include="commons :: footer-section"></div>
+	</body>
+</html>

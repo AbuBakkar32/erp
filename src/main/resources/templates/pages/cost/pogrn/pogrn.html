@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<title th:text="#{lcdre.page.title}">Document Retirement Entry</title>
+		<meta th:remove="tag" th:include="commons :: common-meta" />
+		<meta th:remove="tag" th:include="commons :: common-css" />
+		<meta th:remove="tag" th:include="commons :: common-js" />
+	</head>
+	<body>
+		<!-- Header section -->
+		<div class="header-section" th:include="commons :: header-section"></div>
+
+		<!-- Menu section -->
+		<div th:if="${menuVersion != null and menuVersion eq 'MENU_V2'}" class="menuv2" th:include="commons :: main-menu"></div>
+
+		<div th:if="${menuVersion == null or menuVersion eq 'MENU_V1'}" class="navbar-inverse menu-section">
+			<div class="container-fluid">
+				<div class="row">
+					<nav class="navbar navbar-inverse">
+						<div class="container-fluid">
+							<div class="row">
+								<div class="navbar-header">
+									<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+										<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+									</button>
+								</div>
+								<div class="collapse navbar-collapse" id="myNavbar">
+									<div class="nav navbar-nav">
+										<li><a th:href="@{/}"><i class="fas fa-home"></i> Home</a></li>
+										<li class="active"><a th:href="@{/cost/pogrnheader}">Document Retirement Entry</a></li>
+									</div>
+									<ul class="nav navbar-nav navbar-right" th:include="ckbigmenu :: dashboard-menu"></ul>
+								</div>
+							</div>
+						</div>
+					</nav>
+				</div>
+			</div>
+		</div>
+
+		<!-- Content section -->
+		<div>
+			<div class="container-fluid">
+				<div class="row">
+					<h1 class="text-center" th:text="#{lcdre.page.heading}">Document Retirement Entry</h1>
+				</div>
+			
+				<div class="row">
+					<div class="col-md-6 content-area">
+
+						<div class="row">
+							<div class="col-md-12">
+								<!-- Section list head -->
+								<section id="data-maintenance" style="margin-top: 30px;">
+									<div id="pogrnheaderform" th:fragment="pogrnheaderform">
+										<div class="section-header sectionbartoggle"></div>
+										<div class="form-action-button">
+											<a th:href="@{/cost/pogrnheader}" class="btn btn-sm btn-default"><i class="fas fa-redo-alt"></i> <span style="margin-left:2px;" th:text="#{button.value.xclear}"> Clear</span></a>
+											<a th:if="${#strings.isEmpty(pogrnheader.xgrnnum)}" th:href="@{/cost/pogrnheader}" class="btn btn-sm btn-success confirm-btn"><i class="fas fa-save"></i> <span style="margin-left:2px;" th:text="#{button.value.xsave}"> Save</span></a>
+											<a th:if="${not #strings.isEmpty(pogrnheader.xgrnnum) and pogrnheader.xstatusgrn == 'Open'}" href="#" class="btn btn-sm btn-success update-btn"><i class="fas fa-edit"></i> <span style="margin-left:2px;" th:text="#{button.value.xupdate}"> Update</span></a>
+											<a th:if="${not #strings.isEmpty(pogrnheader.xgrnnum) and pogrnheader.xstatusgrn == 'Open'}" th:href="@{/cost/pogrnheader/archive/} + ${pogrnheader.xgrnnum}" class="btn btn-sm btn-danger archive-btn-link"><i class="fas fa-trash-alt"></i> <span style="margin-left:2px;" th:text="#{button.value.xdelete}"> Delete</span></a>
+											<a th:if="${not #strings.isEmpty(pogrnheader.xgrnnum) and pogrnheader.xstatusgrn == 'Open'}" th:href="@{/cost/pogrnheader/confirm/} + ${pogrnheader.xgrnnum}" class="btn btn-sm btn-primary confirm-btn-link"><i class="fas fa-clipboard-check"></i> <span style="margin-left:2px;" th:text="#{button.value.xconfirm}"> Confirm</span></a>
+										</div>
+										<div class="section-body section-border">
+											<div id="pogrnheaderform" th:fragment="pogrnheaderform">
+												<form id="mainform" class="form-horizontal" th:action="@{/cost/pogrnheader/save}" th:object="${pogrnheader}" method="post" th:with="df=${'E, dd-MMM-yyyy'}">
+													<input type="hidden" th:field="*{xtypetrn}"/>
+													<input type="hidden" th:field="*{xpornum}"/>
+													<input type="hidden" th:field="*{xstatusap}"/>
+													<input type="hidden" th:field="*{xstatusjv}"/>
+
+													<div class="row">
+														<div class="col-md-6">
+
+															<div class="form-group" th:if="${#strings.isEmpty(pogrnheader.xgrnnum)}">
+																<label class="control-label col-md-4" for="xtrn" th:text="#{lcdre.form.label.xtrn}">GRN/Invoice No.</label>
+																<div class="col-md-4">
+																	<select class="form-control" th:field="*{xtrn}">
+																		<option th:each="prefix : ${grnprefix}" th:value="${prefix.xtrn}" th:text="${prefix.xtrn}"></option>
+																	</select>
+																</div>
+															</div>
+
+															<div class="form-group" th:if="${not #strings.isEmpty(pogrnheader.xgrnnum)}">
+																<label class="control-label col-md-4" for="xgrnnum" th:text="#{lcdre.form.label.xgrnnum}">GRN/Invoice No.</label>
+																<div class="col-md-8">
+																	<input type="hidden" class="form-control" th:field="*{xgrnnum}">
+																	<input type="text" class="form-control" th:value="*{xgrnnum}" disabled="disabled">
+																</div>
+															</div>
+
+															<div class="form-group datepicker">
+																<label class="control-label col-md-4" for="xdate" th:text="#{lcdre.form.label.xdate}">Date</label>
+																<div class="input-group date col-md-6 datepicker">
+																	<input 	type="datepicker" 
+																			class="form-control" 
+																			id="xdate"
+																			name="xdate"
+																			th:value="${pogrnheader.xdate == null ? #dates.format(#dates.createNow(), df) : #dates.format(pogrnheader.xdate, df)}"/>
+																	<div class="input-group-addon">
+																		<span class="glyphicon glyphicon-calendar"></span>
+																	</div>
+																</div>
+															</div>
+
+															<!--<div class="form-group">
+																<label class="control-label col-md-4" for="xlcno">LC No.</label>
+																<div class="col-sm-8">
+																	<input 	type="text" 
+																			class="form-control searchsuggest" 
+																			placeholder="Search..." 
+																			th:attr="search-url='search/supplier'"/>
+																	<input type="hidden" id="search-val" th:field="*{xlcno}" value=""/>
+																	<input type="hidden" id="search-des" th:value="*{xlcno}"/>
+																</div>
+															</div>-->
+
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xref" th:text="#{lcdre.form.label.xref}">Document No.</label>
+																<div class="col-md-8">
+																	<input type="text" class="form-control" th:field="*{xref}">
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xcus" th:text="#{lcdre.form.label.xcus}">Supplier</label>
+																<div class="col-md-8">
+																	<input type="text" class="form-control" th:field="*{xcus}" disabled="disabled">
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xwh" th:text="#{lcdre.form.label.xwh}">Store/Plant</label>
+																<div class="col-md-8">
+																	<select class="form-control" th:field="*{xwh}">
+																		<option th:each="b : ${branchs}" th:value="${b.xcode}" th:text="${b.xcode}"></option>
+																	</select>
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xcur" th:text="#{lcdre.form.label.xcur}">LC Currency</label>
+																<div class="col-md-8">
+																	<input type="text" class="form-control" th:field="*{xcur}" disabled="disabled">
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xnote" th:text="#{lcdre.form.label.xnote}">Note</label>
+																<div class="col-md-8">
+																	<textarea class="form-control" th:field="*{xnote}" rows="3"></textarea>
+																</div>
+															</div>
+
+														</div>
+
+														<div class="col-md-6">
+
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xexch" th:text="#{lcdre.form.label.xexch}">Exchange Rate in (Base)</label>
+																<div class="col-md-8">
+																	<input type="text" class="form-control" th:field="*{xexch}" disabled="disabled">
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xfreightcost" th:text="#{lcdre.form.label.xfreightcost}">Freight Cost</label>
+																<div class="col-md-8">
+																	<input type="text" class="form-control" th:field="*{xfreightcost}">
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xstatusgrn" th:text="#{lcdre.form.label.xstatusgrn}">GRN Status</label>
+																<div class="col-md-8">
+																	<input type="hidden" class="form-control" th:field="*{xstatusgrn}"/>
+																	<input type="text" class="form-control" th:value="*{xstatusgrn}" disabled="disabled"/>
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xpornum" th:text="#{lcdre.form.label.xpornum}">PO Number</label>
+																<div class="col-md-8">
+																	<input type="text" class="form-control" th:field="*{xpornum}" disabled="disabled">
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xstatus" th:text="#{lcdre.form.label.xstatus}">Status</label>
+																<div class="col-md-8">
+																	<input type="text" class="form-control" th:field="*{xstatus}" disabled="disabled">
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xtype" th:text="#{lcdre.form.label.xtype}">Purchase Type</label>
+																<div class="col-md-6">
+																	<input type="hidden" class="form-control" th:field="*{xtype}">
+																	<input type="text" class="form-control" th:value="*{xtype}" disabled="disabled">
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xstatusimgl" th:text="#{lcdre.form.label.xstatusimgl}">Closing Status</label>
+																<div class="col-md-8">
+																	<input type="text" class="form-control" th:field="*{xstatusimgl}" disabled="disabled">
+																</div>
+															</div>
+
+														</div>
+													</div>
+												</form>
+											</div>
+										</div>
+										<script type="text/javascript" th:src="@{/assets/js/ck-ui/ck-search-suggest.js}"></script>
+										<script>
+											$(document).ready(function(){
+												ck.ui.config.editmode();
+												ck.ui.config.dateAndTimepicker();
+											})
+										</script>
+									</div>
+								</section>
+							</div>
+
+						</div>
+					</div>
+
+					<div class="col-md-6 content-area">
+						<div class="row">
+							<div class="col-md-12">
+								<section id="list-manager" style="margin-top: 30px;">
+									<div class="section-header sectionbartoggle">
+										<h1 th:text="#{lcdre.table.heading.title}">Document Retirement List</h1>
+									</div>
+									<div class="section-body">
+										<div style="overflow-x: auto;">
+											<table class="table table-striped table-bordered datatable nowrap" id="pogrnheadertable" th:fragment="pogrnheadertable">
+												<thead>
+													<tr>
+														<th th:text="#{lcdre.table.heading.xgrnnum}">GRN/Invoice Number</th>
+														<th th:text="#{lcdre.table.heading.xdate}">Date</th>
+														<th th:text="#{lcdre.table.heading.xwh}">Store/Plant</th>
+														<th th:text="#{lcdre.table.heading.xfreightcost}">Freight Cost</th>
+														<th th:text="#{lcdre.table.heading.xstatus}">Status</th>
+													</tr>
+												</thead>
+												<tbody th:with="df=${'E, dd-MMM-yyyy'}">
+													<tr th:each="g,n : ${allPogrnHeader}">
+														<td>
+															<a th:href="@{/cost/pogrnheader/} + ${g.xgrnnum}" th:text="${g.xgrnnum}"></a>
+														</td>
+														<td  th:text="${#dates.format(g.xdate, df)}"></td>
+														<td th:text="${g.xwh}"></td>
+														<td th:text="${g.xfreightcost}"></td>
+														<td th:text="${g.xstatusgrn}"></td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</section>
+							</div>
+						</div>
+					</div>
+
+
+					<div class="col-md-12">
+						<section th:if="${not #strings.isEmpty(pogrnheader.xgrnnum)}" id="data-maintenance" style="margin-top: 30px;">
+							<a id="listlines-url" th:href="@{/cost/pogrnheader/pogrndetail/} + ${pogrnheader.xgrnnum}"></a>
+							<div class="section-header sectionbartoggle">
+								<h1>Document Retirement Detail of <span th:text="${pogrnheader.xgrnnum}"></span></h1>
+							</div>
+							<div class="section-body">
+								<table class="table table-striped table-bordered normal-table nowrap" id="pogrndetailtable" th:fragment="pogrndetailtable">
+									<thead>
+										<tr>
+											<th th:text="#{lcdre.modal.table.heading.xrow}">Row</th>
+											<th th:text="#{lcdre.modal.table.heading.xitem}">Item Code</th>
+											<th th:text="#{lcdre.modal.table.heading.xqtygrn}" class="text-right">Qty Received</th>
+											<th th:text="#{lcdre.modal.table.heading.xrate}" class="text-right">Rate</th>
+											<th th:text="#{lcdre.modal.table.heading.xunitpur}">Purchase Unit</th>
+											<th th:text="#{lcdre.modal.table.heading.xlineamt}" class="text-right">Line Amount</th>
+											<th th:text="#{lcdre.modal.table.heading.xnote}">Note</th>
+											<th data-nosort="Y" style="text-align: right;">
+												<button type="button" class="btn btn-success btn-edit editmode" th:attr="data-url=@{/cost/pogrnheader/} + ${pogrnheader.xgrnnum} + '/pogrndetail/new/show', data-target-modal='pogrndetailmodal'"><i class="fas fa-plus"></i></button>
+											</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr th:each="d : ${pogrnDetailsList}">
+											<td th:text="${dStat.index+1}"></td>
+											<td>
+												<a th:href="@{/mastersetup/caitem/} + ${d.xitem}" target="_blank" th:text="${d.xitem} + ' - ' + ${d.xitemdesc}"></a>
+											</td>
+											<td class="text-right" th:text="${d.xqtygrn}"></td>
+											<td class="text-right" th:text="${d.xrate}"></td>
+											<td th:text="${d.xunitpur}"></td>
+											<td class="text-right" th:text="${d.xlineamt}"></td>
+											<td th:text="${d.xnote}"></td>
+											<td data-nosort="Y" style="text-align: right; font-size: 11px;">
+												<button type="button" class="btn btn-default btn-edit editmode" th:attr="data-url=@{/cost/pogrnheader/} + ${pogrnheader.xgrnnum} + '/pogrndetail/' + ${d.xrow} + '/show', data-target-modal='pogrndetailmodal'"><i class="fas fa-edit"></i></button>
+												<button type="button" class="btn btn-danger btn-delete editmode" th:attr="data-url=@{/cost/pogrnheader/} + ${pogrnheader.xgrnnum} + '/pogrndetail/' + ${d.xrow} + '/delete'"><i class="fas fa-trash"></i></button>
+											</td>
+										</tr>
+									</tbody>
+									<tfoot>
+										<th colspan="5" class="text-right">Total</th>
+										<th class="text-right" th:text="${totalLineAmount}">0</th>
+										
+									</tfoot>
+								</table>
+							</div>
+						</section>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Modal -->
+	<div id="pogrndetailmodal-section"></div>
+
+	<!-- Footer section -->
+		<div class="footer-section" th:include="commons :: footer-section"></div>
+
+	</body>
+</html>

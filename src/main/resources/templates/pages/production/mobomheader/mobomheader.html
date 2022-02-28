@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<title>BOM Entry</title>
+		<meta th:remove="tag" th:include="commons :: common-meta" />
+		<meta th:remove="tag" th:include="commons :: common-css" />
+		<meta th:remove="tag" th:include="commons :: common-js" />
+		<style type="text/css">
+			.select2{
+				width: 200px;
+			}
+
+			.right-panel{
+				width: 0%;
+				height: 73%;
+				background: #fff;
+				z-index : 9999;
+				display: block;
+				position: fixed;
+				top: 23%;
+				right: 0;
+				border: 1px solid #ddd;
+				box-shadow: 0px 0px 15px #ddd;
+				border-top-left-radius: 8px;
+				border-bottom-left-radius: 8px; 
+			}
+			.right-panel-content-area{
+				width: 100%;
+				height: 100%;
+				padding: 5px;
+				box-sizing: border-box;
+			}
+			.right-panel-content{
+				width: 100%;
+				height: 100%;
+				padding: 10px;
+				box-sizing: border-box;
+				border: 1px solid #ddd;
+				border-radius: 8px;
+				overflow-y: auto;
+				overflow-x: hidden;
+			}
+			.right-panel-content::-webkit-scrollbar-track {
+				border: 1px solid #961b39;
+				background-color: #F5F5F5;
+			}
+			
+			.right-panel-content::-webkit-scrollbar {
+				width: 10px;
+				background-color: #F5F5F5;
+			}
+			
+			.right-panel-content::-webkit-scrollbar-thumb {
+				background-color: #961b39;	
+			}
+			.right-panel-toggler{
+				background: #760823;
+				top: 25%;
+				right: 0%;
+				position: fixed;
+				z-index: 9999;
+				padding: 10px 5px;
+				margin: 0;
+				overflow: hidden;
+				border-top-left-radius: 5px;
+				border-bottom-left-radius: 5px;
+				color: #fff;
+				font-size: 25px;
+				cursor: pointer;
+				opacity: .5;
+			}
+			
+			.search-suggest-table-container{
+				max-height: 180px;
+				background: red;
+				z-index: 99999;
+				position: absolute;
+				background: #fff;
+				overflow-y: auto;
+				overflow-x: auto;
+				border-radius: 3px;
+				display: none;
+				padding: 2px !important;
+				border: 1px solid #ddd;
+			}
+			.search-suggest-table-container::-webkit-scrollbar-track {
+				border: 1px solid #ddd;
+				background-color: #ddd;
+			}
+			
+			.search-suggest-table-container::-webkit-scrollbar {
+				width: 10px;
+				height: 10px;
+				background-color: #ddd;
+			}
+			
+			.search-suggest-table-container::-webkit-scrollbar-thumb {
+				background-color: #961b39;	
+			}
+			.search-suggest-table{
+				padding: 0px;
+				margin: 0px;
+			}
+			tr.search-item{
+				cursor: pointer;
+			}
+			tr.search-item:hover{
+				background: #29af70 !important;
+				color: #fff;
+			}
+			tr.selected-search-item{
+				background: #29af70 !important;
+				color: #fff;
+			}
+		</style>
+	</head>
+	<body>
+		<!-- Header section -->
+		<div class="header-section" th:include="commons :: header-section"></div>
+
+		<!-- Menu section -->
+		<div th:if="${menuVersion != null and menuVersion eq 'MENU_V2'}" class="menuv2" th:include="commons :: main-menu"></div>
+
+		<div th:if="${menuVersion == null or menuVersion eq 'MENU_V1'}" class="navbar-inverse menu-section">
+			<div class="container-fluid">
+				<div class="row">
+					<nav class="navbar navbar-inverse">
+						<div class="container-fluid">
+							<div class="row">
+								<div class="navbar-header">
+									<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+										<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+									</button>
+								</div>
+								<div class="collapse navbar-collapse" id="myNavbar">
+									<div class="nav navbar-nav">
+										<li><a th:href="@{/}"><i class="fas fa-home"></i> Home</a></li>
+										<li class="active"><a th:href="@{/production/mobomheader}">BOM Entry</a></li>
+									</div>
+									<ul class="nav navbar-nav navbar-right" th:include="ckbigmenu :: dashboard-menu"></ul>
+								</div>
+							</div>
+						</div>
+					</nav>
+				</div>
+			</div>
+		</div>
+
+		<!-- Content section -->
+		<div>
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-md-12 content-area">
+						<div class="row">
+							<h2 class="text-center">BOM Entry</h2>
+						</div>
+
+						<div class="row">
+							<div class="col-md-12">
+								<!-- Section list head -->
+								<section id="data-maintenance" style="margin-top: 30px;">
+									<div id="bomform" th:fragment="bomform">
+										<div class="section-header sectionbartoggle"></div>
+										<div class="form-action-button">
+											<a th:href="@{/production/mobomheader}" class="btn btn-sm btn-default"><i class="fas fa-redo-alt"></i> <span style="margin-left:2px;" th:text="#{button.value.xclear}"> Clear</span></a>
+											<a th:if="${#strings.isEmpty(mobomheader.xbomkey)}" href="#" class="btn btn-sm btn-success bom-confirm-btn"><i class="fas fa-save"></i> <span style="margin-left:2px;" th:text="#{button.value.xsave}"> Save</span></a>
+											<a th:if="${not #strings.isEmpty(mobomheader.xbomkey) and mobomheader.zactive == true}" href="#" class="btn btn-sm btn-success bom-confirm-btn"><i class="fas fa-edit"></i> <span style="margin-left:2px;" th:text="#{button.value.xupdate}"> Update</span></a>
+											<a th:if="${not #strings.isEmpty(mobomheader.xbomkey) and mobomheader.zactive == true}" th:href="@{/production/mobomheader/delete/} + ${mobomheader.xbomkey}" class="btn btn-sm btn-danger archive-btn-link"><i class="fas fa-trash-alt"></i> <span style="margin-left:2px;" th:text="#{button.value.xdelete}"> Delete</span></a>
+											<a th:href="@{/production/mobomheader/print/} + ${mobomheader.xbomkey}" class="btn btn-sm btn-primary print-btn-link" target="_blank"><i class="fas fa-print"></i> Print Bom</a>
+										</div>
+
+										<div class="section-body section-border">
+											<form id="mainform" class="form-horizontal bom-header-form" th:action="@{/production/mobomheader/save}" th:object="${mobomheader}" method="POST" th:with="df=${'E, dd-MMM-yyyy'}">
+												<!--<input type="hidden" th:field="*{xtypetrn}"/>-->
+												<div class="row">
+													<div class="col-md-4">
+														<div class="form-group" th:if="${#strings.isEmpty(mobomheader.xbomkey)}">
+															<label class="control-label col-md-4" for="xtrn">BOM Key</label>
+															<div class="col-md-4">
+																<select class="form-control" th:field="*{xtrn}">
+																	<option th:each="p : ${prefix}" th:value="${p.xtrn}" th:text="${p.xtrn}"></option>
+																</select>
+															</div>
+														</div>
+
+														<div class="form-group" th:if="${not #strings.isEmpty(mobomheader.xbomkey)}">
+															<label class="control-label col-md-4" for="xbomkey">BOM Key</label>
+															<div class="col-md-8">
+																<input type="hidden" class="form-control" th:field="*{xbomkey}">
+																<input type="text" class="form-control" th:value="*{xbomkey}" disabled="disabled">
+															</div>
+														</div>
+
+														<div class="form-group">
+															<label class="control-label col-md-4" for="xdesc">BOM Name</label>
+															<div class="col-md-8">
+																<input type="text" class="form-control" th:field="*{xdesc}">
+															</div>
+														</div>
+
+
+														<div class="form-group datepicker">
+															<label class="control-label col-md-4" for="xdate">Date</label>
+															<div class="input-group date col-md-7 datepicker">
+																<input 	type="datepicker" 
+																		class="form-control" 
+																		id="xdate"
+																		name="xdate"
+																		th:value="${mobomheader.xdate == null ? #dates.format(#dates.createNow(), df) : #dates.format(mobomheader.xdate, df)}"/>
+																<div class="input-group-addon">
+																	<span class="glyphicon glyphicon-calendar"></span>
+																</div>
+															</div>
+														</div>
+
+														<div class="form-group">
+															<label class="control-label col-sm-4" for="xitem">FG Item</label>
+															<div class="col-md-8">
+																<select class="form-control select2 bom-xitem" th:field="*{xitem}" required="required">
+																	<option value="">-- Select--</option>
+																	<option th:each="p : ${caitemList}" th:value="${p.xitem}" th:text="${p.xitem + ' - ' + p.xdesc}"></option>
+																</select>
+																<!--<select class="form-control select2 bom-xitem" th:field="*{xitem}" required="required"></select>-->
+															</div>
+														</div>
+													</div>
+
+													<div class="col-md-4">
+														<div class="form-group">
+															<label class="control-label col-md-4" for="xqty">Base Quantity</label>
+															<div class="col-md-8">
+																<input type="text" class="form-control" th:field="*{xqty}">
+															</div>
+														</div>
+
+														<div class="form-group">
+															<label class="control-label col-sm-4" for="xunit"> Unit</label>
+															<div class="col-sm-8">
+																<input type="hidden" th:field="*{xunit}" class="bom-item-unit"/>
+																<input type="text" th:value="${mobomheader.xunit}" class="form-control bom-item-unit" disabled="disabled"/>
+															</div>
+														</div>
+
+														<div class="form-group">
+															<label class="control-label col-md-4" for="xcost" >Estimated Cost</label>
+															<div class="col-md-8">
+																<input type="text" class="form-control" th:field="*{xcost}">
+															</div>
+														</div>
+
+														<div class="form-group">
+															<label class="control-label col-md-4" for="xcus">Customer</label>
+															<div class="col-md-8">
+																<!--<select class="form-control select2 bom-xcus" th:field="*{xcus}" required="required"></select>-->
+																<select class="form-control select2 bom-xcus" th:field="*{xcus}" required="required">
+																	<option value="">-- Select--</option>
+																	<option th:each="p : ${customers}" th:value="${p.xcus}" th:text="${p.xcus + ' - ' + p.xorg}">-- Select --</option>
+																</select>
+															</div>
+														</div>
+													</div>
+
+													<div class="col-md-4">
+														<div class="form-group input2">
+															<label class="control-label col-sm-4" for="zactive">Is Active ?</label>
+															<div class="col-sm-8">
+																<div class="checkbox">
+																	<label><input type="checkbox" class="form-control-input2" th:field="*{zactive}" value="Y"/></label>
+																</div>
+															</div>
+														</div>
+
+														<div class="form-group input2">
+															<label class="control-label col-sm-4" for="xisdefaut">Is Default ?</label>
+															<div class="col-sm-8">
+																<div class="checkbox">
+																	<label><input type="checkbox" class="form-control-input2" th:field="*{xisdefaut}" value="Y"/></label>
+																</div>
+															</div>
+														</div>
+
+														<div class="form-group">
+															<label class="control-label col-md-4" for="xref">Reference </label>
+															<div class="col-md-8">
+																<input type="number" class="form-control" th:value="*{xref}" disabled="disabled">
+															</div>
+														</div>
+
+														<div class="form-group">
+															<label class="control-label col-md-4" for="xnote">Note</label>
+															<div class="col-md-8">
+																<textarea class="form-control" rows="2" th:field="*{xnote}"></textarea>
+															</div>
+														</div>
+
+													</div>
+												</div>
+											</form>
+										</div>
+										<script type="text/javascript">
+											$(document).ready(function(){
+												ck.ui.config.editmode();
+												ck.ui.config.dateAndTimepicker();
+											})
+										</script>
+									</div>
+								</section>
+							</div>
+
+
+							<!--Meterial Detail-->
+							<div class="col-md-12">
+								<section id="data-maintenance" style="margin-top: 30px;">
+									<div class="section-body">
+										<table class="table table-striped table-bordered normal-table nowrap" id="mobomdetailtable" th:fragment="mobomdetailtable">
+											<thead>
+												<tr>
+													<th style="text-align: center;">SN.</th>
+													<th>Item</th>
+													<th>Quantity</th>
+													<th>Unit</th>
+													<th>Particular</th>
+													<th data-nosort="Y" style="text-align: center;">
+														<a href="#" class="row-creator btn btn-success"><i class="fas fa-plus-square"></i></a>
+													</th>
+												</tr>
+											</thead>
+											<tbody id="mobomdetailbody">
+												<tr th:attr="data-rowindex=${n.count}" th:each="d,n : ${mobomdetails}">
+													<td style="text-align: center;" th:text="${n.count}"></td>
+													<td>
+														<div class="form-group">
+															<div class="row">
+																<div class="form-group">
+																	<div class="col-sm-8">
+																		<!--<select class="form-control select2 item-xitem" th:value="${d.xitem}" th:text="${d.xitem}" required="required"></select>-->
+																		
+																		<select class="form-control select2 item-xitem" required="required">
+																			<option value="">-- Select--</option>
+																			<option th:each="p : ${caitemList}" th:value="${p.xitem}" th:text="${p.xitem + ' - ' + p.xdesc}"></option>
+																		</select>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</td>
+													<td>
+														<div class="form-group">
+															<div class="col-sm-8">
+																<input type="text"  class="form-control item-qty" th:value="${d.xqty}" min="0"/>
+															</div>
+														</div>
+													</td>
+													<td>
+														<div class="form-group">
+															<div class="col-sm-8">
+																<input type="text" th:value="${d.xunit}" class="form-control item-unit" disabled="disabled"/>
+															</div>
+														</div>
+													</td>
+													<td>
+														<div class="form-group">
+															<div class="col-sm-8">
+																<input type="text" th:value="${d.xref}" class="form-control item-xref"/>
+															</div>
+														</div>
+													</td>
+													<td style="text-align: center;">
+														<button type="button" class="btn btn-danger row-remover"><i class="fas fa-trash"></i></button>
+													</td>
+												</tr>
+											</tbody>
+											<tfoot>
+												<!-- <th colspan="3" class="text-right">Total</th>
+												<th></th>
+												<th class="text-right" th:text="${totalDebit}">0</th>
+												<th class="text-right" th:text="${totalCredit}">0</th>
+												<th colspan="2"></th> -->
+											</tfoot>
+										</table>
+									</div>
+								</section>
+							</div>
+							
+							<!--By Product Detail-->
+							<div class="col-md-12">
+								<section id="data-maintenance" style="margin-top: 30px;">
+									<div class="section-body">
+										<table class="table table-striped table-bordered normal-table nowrap" id="mobomdetailtable2" th:fragment="mobomdetailtable2">
+											<thead>
+												<tr>
+													<th style="text-align: center;">SN.</th>
+													<th>Item</th>
+													<th>Quantity</th>
+													<th>Unit</th>
+													<th>Particular</th>
+													<th data-nosort="Y" style="text-align: center;">
+														<a href="#" class="row-creator2 btn btn-success"><i class="fas fa-plus-square"></i></a>
+													</th>
+												</tr>
+											</thead>
+											<tbody id="mobomdetailbody2">
+												<tr th:attr="data-rowindex=${n.count}" th:each="d,n : ${mobomdetails}">
+													<td style="text-align: center;" th:text="${n.count}"></td>
+													<td>
+														<div class="form-group">
+															<div class="row">
+																<div class="form-group">
+																	<div class="col-sm-8">
+																		<!--<select class="form-control select2 item-xitem2" th:value="${d.xitem}" th:text="${d.xitem}" required="required"></select>-->
+																		
+																		<select class="form-control select2 item-xitem2" required="required">
+																			<option value="">-- Select--</option>
+																			<option th:each="p : ${caitemList}" th:value="${p.xitem}" th:text="${p.xitem + ' - ' + p.xdesc}"></option>
+																		</select>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</td>
+													<td>
+														<div class="form-group">
+															<div class="col-sm-8">
+																<input type="text"  class="form-control item-qty2" th:value="${d.xqty}" min="0"/>
+															</div>
+														</div>
+													</td>
+													<td>
+														<div class="form-group">
+															<div class="col-sm-8">
+																<input type="text" th:value="${d.xunit}" class="form-control item-unit2" disabled="disabled"/>
+															</div>
+														</div>
+													</td>
+													<td>
+														<div class="form-group">
+															<div class="col-sm-8">
+																<input type="text" th:value="${d.xref}" class="form-control item-xref2"/>
+															</div>
+														</div>
+													</td>
+													<td style="text-align: center;">
+														<button type="button" class="btn btn-danger row-remover"><i class="fas fa-trash"></i></button>
+													</td>
+												</tr>
+											</tbody>
+											<tfoot>
+												<!-- <th colspan="3" class="text-right">Total</th>
+												<th></th>
+												<th class="text-right" th:text="${totalDebit}">0</th>
+												<th class="text-right" th:text="${totalCredit}">0</th>
+												<th colspan="2"></th> -->
+											</tfoot>
+										</table>
+									</div>
+								</section>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Right Panel -->
+		<div class="right-panel menu-close">
+			<div class="right-panel-content-area">
+				<div class="right-panel-content">
+					<section id="list-manager" style="margin: 10px 0px;">
+						<div class="section-header sectionbartoggle">
+							<h1>BOM List</h1>
+						</div>
+						<div class="section-body">
+							<table class="table table-striped table-bordered datatable nowrap" th:with="df=${'E, dd-MMM-yyyy'}">
+								<thead>
+									<tr>
+										<th>Item</th>
+										<th>Date</th>
+										<th>FG Item</th>
+										<th>Customer</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr th:each="v : ${mobomheaders}">
+										<td>
+											<a th:href="@{/production/mobomheader/} + ${v.xbomkey}" th:text="${v.xbomkey}"></a>
+										</td>
+										<td th:text="${#dates.format(v.xdate, df)}"></td>
+										<td th:text="${v.xitem}"></td>
+										<td th:text="${v.xcus}"></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</section>
+
+				</div>
+			</div>
+		</div>
+		<div class="right-panel-toggler">
+			<i class="fas fa-caret-left"></i>
+		</div>
+
+		<!-- Footer section -->
+		<div class="footer-section" th:include="commons :: footer-section"></div>
+
+		<script type="text/javascript" th:src="@{/assets/js/ck-ui/ck-search-suggest.js}"></script>
+		<script type="text/javascript" th:src="@{/assets/pages/production/mobomheader/mobomheader.js}"></script>
+		<script type="text/javascript" th:src="@{/assets/pages/production/mobomheader/mobomheader2.js}"></script>
+		<script type="text/javascript" th:src="@{/assets/js/ck-ui/ck-search-suggest.js}"></script>
+	</body>
+</html>

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<title>List of Production Chalan</title>
+		<meta th:remove="tag" th:include="commons :: common-meta" />
+		<meta th:remove="tag" th:include="commons :: common-css" />
+		<meta th:remove="tag" th:include="commons :: common-js" />
+	</head>
+	<body>
+		<!-- Header section -->
+		<div class="header-section" th:include="commons :: header-section"></div>
+
+		<!-- Menu section -->
+		<div th:if="${menuVersion != null and menuVersion eq 'MENU_V2'}" class="menuv2" th:include="commons :: main-menu"></div>
+
+		<div th:if="${menuVersion == null or menuVersion eq 'MENU_V1'}" class="navbar-inverse menu-section">
+			<div class="container-fluid">
+				<div class="row">
+					<nav class="navbar navbar-inverse">
+						<div class="container-fluid">
+							<div class="row">
+								<div class="navbar-header">
+									<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+										<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+									</button>
+								</div>
+								<div class="collapse navbar-collapse" id="myNavbar">
+									<div class="nav navbar-nav">
+										<li><a th:href="@{/}"><i class="fas fa-home"></i> Home</a></li>
+										<li class="active"><a th:href="@{/salesninvoice/chalanlist}">List of Production Chalan</a></li>
+									</div>
+									<ul class="nav navbar-nav navbar-right" th:include="ckbigmenu :: dashboard-menu"></ul>
+								</div>
+							</div>
+						</div>
+					</nav>
+				</div>
+			</div>
+		</div>
+
+		<!-- Content section -->
+		<div>
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-md-12 content-area">
+						<div class="row">
+							<h1 class="text-center">List of Production Chalan</h1>
+						</div>
+
+						<div class="row">
+							<div class="col-md-6">
+								<!-- Section list head -->
+								<section id="data-maintenance" style="margin-top: 30px;">
+									<div id="chalanform" th:fragment="chalanform">
+										<div class="section-header sectionbartoggle">
+											
+										</div>
+									</div>
+								</section>
+							</div>
+							
+						</div>
+						
+					</div>
+
+
+					<div class="col-md-12">
+						<section id="data-maintenance" style="margin-top: 30px;">
+							<div class="section-header sectionbartoggle">
+								<h1>
+									<span th:text="${salesorderchalan.xstatus eq 'Open' ? 'All assigned & open Sales Orders' : 'All assigned Sales Orders of ' + salesorderchalan.xordernum}"></span>
+								</h1>
+							</div>
+							<div class="section-body">
+								<div class="row" th:if="${salesorderchalan.xstatus eq 'Open'}">
+									<div class="col-md-6">
+										<form id="mainform2" class="form-horizontal" th:action="@{/salesninvoice/salesorderchalan/opensalesorder/query}" method="post" th:with="df=${'E, dd-MMM-yyyy'}">
+											<input type="hidden" name="xordernum" th:value="${salesorderchalan.xordernum}"/>
+											<div class="form-group datepicker">
+												<label class="control-label col-md-4" for="xdate" th:text="#{pc.modal.table.search.xdate}">Sales Order Date : </label>
+												<div class="input-group date col-md-8 datepicker">
+													<input 	type="datepicker" 
+															class="form-control" 
+															id="xdate"
+															name="xdate"
+															th:value="${#dates.format(#dates.createNow(), df)}"/>
+													<div class="input-group-addon">
+														<span class="glyphicon glyphicon-calendar"></span>
+													</div>
+												</div>
+											</div>
+										</form>
+									</div>
+									<div class="col-md-6">
+										<div class="">
+											<button class="btn btn-sm btn-success query-submit-btn" type="submit"><i class="fas fa-search"></i></button>
+										</div>
+									</div>
+								</div>
+
+								<div style="overflow-x: scroll; overflow-y: none;">
+									<table class="table table-striped table-bordered normal-table" id="opensalesorderstable" th:fragment="opensalesorderstable">
+										<thead>
+											<tr>
+												<th th:text="#{pc.modal.table.heading.xordernum}">Sales Order No.</th>
+												<th th:text="#{pc.modal.table.heading.xdate}">Date</th>
+												<th th:text="#{pc.modal.table.heading.xcus}">Customer</th>
+												<th th:text="#{pc.modal.table.heading.xpornum}">Requisition</th>
+												<th th:text="#{pc.modal.table.heading.xstatusord}">Status</th>
+												<th th:text="#{pc.modal.table.heading.xdornum}">Sales Invoice No.</th>
+												<th data-nosort="Y" style="text-align: right">Action</th>
+											</tr>
+										</thead>
+										<tbody th:with="df=${'E, dd-MMM-yyyy'}">
+											<tr th:each="os : ${opensalesorders}">
+												<td th:text="${os.xordernum}"></td>
+												<td th:text="${#dates.format(os.xdate, df)}"></td></td>
+												<td th:text="${#strings.isEmpty(os.xcus) ? '' : os.xcus + ' - ' + os.branchname}"></td>
+												<td th:text="${os.xpornum}"></td>
+												<td th:text="${os.xstatusord}"></td>
+												<td th:text="${os.xdornum}"></td>
+												<td style="text-align: right">
+													<button type="button" class="btn btn-primary btn-edit editmode" th:attr="data-url=@{/salesninvoice/salesorderchalan/ordreqdetails/} + ${os.xordernum} + '/show', data-target-modal='salesorderdetailmodal'"><i class="fas fa-eye"></i></button>
+													<button th:if="${os.xstatusord eq 'Open' and salesorderchalan.xstatus eq 'Open'}" type="button" class="btn btn-success btn-confirm editmode" th:attr="data-url=@{/salesninvoice/salesorderchalan/salesorderconfirm/} + ${salesorderchalan.xordernum}  + '/' + ${os.xordernum}"><i class="fas fa-check-square"></i></button>
+													<button th:if="${os.xstatusord ne 'Open' and salesorderchalan.xstatus eq 'Open'}" type="button" class="btn btn-danger btn-confirm editmode" th:attr="data-url=@{/salesninvoice/salesorderchalan/salesorderrevoke/} + ${salesorderchalan.xordernum}  + '/' + ${os.xordernum}"><i class="fas fa-trash"></i></button>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</section>
+						
+						<section id="data-maintenance" style="margin-top: 30px;">
+							<div class="section-header sectionbartoggle">
+								<h1>
+									Chalan Details of <span th:text="${salesorderchalan.xordernum}"></span>
+									<a th:if="${not #strings.isEmpty(salesorderchalan.xordernum) and salesorderchalan.zactive == true and salesorderchalan.xstatus eq 'Confirmed'}" th:href="@{/salesninvoice/salesorderchalan/print/} + ${salesorderchalan.xordernum}" class="" target="_blank"><i class="fas fa-print"></i> Print</a>
+								</h1>
+							</div>
+							<div class="section-body">
+								<div style="overflow-x: scroll; overflow-y: none;">
+									<table class="table table-striped table-bordered normal-table" id="salesorderchalandetailtable" th:fragment="salesorderchalandetailtable">
+										<thead>
+											<tr>
+												<th th:text="#{pc.modal.table1.heading.xitem}">Item</th>
+												<th th:text="#{pc.modal.table1.heading.xunit}">Unit</th>
+												<th th:text="#{pc.modal.table1.heading.xqty}">Qty</th>
+											</tr>
+										</thead>
+										<tbody th:with="df=${'E, dd-MMM-yyyy'}">
+											<tr th:each="cd : ${chalandetails}">
+												<td>
+													<a th:href="@{/mastersetup/caitem/} + ${cd.xitem}" target="_blank" th:text="${cd.xitem} + ' - ' + ${cd.itemname}"></a>
+												</td>
+												<td th:text="${cd.xunit}"></td>
+												<td th:text="${cd.xqtyord}"></td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</section>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Modal -->
+		<div id="salesorderchalandetailmodal-section"></div>
+		<div id="salesorderdetailmodal-section"></div>
+
+		<!-- Footer section -->
+		<div class="footer-section" th:include="commons :: footer-section"></div>
+
+		<script type="text/javascript">
+
+			$(document).ready(function(){
+			
+				$('.query-submit-btn').on('click', function(e){
+					e.preventDefault();
+					submitMainForm($('#mainform2').attr('action'), $('#mainform2'));
+				})
+				
+			})
+		</script>
+	</body>
+</html>

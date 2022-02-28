@@ -1,0 +1,703 @@
+ <!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+	<head>
+		<title th:text="#{li.page.title}">Land Info</title>
+		<meta th:remove="tag" th:include="commons :: common-meta"/>
+		<meta th:remove="tag" th:include="commons :: common-css"/>
+		<meta th:remove="tag" th:include="commons :: common-js"/>
+	</head>
+	<body>
+
+		<!-- Header section -->
+		<div class="header-section" th:include="commons :: header-section"></div>
+
+		<!-- Menu section -->
+		<div th:if="${menuVersion != null and menuVersion eq 'MENU_V2'}" class="menuv2" th:include="commons :: main-menu"></div>
+
+		<div th:if="${menuVersion == null or menuVersion eq 'MENU_V1'}" class="navbar-inverse menu-section">
+			<div class="container-fluid">
+				<div class="row">
+					<nav class="navbar navbar-inverse">
+						<div class="container-fluid">
+							<div class="row">
+								<div class="navbar-header">
+									<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+										<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+									</button>
+								</div>
+								<div class="collapse navbar-collapse" id="myNavbar">
+									<div class="nav navbar-nav">
+										<li><a th:href="@{/}"><i class="fas fa-home"></i> Home</a></li>
+										<li class="active"><a th:href="@{/landinfo}">Land Info</a></li>
+									</div>
+									<ul class="nav navbar-nav navbar-right" th:include="ckbigmenu :: dashboard-menu"></ul>
+								</div>
+							</div>
+						</div>
+					</nav>
+				</div>
+			</div>
+		</div>
+		
+		<!-- Content section -->
+		<div>
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-md-12 content-area">
+						<div class="row">
+							<div class="col-md-6">
+								<!-- Section list head -->
+								<section id="data-maintenance" style="margin-top: 30px;">
+									<div class="row">
+										<div class="col-md-12">
+											<div class="row">
+												<div class="col-md-12">
+													<div class="section-header sectionbartoggle">
+														<h1 th:text="#{li.page.heading}">Land Info</h1>
+													</div>
+													<div class="form-action-button">
+														<a th:href="@{/landinfo}" class="btn btn-sm btn-default"><i class="fas fa-redo-alt"></i> <span style="margin-left:2px;" th:text="#{button.value.xclear}"> Clear</span></a>
+														<a th:if="${#strings.isEmpty(info.xland)}" class="btn btn-sm btn-success confirm-btn"><i class="fas fa-save"></i> <span style="margin-left:2px;" th:text="#{button.value.xsave}"> Save</span></a>
+														<a th:if="${not #strings.isEmpty(info.xland) and info.zactive == true}" class="btn btn-sm btn-success confirm-btn"><i class="fas fa-save"></i> <span style="margin-left:2px;" th:text="#{button.value.xupdate}"> Update</span></a>
+														<a th:if="${not #strings.isEmpty(info.xland) and info.zactive == true}" th:href="@{/landinfo/delete/} + ${info.xland}" class="btn btn-sm btn-danger archive-btn-link"><i class="fas fa-trash-alt"></i> <span style="margin-left:2px;" th:text="#{button.value.xdelete}"> Delete</span></a>
+														<a th:if="${not #strings.isEmpty(info.xland) and info.zactive == false}" th:href="@{/landinfo/restore/} + ${info.xland}" class="btn btn-sm btn-success restore-btn-link"><i class="fas fa-trash-restore-alt"></i> <span style="margin-left:2px;" th:text="#{button.value.xrestore}"> Restore</span></a>
+														<a th:if="${not #strings.isEmpty(info.xland) and info.zactive == true}" th:href="@{/landinfo/print/} + ${info.xland}" class="btn btn-sm btn-primary print-btn-link" target="_blank"><i class="fas fa-print"></i><span style="margin-left:2px;" th:text="#{button.value.xprint}"> Print</span></a>
+													</div>
+												</div>
+											</div>
+										</div>
+										</div><br>
+										<div class="section-body section-border">
+											<form id="mainform" class="form-horizontal" method="post" th:action="@{/landinfo/save}" th:object="${info}" th:with="df=${'E, dd-MMM-yyyy'}">
+											<input type="hidden" th:field="*{xtypetrn}"/>
+											<input type="hidden" th:field="*{xroadred}"/>
+											<input type="hidden" th:field="*{xotherred}"/>
+											<input type="hidden" th:field="*{newData}"/>
+											<div class="row">
+												<div class="col-md-12">
+													<div class="row">
+														<div class="col-md-6">
+														
+															<div class="form-group" th:if="${info.newData}">
+																<label class="control-label col-md-4" for="xland" th:text="#{li.form.label.xland}">Land ID </label>
+																<div class="col-md-8">
+																	<!--<select class="form-control" th:field="*{xtrn}">
+																		<option th:each="d : ${prefixes}" th:value="${d.xtrn}" th:text="${d.xtrn}"></option>
+																	</select>-->
+																	<input type="text" class="form-control" th:field="*{xland}"/>
+																</div>
+															</div>
+
+															<div class="form-group" th:if="${not info.newData}">
+																<label class="control-label col-md-4" for="xland" th:text="#{li.form.label.xlandd}">Land ID</label>
+																<div class="col-md-8">
+																	<input type="hidden" th:field="*{xland}"/>
+																	<input type="text" class="form-control" th:value="*{xland}" disabled="disabled"/>
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xlname" th:text="#{li.form.label.xlname}">Land Name</label>
+																<div class="col-md-8">
+																	<input type="text" class="form-control" th:field="*{xlname}" maxlength="100"/>
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xblock" th:text="#{li.form.label.xblock}">Block</label>
+																<div class="col-md-8">
+																	<input type="text" class="form-control" th:field="*{xblock}" maxlength="100"/>
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xroad" th:text="#{li.form.label.xroad}">Road</label>
+																<div class="col-md-8">
+																	<input type="text" class="form-control" th:field="*{xroad}" maxlength="100"/>
+																</div>
+															</div>
+
+															<!-- <div class="form-group">
+																<label class="control-label col-md-4" for="xcslanddag">CS Land Dag:</label>
+																<div class="col-md-8">
+																	<input type="number" class="form-control" th:field="*{xcslanddag}" maxlength="100" />
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xcslandqty">CS Land Qty:</label>
+																<div class="col-md-8">
+																	<input type="text" class="form-control" th:field="*{xcslandqty}" maxlength="100"/>
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xcslandunit">CS Land Unit:</label>
+																<div class="col-md-8">
+																	<select class="form-control" th:field="*{xcslandunit}">
+																	
+																		<option th:each="d : ${landUnitTypes}" th:value="${d.xcode}" th:text="${d.xcode}"></option>
+																	</select>
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xrslanddag">RS Land Dag:</label>
+																<div class="col-md-8">
+																	<input type="number" class="form-control" th:field="*{xrslanddag}" maxlength="100"/>
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xrslandqty">RS Land Qty:</label>
+																<div class="col-md-8">
+																	<input type="text" class="form-control" th:field="*{xrslandqty}" maxlength="100"/>
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xrslandunit">RS Land Unit:</label>
+																<div class="col-md-8">
+																	<select class="form-control" th:field="*{xrslandunit}">
+																		<option th:each="d : ${landUnitTypes}" th:value="${d.xcode}" th:text="${d.xcode}"></option>
+																	</select>
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xcitylanddag"> City Land Daq:</label>
+																<div class="col-md-8">
+																	<input type="number" class="form-control" th:field="*{xcitylanddag}" maxlength="100"/>
+																</div>
+															</div> -->
+
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xlandqty" th:text="#{li.form.label.xlandqty}"> Land Amt.</label>
+																<div class="col-md-8">
+																	<input type="text" class="form-control" th:field="*{xlandqty}" maxlength="100"/>
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xlandunit" th:text="#{li.form.label.xlandunit}">Land Unit</label>
+																<div class="col-md-8">
+																	<select class="form-control xlandunit" th:field="*{xlandunit}">
+																		<option th:each="d : ${landUnitTypes}" th:value="${d.xcode}" th:text="${d.xcode}"></option>
+																	</select>
+																</div>
+															</div>
+															
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xlanddedroad" th:text="#{li.form.label.xlanddedroad}">Land Deduction for Road(%)</label>
+																<div class="col-md-8">
+																	<input type="number" class="form-control" th:field="*{xlanddedroad}" maxlength="100"/>
+																</div>
+															</div>
+															
+															<!-- <div class="form-group">
+																<label class="control-label col-md-4" for="xroadred"></label>
+																<div class="col-md-8">
+																	<input type="text" class="form-control" th:field="*{xroadred}" maxlength="100" disabled="disabled"/>
+																</div>
+															</div> -->
+
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xlanddedother" th:text="#{li.form.label.xlanddedother}">Land Deduction for Others(%)</label>
+																<div class="col-md-8">
+																	<input type="number" class="form-control" th:field="*{xlanddedother}" maxlength="100"/>
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xlandqtyd" th:text="#{li.form.label.xlandqtyd}">Land Amt.(Decimal)</label>
+																<div class="col-md-8">
+																	<input type="hidden" class="form-control xlandqtyd" th:field="*{xlandqtyd}"/>
+																	<input type="text" class="form-control xlandqtyd" th:field="*{xlandqtyd}" maxlength="100" disabled="disabled"/>
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xlandqtyk" th:text="#{li.form.label.xlandqtyk}">Land Amt.(Katha)</label>
+																<div class="col-md-8">
+																	<input type="hidden" class="form-control xlandqtyk" th:field="*{xlandqtyk}"/>
+																	<input type="text" class="form-control xlandqtyk" th:field="*{xlandqtyk}" maxlength="100" disabled="disabled"/>
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xtotded" th:text="#{li.form.label.xtotded}">Total Deduction(Decimal)</label>
+																<div class="col-md-8">
+																	<input type="hidden" class="form-control xtotded" th:field="*{xtotded}"/>
+																	<input type="text" class="form-control xtotded" th:field="*{xtotded}" maxlength="100" disabled="disabled"/>
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xtotrem" th:text="#{li.form.label.xtotrem}">Remaining Land(Decimal)</label>
+																<div class="col-md-8">
+																	<input type="hidden" class="form-control xtotrem" th:field="*{xtotrem}"/>
+																	<input type="text" class="form-control xtotrem" th:field="*{xtotrem}" maxlength="100" disabled="disabled"/>
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xriversideqty" th:text="#{li.form.label.xriversideqty}">River Side Amt.</label>
+																<div class="col-md-8">
+																	<input type="text" class="form-control" th:field="*{xriversideqty}" maxlength="100"/>
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xriversideunit" th:text="#{li.form.label.xriversideunit}">River Side Unit</label>
+																<div class="col-md-8">
+																	<select class="form-control" th:field="*{xriversideunit}">
+																		<option th:each="d : ${landUnitTypes}" th:value="${d.xcode}" th:text="${d.xcode}"></option>
+																	</select>
+																</div>
+															</div>
+
+															<!-- <div class="form-group">
+																<label class="control-label col-md-4" for="xotherred"></label>
+																<div class="col-md-8">
+																	<input type="text" class="form-control" th:field="*{xotherred}" maxlength="100" disabled="disabled"/>
+																</div>
+															</div> -->
+
+															<!-- <div class="form-group">
+																<label class="control-label col-md-4" for="xlandgrsqty">Land GRS Qty:</label>
+																<div class="col-md-8">
+																	<input type="number" class="form-control" th:field="*{xlandgrsqty}" maxlength="100" disabled="disabled"/>
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xlanggrsunit">Land GRS Unit:</label>
+																<div class="col-md-8">
+																	<select class="form-control" th:field="*{xlanggrsunit}">
+																		<option th:each="d : ${landUnitTypes}" th:value="${d.xcode}" th:text="${d.xcode}"></option>
+																	</select>
+																</div>
+															</div> -->
+
+														</div>
+
+														<div class="col-md-6">
+														<!-- 	<div class="form-group">
+																<label class="control-label col-md-4" for="xlandnetqty">Land Net Amt:</label>
+																<div class="col-md-8">
+																	<input type="text" class="form-control" th:field="*{xlandnetqty}" maxlength="100"/>
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xlandnetunit">Land Net Unit:</label>
+																<div class="col-md-8">
+																	<select class="form-control" th:field="*{xlandnetunit}">
+																		<option th:each="d : ${landUnitTypes}" th:value="${d.xcode}" th:text="${d.xcode}"></option>
+																	</select>
+																</div>
+															</div> -->
+
+															<div class="form-group" >
+																<label class="control-label col-md-4" for="xcus" th:text="#{li.form.label.xcus}">Member/Director</label>
+																<div class="col-sm-8">
+																	<input 	type="text" 
+																			class="form-control searchsuggest" 
+																			placeholder="Search..." 
+																			th:value="${#strings.isEmpty(info.xcus) ? '' : info.xcus + ' - ' + info.xmemname}"  
+																			th:attr="search-url='search/memberdir'"/>
+																	<input type="hidden" id="search-val" th:field="*{xcus}"/>
+																	<input type="hidden" id="search-des" th:value="*{xcus}"/>
+																</div>
+															</div>
+
+															<div class="form-group" >
+																<label class="control-label col-md-4" for="xlandparent" th:text="#{li.form.label.xlandparent}">Land Ref.</label>
+																<div class="col-sm-8">
+																	<input 	type="text" 
+																			class="form-control searchsuggest" 
+																			placeholder="Search..." 
+																			th:value="${#strings.isEmpty(info.xlandparent) ? '' : info.xlandparent + ' - ' + info.xlname}"  
+																			th:attr="search-url='search/landId'"/>
+																	<input type="hidden" id="search-val" th:field="*{xlandparent}"/>
+																	<input type="hidden" id="search-des" th:value="*{xlandparent}"/>
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xnote2">Previous Land Note</label>
+																<div class="col-md-8">
+																	<textarea class="form-control" rows="3" th:field="*{xnote2}" placeholder="Note"></textarea>
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xstatus" th:text="#{li.form.label.xstatus}">Status</label>
+																<div class="col-md-8">
+																	<select class="form-control" th:field="*{xstatus}">
+																		<option th:each="d : ${statusTypes}" th:value="${d.xcode}" th:text="${d.xcode}" /></option>
+																	</select>
+																</div>
+															</div>
+
+															<div class="form-group datepicker">
+																<label class="control-label col-md-4" for="xdateborn">Record Date</label>
+																<div class="input-group date col-md-7 datepicker">
+																	<input 	type="datepicker" 
+																			class="form-control" 
+																			id="xdateborn"
+																			name="xdateborn"
+																			required="required"
+																			th:value="${info.xdateborn == null ? #dates.format(#dates.createNow(), df) : #dates.format(info.xdateborn, df)}"/>
+																	<div class="input-group-addon">
+																		<span class="glyphicon glyphicon-calendar"></span>
+																	</div>
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xtotdedprice" th:text="#{li.form.label.xtotddprice}">Price of Deducted Land</label>
+																<div class="col-md-8">
+																	<input type="text" class="form-control" th:field="*{xtotdedprice}" maxlength="100"/>
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xamtar">Total Receivable Amt.</label>
+																<div class="col-md-8">
+																	<input type="hidden" class="form-control xamtar" th:field="*{xamtar}"/>
+																	<input type="text" class="form-control xamtar" th:field="*{xamtar}" maxlength="100" disabled="disabled"/>
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xamtrv">Total Received Amt.</label>
+																<div class="col-md-8">
+																	<input type="hidden" class="form-control xamtrv" th:field="*{xamtrv}"/>
+																	<input type="text" class="form-control xamtrv-display" th:value="*{xamtrv}" maxlength="100" disabled="disabled"/>
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-md-4">Net Receivable</label>
+																<div class="col-md-8">
+																	<input type="text" class="form-control balance" disabled="disabled">
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xnote" th:text="#{li.form.label.xnote}">Remarks</label>
+																<div class="col-md-8">
+																	<textarea class="form-control" rows="3" th:field="*{xnote}" placeholder="Remarks"></textarea>
+																</div>
+															</div>
+
+																<div class="section-header sectionbartoggle">
+																	<h1 style="text-align:center; "><u><b>Survey Details</b></u></h1>
+																</div>
+
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xlandqtydsg">Gross Land Amt.(Decimal)</label>
+																<div class="col-md-8">
+																	<input type="hidden" class="form-control xlandqtydsg" th:field="*{xlandqtydsg}"/>
+																	<input type="text" class="form-control xlandqtydsg-display" th:value="*{xlandqtydsg}" maxlength="100" disabled="disabled"/>
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xlandqtydsn">Net Land Amt.(Decimal)</label>
+																<div class="col-md-8">
+																	<input type="hidden" class="form-control xlandqtydsn" th:field="*{xlandqtydsn}"/>
+																	<input type="text" class="form-control xlandqtydsn-display" th:value="*{xlandqtydsn}" maxlength="100" disabled="disabled"/>
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xsurveyor">Survey By</label>
+																<div class="col-md-8">
+																	<input type="hidden" class="form-control xsurveyor" th:field="*{xsurveyor}"/>
+																	<input type="text" class="form-control xsurveyor-display" th:value="${#strings.isEmpty(info.xsurveyor) ? '' : info.xsurveyor + ' - ' + info.xsername}"  maxlength="100" disabled="disabled"/>
+																</div>
+															</div>
+
+															<div class="form-group datepicker">
+																<label class="control-label col-md-4" for="xdatesrv">Survey Date</label>
+																<div class="input-group date col-md-7 datepicker">
+																	<input 	type="datepicker" 
+																			class="form-control" 
+																			id="xdatesrv"
+																			name="xdatesrv"
+																			disabled="disabled"
+																			th:value="${#dates.format(info.xdatesrv, df)}"
+																			/>
+																	<div class="input-group-addon">
+																		<span class="glyphicon glyphicon-calendar"></span>
+																	</div>
+																</div>	
+															</div>
+
+														</div>
+													</div>
+												</div>
+											</div>
+										</form>
+									</div>
+								</section>
+							</div>
+							<div class="col-md-6">
+								<section id="list-manager" style="margin-top: 30px;">
+									<div class="section-header sectionbartoggle">
+										<h1>All Land Info</h1>
+									</div>
+									<div class="section-body">
+										<div style="overflow-x: scroll;">
+											<table class="table table-striped table-bordered datatable nowrap">
+												<thead>
+													<tr>
+														<th th:text="#{li.table.heading.xland}">Land ID</th>
+														<th th:text="#{li.table.heading.xlname}">Land Name</th>
+														<th th:text="#{li.table.heading.xcus}">Member</th>
+														<th th:text="#{li.table.heading.xlanddedroad}">LD(Road)</th>
+														<th th:text="#{li.table.heading.xlanddedother}">LD(Others)</th>
+														<th th:text="#{li.table.heading.xlandqty}">Land Amt.</th>
+													</tr>
+												</thead>
+												<tbody>
+													<tr th:each="ar : ${allInfos}">
+														<td><a th:href="@{/landinfo/} + ${ar.xland}" th:text="${ar.xland}"></a></td>
+														<td th:text="${ar.xlname}"></td>
+														<td th:text="${#strings.isEmpty(ar.xcus) ? '' : ar.xcus + ' - ' + ar.xmemname}"></td>
+														<td th:text="${ar.xlanddedroad}"></td>
+														<td th:text="${ar.xlanddedother}"></td>
+														<td th:text="${ar.xlandqty}"></td>
+													</tr>
+													
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</section>
+							</div>
+						</div>
+					</div>
+
+		<div class="col-md-12">
+			<section th:if="${not #strings.isEmpty(info.xland)}" id="data-maintenance" style="margin-top: 30px;">
+			<div class="section-header sectionbartoggle">
+				<h1>Owner Details of Land-<span th:text="${info.xland}"></span> </h1>			
+			</div>
+				<div class="section-body" style="overflow-y:scroll;height:200px;">
+					<table class="table table-striped table-bordered normal-table" id="ownertable" th:fragment="ownertable">
+						<thead>
+							<tr>
+								<th th:text="#{li.modal.table.heading.count}">SL#</th>
+								<th th:text="#{li.modal.table.heading.xperson}">Owner </th>
+								<th th:text="#{li.modal.table.heading.xtype}">Owner Type</th>
+								<th th:text="#{li.modal.table.heading.xqty}">Land Amt</th>
+								<th th:text="#{li.modal.table.heading.xunit}">Land Unit</th>
+								<th th:text="#{li.modal.table.heading.xnote}">Note </th>
+								<th data-nosort="Y" style="text-align: right;">
+									<button type="button" class="btn btn-success btn-add" th:attr="data-url=@{/landinfo/} + ${info.xland} + '/owner/new/show', data-target-modal='ownermodal'"><i class="fas fa-plus"></i></button>
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+						
+							<tr th:each="d, n : ${lpelist}">
+								<td th:text="${n.count}"></td>
+								<td th:text="${#strings.isEmpty(d.xperson) ? '' : d.xperson + ' - ' + d.xpername}"></td>
+								<td th:text="${d.xtype}"></td>
+								<td th:text="${d.xqty}"></td>
+								<td th:text="${d.xunit}"></td>
+								<td th:text="${d.xnote}"></td>
+								<td data-nosort="Y" style="text-align: right; font-size: 11px;">
+									<button type="button" class="btn btn-default btn-edit editmode" th:attr="data-url=@{/landinfo/} + ${info.xland} + '/owner/' + ${d.xrow} + '/show', data-target-modal='ownermodal'"><i class="fas fa-edit"></i></button>
+									<button type="button" class="btn btn-danger btn-delete editmode" th:attr="data-url=@{/landinfo/} + ${info.xland} + '/owner/' + ${d.xrow} + '/delete'"><i class="fas fa-trash"></i></button>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+		</section>
+	</div>
+		
+		<div class="col-md-12">
+			<section th:if="${not #strings.isEmpty(info.xland)}" id="data-maintenance" style="margin-top: 30px;">
+				<div class="section-header sectionbartoggle">
+					<h1> Dag Details of Land- <span th:text="${info.xland}"></span> </h1>
+					
+				</div>
+				<div class="section-body" style="overflow-y:scroll;height:200px;">
+					<table class="table table-striped table-bordered normal-table" id="landdagtable" th:fragment="landdagtable">
+						<thead>
+							<tr>
+								<th th:text="#{li.modal1.table.heading.count}">SL#</th>
+								<th th:text="#{li.modal1.table.heading.xdagtype}">Dag Type</th>
+								<th th:text="#{li.modal1.table.heading.xdagnum}">Dag No.</th>
+								<th th:text="#{li.modal1.table.heading.xtype}">In/Out</th>
+								<th th:text="#{li.modal1.table.heading.xqty}">Land Amt. </th>
+								<th th:text="#{li.modal1.table.heading.xunit}">Land Unit </th>
+								<th data-nosort="Y" style="text-align: right;">
+									<button type="button" class="btn btn-success btn-add" th:attr="data-url=@{/landinfo/} + ${info.xland} + '/landdag/new/show', data-target-modal='landdagmodal'"><i class="fas fa-plus"></i></button>
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="d, n : ${lddlist}">
+								<td th:text="${n.count}"></td>
+								<td th:text="${d.xdagtype}"></td>
+								<td th:text="${d.xdagnum}"></td>
+								<td th:text="${d.xtype}"></td>
+								<td th:text="${d.xqty}"></td>
+								<td th:text="${d.xunit}"></td>
+								<td data-nosort="Y" style="text-align: right; font-size: 11px;">
+									<button type="button" class="btn btn-default btn-edit editmode" th:attr="data-url=@{/landinfo/} + ${info.xland} + '/landdag/' + ${d.xrow} + '/show', data-target-modal='landdagmodal'"><i class="fas fa-edit"></i></button>
+									<button type="button" class="btn btn-danger btn-delete editmode" th:attr="data-url=@{/landinfo/} + ${info.xland} + '/landdag/' + ${d.xrow} + '/delete'"><i class="fas fa-trash"></i></button>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</section>
+		</div>
+
+		<div class="col-md-12">
+			<section th:if="${not #strings.isEmpty(info.xland)}" id="data-maintenance" style="margin-top: 30px;">
+				<div class="section-header sectionbartoggle">
+					<h1>Document Details of Land- <span th:text="${info.xland}"></span></h1>
+				</div>
+				<div class="section-body" style="overflow-y:scroll;height:200px;">
+					<table class="table table-striped table-bordered normal-table" id="landdocumenttable" th:fragment="landdocumenttable">
+						<thead>
+							<tr>
+								<th th:text="#{li.modal2.table.heading.count}">SL#</th>
+								<th th:text="#{li.modal2.table.heading.xdoc}">Document ID</th>
+								<th th:text="#{li.modal2.table.heading.xdoctype}">Document Type</th>
+								<th th:text="#{li.modal2.table.heading.xdocument}">Document </th>
+								<th th:text="#{li.modal2.table.heading.xnote}">Note</th>
+								<th data-nosort="Y" style="text-align: right;">
+									<button type="button" class="btn btn-success btn-add" th:attr="data-url=@{/landinfo/} + ${info.xland} + '/land/new/show', data-target-modal='landdocumentmodal'"><i class="fas fa-plus"></i></button>
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="ld, n : ${lldlist}">
+								<td th:text="${n.count}"></td>
+								<td th:text="${ld.xdoc}"></td>
+								<td th:text="${ld.xdoctype}"></td>
+								<td>
+									<a th:href="@{/download/document/} + ${ld.xdocument} + '/' + ${ld.xnameold}" target="_blank" th:text="${ld.xnameold}">Download</a>
+								</td>
+								<td th:text="${ld.xnote}"></td>
+								
+								<td data-nosort="Y" style="text-align: right; font-size: 11px;">
+									<button type="button" class="btn btn-default btn-edit editmode" th:attr="data-url=@{/landinfo/} + ${info.xland} + '/land/' + ${ld.xrow} + '/show', data-target-modal='landdocumentmodal'"><i class="fas fa-edit"></i></button>
+									<button type="button" class="btn btn-danger btn-delete editmode" th:attr="data-url=@{/landinfo/} + ${info.xland} + '/land/' + ${ld.xrow} + '/delete'"><i class="fas fa-trash"></i></button>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</section>
+		</div>		
+		
+		<div class="col-md-12">
+			<section th:if="${not #strings.isEmpty(info.xland)}" id="data-maintenance" style="margin-top: 30px;">
+				<div class="section-header sectionbartoggle">
+					<h1> Activities of Land-<span th:text="${info.xland}"></span> </h1>
+					
+				</div>
+				<div class="section-body" style="overflow-y:scroll;height:200px;">
+					<table class="table table-striped table-bordered normal-table" id="landeventstable" th:fragment="landeventstable">
+						<thead>
+							<tr>
+								<th th:text="#{li.modal3.table.heading.count}">SL#</th>
+								<th th:text="#{li.modal3.table.heading.xperson}">Person</th>
+								<th th:text="#{li.modal3.table.heading.xdate}">Date</th>
+								<th th:text="#{li.modal3.table.heading.xplace}">Place</th>
+								<th th:text="#{li.modal3.table.heading.xtype}">Priority</th>
+								<th th:text="#{li.modal3.table.heading.xnote}">Comment</th>
+								<th data-nosort="Y" style="text-align: right;">
+									<button type="button" class="btn btn-success btn-add" th:attr="data-url=@{/landinfo/} + ${info.xland} + '/landevents/new/show', data-target-modal='landeventsmodal'"><i class="fas fa-plus"></i></button>
+								</th>
+							</tr>
+						</thead>
+						<tbody th:with="df=${'E, dd-MMM-yyyy'}">
+							<tr th:each="d, n : ${lelist}">
+								<td th:text="${n.count}"></td>
+								<td th:text="${#strings.isEmpty(d.xperson) ? '' : d.xperson + ' - ' + d.xpername}"></td>
+								<td th:text="${#dates.format(d.xdate, df)}"></td>
+								<td th:text="${d.xplace}"></td>
+								<td th:text="${d.xtype}"></td>
+								<td th:text="${d.xnote}"></td>
+								<td data-nosort="Y" style="text-align: right; font-size: 11px;">
+									<button type="button" class="btn btn-default btn-edit editmode" th:attr="data-url=@{/landinfo/} + ${info.xland} + '/landevents/' + ${d.xrow} + '/show', data-target-modal='landeventsmodal'"><i class="fas fa-edit"></i></button>
+									<button type="button" class="btn btn-danger btn-delete editmode" th:attr="data-url=@{/landinfo/} + ${info.xland} + '/landevents/' + ${d.xrow} + '/delete'"><i class="fas fa-trash"></i></button>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</section>
+		</div>
+
+			<div class="col-md-12">
+				<section th:if="${not #strings.isEmpty(info.xland)}" id="data-maintenance" style="margin-top: 30px;">
+				<div class="section-header sectionbartoggle">
+					<h1>Survey Details of Land-<span th:text="${info.xland}"></span></h1>
+				</div>
+				<div class="section-body" style="overflow-y:scroll;height:200px;">
+					<table class="table table-striped table-bordered normal-table" id="surveytable" th:fragment="surveytable">
+						<thead>
+							<tr>
+								<th th:text="#{li.modal4.table.heading.count}">SL#</th>
+								<th th:text="#{li.modal4.table.heading.xsurveyor}">Survey By</th>
+								<th th:text="#{li.modal4.table.heading.xdate}">Survey Date</th>
+								<th th:text="#{li.modal4.table.heading.xnote}">Survey Details</th>
+								<th>Gross Land Amt (Decimal)</th>
+								<th>Net Land Amt (Decimal)</th>
+								<th>Status</th>
+								<th data-nosort="Y" style="text-align: right;">
+									<button type="button" class="btn btn-success btn-add" th:attr="data-url=@{/landinfo/} + ${info.xland} + '/survey/new/show', data-target-modal='surveymodal'"><i class="fas fa-plus"></i></button>
+								</th>
+							</tr>
+						</thead>
+						<tbody  th:with="df=${'E, dd-MMM-yyyy'}">
+							<tr th:each="ls, n : ${llslist}">
+								<td th:text="${n.count}"></td>
+								<!--<td th:text="${ls.xsurveyor}"></td>-->
+								<td th:text="${#strings.isEmpty(ls.xsurveyor) ? '' : ls.xsurveyor + ' - ' + ls.xsername}"></td>
+								<td th:text="${#dates.format(ls.xdate, df)}"></td>
+								<td th:text="${ls.xnote}"></td>
+								<td th:text="${ls.xlandqtydsg}"></td>
+								<td th:text="${ls.xlandqtydsn}"></td>
+								<td th:text="${ls.xstatus}"></td>
+								<td data-nosort="Y" style="text-align: right; font-size: 11px;">
+									<button th:if="${ls.xstatus == 'Open'}" type="button" class="btn btn-default btn-edit editmode" th:attr="data-url=@{/landinfo/} + ${info.xland} + '/survey/' + ${ls.xrow} + '/show', data-target-modal='surveymodal'"><i class="fas fa-edit"></i></button>
+									<button th:if="${ls.xstatus == 'Open'}" type="button" class="btn btn-danger btn-delete editmode" th:attr="data-url=@{/landinfo/} + ${info.xland} + '/survey/' + ${ls.xrow} + '/delete'"><i class="fas fa-trash"></i></button>
+									<button th:if="${ls.xstatus == 'Open'}" type="button" class="btn btn-success btn-confirm editmode" th:attr="data-url=@{/landinfo/} + ${info.xland} + '/survey/' + ${ls.xrow} + '/confirm'"><i class="fas fa-check-square"></i></button>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</section>
+			</div>
+		</div>
+	</div>
+</div>
+
+		<!-- Modal -->
+		<div id="ownermodal-section"></div>
+		<div id="landdagmodal-section"></div>
+		<div id="landdocumentmodal-section"></div>
+		<div id="surveymodal-section"></div>
+		<div id="landeventsmodal-section"></div>
+		<div id="landeventsmodal-section"></div>
+
+		<!-- Footer section -->
+		<div class="footer-section" th:include="commons :: footer-section"></div>
+
+		<script type="text/javascript" th:src="@{/assets/pages/land/landinfo/landinfo.js}"></script>		
+	</body>
+</html>

@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.asl.mapper.ImissueheaderMapper">
+
+	<insert id="saveImissueheader" parameterType="Imissueheader">
+		<selectKey keyProperty="xissuenum" resultType="String" order="BEFORE">
+			SELECT Func_GetTrn('${zid}', '${xtypetrn}', '${xtrn}', 6) FROM DUAL
+		</selectKey>
+		INSERT INTO imissueheader
+		(
+			xissuenum,
+			xdate,
+			xwh,
+			xhwh,
+			xstatus,
+			xtotamt,
+			xref,
+			xperparer,
+			xprepdate,
+			xstatusjv,
+			xvoucher,
+			xnote,
+			xtrn,
+			xtypetrn,
+			zactive,
+			zauserid,
+			zid,
+			ztime,
+			zutime,
+			zuuserid
+		)
+		VALUES
+		(
+			#{xissuenum, jdbcType=VARCHAR},
+			#{xdate, jdbcType=DATE},
+			#{xwh, jdbcType=VARCHAR},
+			#{xhwh, jdbcType=VARCHAR},
+			#{xstatus, jdbcType=VARCHAR},
+			#{xtotamt, jdbcType=DECIMAL},
+			#{xref, jdbcType=VARCHAR},
+			#{xperparer, jdbcType=VARCHAR},
+			#{xprepdate, jdbcType=DATE},
+			#{xstatusjv, jdbcType=VARCHAR},
+			#{xvoucher, jdbcType=VARCHAR},
+			#{xnote, jdbcType=VARCHAR},
+			#{xtrn, jdbcType=VARCHAR},
+			#{xtypetrn, jdbcType=VARCHAR},
+			#{zactive, jdbcType=VARCHAR},
+			#{zauserid, jdbcType=VARCHAR},
+			#{zid, jdbcType=VARCHAR},
+			#{ztime, jdbcType=TIMESTAMP},
+			#{zutime, jdbcType=TIMESTAMP},
+			#{zuuserid, jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<update id="updateImissueheader" parameterType="Imissueheader">
+		UPDATE 
+			imissueheader
+		SET
+			xdate=#{xdate, jdbcType=DATE},
+			xwh=#{xwh, jdbcType=VARCHAR},
+			xhwh=#{xhwh, jdbcType=VARCHAR},
+			xstatus=#{xstatus, jdbcType=VARCHAR},
+			xtotamt=#{xtotamt, jdbcType=DECIMAL},
+			xref=#{xref, jdbcType=VARCHAR},
+			xperparer=#{xperparer, jdbcType=VARCHAR},
+			xprepdate=#{xprepdate, jdbcType=DATE},
+			xstatusjv=#{xstatusjv, jdbcType=VARCHAR},
+			xvoucher=#{xvoucher, jdbcType=VARCHAR},
+			xnote=#{xnote, jdbcType=VARCHAR},
+			xtrn=#{xtrn, jdbcType=VARCHAR},
+			xtypetrn=#{xtypetrn, jdbcType=VARCHAR},
+			zactive=#{zactive, jdbcType=VARCHAR},
+			zauserid=#{zauserid, jdbcType=VARCHAR},
+			ztime=#{ztime, jdbcType=TIMESTAMP},
+			zutime=#{zutime, jdbcType=TIMESTAMP},
+			zuuserid=#{zuuserid, jdbcType=VARCHAR}
+		WHERE
+			xissuenum=#{xissuenum, jdbcType=VARCHAR}
+			AND zid=#{zid, jdbcType=VARCHAR}
+	</update>
+
+	<delete id="deleteImissueheader" parameterType="Imissueheader">
+		DELETE FROM imissueheader WHERE xissuenum=#{xissuenum} AND zactive='1' AND zid=#{zid}
+	</delete>
+
+	<update id="updateImissueheaderTotalAmt" parameterType="Imissueheader">
+		UPDATE 
+			imissueheader
+		SET
+			xtotamt=(SELECT SUM(xlineamt) FROM imissuedetail WHERE xissuenum=#{xissuenum} AND zid=#{zid})
+		WHERE
+			xissuenum=#{xissuenum} 
+			AND zid=#{zid}
+	</update>
+
+	<select id="getAllImissueheader" resultType="Imissueheader">
+		SELECT 
+			imissueheader.*,
+			p.xname as xpreparername,
+			x.xlong as storeName,
+			y.xlong as projectName
+		FROM 
+			imissueheader 
+			left join pdmst p on p.xstaff = imissueheader.xperparer and p.zid= imissueheader.zid
+			left join xcodes x ON x.xcode = imissueheader.xwh AND x.zid = imissueheader.zid AND x.zactive='1' AND x.xtype='Site'
+			left join xcodes y on y.xcode = imissueheader.xhwh and y.zid= imissueheader.zid and y.xtype='Project'
+		WHERE 
+			imissueheader.zid=#{zid} 
+			AND imissueheader.zactive ='1'
+		order by 
+			imissueheader.xissuenum desc
+	</select>
+
+	<select id="findByImissueheader" resultType="Imissueheader"> 
+		SELECT 
+			imissueheader.*,
+			p.xname as xpreparername,
+			x.xlong as storeName,
+			y.xlong as projectName
+		FROM 
+			imissueheader 
+			left join pdmst p on p.xstaff = imissueheader.xperparer and p.zid= imissueheader.zid
+			left join xcodes x ON x.xcode = imissueheader.xwh AND x.zid = imissueheader.zid AND x.zactive='1' AND x.xtype='Site'
+			left join xcodes y on y.xcode = imissueheader.xhwh and y.zid= imissueheader.zid and y.xtype='Project'
+		WHERE 
+			imissueheader.zid=#{zid} 
+			AND imissueheader.xissuenum=#{xissuenum}
+		order by imissueheader.xissuenum
+	</select>
+
+	<select id="getALllImissueheaderByXwh" resultType="Imissueheader">
+		SELECT 
+			imissueheader.*,
+			p.xname as xpreparername,
+			x.xlong as storeName,
+			y.xlong as projectName
+		FROM 
+			imissueheader 
+			left join pdmst p on p.xstaff = imissueheader.xperparer and p.zid= imissueheader.zid
+			left join xcodes x ON x.xcode = imissueheader.xwh AND x.zid = imissueheader.zid AND x.zactive='1' AND x.xtype='Site'
+			left join xcodes y on y.xcode = imissueheader.xhwh and y.zid= imissueheader.zid and y.xtype='Project'
+		WHERE 
+			imissueheader.zid=#{zid} 
+			AND imissueheader.xwh =#{xwh}
+		order by 
+			imissueheader.xissuenum desc
+	</select>
+
+	<!-- For Budget Details -->
+		
+	<insert id="saveImissuedetail" parameterType="Imissuedetail">
+
+		<selectKey keyProperty="xrow" resultType="Integer" order="BEFORE">
+			SELECT COALESCE(Max(xrow), 0) + 1 FROM imissuedetail WHERE zactive='1' AND zid=#{zid}
+		</selectKey>
+		INSERT INTO imissuedetail
+		(
+			xrow,
+			xissuenum,
+			xitem,
+			xunit,
+			xqty,
+			xlineamt,
+			xrate,
+			xpurpose,
+			xnote,
+			xgitem,
+
+			zactive,
+			zauserid,
+			zid,
+			ztime,
+			zutime,
+			zuuserid
+		)
+		VALUES
+		(
+			
+			#{xrow},
+			#{xissuenum, jdbcType=VARCHAR},
+			#{xitem, jdbcType=VARCHAR},
+			#{xunit, jdbcType=VARCHAR},
+			#{xqty, jdbcType=DECIMAL},
+			#{xlineamt, jdbcType=DECIMAL},
+			#{xrate, jdbcType=DECIMAL},
+			#{xpurpose, jdbcType=VARCHAR},
+			#{xnote, jdbcType=VARCHAR},
+			#{xgitem, jdbcType=VARCHAR},
+
+			#{zactive, jdbcType=VARCHAR},
+			#{zauserid, jdbcType=VARCHAR},
+			#{zid, jdbcType=VARCHAR},
+			#{ztime, jdbcType=TIMESTAMP},
+			#{zutime, jdbcType=TIMESTAMP},
+			#{zuuserid, jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<update id="updateImissuedetail" parameterType="Imissuedetail">
+		UPDATE 
+			imissuedetail
+		SET
+			xitem=#{xitem, jdbcType=VARCHAR},
+			xunit=#{xunit, jdbcType=VARCHAR},
+			xqty=#{xqty, jdbcType=DECIMAL},
+			xlineamt=#{xlineamt, jdbcType=DECIMAL},
+			xrate=#{xrate, jdbcType=DECIMAL},
+			xpurpose=#{xpurpose, jdbcType=VARCHAR},
+			xnote=#{xnote, jdbcType=VARCHAR},
+			xgitem=#{xgitem, jdbcType=VARCHAR},
+
+			zactive=#{zactive, jdbcType=VARCHAR},
+			zauserid=#{zauserid, jdbcType=VARCHAR},
+			zid=#{zid, jdbcType=VARCHAR},
+			ztime=#{ztime, jdbcType=TIMESTAMP},
+			zutime=#{zutime, jdbcType=TIMESTAMP},
+			zuuserid=#{zuuserid, jdbcType=VARCHAR}
+		WHERE
+			xissuenum=#{xissuenum, jdbcType=VARCHAR}
+			AND xrow=#{xrow, jdbcType=INTEGER}
+			AND zid=#{zid, jdbcType=VARCHAR}
+	</update>
+
+	<select id="getAllImissuedetail" resultType="Imissuedetail">
+		SELECT 
+			* 
+		FROM 
+			imissuedetail 
+		WHERE 
+			zid=#{zid} 
+			AND zactive='1'
+		order by 
+			ztime desc
+	</select>
+
+	<select id="findByImissuedetail" resultType="Imissuedetail">
+		SELECT 
+			imissuedetail.*,
+			caitem.xdesc as itemname
+		FROM 
+			imissuedetail 
+			left join caitem on caitem.xitem = imissuedetail.xitem and caitem.zid = imissuedetail.zid and caitem.zactive='1'
+		WHERE 
+			imissuedetail.xissuenum=#{xissuenum} 
+			AND imissuedetail.zid=#{zid} 
+			AND imissuedetail.zactive='1'
+	</select>
+
+	<select id="findImissuedetailByXissuenumAndXrow" resultType="Imissuedetail">
+		SELECT 
+			imissuedetail.*,
+			caitem.xdesc as itemname
+		FROM 
+			imissuedetail 
+			left join caitem on caitem.xitem = imissuedetail.xitem and caitem.zid = imissuedetail.zid and caitem.zactive='1'
+		WHERE 
+		imissuedetail.xissuenum=#{xissuenum} 
+		AND imissuedetail.xrow=#{xrow} 
+		AND imissuedetail.zid=#{zid} 
+		AND imissuedetail.zactive='1'
+	</select>
+
+	<select id="findImissuedetailByXissuenumAndXitem" resultType="Imissuedetail">
+		SELECT * FROM imissuedetail WHERE xissuenum=#{xissuenum} AND xitem=#{xitem} AND zid=#{zid} AND zactive='1'
+	</select>
+
+	<delete id="deleteImissuedetail" parameterType="Imissuedetail">
+		DELETE FROM imissuedetail WHERE xrow=#{xrow} AND xissuenum=#{xissuenum} AND zactive='1' AND zid=#{zid}
+	</delete>
+	
+	<select id = "procIM_confirmProjectIssue" statementType = "CALLABLE">
+		{call IM_confirmProjectIssue
+		(
+		#{zid, jdbcType = VARCHAR, mode = IN}, 
+		#{user, jdbcType = VARCHAR, mode = IN}, 
+		#{xissuenum, jdbcType = VARCHAR, mode = IN}, 
+		#{p_seq, jdbcType = VARCHAR, mode = IN}
+		)}
+	</select>
+	
+	<select id = "procIM_confirmProjectIssueGL" statementType = "CALLABLE">
+		{call IM_confirmProjectIssueGL
+		(
+		#{zid, jdbcType = VARCHAR, mode = IN}, 
+		#{user, jdbcType = VARCHAR, mode = IN}, 
+		#{xissuenum, jdbcType = VARCHAR, mode = IN}, 
+		#{p_seq, jdbcType = VARCHAR, mode = IN}
+		)}
+	</select>
+</mapper>

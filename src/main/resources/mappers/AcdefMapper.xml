@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.asl.mapper.AcdefMapper">
+
+	<insert id="save" parameterType="Acdef">
+		INSERT INTO acdef
+		(
+			xyear,
+			xper,
+			xoffset,
+			xaccpl,
+			xaccrule,
+			xgetper,
+			xname,
+			xlength,
+			xaccgl,
+			xyesno,
+			xday,
+			xdatedue,
+			xpreventry,
+			xdateexp,
+			xbacklock,
+			xaccrec,
+			xaccpay,
+
+			zid,
+			zauserid,
+			zaip,
+			zactive,
+			ztime
+		)
+		VALUES
+		(
+			#{xyear, jdbcType=VARCHAR},
+			#{xper, jdbcType=INTEGER},
+			#{xoffset, jdbcType=INTEGER},
+			#{xaccpl, jdbcType=VARCHAR},
+			#{xaccrule, jdbcType=VARCHAR},
+			#{xgetper, jdbcType=VARCHAR},
+			#{xname, jdbcType=VARCHAR},
+			#{xlength, jdbcType=INTEGER},
+			#{xaccgl, jdbcType=VARCHAR},
+			#{xyesno, jdbcType=VARCHAR},
+			#{xday, jdbcType=INTEGER},
+			#{xdatedue, jdbcType=DATE},
+			#{xpreventry, jdbcType=VARCHAR},
+			#{xdateexp, jdbcType=DATE},
+			#{xbacklock, jdbcType=VARCHAR},
+			#{xaccrec, jdbcType=VARCHAR},
+			#{xaccpay, jdbcType=VARCHAR},
+
+			#{zid, jdbcType=VARCHAR},
+			#{zauserid, jdbcType=VARCHAR},
+			#{zaip, jdbcType=VARCHAR},
+			#{zactive, jdbcType=VARCHAR},
+			#{ztime, jdbcType=TIMESTAMP}
+		)
+	</insert>
+
+	<update id="update" parameterType="Acdef">
+		UPDATE 
+			acdef 
+		SET
+			xyear=#{xyear, jdbcType=VARCHAR},
+			xper=#{xper, jdbcType=INTEGER},
+			xoffset=#{xoffset, jdbcType=INTEGER},
+			xaccpl=#{xaccpl, jdbcType=VARCHAR},
+			xaccrule=#{xaccrule, jdbcType=VARCHAR},
+			xgetper=#{xgetper, jdbcType=VARCHAR},
+			xname=#{xname, jdbcType=VARCHAR},
+			xlength=#{xlength, jdbcType=INTEGER},
+			xaccgl=#{xaccgl, jdbcType=VARCHAR},
+			xyesno=#{xyesno, jdbcType=VARCHAR},
+			xday=#{xday, jdbcType=INTEGER},
+			xdatedue=#{xdatedue, jdbcType=DATE},
+			xpreventry=#{xpreventry, jdbcType=VARCHAR},
+			xdateexp=#{xdateexp, jdbcType=DATE},
+			xbacklock=#{xbacklock, jdbcType=VARCHAR},
+			xaccrec=#{xaccrec, jdbcType=VARCHAR},
+			xaccpay=#{xaccpay, jdbcType=VARCHAR},
+
+			zuuserid=#{zuuserid, jdbcType=VARCHAR},
+			zuip=#{zuip, jdbcType=VARCHAR},
+			zactive=#{zactive, jdbcType=VARCHAR},
+			zutime=#{zutime, jdbcType=TIMESTAMP}
+		WHERE
+			zid=#{zid, jdbcType=VARCHAR}
+	</update>
+
+	<select id="find" resultType="Acdef">
+		SELECT
+			acdef.*,
+			acmst.xdesc as xaccpldesc,
+			ac.xdesc as xaccgldesc,
+			r.xdesc as xaccrecdesc,
+			p.xdesc as xaccpaydesc
+		FROM
+			acdef
+			left join acmst  on acmst.xacc = acdef.xaccpl and acmst.zid = acdef.zid
+			left join acmst ac on ac.xacc = acdef.xaccgl and ac.zid = acdef.zid
+			left join acmst r on r.xacc = acdef.xaccrec and r.zid = acdef.zid
+			left join acmst p on p.xacc = acdef.xaccpay and p.zid = acdef.zid
+		WHERE
+			acdef.zid=#{zid}
+	</select>
+
+</mapper>

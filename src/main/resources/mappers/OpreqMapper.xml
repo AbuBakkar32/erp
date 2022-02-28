@@ -1,0 +1,488 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.asl.mapper.OpreqMapper">
+
+	<insert id="saveOpreqheader" parameterType="Opreqheader">
+		<selectKey keyProperty="xdoreqnum" resultType="String" order="BEFORE">
+			SELECT Func_GetTrn('${zid}', '${xtypetrn}', '${xtrn}', 6) FROM DUAL
+		</selectKey>
+		INSERT INTO opreqheader
+		(
+			xdoreqnum,
+			xdate,
+			xstatusreq,
+			xnote,
+			xwh,
+			xhwh,
+			xstaff,
+			xamount,
+			xtype,
+			xtypetrn,
+			xtrn,
+			xstatus,
+			xcus,
+			xref,
+			xsignreject,
+			xdatereject,
+			xreqtype,
+			xpreparer,
+			xpreparertime,
+			xapreparer,
+			xapreparertime,
+			xreqitemtype,
+			xordernum,
+
+			zid,
+			zauserid,
+			zuuserid,
+			zaip,
+			zuip,
+			zactive,
+			ztime,
+			zutime
+		)
+		VALUES
+		(
+			#{xdoreqnum},
+			#{xdate, jdbcType=DATE},
+			#{xstatusreq, jdbcType=VARCHAR},
+			#{xnote, jdbcType=VARCHAR},
+			#{xwh, jdbcType=VARCHAR},
+			#{xhwh, jdbcType=VARCHAR},
+			#{xstaff, jdbcType=VARCHAR},
+			#{xamount, jdbcType=DECIMAL},
+			#{xtype, jdbcType=VARCHAR},
+			#{xtypetrn, jdbcType=VARCHAR},
+			#{xtrn, jdbcType=VARCHAR},
+			#{xstatus, jdbcType=VARCHAR},
+			#{xcus, jdbcType=VARCHAR},
+			#{xref, jdbcType=VARCHAR},
+			#{xsignreject, jdbcType=VARCHAR},
+			#{xdatereject, jdbcType=VARCHAR},
+			#{xreqtype, jdbcType=VARCHAR},
+			#{xpreparer, jdbcType=VARCHAR},
+			#{xpreparertime, jdbcType=TIMESTAMP},
+			#{xapreparer, jdbcType=VARCHAR},
+			#{xapreparertime, jdbcType=TIMESTAMP},
+			#{xreqitemtype, jdbcType=VARCHAR},
+			#{xordernum, jdbcType=VARCHAR},
+
+			#{zid, jdbcType=VARCHAR},
+			#{zauserid, jdbcType=VARCHAR},
+			#{zuuserid, jdbcType=VARCHAR},
+			#{zaip, jdbcType=VARCHAR},
+			#{zuip, jdbcType=VARCHAR},
+			#{zactive, jdbcType=VARCHAR},
+			#{ztime, jdbcType=TIMESTAMP},
+			#{zutime, jdbcType=TIMESTAMP}
+		) 
+	</insert>
+
+	<update id="updateOpreqheader" parameterType="Opreqheader">
+		UPDATE
+			opreqheader
+		SET
+			xdate=#{xdate, jdbcType=DATE},
+			xstatusreq=#{xstatusreq, jdbcType=VARCHAR},
+			xnote=#{xnote, jdbcType=VARCHAR},
+			xwh=#{xwh, jdbcType=VARCHAR},
+			xhwh=#{xhwh, jdbcType=VARCHAR},
+			xstaff=#{xstaff, jdbcType=VARCHAR},
+			xamount=#{xamount, jdbcType=DECIMAL},
+			xtype=#{xtype, jdbcType=VARCHAR},
+			xtypetrn=#{xtypetrn, jdbcType=VARCHAR},
+			xtrn=#{xtrn, jdbcType=VARCHAR},
+			xstatus=#{xstatus, jdbcType=VARCHAR},
+			xcus=#{xcus, jdbcType=VARCHAR},
+			xref=#{xref, jdbcType=VARCHAR},
+			xsignreject=#{xsignreject, jdbcType=VARCHAR},
+			xdatereject=#{xdatereject, jdbcType=VARCHAR},
+			xreqtype=#{xreqtype, jdbcType=VARCHAR},
+			xpreparer=#{xpreparer, jdbcType=VARCHAR},
+			xpreparertime=#{xpreparertime, jdbcType=TIMESTAMP},
+			xapreparer=#{xapreparer, jdbcType=VARCHAR},
+			xapreparertime=#{xapreparertime, jdbcType=TIMESTAMP},
+			xreqitemtype=#{xreqitemtype, jdbcType=VARCHAR},
+			xordernum=#{xordernum, jdbcType=VARCHAR},
+
+			zuuserid=#{zuuserid, jdbcType=VARCHAR},
+			zaip=#{zaip, jdbcType=VARCHAR},
+			zuip=#{zuip, jdbcType=VARCHAR},
+			zactive=#{zactive, jdbcType=VARCHAR},
+			ztime=#{ztime, jdbcType=TIMESTAMP},
+			zutime=#{zutime, jdbcType=TIMESTAMP}
+		WHERE
+			xdoreqnum=#{xdoreqnum, jdbcType=VARCHAR}
+			AND zid=#{zid, jdbcType=VARCHAR}
+	</update>
+
+	<insert id="saveOpreqdetail" parameterType="Opreqdetail">
+		<selectKey keyProperty="xrow" resultType="Integer" order="BEFORE">
+			SELECT COALESCE(Max(xrow), 0) + 1 FROM opreqdetail WHERE xdoreqnum=#{xdoreqnum} AND zid=#{zid}
+		</selectKey>
+		INSERT INTO opreqdetail
+		(
+			xdoreqnum,
+			xrow,
+			xitem,
+			xnote,
+			xqtyord,
+			xrate,
+			xqtydel,
+			xunit,
+			xlineamt,
+			xitemdesc,
+			xcatitem,
+			xgitem,
+			xcfsel,
+			xunitsel,
+
+			zid,
+			zauserid,
+			zuuserid,
+			zaip,
+			zuip,
+			zactive,
+			ztime,
+			zutime
+		)
+		VALUES
+		(
+			#{xdoreqnum, jdbcType=VARCHAR},
+			#{xrow, jdbcType=INTEGER},
+			#{xitem, jdbcType=VARCHAR},
+			#{xnote, jdbcType=VARCHAR},
+			#{xqtyord, jdbcType=DECIMAL},
+			#{xrate, jdbcType=DECIMAL},
+			#{xqtydel, jdbcType=DECIMAL},
+			#{xunit, jdbcType=VARCHAR},
+			#{xlineamt, jdbcType=DECIMAL},
+			#{xitemdesc, jdbcType=VARCHAR},
+			#{xcatitem, jdbcType=VARCHAR},
+			#{xgitem, jdbcType=VARCHAR},
+			#{xcfsel, jdbcType=DECIMAL},
+			#{xunitsel, jdbcType=VARCHAR},
+
+			#{zid, jdbcType=VARCHAR},
+			#{zauserid, jdbcType=VARCHAR},
+			#{zuuserid, jdbcType=VARCHAR},
+			#{zaip, jdbcType=VARCHAR},
+			#{zuip, jdbcType=VARCHAR},
+			#{zactive, jdbcType=VARCHAR},
+			#{ztime, jdbcType=TIMESTAMP},
+			#{zutime, jdbcType=TIMESTAMP}
+		) 
+	</insert>
+
+	<update id="updateOpreqdetail" parameterType="Opreqdetail">
+		UPDATE 
+			opreqdetail
+		SET
+			xitem=#{xitem, jdbcType=VARCHAR},
+			xnote=#{xnote, jdbcType=VARCHAR},
+			xqtyord=#{xqtyord, jdbcType=DECIMAL},
+			xrate=#{xrate, jdbcType=DECIMAL},
+			xqtydel=#{xqtydel, jdbcType=DECIMAL},
+			xunit=#{xunit, jdbcType=VARCHAR},
+			xlineamt=#{xlineamt, jdbcType=DECIMAL},
+			xitemdesc=#{xitemdesc, jdbcType=VARCHAR},
+			xcatitem=#{xcatitem, jdbcType=VARCHAR},
+			xgitem=#{xgitem, jdbcType=VARCHAR},
+			xcfsel=#{xcfsel, jdbcType=DECIMAL},
+			xunitsel=#{xunitsel, jdbcType=VARCHAR},
+
+			zuuserid=#{zuuserid, jdbcType=VARCHAR},
+			zaip=#{zaip, jdbcType=VARCHAR},
+			zuip=#{zuip, jdbcType=VARCHAR},
+			zactive=#{zactive, jdbcType=VARCHAR},
+			ztime=#{ztime, jdbcType=TIMESTAMP},
+			zutime=#{zutime, jdbcType=TIMESTAMP}
+		WHERE
+			xdoreqnum=#{xdoreqnum, jdbcType=VARCHAR}
+			AND xrow=#{xrow, jdbcType=INTEGER}
+			AND zid=#{zid, jdbcType=VARCHAR}
+	</update>
+	
+	<delete id="deleteOpreqheader">
+		DELETE
+		FROM
+			opreqheader
+		WHERE
+			zid=#{zid}
+			AND xdoreqnum=#{xdoreqnum}
+	</delete>
+	
+	<insert id="savePoordDetailWithRow" parameterType="Opreqdetail">
+		INSERT INTO opreqdetail
+		(
+			xdoreqnum,
+			xrow,
+			xitem,
+			xnote,
+			xqtyord,
+			xrate,
+			xunit,
+			xlineamt,
+			xitemdesc,
+			xcatitem,
+			xgitem,
+			xcfsel,
+			xunitsel,
+
+			zid,
+			zauserid,
+			zuuserid,
+			zaip,
+			zuip,
+			zactive,
+			ztime,
+			zutime
+		)
+		VALUES
+		(
+			#{xdoreqnum, jdbcType=VARCHAR},
+			#{xrow, jdbcType=INTEGER},
+			#{xitem, jdbcType=VARCHAR},
+			#{xnote, jdbcType=VARCHAR},
+			#{xqtyord, jdbcType=DECIMAL},
+			#{xrate, jdbcType=DECIMAL},
+			#{xunit, jdbcType=VARCHAR},
+			#{xlineamt, jdbcType=DECIMAL},
+			#{xitemdesc, jdbcType=VARCHAR},
+			#{xcatitem, jdbcType=VARCHAR},
+			#{xgitem, jdbcType=VARCHAR},
+			#{xcfsel, jdbcType=DECIMAL},
+			#{xunitsel, jdbcType=VARCHAR},
+
+			#{zid, jdbcType=VARCHAR},
+			#{zauserid, jdbcType=VARCHAR},
+			#{zuuserid, jdbcType=VARCHAR},
+			#{zaip, jdbcType=VARCHAR},
+			#{zuip, jdbcType=VARCHAR},
+			#{zactive, jdbcType=VARCHAR},
+			#{ztime, jdbcType=TIMESTAMP},
+			#{zutime, jdbcType=TIMESTAMP}
+		) 
+	</insert>
+	
+	<delete id="deleteOpreqdetail" parameterType="Opreqdetail">
+		DELETE
+		FROM
+			opreqdetail
+		WHERE
+			xdoreqnum=#{xdoreqnum, jdbcType=VARCHAR}
+			AND xrow=#{xrow, jdbcType=INTEGER}
+			AND zid=#{zid, jdbcType=VARCHAR}
+	</delete>
+	
+	<delete id="deleteOpreqdetailData" parameterType="Opreqdetail">
+		DELETE
+		FROM
+			opreqdetail
+		WHERE
+			xdoreqnum=#{xdoreqnum, jdbcType=VARCHAR}
+			AND zid=#{zid, jdbcType=VARCHAR}
+	</delete>
+	
+	<select id="getAllOpreqheader" resultType="Opreqheader">
+		SELECT
+			opreqheader.*,
+			opreqheader.xcus ||'-'||cacus.xorg as xorg,
+			y.xlong as projectName
+		FROM 
+			opreqheader
+			left join cacus on cacus.xcus=opreqheader.xcus and cacus.zid=opreqheader.zid
+			left join xcodes y on y.xcode = opreqheader.xhwh and y.zid= opreqheader.zid and y.xtype='Project'
+		WHERE 
+			opreqheader.zid=#{zid} 
+		ORDER BY 
+			opreqheader.xdoreqnum DESC
+	</select>
+	
+	<select id="getAllSOCreated" resultType="Opordheader">
+		SELECT 
+			opordheader.*,
+			cacus.xorg as xorg 
+		FROM 
+			opordheader
+			left join cacus on cacus.xcus=opordheader.xcus and cacus.zid=opordheader.zid 
+		WHERE 
+			opordheader.zid=#{zid} 
+			AND opordheader.xreqnum=#{xreqnum}
+		ORDER BY 
+			opordheader.xordernum DESC
+		
+	</select>
+	
+	<select id="findOpreqHeaderByXdoreqnum" resultType="Opreqheader">
+		SELECT 
+			opreqheader.*,
+			spell_number(opreqheader.xamount) as spellword,
+			spell_number(substr(to_char(opreqheader.xamount-floor(opreqheader.xamount)),2,2)) as xprimeword,
+			cacus.xorg,
+			cacus.xmadd as customeraddress,
+			x.xlong as storeName,
+			y.xlong as projectName
+		FROM 
+			opreqheader 
+			LEFT JOIN cacus ON cacus.xcus = opreqheader.xcus AND cacus.zid = opreqheader.zid AND cacus.zactive='1'
+			left join xcodes x on x.xcode=opreqheader.xwh and x.zid=opreqheader.zid and x.zactive=1 AND x.xtype='Store'
+			left join xcodes y on y.xcode = opreqheader.xhwh and y.zid= opreqheader.zid and y.xtype='Project'
+		WHERE 
+			opreqheader.xdoreqnum=#{xdoreqnum} 
+			AND opreqheader.zid=#{zid}  
+		ORDER BY 
+			opreqheader.xdoreqnum DESC
+	</select>
+	
+	<select id="getAllStatusOpenOpreqheader" resultType="Opreqheader">
+		SELECT
+			opreqheader.*,
+			opreqheader.xcus ||'-'||cacus.xorg as xorg
+		FROM 
+			opreqheader
+			left join cacus on cacus.xcus=opreqheader.xcus and cacus.zid=opreqheader.zid
+		WHERE 
+			opreqheader.zid=#{zid} 
+			AND opreqheader.xstatus='Open' 
+		ORDER BY 
+			opreqheader.xdoreqnum DESC
+	</select>
+
+	<select id="getAllStatusConfirmedOpreqheader" resultType="Opreqheader">
+		SELECT
+			opreqheader.*,
+			opreqheader.xcus ||'-'||cacus.xorg as xorg
+		FROM 
+			opreqheader
+			left join cacus on cacus.xcus=opreqheader.xcus and cacus.zid=opreqheader.zid
+		WHERE 
+			opreqheader.zid=#{zid} 
+			AND opreqheader.xstatusreq='Open' 
+		ORDER BY 
+			opreqheader.xdoreqnum DESC
+	</select>
+
+	<select id="findOpreqdetailByXordernumAndXrow" resultType="Opreqdetail">
+		SELECT 
+			opreqdetail.*,
+			caitem.xdesc,
+			caitem.xgitem,
+			caitem.xcatitem 
+		FROM 
+			opreqdetail
+			JOIN caitem ON caitem.xitem = opreqdetail.xitem AND caitem.zid=opreqdetail.zid AND caitem.zactive='1'
+			LEFT JOIN xcodes ON xcodes.xcode = caitem.xcatitem AND xcodes.zid = caitem.zid and xcodes.zactive='1'
+		WHERE 
+			opreqdetail.xdoreqnum=#{xdoreqnum} 
+			AND opreqdetail.xrow=#{xrow} 
+			AND opreqdetail.zid=#{zid} 
+		ORDER BY
+			xcodes.seqn
+	</select>
+	
+	<select id="findOpreqDetailByXdoreqnum" resultType="Opreqdetail">
+		SELECT 
+			distinct
+			opreqdetail.*,
+			caitem.xdesc,
+			caitem.xgitem,
+			caitem.xcatitem,
+			xcodes.seqn
+		FROM
+			opreqdetail 
+			LEFT JOIN caitem ON caitem.xitem = opreqdetail.xitem AND caitem.zid=opreqdetail.zid AND caitem.zactive='1'
+			LEFT JOIN xcodes ON xcodes.xcode = caitem.xcatitem AND xcodes.zid = caitem.zid and xcodes.zactive='1'
+		WHERE 
+			opreqdetail.xdoreqnum=#{xdoreqnum}
+			AND opreqdetail.zid=#{zid}
+		ORDER BY
+			xcodes.seqn, caitem.xcatitem, opreqdetail.xitem
+	</select>
+	
+	<select id="findOpreqdetailByXdoreqnumAndXitem" resultType="Opreqdetail">
+		SELECT 
+			* 
+		FROM 
+			opreqdetail 
+		WHERE 
+			xdoreqnum=#{xdoreqnum}
+			AND xitem=#{xitem}
+			AND zid=#{zid} 
+		ORDER BY
+			XROW DESC
+	</select>
+	
+	<update id="updateOpreqHeaderTotalAmtAndGrandTotalAmt">
+		UPDATE 
+			opreqheader oph
+		SET
+			oph.xamount=NVL(Func_GetTotalAmtOpreqDetails(oph.xdoreqnum, oph.zid), 0)
+		WHERE
+			oph.xdoreqnum=#{xdoreqnum}
+			AND oph.zid=#{zid} 
+	</update>
+
+<!-- For Individual Customer Requisition -->
+
+	<select id="findOpreqCusHeaderByXdoreqnum" resultType="Opreqheader">
+		SELECT 
+			opreqheader.*,
+			cacus.xorg as xorg
+		FROM 
+			opreqheader 
+			left join cacus on cacus.xcus=opreqheader.xcus and cacus.zid=opreqheader.zid
+		WHERE 
+			opreqheader.zid=#{zid} 
+			AND opreqheader.xcus=#{xcus} 
+			AND opreqheader.zactive=1
+	</select>
+	
+	<select id="getAllOpreqCusheader" resultType="Opreqheader">
+		SELECT
+			opreqheader.*,
+			opreqheader.xcus ||'-'||cacus.xorg as xorg
+		FROM 
+			opreqheader
+			left join cacus on cacus.xcus=opreqheader.xcus and cacus.zid=opreqheader.zid
+		WHERE 
+			opreqheader.zid=#{zid} 
+			AND opreqheader.xcus=#{xcus} 
+		ORDER BY opreqheader.xdoreqnum DESC
+	</select>
+	
+	<select id="getAllStatusOpenOpreqCusheader" resultType="Opreqheader">
+		SELECT
+			opreqheader.*,
+			opreqheader.xcus ||'-'||cacus.xorg as xorg
+		FROM 
+			opreqheader
+			left join cacus on cacus.xcus=opreqheader.xcus and cacus.zid=opreqheader.zid
+		WHERE 
+			opreqheader.zid=#{zid} 
+			AND opreqheader.xcus=#{xcus} 
+			AND opreqheader.xstatus='Open' 
+		ORDER BY 
+			opreqheader.xdoreqnum DESC
+	</select>
+
+	<select id = "procCreateSOFromSRQ" statementType = "CALLABLE">
+		{call sp_createSO_fromSRQ
+		(
+			#{zid, jdbcType = VARCHAR, mode = IN}, 
+			#{user, jdbcType = VARCHAR, mode = IN}, 
+			#{xdoreqnum, jdbcType = VARCHAR, mode = IN},
+			#{p_seq, jdbcType = VARCHAR, mode = IN}
+		)}
+	</select>
+
+	<select id = "procCreateSOFromSRQ_Khanas" statementType = "CALLABLE">
+		{call sp_createSO_fromSRQ_khanas
+		(
+			#{zid, jdbcType = VARCHAR, mode = IN}, 
+			#{user, jdbcType = VARCHAR, mode = IN}, 
+			#{xdoreqnum, jdbcType = VARCHAR, mode = IN}
+		)}
+	</select>
+</mapper>

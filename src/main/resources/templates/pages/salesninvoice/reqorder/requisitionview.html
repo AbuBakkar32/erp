@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<title th:text="${reqtype} + ' Requisition'">Sales Requisition (User)</title>
+		<meta th:remove="tag" th:include="commons :: common-meta" />
+		<meta th:remove="tag" th:include="commons :: common-css" />
+		<meta th:remove="tag" th:include="commons :: common-js" />
+		<style type="text/css">
+			.requisition-table{
+				background: #f1eaea;
+			}
+			.requisition-table th{
+				background: #29af70;
+				color: #fff;
+			}
+			.requisition-table th, .requisition-table td{
+				text-align: center;
+			}
+		</style>
+	</head>
+	<body>
+		<!-- Header section -->
+		<div class="header-section" th:include="commons :: header-section"></div>
+
+		<!-- Menu section -->
+		<div th:if="${menuVersion != null and menuVersion eq 'MENU_V2'}" class="menuv2" th:include="commons :: main-menu"></div>
+
+		<div th:if="${menuVersion == null or menuVersion eq 'MENU_V1'}" class="navbar-inverse menu-section">
+			<div class="container-fluid">
+				<div class="row">
+					<nav class="navbar navbar-inverse">
+						<div class="container-fluid">
+							<div class="row">
+								<div class="navbar-header">
+									<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+										<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+									</button>
+								</div>
+								<div class="collapse navbar-collapse" id="myNavbar">
+									<div class="nav navbar-nav">
+										<li><a th:href="@{/}"><i class="fas fa-home"></i> Home</a></li>
+										<li class="active"><a th:href="@{/salesninvoice/opreqcus?reqtype=} + ${reqtype}" th:text="${reqtype} + ' Requisition'"> Requisition</a></li>
+									</div>
+									<ul class="nav navbar-nav navbar-right" th:include="ckbigmenu :: dashboard-menu"></ul>
+								</div>
+							</div>
+						</div>
+					</nav>
+				</div>
+			</div>
+		</div>
+
+		<!-- Content section -->
+		<div>
+			<div class="container-fluid">
+				<div class="row">
+					<h3 class="text-center" th:text="${reqtype} + ' Requisition'"></h3>
+				</div>
+				<div class="row">
+					<div class="col-md-12 content-area">
+						<div class="row">
+							<div class="col-md-12">
+								<!-- Section list head -->
+								<section id="data-maintenance">
+								<div id="opreqheaderform" th:fragment="opreqheaderform">
+									<div class="section-header sectionbartoggle"></div>
+									<div class="form-action-button">
+										<a th:if="${not #strings.isEmpty(opreqheader.xdoreqnum) and opreqheader.xstatus eq 'Open'}" th:href="@{/salesninvoice/opreqcus/} + ${opreqheader.xdoreqnum} + '?reqtype=' + ${reqtype}" class="btn btn-sm btn-default"><i class="fas fa-edit"></i> <span style="margin-left:2px;"> Edit</span></a>
+										<a th:if="${not #strings.isEmpty(opreqheader.xdoreqnum) and opreqheader.xstatus eq 'Open'}" th:href="@{/salesninvoice/opreqcus/archive/} + ${opreqheader.xdoreqnum} + '?reqtype=' + ${reqtype}" class="btn btn-sm btn-danger archive-btn-link"><i class="fas fa-trash-alt"></i> <span style="margin-left:2px;" th:text="#{button.value.xdelete}"> Delete</span></a>
+										<a th:if="${not #strings.isEmpty(opreqheader.xdoreqnum) and opreqheader.xstatus eq 'Open'}" th:href="@{/salesninvoice/opreqcus/confirm/} + ${opreqheader.xdoreqnum} + '?reqtype=' + ${reqtype}" class="btn btn-sm btn-success confirm-btn-link"><i class="fas fa-check-square"></i> <span style="margin-left:2px;" th:text="#{button.value.xconfirm}"> Confirm</span></a>
+										<a th:if="${not #strings.isEmpty(opreqheader.xdoreqnum)}" th:href="@{/salesninvoice/opreqcus/print/} + ${opreqheader.xdoreqnum}" class="btn btn-sm btn-primary print-btn-link" target="_blank"><i class="fas fa-print"></i> <span style="margin-left:2px;" th:text="#{button.value.xprint}"> Print</span></a>
+									</div>
+									<div class="section-body section-border">
+											<form id="mainform" class="form-horizontal" th:action="@{/salesninvoice/opreqcus/save}" th:object="${opreqheader}" method="post" th:with="df=${'E, dd-MMM-yyyy'}">
+												<input type="hidden" class="form-control" th:field="*{xtypetrn}"/>
+												<input th:if="${not #strings.isEmpty(opreqheader.xdoreqnum)}" type="hidden" class="form-control" th:field="*{xtrn}"/>
+												<input type="hidden" th:if="${not #strings.isEmpty(opreqheader.xdoreqnum)}" class="form-control" th:field="*{xdoreqnum}">
+												<input type="hidden" th:field="*{xcus}"/>
+												<input type="hidden" id="xreqitemtype" name="xreqitemtype" th:value="${reqtype}"/>
+												<div class="row">
+													<div class="col-md-4">
+														<div class="form-group" th:if="${#strings.isEmpty(opreqheader.xdoreqnum)}">
+															<label class="control-label col-md-4" for="xtrn" th:text="#{sr.form.label.xtrn}">Code: </label>
+															<div class="col-md-6">
+																<select class="form-control" th:field="*{xtrn}">
+																	<option th:each="prefix : ${opreqprefix}" th:value="${prefix.xtrn}" th:text="${prefix.xtrn}"></option>
+																</select>
+															</div>
+														</div>
+
+														<div class="form-group" th:if="${not #strings.isEmpty(opreqheader.xdoreqnum)}">
+															<label class="control-label col-md-4" for="xdoreqnum" th:text="#{sr.form.label.xdoreqnum}">SRQ Number: </label>
+															<div class="col-md-8">
+																<input type="text" class="form-control" th:value="*{xdoreqnum}" disabled="disabled">
+															</div>
+														</div>
+
+														<div class="form-group">
+															<label class="control-label col-md-4" for="xstatus" th:text="#{sr.form.label.xstatus}">Status: </label>
+															<div class="col-md-8">
+																<input type="hidden" class="form-control" th:field="*{xstatus}">
+																<input type="text" class="form-control" th:value="*{xstatus}" disabled="disabled">
+															</div>
+														</div>
+
+													</div>
+													<div class="col-md-4">
+														<div class="form-group datepicker">
+															<label class="control-label col-md-4" for="xdate" th:text="#{sr.form.label.xdate}">Date: </label>
+															<div class="input-group date col-md-7 datepicker">
+																<input 	type="datepicker" 
+																		class="form-control" 
+																		id="xdate"
+																		name="xdate"
+																		disabled="disabled"
+																		th:value="${opreqheader.xdate == null ? #dates.format(#dates.createNow(), df) : #dates.format(opreqheader.xdate, df)}"/>
+																<div class="input-group-addon">
+																	<span class="glyphicon glyphicon-calendar"></span>
+																</div>
+															</div>
+														</div>
+
+														<div class="form-group">
+															<label class="control-label col-md-4" for="xamount" th:text="#{sr.form.label.xamount}">Total Amount: </label>
+															<div class="col-md-6">
+																<input type="hidden" class="form-control" th:field="*{xamount}">
+																<input type="text" class="form-control xtotamt" th:value="*{xamount}" disabled="disabled">
+															</div>
+														</div>
+													</div>
+													<div class="col-md-4">
+														<div class="form-group">
+															<label class="control-label col-md-4" for="xnote" th:text="#{sr.form.label.xnote}">Note: </label>
+															<div class="col-md-8">
+																<textarea class="form-control" th:field="*{xnote}" rows="3" disabled="disabled"></textarea>
+															</div>
+														</div>
+													</div>
+												</div>
+											</form>
+										</div>
+									</div>
+								</section>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-md-12">
+								<section id="data-maintenance" style="margin-top: 30px;">	
+									<div class="section-body">
+										<form class="form-horizontal"  method="Post" th:with="df=${'E, dd-MMM-yyyy'}">
+											<table class="table table-stripped table-bordered requisition-table">
+												<thead>
+													<tr>
+														<th th:text="#{sr.table1.header.xitem}" style="text-align:left">Item</th>
+														<th th:text="#{sr.table1.header.xunit}">Unit</th>
+														<th th:text="#{sr.table1.header.xqty}">Quantity</th>
+														<th>Rate</th>
+														<th>Amount</th>
+													</tr>
+												</thead>
+												<tbody>
+													<tr th:each="item, n : ${items}">
+														<td th:text="${item.xitem} + ' - ' + ${item.xdesc}" style="text-align:left"></td>
+														<td th:text="${item.xunitpur}"></td>
+														<td th:text="${item.xqtyord}"></td>
+														<td th:text="${item.xdealerp}"></td>
+														<td th:text="${item.lineamt}"></td>
+													</tr>
+												</tbody>
+											</table>
+										</form>
+									</div>
+								</section>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Modal -->
+		<div id="opreqdetailmodal-section"></div>
+
+		<!-- Footer section -->
+		<div class="footer-section" th:include="commons :: footer-section"></div>
+
+		<script type="text/javascript">
+			$(document).ready(function(){
+
+				$('.req-confirm-btn').off('click').on('click', function(e){
+					e.preventDefault();
+
+					var opreqHeader = {};
+					opreqHeader.xdoreqnum=$('#xdoreqnum').val();
+					opreqHeader.xtypetrn = $('#xtypetrn').val();
+					opreqHeader.xtrn = $('#xtrn').val();
+					opreqHeader.xdate = $('#xdate').val();
+					opreqHeader.xcus = $('#xcus').val();
+					opreqHeader.xamount = $('#xamount').val();
+					opreqHeader.xnote = $('#xnote').val();
+					opreqHeader.xstatus = $('#xstatus').val();
+					opreqHeader.xreqitemtype = $('#xreqitemtype').val();
+	
+					var items = [];
+					$('.requisition-table .item-qty').each(function(i, row){
+						items.push({
+							"xitem" : $(row).attr('id'),
+							"xqtyord" : $(row).val(),
+							"xunit" : $(row).data('xunitpur'),
+							"xrate" : $(row).data('xrate')
+						});
+					});
+	
+					opreqHeader.items = items;
+					
+					//console.log({opreqHeader});
+					loadingMask2.show();
+					$.ajax({
+						url : getBasepath() + '/salesninvoice/opreqcus/save',
+						type : 'POST',
+						dataType : 'json', 
+						data: JSON.stringify(opreqHeader),
+						beforeSend: function(xhr) {
+							xhr.setRequestHeader("Accept", "application/json");
+							xhr.setRequestHeader("Content-Type", "application/json");
+						},
+						success : function(data) {
+							loadingMask2.hide();
+							if(data.status == 'SUCCESS'){
+								$('div.modal').modal('hide');
+								showMessage(data.status.toLowerCase(), data.message);
+								if(data.triggermodalurl){
+									modalLoader(getBasepath() + data.triggermodalurl, data.modalid);
+								} else {
+									if(data.redirecturl){
+										setTimeout(() => {
+											window.location.replace(getBasepath() + data.redirecturl);
+										}, 1000);
+									} else if(data.reloadurl){
+										doSectionReloadWithNewData(data);
+									}
+								}
+							} else {
+								showMessage(data.status.toLowerCase(), data.message);
+							}
+						},
+						error : function(jqXHR, status, errorThrown){
+							showMessage(status, "Something went wrong .... ");
+							loadingMask2.hide()
+						}
+					})
+					
+				})
+
+			})
+		</script>
+	</body>
+</html>

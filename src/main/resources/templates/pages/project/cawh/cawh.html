@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<title>Site Master</title>
+		<meta th:remove="tag" th:include="commons :: common-meta" />
+		<meta th:remove="tag" th:include="commons :: common-css" />
+		<meta th:remove="tag" th:include="commons :: common-js" />
+	</head>
+	<body>
+		<!-- Header section -->
+		<div class="header-section" th:include="commons :: header-section"></div>
+
+		<!-- Menu section -->
+		<div th:if="${menuVersion != null and menuVersion eq 'MENU_V2'}" class="menuv2" th:include="commons :: main-menu"></div>
+
+		<div th:if="${menuVersion == null or menuVersion eq 'MENU_V1'}" class="navbar-inverse menu-section">
+			<div class="container-fluid">
+				<div class="row">
+					<nav class="navbar navbar-inverse">
+						<div class="container-fluid">
+							<div class="row">
+								<div class="navbar-header">
+									<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+										<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+									</button>
+								</div>
+								<div class="collapse navbar-collapse" id="myNavbar">
+									<div class="nav navbar-nav">
+										<li><a th:href="@{/}"><i class="fas fa-home"></i> Home</a></li>
+										<li class="active"><a th:href="@{/project/cawh}">Site Master</a></li>
+									</div>
+									<ul class="nav navbar-nav navbar-right" th:include="ckbigmenu :: dashboard-menu"></ul>
+								</div>
+							</div>
+						</div>
+					</nav>
+				</div>
+			</div>
+		</div>
+
+		<!-- Content section -->
+		<div>
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-md-12 content-area">
+						<div class="row">
+							<h1 class="text-center">Site Master</h1>
+						</div>
+
+						<div class="row">
+							<div class="col-md-6" style="padding-left: 30px; padding-right: 30px;">
+								<div class="row">
+									<!-- Section list head -->
+									<section id="data-maintenance" style="margin-top: 30px;">
+										<div class="section-header sectionbartoggle">
+										</div>
+										<div class="form-action-button">
+											<a th:href="@{/project/cawh}" class="btn btn-sm btn-default"><i class="fas fa-redo-alt"></i> <span style="margin-left:2px;"> Clear</span></a>
+											<a th:if="${#strings.isEmpty(cawh.xwh)}" th:href="@{/project/cawh}" class="btn btn-sm btn-success confirm-btn"><i class="fas fa-save"></i> <span style="margin-left:2px;"> Save</span></a>
+											<a th:if="${not #strings.isEmpty(cawh.xwh) and cawh.xstatus == 'Open' and cawh.zactive == true}" href="#" class="btn btn-sm btn-success update-btn"><i class="fas fa-edit"></i> <span style="margin-left:2px;"> Update</span></a>
+											<a th:if="${not #strings.isEmpty(cawh.xwh) and cawh.xstatus == 'Open'  and cawh.zactive == true}" th:href="@{/project/cawh/delete/} + ${cawh.xwh}" class="btn btn-sm btn-danger archive-btn-link"><i class="fas fa-trash-alt"></i> <span style="margin-left:2px;"> Delete</span></a>
+											<a th:if="${not #strings.isEmpty(cawh.xwh) and cawh.xstatus == 'Open'  and cawh.zactive == true}" th:href="@{/project/cawh/confirm/} + ${cawh.xwh}" class="btn btn-sm btn-warning confirm-btn-link"><i class="fas fa-paper-plane"></i> <span style="margin-left:2px;"> Confirm</span></a>
+											<a th:if="${not #strings.isEmpty(cawh.xwh)}" th:href="@{/project/cawh/print/} + ${cawh.xwh}" class="btn btn-sm btn-primary print-btn-link" target="_blank"><i class="fas fa-print"></i> Print Site</a>
+										</div>
+										
+										<div class="form-action-button">
+											<a class="btn btn-sm btn-default"><i class="glyphicon glyphicon-fast-backward"></i> <span style="margin-left:2px;"> Top</span></a>
+											<a class="btn btn-sm btn-default"><i class="glyphicon glyphicon-chevron-left"></i> <span style="margin-left:2px;"> Previous</span></a>
+											<a class="btn btn-sm btn-default"><i class="glyphicon glyphicon-chevron-right"></i> <span style="margin-left:2px;"> Next</span></a>
+											<a class="btn btn-sm btn-default"><i class="glyphicon glyphicon-fast-forward"></i> <span style="margin-left:2px;"> Bottom</span></a>
+										</div>
+										<div class="section-body section-border">
+											<div id="cawhheaderform" th:fragment="cawhheaderform">
+												<form id="mainform" class="form-horizontal" th:action="@{/project/cawh/save}" th:object="${cawh}" method="post" th:with="df=${'E, dd-MMM-yyyy'}">
+													<input type="hidden" class="form-control" th:field="*{xtrn}">
+													<input type="hidden" th:field="*{newData}"/>
+													<div class="row">
+														<div class="col-md-6">
+		
+															<!--<div class="form-group" th:if="${#strings.isEmpty(cawh.xwh)}">
+																<label class="control-label col-md-4" for="xwh">Site Code</label>
+																<div class="col-md-8">
+																	<select class="form-control" th:field="*{xwh}">
+																		<option th:each="wh : ${warehouses}" th:value="${wh.xcode}" th:text="${wh.xcode}"></option>
+																	</select>
+																</div>
+															</div>
+
+															<div class="form-group" th:if="${not #strings.isEmpty(cawh.xwh)}">
+																<label class="control-label col-md-4" for="xwh ">Site Code</label>
+																<div class="col-md-8">
+																	<input type="text" class="form-control" th:value="*{xwh}" disabled="disabled">
+																	<input type="hidden" class="form-control" th:field="*{xwh}">
+																</div>
+															</div>-->
+
+															<div class="form-group" th:if="${#strings.isEmpty(cawh.xwh)}">
+																<label class="control-label col-md-4" for="xwh">Site</label>
+																<div class="col-sm-8">
+																	<input 	type="text" 
+																			class="form-control searchsuggest xwhsearch" 
+																			placeholder="Search..." 
+																			th:value="${#strings.isEmpty(cawh.xwh) ? '' : cawh.xwh + '-' + cawh.xdesc}" 
+																			th:attr="search-url='search/site'"
+																			/>
+																	<input type="hidden" class="required" id="search-val" th:field="*{xwh}" value=""/>
+																	<input type="hidden" id="search-des" th:value="*{xwh}"/>
+																</div>
+															</div>
+
+															<!--<div class="form-group">
+																<label class="control-label col-md-4" for="xdesc">Site Name</label>
+																<div class="col-sm-8">
+																	<input type="text" class="form-control xdesc-display" th:value="${#strings.isEmpty(cawh.xdesc) ? '' : cawh.xdesc}" disabled="disabled">
+																	<input type="hidden" class="form-control" th:field="*{xdesc}">
+																</div>
+															</div>-->
+
+															<div class="form-group" th:if="${not #strings.isEmpty(cawh.xwh)}">
+																<label class="control-label col-md-4" for="xwh ">Site</label>
+																<div class="col-md-8">
+																	<input type="text" class="form-control" th:value="${#strings.isEmpty(cawh.xwh) ? '' : cawh.xwh + '-' + cawh.xdesc}"  disabled="disabled">
+																	<input type="hidden" class="form-control" th:field="*{xwh}">
+																</div>
+															</div>
+
+															<!--<div class="form-group">
+																<label class="control-label col-md-4" for="xname ">Site Name</label>
+																<div class="col-md-8">
+																	<input type="text" class="form-control" th:field="*{xname}">
+																</div>
+															</div>-->
+
+															<div class="form-group"  th:if="${#strings.isEmpty(cawh.xwh)}">
+																<label class="control-label col-md-4" for="xproject">Project</label>
+																<div class="col-sm-8">
+																	<input 	type="text" 
+																			class="form-control searchsuggest xprojectsearch" 
+																			placeholder="Search..." 
+																			th:value="${#strings.isEmpty(cawh.xproject) ? '' : cawh.xproject + '-' + cawh.projectName}" 
+																			th:attr="search-url='search/caproject'"
+																			/>
+																	<input type="hidden" class="required" id="search-val" th:field="*{xproject}" value=""/>
+																	<input type="hidden" id="search-des" th:value="*{xproject}"/>
+																</div>
+															</div>
+															
+															<div class="form-group" th:if="${not #strings.isEmpty(cawh.xwh)}">
+																<label class="control-label col-md-4" for="xproject ">Project</label>
+																<div class="col-md-8">
+																	<input type="text" class="form-control" th:value="${#strings.isEmpty(cawh.xproject) ? '' : cawh.xproject + '-' + cawh.projectName}"  disabled="disabled">
+																	<input type="hidden" class="form-control" th:field="*{xproject}">
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xcus">Customer</label>
+																<div class="col-sm-8">
+																	<input type="text" class="form-control xcus-display" th:value="${#strings.isEmpty(cawh.xcus) ? '' : cawh.xcus + '-' + cawh.xorg}" disabled="disabled">
+																	<input type="hidden" class="form-control" th:field="*{xcus}">
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xlocation ">Location</label>
+																<div class="col-md-8">
+																	<input type="text" class="form-control" th:field="*{xlocation}">
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xsupervisor">Supervisor</label>
+																<div class="col-sm-8">
+																	<input 	type="text" 
+																			class="form-control searchsuggest" 
+																			placeholder="Search..." 
+																			th:value="${#strings.isEmpty(cawh.xsupervisor) ? '' : cawh.xsupervisor + ' - ' + cawh.xsupervisorName}" 
+																			th:attr="search-url='search/staff'"
+																			/>
+																	<input type="hidden" class="required" id="search-val" th:field="*{xsupervisor}" value=""/>
+																	<input type="hidden" id="search-des" th:value="*{xsupervisor}"/>
+																</div>
+															</div>
+		
+															<div class="form-group datepicker">
+																<label class="control-label col-md-4" for="xdate">Date</label>
+																<div class="input-group date col-md-7 datepicker">
+																	<input 	type="datepicker" 
+																			class="form-control" 
+																			id="xdate"
+																			name="xdate"
+																			th:value="${cawh.xdate == null ? #dates.format(#dates.createNow(), df) : #dates.format(cawh.xdate, df)}"/>
+																	<div class="input-group-addon">
+																		<span class="glyphicon glyphicon-calendar"></span>
+																	</div>
+																</div>
+															</div>
+		
+															<div class="form-group datepicker">
+																<label class="control-label col-md-4" for="xstartdate">Start Date</label>
+																<div class="input-group date col-md-7 datepicker">
+																	<input 	type="datepicker" 
+																			class="form-control" 
+																			id="xstartdate"
+																			name="xstartdate"
+																			th:value="${cawh.xstartdate == null ? #dates.format(#dates.createNow(), df) : #dates.format(cawh.xstartdate, df)}"/>
+																	<div class="input-group-addon">
+																		<span class="glyphicon glyphicon-calendar"></span>
+																	</div>
+																</div>
+															</div>
+		
+															<div class="form-group datepicker">
+																<label class="control-label col-md-4" for="xenddate">Completion Date</label>
+																<div class="input-group date col-md-7 datepicker">
+																	<input 	type="datepicker" 
+																			class="form-control" 
+																			id="xenddate"
+																			name="xenddate"
+																			th:value="${cawh.xenddate == null ? #dates.format(#dates.createNow(), df) : #dates.format(cawh.xenddate, df)}"/>
+																	<div class="input-group-addon">
+																		<span class="glyphicon glyphicon-calendar"></span>
+																	</div>
+																</div>
+															</div>
+
+														</div>
+														<div class="col-md-6">
+
+															<div class="form-group">
+																<label class="control-label col-sm-4" for="xamountbudgt">Budget Amount</label>
+																<div class="col-sm-8">
+																	<input type="hidden" class="form-control" th:field="*{xamountbudgt}">
+																	<input type="text" class="form-control" th:value="*{xamountbudgt}" disabled="disabled"/>
+																</div>
+															</div>
+		
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xamountcost">Actual Cost Amount</label>
+																<div class="col-md-8">
+																	<input type="hidden" class="form-control" th:field="*{xamountcost}">
+																	<input type="text" class="form-control" th:value="*{xamountcost}" disabled="disabled">
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xref">Reference</label>
+																<div class="col-md-8">
+																	<input type="text" class="form-control" th:field="*{xref}">
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xstatus">Site Status</label>
+																<div class="col-md-8">
+																	<input type="hidden" class="form-control" th:field="*{xstatus}">
+																	<input type="text" class="form-control" th:value="*{xstatus}" disabled="disabled">
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-sm-4" for="xtotamt">Estimated Cost</label>
+																<div class="col-sm-8">
+																	<input type="hidden" class="form-control" th:field="*{xtotamt}">
+																	<input type="text" class="form-control" th:value="*{xtotamt}" disabled="disabled"/>
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xnote">Note</label>
+																<div class="col-md-8">
+																	<textarea class="form-control" th:field="*{xnote}" rows="3"></textarea>
+																</div>
+															</div>
+
+														</div>
+													</div>
+												</form>
+											</div>
+										</div>
+								</section>
+								</div>
+								<div class="row">
+									<section th:if="${not #strings.isEmpty(cawh.xwh)}" id="data-maintenance" style="margin-top: 30px;">
+										<div class="section-header sectionbartoggle">
+											<h1>Document Details of <span th:text="${cawh.xwh + '-' + cawh.xdesc}"></span></h1>
+										</div>
+										<div class="section-body" style="overflow-y:scroll;height:200px;">
+											<table class="table table-striped table-bordered normal-table" id="documenttable" th:fragment="documenttable">
+												<thead>
+													<tr>
+														<th th:text="#{li.modal2.table.heading.count}">SL#</th>
+														<th th:text="#{li.modal2.table.heading.xdoc}">Document ID</th>
+														<th>Name</th>
+														<th>Document</th>
+														<th>Type</th>
+														<th th:if="${cawh.xstatus eq 'Open'}" data-nosort="Y" style="text-align: right;">
+															<button type="button" class="btn btn-success btn-add" th:attr="data-url=@{/project/cawh/} + ${cawh.xwh} + '/document/new/show', data-target-modal='documentmodal'"><i class="fas fa-plus"></i></button>
+														</th>
+													</tr>
+												</thead>
+												<tbody>
+													<tr th:each="ld, n : ${documentlist}">
+														<td th:text="${n.count}"></td>
+														<td th:text="${ld.xdoc}"></td>
+														<td th:text="${ld.xname}"></td>
+														<td>
+															<a th:href="@{/download/document/} + ${ld.xdocument} + '/' + ${ld.xnameold}" target="_blank" th:text="${ld.xnameold}">Download</a>
+														</td>
+														<td th:text="${ld.xdoctype}"></td>
+														<td th:if="${cawh.xstatus eq 'Open'}" data-nosort="Y" style="text-align: right; font-size: 11px;">
+															<button type="button" class="btn btn-default btn-edit editmode" th:attr="data-url=@{/project/cawh/} + ${cawh.xwh} + '/document/' + ${ld.xrow} + '/show', data-target-modal='documentmodal'"><i class="fas fa-edit"></i></button>
+															<button type="button" class="btn btn-danger btn-delete editmode" th:attr="data-url=@{/project/cawh/} + ${cawh.xwh} + '/document/' + ${ld.xrow} + '/delete'"><i class="fas fa-trash"></i></button>
+														</td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+									</section>
+								</div>
+								
+								<div class="row">
+									<section th:if="${not #strings.isEmpty(cawh.xwh)}" id="data-maintenance" style="margin-top: 30px;">
+										<div class="section-header sectionbartoggle">
+											<h1>Estimated Cost Details of <span th:text="${cawh.xwh + '-' + cawh.xdesc}"></span></h1>
+										</div>
+										<div class="section-body" style="overflow-y:scroll;height:200px;">
+											<table class="table table-striped table-bordered normal-table" id="estcosttable" th:fragment="estcosttable">
+												<thead>
+													<tr>
+														<th th:text="#{li.modal2.table.heading.count}">SL#</th>
+														<th>Item</th>
+														<th>Purpose</th>
+														<th>Unit</th>
+														<th>Quantity</th>
+														<th>Unit Price</th>
+														<th>Line Amount</th>
+														<th th:if="${cawh.xstatus eq 'Open'}" data-nosort="Y" style="text-align: right;">
+															<button type="button" class="btn btn-success btn-add" th:attr="data-url=@{/project/cawh/} + ${cawh.xwh} + '/estcost/new/show', data-target-modal='estcostmodal'"><i class="fas fa-plus"></i></button>
+														</th>
+													</tr>
+												</thead>
+												<tbody th:with="df=${'E, dd-MMM-yyyy'}">
+													<tr th:each="ld, n : ${estcostlist}">
+														<td th:text="${ld.xrow}"></td>
+														<td>
+															<a th:href="@{/mastersetup/caitem/} + ${ld.xitem}" target="_blank" th:text="${ld.xitem} + ' - ' + ${ld.xitemdesc}"></a>
+														</td>
+														<td th:text="${ld.xpurpose}"></td>
+														<td th:text="${ld.xunit}"></td>
+														<td th:text="${ld.xqty}"></td>
+														<td th:text="${ld.xrate}"></td>
+														<td th:text="${ld.xlineamt}"></td>
+														<td th:if="${cawh.xstatus eq 'Open'}" data-nosort="Y" style="text-align: right; font-size: 11px;">
+															<button type="button" class="btn btn-default btn-edit editmode" th:attr="data-url=@{/project/cawh/} + ${cawh.xwh} + '/estcost/' + ${ld.xrow} + '/show', data-target-modal='estcostmodal'"><i class="fas fa-edit"></i></button>
+															<button type="button" class="btn btn-danger btn-delete editmode" th:attr="data-url=@{/project/cawh/} + ${cawh.xwh} + '/estcost/' + ${ld.xrow} + '/delete'"><i class="fas fa-trash"></i></button>
+														</td>
+													</tr>
+												</tbody>
+												<tfoot>
+													<th colspan="6" class="text-right">Total</th>
+													<th class="text-right" th:text="${totalLineAmount}">0</th>
+												</tfoot>
+											</table>
+										</div>
+									</section>
+								</div>
+							</div>
+
+							<div class="col-md-6" style="padding-left: 30px; padding-right: 30px; margin-top: 30px;">
+								<div class="row">
+									<section id="list-manager" style="margin-top: 30px;">
+										<div class="section-header sectionbartoggle">
+											<h1>Sites List</h1>
+										</div>
+										<div class="section-body">
+											<div style="overflow-x: auto">
+												<table class="table table-striped table-bordered datatable" id="cawhheadertable" th:fragment="cawhheadertable">
+													<thead>
+														<tr>
+															<th>Side</th>
+															<th>Project</th>
+															<th>Customer</th>
+															<th>Supervisor</th>
+															<th>Status</th>
+														</tr>
+													</thead>
+													<tbody th:with="df=${'E, dd-MMM-yyyy'}">
+														<tr th:each="por : ${allCawh}">
+															<td>
+																<a th:href="@{/project/cawh/} + ${por.xwh}" th:text="${#strings.isEmpty(por.xwh)? '' : por.xwh + ' - ' + por.xdesc}"></a>
+															</td>
+															<td th:text="${#strings.isEmpty(por.xproject)? '' : por.xproject + ' - ' + por.projectName}"></td>
+															<td th:text="${#strings.isEmpty(por.xcus)? '' : por.xcus + ' - ' + por.xorg}"></td>
+															<td th:text="${#strings.isEmpty(por.xsupervisor)? '' : por.xsupervisor + ' - ' + por.xsupervisorName}"></td>
+															<td th:text="${por.xstatus}"></td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+										</div>
+									</section>
+								</div>
+								<div class="row">
+									<section id="list-manager" style="margin-top: 30px;">
+										<div class="section-header sectionbartoggle">
+											<h1>Budget List</h1>
+										</div>
+										<div class="section-body">
+											<div style="overflow-x: auto">
+												<table class="table table-striped table-bordered datatable" id="cawhbudgetheadertable" th:fragment="cawhbudgetheadertable">
+													<thead>
+														<tr>
+															<th>Budget Code No.</th>
+															<th>Site</th>
+															<th>Date</th>
+															<th>Budget Amount</th>
+															<th>Reference</th>
+														</tr>
+													</thead>
+													<tbody th:with="df=${'E, dd-MMM-yyyy'}">
+														<tr th:each="por : ${allCawhbudget}">
+															<td>
+																<a th:href="@{/project/cawhbudget/} + ${por.xbudget}" th:text="${por.xbudget}"></a>
+															</td>
+															<td th:text="${#strings.isEmpty(por.xwh)? '' : por.xwh + ' - ' + por.siteName}"></td>
+															<td th:text="${#dates.format(por.xdate, df)}"></td>
+															<td th:text="${por.xtotamt}"></td>
+															<td th:text="${por.xref}"></td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+										</div>
+									</section>
+								</div>
+								<div class="row">
+									<section id="list-manager" style="margin-top: 30px;">
+										<div class="section-header sectionbartoggle">
+											<h1>Expenses List</h1>
+										</div>
+										<div class="section-body">
+											<div style="overflow-x: auto">
+												<table class="table table-striped table-bordered datatable" id="imissueheadertable" th:fragment="imissueheadertable">
+													<thead>
+														<tr>
+															<th>Expense Code</th>
+															<th>Date</th>
+															<th>Site</th>
+															<th>Total Amount</th>
+															<th>Reference</th>
+															<th>Status</th>
+														</tr>
+													</thead>
+													<tbody th:with="df=${'E, dd-MMM-yyyy'}">
+														<tr th:each="por : ${allImissueheader}">
+															<td>
+																<a th:href="@{/project/imissueheader/} + ${por.xissuenum}" th:text="${por.xissuenum}"></a>
+															</td>
+															<td th:text="${#dates.format(por.xdate, df)}"></td>
+															<td th:text="${#strings.isEmpty(por.xwh)? '' : por.xwh + ' - ' + por.storeName}"></td>
+															<td th:text="${por.xtotamt}"></td>
+															<td th:text="${por.xref}"></td>
+															<td th:text="${por.xstatus}"></td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+										</div>
+									</section>
+								</div>
+								<div class="row">
+									
+								</div>
+							</div>
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Modal -->
+		<div id="documentmodal-section"></div>
+		<div id="estcostmodal-section"></div>
+
+		<!-- Footer section -->
+		<div class="footer-section" th:include="commons :: footer-section"></div>
+		
+		<script type="text/javascript" th:src="@{/assets/js/ck-ui/ck-search-suggest.js}"></script>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				// Init ui for modal
+				ck.ui.config.buttonevent();
+				//$(".xitemsearch").click();
+
+				// Get item purchase unit
+				$('.xprojectsearch').on('blur', function(){
+					setTimeout(() => {
+						if($('input[name="xproject"]').val() == ''){
+							$('input.xcus-display').val('');
+							return;
+						}
+
+						loadingMask2.show();
+						$.ajax({
+							url : getBasepath() + '/project/cawh/projectcustomer/' + $('input[name="xproject"]').val(),
+							type : 'GET',
+							success : function(data) {
+								loadingMask2.hide();
+								if(data == undefined || data == null) return;
+
+								$('input[name="xcus"]').val(data.xcus);
+								$('input.xcus-display').val(data.xcus + ' - ' + data.xorg);
+
+							},
+							error : function(jqXHR, status, errorThrown){
+								showMessage(status, "Something went wrong .... ");
+								loadingMask2.hide();
+							}
+						})
+					}, 1000);
+				});
+
+			});
+		</script>
+		
+		<script type="text/javascript">
+			$(document).ready(function(){
+				// Init ui for modal
+				ck.ui.config.buttonevent();
+	
+				$('.xprojectsearch').on('blur', function(){
+					setTimeout(() => {
+						if($('input[name="xproject"]').val() == ''){
+							$("#xwh option").remove(); 
+							var mySelect = $('#xwh');
+							mySelect.append(
+								$('<option></option>').val("").html("-- Select --")
+							);
+							return;
+						}
+	
+						loadingMask2.show();
+						$.ajax({
+							url : getBasepath() + '/project/caproject/allcodesbyproject/' + $('input[name="xproject"]').val(),
+							type : 'GET',
+							success : function(data) {
+								loadingMask2.hide();
+								if(data == undefined || data == null) return;
+	
+								$("#xwh option").remove(); 
+								var mySelect = $('#xwh');
+								mySelect.append(
+									$('<option></option>').val("").html("-- Select --")
+								);
+								$.each(data, function(val, obj) {
+									mySelect.append(
+										$('<option></option>').val(obj.xcode).html(obj.xcode + ' - ' + obj.xcodename)
+									);
+								});
+	
+							},
+							error : function(jqXHR, status, errorThrown){
+								showMessage(status, "Something went wrong .... ");
+								loadingMask2.hide();
+							}
+						})
+					}, 1000);
+				});
+			});
+		</script>
+
+	</body>
+</html>

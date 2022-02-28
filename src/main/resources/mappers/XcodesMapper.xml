@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.asl.mapper.XcodesMapper">
+
+	<insert id="saveXcodes" parameterType="Xcodes">
+		INSERT INTO Xcodes
+		(
+			xtype,
+			xcode,
+			xprops,
+			xacc,
+			xAccDisc,
+			xAccVat,
+			xAccAit,
+			xAccPur,
+			xAccAdj,
+			xAccCash,
+			xAccBank,
+			xAccArdBank,
+			xlong,
+			seqn,
+			xparentcode,
+			zid,
+			zauserid,
+			zuuserid,
+			zaip,
+			zuip,
+			zactive,
+			ztime,
+			zutime
+		)
+		VALUES
+		(
+			#{xtype, jdbcType=VARCHAR},
+			#{xcode, jdbcType=VARCHAR},
+			#{xprops, jdbcType=VARCHAR},
+			#{xacc, jdbcType=VARCHAR},
+			#{xAccDisc, jdbcType=VARCHAR},
+			#{xAccVat, jdbcType=VARCHAR},
+			#{xAccAit, jdbcType=VARCHAR},
+			#{xAccPur, jdbcType=VARCHAR},
+			#{xAccAdj, jdbcType=VARCHAR},
+			#{xAccCash, jdbcType=VARCHAR},
+			#{xAccBank, jdbcType=VARCHAR},
+			#{xAccArdBank, jdbcType=VARCHAR},
+			#{xlong, jdbcType=VARCHAR},
+			#{seqn, jdbcType=INTEGER},
+			#{xparentcode, jdbcType=VARCHAR},
+			#{zid, jdbcType=VARCHAR},
+			#{zauserid, jdbcType=VARCHAR},
+			#{zuuserid, jdbcType=VARCHAR},
+			#{zaip, jdbcType=VARCHAR},
+			#{zuip, jdbcType=VARCHAR},
+			#{zactive, jdbcType=VARCHAR},
+			#{ztime, jdbcType=TIMESTAMP},
+			#{zutime, jdbcType=TIMESTAMP}
+		) 
+	</insert>
+
+	<update id="updateXcodes" parameterType="Xcodes">
+		UPDATE
+			Xcodes
+		SET
+			xprops=#{xprops, jdbcType=VARCHAR},
+			xacc=#{xacc, jdbcType=VARCHAR},
+			xAccDisc=#{xAccDisc, jdbcType=VARCHAR},
+			xAccVat=#{xAccVat, jdbcType=VARCHAR},
+			xAccAit=#{xAccAit, jdbcType=VARCHAR},
+			xAccPur=#{xAccPur, jdbcType=VARCHAR},
+			xAccAdj=#{xAccAdj, jdbcType=VARCHAR},
+			xAccCash=#{xAccCash, jdbcType=VARCHAR},
+			xAccBank=#{xAccBank, jdbcType=VARCHAR},
+			xAccArdBank=#{xAccArdBank, jdbcType=VARCHAR},
+			xlong=#{xlong, jdbcType=VARCHAR},
+			seqn=#{seqn, jdbcType=INTEGER},
+			xparentcode=#{xparentcode, jdbcType=VARCHAR},
+			zuuserid=#{zuuserid, jdbcType=VARCHAR},
+			zaip=#{zaip, jdbcType=VARCHAR},
+			zuip=#{zuip, jdbcType=VARCHAR},
+			zactive=#{zactive, jdbcType=VARCHAR},
+			ztime=#{ztime, jdbcType=TIMESTAMP},
+			zutime=#{zutime, jdbcType=TIMESTAMP}
+		WHERE
+			xcode=#{xcode}
+			AND xtype=#{xtype, jdbcType=VARCHAR}
+			AND zid=#{zid, jdbcType=VARCHAR}
+	</update>
+
+	<select id="getAllXcodes" resultType="Xcodes">
+		SELECT 
+			* 
+		FROM 
+			Xcodes 
+		WHERE 
+			xtype !='PD Transaction Type' 
+			AND zid=#{zid}
+		<if test="zactive != null">
+			AND zactive=#{zactive}
+		</if>
+		order by xtype
+	</select>
+
+	<select id="findByXtype" resultType="Xcodes">
+		SELECT * FROM Xcodes WHERE xtype=#{xtype} AND zid=#{zid}
+		<if test="zactive != null">
+			AND zactive=#{zactive}
+		</if>
+		ORDER BY xcode ASC
+	</select>
+	
+	<select id="getAllXcodesByCusGroup" resultType="Xcodes">
+		select 
+		    x.xcode, 
+    		x.xtype,
+		    CASE when (select xdesc from acmst where xacc=x.xacc and zid=#{zid}) is null
+		        then '' else  x.xacc ||'-' ||(select xdesc from acmst where xacc=x.xacc and zid=#{zid}) end as xacc,
+		    CASE when (select xdesc from acmst where xacc=x.xaccdisc and zid=#{zid}) is null
+		        then '' else  x.xaccdisc ||'-' ||(select xdesc from acmst where xacc=x.xaccdisc and zid=#{zid}) end as xaccdisc,
+		    CASE when (select xdesc from acmst where xacc=x.xaccvat and zid=#{zid}) is null
+		        then '' else  x.xaccvat ||'-' ||(select xdesc from acmst where xacc=x.xaccvat and zid=#{zid}) end as xaccvat,
+		    CASE when (select xdesc from acmst where xacc=x.xaccait and zid=#{zid}) is null
+		        then '' else  x.xaccait ||'-' ||(select xdesc from acmst where xacc=x.xaccait and zid=#{zid}) end as xaccait,
+		    CASE when (select xdesc from acmst where xacc=x.xacccash and zid=#{zid}) is null
+		        then '' else  x.xacccash ||'-' ||(select xdesc from acmst where xacc=x.xacccash and zid=#{zid}) end as xacccash,
+		    CASE when (select xdesc from acmst where xacc=x.xaccbank and zid=#{zid}) is null
+		        then '' else  x.xaccbank ||'-' ||(select xdesc from acmst where xacc=x.xaccbank and zid=#{zid}) end as xaccbank,
+		    CASE when (select xdesc from acmst where xacc=x.xaccardbank and zid=#{zid}) is null 
+		        then '' else  x.xaccardbank ||'-' ||(select xdesc from acmst where xacc=x.xaccardbank and zid=#{zid}) end as xaccardbank
+		from 
+		    xcodes x
+		where 
+		    x.xtype='Customer Group'
+		    and x.zid=#{zid}
+		    ORDER BY x.xcode, x.xtype ASC
+	</select>
+	
+	<select id="getAllXcodesBySupGroup" resultType="Xcodes">
+		select 
+		    x.xcode, 
+    		x.xtype,
+		    CASE when (select xdesc from acmst where xacc=x.xacc and zid=#{zid}) is null
+		        then '' else  x.xacc ||'-' ||(select xdesc from acmst where xacc=x.xacc and zid=#{zid}) end as xacc,
+		    CASE when (select xdesc from acmst where xacc=x.xaccdisc and zid=#{zid})  is null
+		        then '' else  x.xaccdisc ||'-' ||(select xdesc from acmst where xacc=x.xaccdisc and zid=#{zid}) end as xaccdisc,
+		    CASE when (select xdesc from acmst where xacc=x.xaccvat and zid=#{zid}) is null
+		        then '' else  x.xaccvat ||'-' ||(select xdesc from acmst where xacc=x.xaccvat and zid=#{zid}) end as xaccvat,
+		    CASE when (select xdesc from acmst where xacc=x.xaccait and zid=#{zid}) is null
+		        then '' else  x.xaccait ||'-' ||(select xdesc from acmst where xacc=x.xaccait and zid=#{zid}) end as xaccait,
+		    CASE when (select xdesc from acmst where xacc=x.xaccpur and zid=#{zid}) is null
+		        then '' else  x.xaccpur ||'-' ||(select xdesc from acmst where xacc=x.xaccpur and zid=#{zid}) end as xaccpur,
+		    CASE when (select xdesc from acmst where xacc=x.xaccadj and zid=#{zid}) is null
+		        then '' else  x.xaccadj ||'-' ||(select xdesc from acmst where xacc=x.xaccadj and zid=#{zid}) end as xaccadj
+		from 
+		    xcodes x
+		where 
+		    x.xtype='Supplier Group'
+		    and x.zid=#{zid}
+		    ORDER BY x.xcode, x.xtype ASC 
+	</select>
+	
+	<select id="findByXtypesAndXcodes" resultType="Xcodes">
+		SELECT 
+			xcodes.*
+		FROM 
+		    xcodes 	
+		WHERE 
+			xcodes.xtype=#{xtype} 
+			AND xcodes.xcode=#{xcode} 
+			AND xcodes.zid=#{zid}
+		<if test="zactive != null">
+			AND zactive=#{zactive}
+		</if>
+	</select>
+	
+	<select id="findByXtypesAndXcodesForSup" resultType="Xcodes">
+		select 
+		    x.*, 
+		    CASE when (select xdesc from acmst where xacc=x.xacc and zid=#{zid}) is null
+		        then '' else (select xdesc from acmst where xacc=x.xacc and zid=#{zid}) end as xdesc1,
+		    CASE when (select xdesc from acmst where xacc=x.xaccdisc and zid=#{zid}) is null
+		        then '' else (select xdesc from acmst where xacc=x.xaccdisc and zid=#{zid}) end as xdesc2,
+		    CASE when (select xdesc from acmst where xacc=x.xaccvat and zid=#{zid}) is null
+		        then '' else (select xdesc from acmst where xacc=x.xaccvat and zid=#{zid}) end as xdesc3,
+		    CASE when (select xdesc from acmst where xacc=x.xaccait and zid=#{zid}) is null
+		        then '' else (select xdesc from acmst where xacc=x.xaccait and zid=#{zid}) end as xdesc4,
+		    CASE when (select xdesc from acmst where xacc=x.xaccpur and zid=#{zid}) is null
+		       then '' else  (select xdesc from acmst where xacc=x.xaccpur and zid=#{zid}) end as xdesc8,
+		    CASE when (select xdesc from acmst where xacc=x.xaccadj and zid=#{zid}) is null
+		        then '' else (select xdesc from acmst where xacc=x.xaccadj and zid=#{zid}) end as xdesc9
+		from 
+		    xcodes x
+		where 
+		    x.xtype = #{xtype} 
+		    AND x.xcode=#{xcode} 
+		    AND x.zid=#{zid}
+	</select>
+	
+	<select id="findByXtypesAndXcodesForCus" resultType="Xcodes">
+		select 
+		    x.*,
+		    CASE when (select xdesc from acmst where xacc=x.xacc and zid=#{zid}) is null
+		        then '' else (select xdesc from acmst where xacc=x.xacc and zid=#{zid}) end as xdesc1,
+		    CASE when (select xdesc from acmst where xacc=x.xaccdisc and zid=#{zid}) is null
+		        then '' else (select xdesc from acmst where xacc=x.xaccdisc and zid=#{zid}) end as xdesc2,
+		    CASE when (select xdesc from acmst where xacc=x.xaccvat and zid=#{zid}) is null
+		        then '' else (select xdesc from acmst where xacc=x.xaccvat and zid=#{zid}) end as xdesc3,
+		    CASE when (select xdesc from acmst where xacc=x.xaccait and zid=#{zid}) is null
+		        then '' else (select xdesc from acmst where xacc=x.xaccait and zid=#{zid}) end as xdesc4,
+		    CASE when (select xdesc from acmst where xacc=x.xacccash and zid=#{zid}) is null
+		        then '' else (select xdesc from acmst where xacc=x.xacccash and zid=#{zid}) end as xdesc5,
+		    CASE when (select xdesc from acmst where xacc=x.xaccbank and zid=#{zid}) is null
+		        then '' else (select xdesc from acmst where xacc=x.xaccbank and zid=#{zid}) end as xdesc6,
+		    CASE when (select xdesc from acmst where xacc=x.xaccardbank and zid=#{zid}) is null 
+		        then '' else (select xdesc from acmst where xacc=x.xaccardbank and zid=#{zid}) end as xdesc7
+		from 
+		    xcodes x
+		where 
+		    x.xtype=#{xtype}
+		    AND x.xcode=#{xcode}
+		    AND x.zid=#{zid}
+	</select>
+
+	<select id="findByXcode" resultType="Xcodes">
+		SELECT * FROM Xcodes WHERE xcode=#{xcode} AND zid=#{zid}
+		<if test="zactive != null">
+			AND zactive=#{zactive}
+		</if>
+	</select>
+	
+	<select id="findByXtypeAndXtypeobj" resultType="Xcodes">
+		select * from xcodes where xtypeobj =#{xtypeobj} and xtype=#{xtype} and zid=#{zid}
+		<if test="zactive != null">
+			AND zactive=#{zactive}
+		</if>
+	</select>
+
+	<!-- <select id="findByXtypesAndXcodes" resultType="Xcodes">
+		SELECT 
+			xcodes.*,
+			acmst.xdesc
+		FROM 
+			xcodes
+			left join acmst on xcodes.xacc=acmst.xacc and xcodes.zid=acmst.zid 	
+		WHERE 
+			xcodes.xtype=#{xtype} 
+			AND xcodes.xcode=#{xcode} 
+			AND xcodes.zid=#{zid}
+		<if test="zactive != null">
+			AND zactive=#{zactive}
+		</if>
+	</select> -->
+
+	<delete id="deleteXcodes">
+		DELETE
+		FROM
+			xcodes
+		WHERE
+			xcode=#{xcode}
+			AND xtype=#{xtype}
+			AND zid=#{zid}
+	</delete>
+	
+	<select id="getAllPDTransactionTypes" resultType="Xcodes">
+		SELECT 
+			*
+		 FROM 
+		 	Xcodes
+		 WHERE 
+		 	xtype='PD Transaction Type' 
+		 	AND zid=#{zid}
+			<if test="zactive != null">
+			AND zactive= 
+		</if>
+		
+		order by xcode
+	</select>
+	
+	<delete id="deletePDCodes">
+		DELETE
+		FROM
+			xcodes
+		WHERE
+			xcode=#{xcode}
+			AND zid=#{zid}
+	</delete>
+	
+	<select id="findByXcodes" resultType="Xcodes">
+		SELECT * FROM Xcodes WHERE xcode=#{xcode} AND zid=#{zid}
+	</select>
+
+	<select id="getExportDataByChunk" resultType="java.util.HashMap">
+		SELECT * FROM
+		(
+			SELECT a.*, rownum r__
+			FROM
+			(
+				SELECT 
+					xtype,
+					xcode,
+					xlong,
+					seqn
+				FROM 
+					xcodes
+				WHERE 
+					zid = #{zid}
+				ORDER BY 
+					xtype
+			) a
+			WHERE rownum &lt; ((#{page} * #{limit}) + 1)
+		)
+		WHERE r__ &gt; = (((#{page} - 1) * #{limit}) + 1)
+	</select>
+
+	<select id="getAllParents" resultType="Xcodes">
+		SELECT distinct(xcode) FROM Xcodes WHERE zid=#{zid}
+	</select>
+	
+	<select id="getAllCategoryWiseItem" resultType="Xcodes">
+		select xcode from xcodes where zid=#{zid} and xparentcode=#{xparentcode}
+	</select>
+	
+	<select id="searchSite" resultType="Xcodes">
+		SELECT 
+			* 
+		FROM 
+			xcodes 
+		WHERE 
+			(UPPER(xcode) LIKE '%' || #{xcode} || '%' OR Upper(xlong) LIKE '%' || #{xcode} || '%') 
+			 AND zid=#{zid} AND zactive='1' and xtype='Site'
+	</select>
+	
+	<select id="searchProject" resultType="Xcodes">
+		SELECT 
+			* 
+		FROM 
+			xcodes 
+		WHERE 
+			(UPPER(xcode) LIKE '%' || #{xcode} || '%' OR Upper(xlong) LIKE '%' || #{xcode} || '%') 
+			 AND zid=#{zid} AND zactive='1' and xtype='Project'
+	</select>
+	
+	<select id="searchAllProject" resultType="Xcodes">
+		SELECT 
+			* 
+		FROM 
+			xcodes 
+		WHERE 
+			(UPPER(xcode) LIKE '%' || #{xcode} || '%' OR Upper(xlong) LIKE '%' || #{xcode} || '%') 
+			 AND zid=#{zid} AND zactive='1' and xtype='Project'
+	</select>
+
+</mapper>

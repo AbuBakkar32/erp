@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.asl.mapper.ShiftSettingsMapper">
+
+	<insert id="saveShiftSettings" parameterType="ShiftSettings">
+		INSERT INTO shiftsettings
+		(
+			xshift,
+			xnumber,
+			xcusserial,
+			xdate,
+			xdesc,
+			xdisc,
+			xlength,
+			xrel,
+			xservicecharge,
+			xsupserial,
+			xtrn,
+			xvatrate,
+			xyear,
+			xyearperdate,
+			xshopno,
+			zemail,
+			zactive,
+			zauserid,
+			zid,
+			ztime,
+			zutime,
+			zuuserid
+		)
+		VALUES
+		(
+			
+			#{xshift, jdbcType=VARCHAR},
+			#{xnumber, jdbcType=VARCHAR},
+			#{xcusserial, jdbcType=VARCHAR},
+			#{xdate, jdbcType=DATE},
+			#{xdesc, jdbcType=VARCHAR},
+			#{xdisc, jdbcType=DECIMAL},
+			#{xlength, jdbcType=INTEGER},
+			#{xrel, jdbcType=VARCHAR},
+			#{xservicecharge, jdbcType=DECIMAL},
+			#{xsupserial, jdbcType=VARCHAR},
+			#{xtrn, jdbcType=VARCHAR},
+			#{xvatrate, jdbcType=DECIMAL},
+			#{xyear, jdbcType=INTEGER},
+			#{xyearperdate, jdbcType=INTEGER},
+			#{xshopno, jdbcType=VARCHAR},
+			#{zemail, jdbcType=VARCHAR},
+			#{zactive, jdbcType=VARCHAR},
+			#{zauserid, jdbcType=VARCHAR},
+			#{zid, jdbcType=VARCHAR},
+			#{ztime, jdbcType=TIMESTAMP},
+			#{zutime, jdbcType=TIMESTAMP},
+			#{zuuserid, jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<update id="updateShiftSettings" parameterType="ShiftSettings">
+		UPDATE 
+			shiftsettings
+		SET
+			xnumber=#{xnumber, jdbcType=VARCHAR},
+			xcusserial=#{xcusserial, jdbcType=VARCHAR},
+			xdate=#{xdate, jdbcType=DATE},
+			xdesc=#{xdesc, jdbcType=VARCHAR},
+			xdisc=#{xdisc, jdbcType=DECIMAL},
+			xlength=#{xlength, jdbcType=INTEGER},
+			xrel=#{xrel, jdbcType=VARCHAR},
+			xservicecharge=#{xservicecharge, jdbcType=DECIMAL},
+			xsupserial=#{xsupserial, jdbcType=VARCHAR},
+			xtrn=#{xtrn, jdbcType=VARCHAR},
+			xvatrate=#{xvatrate, jdbcType=DECIMAL},
+			xyear=#{xyear, jdbcType=INTEGER},
+			xyearperdate=#{xyearperdate, jdbcType=INTEGER},
+			xshopno=#{xshopno, jdbcType=VARCHAR},
+			zemail=#{zemail, jdbcType=VARCHAR},
+			zactive=#{zactive, jdbcType=VARCHAR},
+			zauserid=#{zauserid, jdbcType=VARCHAR},
+			ztime=#{ztime, jdbcType=TIMESTAMP},
+			zutime=#{zutime, jdbcType=TIMESTAMP},
+			zuuserid=#{zuuserid, jdbcType=VARCHAR}
+		WHERE
+			xshift=#{xshift, jdbcType=VARCHAR}
+			AND zid=#{zid, jdbcType=VARCHAR}
+	</update>
+
+	<select id="getAllShiftSettings" resultType="ShiftSettings">
+		SELECT * FROM shiftsettings WHERE zid=#{zid} order by ztime desc
+	</select>
+
+	<select id="findByShiftSettings" resultType="ShiftSettings">
+		SELECT 
+			* 
+		FROM 
+			shiftsettings 
+		WHERE 
+			zid=#{zid} 
+			AND xshift=#{xshift}
+	</select>
+</mapper>

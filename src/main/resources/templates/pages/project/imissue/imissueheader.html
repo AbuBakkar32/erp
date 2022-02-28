@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<title>Item Consumption (Site)</title>
+		<meta th:remove="tag" th:include="commons :: common-meta" />
+		<meta th:remove="tag" th:include="commons :: common-css" />
+		<meta th:remove="tag" th:include="commons :: common-js" />
+	</head>
+	<body>
+		<!-- Header section -->
+		<div class="header-section" th:include="commons :: header-section"></div>
+
+		<!-- Menu section -->
+		<div th:if="${menuVersion != null and menuVersion eq 'MENU_V2'}" class="menuv2" th:include="commons :: main-menu"></div>
+
+		<div th:if="${menuVersion == null or menuVersion eq 'MENU_V1'}" class="navbar-inverse menu-section">
+			<div class="container-fluid">
+				<div class="row">
+					<nav class="navbar navbar-inverse">
+						<div class="container-fluid">
+							<div class="row">
+								<div class="navbar-header">
+									<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+										<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+									</button>
+								</div>
+								<div class="collapse navbar-collapse" id="myNavbar">
+									<div class="nav navbar-nav">
+										<li><a th:href="@{/}"><i class="fas fa-home"></i> Home</a></li>
+										<li class="active"><a th:href="@{/project/imissueheader}">Item Consumption (Site)</a></li>
+									</div>
+									<ul class="nav navbar-nav navbar-right" th:include="ckbigmenu :: dashboard-menu"></ul>
+								</div>
+							</div>
+						</div>
+					</nav>
+				</div>
+			</div>
+		</div>
+
+		<!-- Content section -->
+		<div>
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-md-12 content-area">
+						<div class="row">
+							<h1 class="text-center">Item Consumption (Site)</h1>
+						</div>
+
+						<div class="row">
+							<div class="col-md-6" style="padding-left: 30px; padding-right: 30px;">
+								<div class="row">
+									<!-- Section list head -->
+									<section id="data-maintenance" style="margin-top: 30px;">
+										<div class="section-header sectionbartoggle">
+										</div>
+										<div class="form-action-button">
+											<a th:href="@{/project/imissueheader}" class="btn btn-sm btn-default"><i class="fas fa-redo-alt"></i> <span style="margin-left:2px;"> Clear</span></a>
+											<a th:if="${#strings.isEmpty(imissueheader.xissuenum)}" th:href="@{/project/imissueheader}" class="btn btn-sm btn-success confirm-btn"><i class="fas fa-save"></i> <span style="margin-left:2px;"> Save</span></a>
+											<a th:if="${not #strings.isEmpty(imissueheader.xissuenum) and imissueheader.xstatus == 'Open' and imissueheader.zactive == true}" href="#" class="btn btn-sm btn-success update-btn"><i class="fas fa-edit"></i> <span style="margin-left:2px;"> Update</span></a>
+											<a th:if="${not #strings.isEmpty(imissueheader.xissuenum) and imissueheader.xstatus == 'Open'  and imissueheader.zactive == true}" th:href="@{/project/imissueheader/delete/} + ${imissueheader.xissuenum}" class="btn btn-sm btn-danger archive-btn-link"><i class="fas fa-trash-alt"></i> <span style="margin-left:2px;"> Delete</span></a>
+											<a th:if="${not #strings.isEmpty(imissueheader.xissuenum) and imissueheader.xstatus == 'Open'  and imissueheader.zactive == true}" th:href="@{/project/imissueheader/confirm/} + ${imissueheader.xissuenum}" class="btn btn-sm btn-warning confirm-btn-link"><i class="fas fa-paper-plane"></i> <span style="margin-left:2px;"> Confirm</span></a>
+											<a th:if="${not #strings.isEmpty(imissueheader.xissuenum) and imissueheader.xstatus == 'Confirmed' and imissueheader.xstatusjv == 'Open' and imissueheader.zactive == true}" th:href="@{/project/imissueheader/transfertogl/} + ${imissueheader.xissuenum}" class="btn btn-sm btn-warning confirm-btn-link"><i class="fas fa-paper-plane"></i> <span style="margin-left:2px;"> Transfer To GL</span></a>
+											<a th:if="${not #strings.isEmpty(imissueheader.xissuenum)}" th:href="@{/project/imissueheader/print/} + ${imissueheader.xissuenum}" class="btn btn-sm btn-primary print-btn-link" target="_blank"><i class="fas fa-print"></i> Print Consumption</a>
+										</div>
+										<div class="form-action-button">
+											<a class="btn btn-sm btn-default"><i class="glyphicon glyphicon-fast-backward"></i> <span style="margin-left:2px;"> Top</span></a>
+											<a class="btn btn-sm btn-default"><i class="glyphicon glyphicon-chevron-left"></i> <span style="margin-left:2px;"> Previous</span></a>
+											<a class="btn btn-sm btn-default"><i class="glyphicon glyphicon-chevron-right"></i> <span style="margin-left:2px;"> Next</span></a>
+											<a class="btn btn-sm btn-default"><i class="glyphicon glyphicon-fast-forward"></i> <span style="margin-left:2px;"> Bottom</span></a>
+										</div>
+										<div class="section-body section-border">
+											<div id="imissueheaderheaderform" th:fragment="imissueheaderheaderform">
+												<div id="imissueheaderheaderform" th:fragment="imissueheaderheaderform">
+													<div id="imissueheaderform" th:fragment="imissueheaderform">
+														<form id="mainform" class="form-horizontal" th:action="@{/project/imissueheader/save}" th:object="${imissueheader}" method="post" th:with="df=${'E, dd-MMM-yyyy HH:mm:ss'}">
+															<input type="hidden" class="form-control" th:field="*{xtypetrn}">
+															<div class="row">
+																<div class="col-md-6">
+
+																	<div class="form-group" th:if="${#strings.isEmpty(imissueheader.xissuenum)}">
+																		<label class="control-label col-md-4" for="xtrn">Consumption Number</label>
+																		<div class="col-md-6">
+																			<select class="form-control" th:field="*{xtrn}">
+																				<option th:each="prefix : ${prefix}" th:value="${prefix.xtrn}" th:text="${prefix.xtrn}"></option>
+																			</select>
+																		</div>
+																	</div>
+
+																	<div class="form-group" th:if="${not #strings.isEmpty(imissueheader.xissuenum)}">
+																		<label class="control-label col-md-4" for="xissuenum ">Consumption Number</label>
+																		<div class="col-md-8">
+																			<input type="text" class="form-control" th:value="*{xissuenum}" disabled="disabled">
+																			<input type="hidden" class="form-control" th:field="*{xissuenum}">
+																		</div>
+																	</div>
+
+																	<div class="form-group datepicker">
+																		<label class="control-label col-md-4" for="xdate">Date</label>
+																		<div class="input-group date col-md-7 datepicker">
+																			<input 	type="datepicker" 
+																					class="form-control" 
+																					id="xdate"
+																					name="xdate"
+																					th:value="${imissueheader.xdate == null ? #dates.format(#dates.createNow(), df) : #dates.format(imissueheader.xdate, df)}"/>
+																			<div class="input-group-addon">
+																				<span class="glyphicon glyphicon-calendar"></span>
+																			</div>
+																		</div>
+																	</div>
+
+																	<div class="form-group">
+																<label class="control-label col-md-4" for="xhwh">Project</label>
+																<div class="col-sm-8">
+																	<input 	type="text" 
+																			class="form-control searchsuggest xitemsearch" 
+																			placeholder="Search..." 
+																			th:value="${#strings.isEmpty(imissueheader.xhwh) ? '' : imissueheader.xhwh + '-' + imissueheader.projectName}" 
+																			th:attr="search-url='search/project'"
+																			/>
+																	<input type="hidden" class="required" id="search-val" th:field="*{xhwh}" value=""/>
+																	<input type="hidden" id="search-des" th:value="*{xhwh}"/>
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-sm-4" for="xwh">Site</label>
+																<div class="col-sm-8">
+																	<select th:field="*{xwh}" class="form-control">
+																		<option value="">-- Select --</option>
+																		<option th:each="s : ${codes}" th:value="${s.xcode}" th:text="${s.xcode + ' - ' + s.xcodename}"></option>
+																	</select>
+																</div>
+															</div>
+
+																	<div class="form-group">
+																		<label class="control-label col-md-4" for="xperparer">Prepared By</label>
+																		<div class="col-sm-8">
+																			<input type="hidden" class="form-control" th:field="*{xperparer}">
+																			<input type="text" class="form-control xcus-display" th:value="${imissueheader.xperparer + ' - ' + imissueheader.xpreparername}" disabled="disabled">
+																		</div>
+																	</div>
+
+																	<div class="form-group datepicker">
+																		<label class="control-label col-md-4" for="xprepdate">Creation Date</label>
+																		<div class="input-group date col-md-7 datepicker">
+																			<input 	type="datepicker" 
+																					class="form-control" 
+																					id="xprepdate"
+																					name="xprepdate"
+																					th:value="${imissueheader.xprepdate == null ? #dates.format(#dates.createNow(), df) : #dates.format(imissueheader.xprepdate, df)}"/>
+																			<div class="input-group-addon">
+																				<span class="glyphicon glyphicon-calendar"></span>
+																			</div>
+																		</div>
+																	</div>
+
+																	<div class="form-group">
+																		<label class="control-label col-md-4" for="xref">Reference</label>
+																		<div class="col-md-8">
+																			<input type="text" class="form-control" th:field="*{xref}">
+																		</div>
+																	</div>
+
+																</div>
+																<div class="col-md-6">
+
+																	<div class="form-group">
+																		<label class="control-label col-md-4" for="xstatus">Status</label>
+																		<div class="col-md-8">
+																			<input type="hidden" class="form-control" th:field="*{xstatus}">
+																			<input type="text" class="form-control" th:value="*{xstatus}" disabled="disabled">
+																		</div>
+																	</div>
+
+																	<div class="form-group">
+																		<label class="control-label col-md-4" for="xstatusjv">GL Status</label>
+																		<div class="col-md-8">
+																			<input type="hidden" class="form-control" th:field="*{xstatusjv}">
+																			<input type="text" class="form-control" th:value="*{xstatusjv}" disabled="disabled">
+																		</div>
+																	</div>
+
+																	<div class="form-group">
+																		<label class="control-label col-md-4" for="xvoucher">GL Voucher</label>
+																		<div class="col-md-8">
+																			<input type="hidden" class="form-control" th:field="*{xvoucher}">
+																			<input type="text" class="form-control" th:value="*{xvoucher}" disabled="disabled">
+																		</div>
+																	</div>
+
+																	<div class="form-group">
+																		<label class="control-label col-sm-4" for="xtotamt">Total Amount</label>
+																		<div class="col-sm-8">
+																			<input type="hidden" class="form-control" th:field="*{xtotamt}">
+																			<input type="text" class="form-control" th:value="*{xtotamt}" disabled="disabled"/>
+																		</div>
+																	</div>
+
+																	<div class="form-group">
+																		<label class="control-label col-md-4" for="xnote">Note</label>
+																		<div class="col-md-8">
+																			<textarea class="form-control" th:field="*{xnote}" rows="3"></textarea>
+																		</div>
+																	</div>
+
+																</div>
+															</div>
+														</form>
+													</div>
+												</div>
+											</div>
+										</div>
+								</section>
+								</div>
+								<div class="row">
+									<section th:if="${not #strings.isEmpty(imissueheader.xissuenum)}" id="data-maintenance" style="margin-top: 30px;">
+										<a id="listlines-url" th:href="@{/project/imissueheader/imissuedetail/} + ${imissueheader.xissuenum}"></a>
+										<div class="section-header sectionbartoggle">
+											<h1>Consumption Details of <span th:text="${imissueheader.xissuenum}"></span></h1>
+										</div>
+										<div class="section-body">
+											<table class="table table-striped table-bordered normal-table nowrap" id="imissuedetailtable" th:fragment="imissuedetailtable">
+												<thead>
+													<tr>
+														<th>SL#</th>
+														<th>Item</th>
+														<th>Consumption Purpose</th>
+														<th>Unit</th>
+														<th>Quantity</th>
+														<th>Unit Price</th>
+														<th>Line Amount</th>
+														<th data-nosort="Y" style="text-align: right;" th:if="${imissueheader.xstatus == 'Open'}">
+															<button type="button" class="btn btn-success btn-add" th:attr="data-url=@{/project/imissueheader/} + ${imissueheader.xissuenum} + '/imissuedetail/new/show', data-target-modal='imissuedetailmodal'"><i class="fas fa-plus"></i></button>
+														</th>
+													</tr>
+												</thead>
+												<tbody>
+													<tr th:each="d : ${imissuedetailList}">
+														<td th:text="${d.xrow}"></td>
+														<td th:text="${#strings.isEmpty(d.xitem)? '' : d.xitem + ' - ' + d.itemname}"></td>
+														<td th:text="${d.xpurpose }"></td>
+														<td th:text="${d.xunit }"></td>
+														<td th:text="${d.xqty }"></td>
+														<td th:text="${d.xrate }"></td>
+														<td th:text="${d.xlineamt }"></td>
+														<td  data-nosort="Y" style="text-align: right; font-size: 11px;" th:if="${imissueheader.xstatus == 'Open'}">
+															<button type="button" class="btn btn-default btn-edit editmode" th:attr="data-url=@{/project/imissueheader/} + ${imissueheader.xissuenum} + '/imissuedetail/' + ${d.xrow} + '/show', data-target-modal='imissuedetailmodal'"><i class="fas fa-edit"></i></button>
+															<button type="button" class="btn btn-danger btn-delete editmode" th:attr="data-url=@{/project/imissueheader/} + ${imissueheader.xissuenum} + '/imissuedetail/' + ${d.xrow} + '/delete'"><i class="fas fa-trash"></i></button>
+														</td>
+													</tr>
+												</tbody>
+												<tfoot>
+													<th colspan="4" class="text-right">Total</th>
+													<th class="text-right" th:text="${totalQty}">0</th>
+													<th></th>
+													<th class="text-right" th:text="${totalLineAmt}">0</th>
+													<th></th>
+												</tfoot>
+											</table>
+										</div>
+									</section>
+								</div>
+							</div>
+
+							<div class="col-md-6" style="padding-left: 30px; padding-right: 30px; margin-top: 30px;">
+								<div class="row">
+									<section id="list-manager" style="margin-top: 30px;">
+										<div class="section-header sectionbartoggle">
+											<h1>Draft Consumptions</h1>
+										</div>
+										<div class="section-body">
+											<div style="overflow-x: auto">
+												<table class="table table-striped table-bordered datatable" id="imissueheadertable" th:fragment="imissueheadertable">
+													<thead>
+														<tr>
+															<th>Consumptions No.</th>
+															<th>Date</th>
+															<th>Project/Business</th>
+															<th>Total Amount</th>
+															<th>Reference</th>
+														</tr>
+													</thead>
+													<tbody th:with="df=${'E, dd-MMM-yyyy'}">
+														<tr th:if="${por.xstatus == 'Open'}" th:each="por : ${allImissueheader}">
+															<td>
+																<a th:href="@{/project/imissueheader/} + ${por.xissuenum}" th:text="${por.xissuenum}"></a>
+															</td>
+															<td th:text="${#dates.format(por.xdate, df)}"></td>
+															<td th:text="${#strings.isEmpty(por.xhwh)? '' : por.xhwh + ' - ' + por.projectName}"></td>
+															<td th:text="${por.xtotamt}"></td>
+															<td th:text="${por.xref}"></td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+										</div>
+									</section>
+								</div>
+								<div class="row">
+									<section id="list-manager" style="margin-top: 30px;">
+										<div class="section-header sectionbartoggle">
+											<h1>Waiting For GL</h1>
+										</div>
+										<div class="section-body">
+											<div style="overflow-x: auto">
+												<table class="table table-striped table-bordered datatable" id="imissueheadertable" th:fragment="imissueheadertable">
+													<thead>
+														<tr>
+															<th>Consumptions No.</th>
+															<th>Date</th>
+															<th>Site</th>
+															<th>Total Amount</th>
+															<th>Reference</th>
+														</tr>
+													</thead>
+													<tbody th:with="df=${'E, dd-MMM-yyyy'}">
+														<tr th:if="${por.xstatus == 'Confirmed'}" th:each="por : ${allImissueheader}">
+															<td>
+																<a th:href="@{/project/imissueheader/} + ${por.xissuenum}" th:text="${por.xissuenum}"></a>
+															</td>
+															<td th:text="${#dates.format(por.xdate, df)}"></td>
+															<td th:text="${#strings.isEmpty(por.xwh)? '' : por.xwh + ' - ' + por.storeName}"></td>
+															<td th:text="${por.xtotamt}"></td>
+															<td th:text="${por.xref}"></td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+										</div>
+									</section>
+								</div>
+								<div class="row">
+									<section id="list-manager" style="margin-top: 30px;">
+										<div class="section-header sectionbartoggle">
+											<h1>All Consumptions</h1>
+										</div>
+										<div class="section-body">
+											<div style="overflow-x: auto">
+												<table class="table table-striped table-bordered datatable" id="imissueheadertable" th:fragment="imissueheadertable">
+													<thead>
+														<tr>
+															<th>Consumptions No.</th>
+															<th>Date</th>
+															<th>Site</th>
+															<th>Total Amount</th>
+															<th>Reference</th>
+														</tr>
+													</thead>
+													<tbody th:with="df=${'E, dd-MMM-yyyy'}">
+														<tr th:each="por : ${allImissueheader}">
+															<td>
+																<a th:href="@{/project/imissueheader/} + ${por.xissuenum}" th:text="${por.xissuenum}"></a>
+															</td>
+															<td th:text="${#dates.format(por.xdate, df)}"></td>
+															<td th:text="${#strings.isEmpty(por.xwh)? '' : por.xwh + ' - ' + por.storeName}"></td>
+															<td th:text="${por.xtotamt}"></td>
+															<td th:text="${por.xref}"></td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+										</div>
+									</section>
+								</div>
+							</div>
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Modal -->
+
+		<!-- Footer section -->
+		<div class="footer-section" th:include="commons :: footer-section"></div>
+		<script type="text/javascript" th:src="@{/assets/js/ck-ui/ck-search-suggest.js}"></script>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				// Init ui for modal
+				ck.ui.config.buttonevent();
+
+				$('.xitemsearch').on('blur', function(){
+					setTimeout(() => {
+						if($('input[name="xhwh"]').val() == ''){
+							$("#xwh option").remove(); 
+							var mySelect = $('#xwh');
+							mySelect.append(
+								$('<option></option>').val("").html("-- Select --")
+							);
+							return;
+						}
+
+						loadingMask2.show();
+						$.ajax({
+							url : getBasepath() + '/project/imissueheader/codesbyproject/' + $('input[name="xhwh"]').val(),
+							type : 'GET',
+							success : function(data) {
+								loadingMask2.hide();
+								if(data == undefined || data == null) return;
+
+								$("#xwh option").remove(); 
+								var mySelect = $('#xwh');
+								mySelect.append(
+									$('<option></option>').val("").html("-- Select --")
+								);
+								$.each(data, function(val, obj) {
+									mySelect.append(
+										$('<option></option>').val(obj.xcode).html(obj.xcode + ' - ' + obj.xcodename)
+									);
+								});
+
+							},
+							error : function(jqXHR, status, errorThrown){
+								showMessage(status, "Something went wrong .... ");
+								loadingMask2.hide();
+							}
+						})
+					}, 1000);
+				});
+			});
+		</script>
+	
+		<!-- Modal -->
+		<div id="imissuedetailmodal-section"></div>
+	</body>
+</html>

@@ -1,0 +1,412 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.asl.mapper.PoreqheaderMapper">
+
+	<insert id="savePoreqheader" parameterType="Poreqheader">
+		<selectKey keyProperty="xporeqnum" resultType="String" order="BEFORE">
+			SELECT Func_GetTrn('${zid}', '${xtypetrn}', '${xtrn}', 6) FROM DUAL
+		</selectKey>
+		INSERT INTO poreqheader
+		(
+			xporeqnum,
+			xdate,
+			xcus,
+			xwh, 
+			xhwh,
+			xstatusreq, 
+			xref, 
+			xquotnum,
+			xtotamt, 
+			xpreparer, 
+			xprepdate,
+			xnote, 
+			xsignatory1, 
+			xstatus,
+			xsignatorynote1,
+			xsignatorydate1,
+			xpornum,
+			xtypetrn,
+			xtrn,
+			
+			zactive,
+			zauserid,
+			zid,
+			ztime,
+			zutime,
+			zuuserid
+		)
+		VALUES
+		(
+			#{xporeqnum, jdbcType=VARCHAR},
+			#{xdate, jdbcType=DATE},
+			#{xcus, jdbcType=VARCHAR},
+			#{xwh, jdbcType=VARCHAR},
+			#{xhwh, jdbcType=VARCHAR},
+			#{xstatusreq, jdbcType=VARCHAR},
+			#{xref, jdbcType=VARCHAR},
+			#{xquotnum, jdbcType=VARCHAR},
+			#{xtotamt, jdbcType=DECIMAL},
+			#{xpreparer, jdbcType=VARCHAR},
+			#{xprepdate, jdbcType=TIMESTAMP},
+			#{xnote, jdbcType=VARCHAR},
+			#{xsignatory1, jdbcType=VARCHAR},
+			#{xstatus, jdbcType=VARCHAR},
+			#{xsignatorynote1, jdbcType=VARCHAR},
+			#{xsignatorydate1, jdbcType=TIMESTAMP},
+			#{xpornum, jdbcType=VARCHAR},
+			#{xtypetrn, jdbcType=VARCHAR},
+			#{xtrn, jdbcType=VARCHAR},
+			
+			#{zactive, jdbcType=VARCHAR},
+			#{zauserid, jdbcType=VARCHAR},
+			#{zid, jdbcType=VARCHAR},
+			#{ztime, jdbcType=TIMESTAMP},
+			#{zutime, jdbcType=TIMESTAMP},
+			#{zuuserid, jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<update id="updatePoreqheader" parameterType="Poreqheader">
+		UPDATE 
+			poreqheader
+		SET
+			xdate=#{xdate, jdbcType=DATE},
+			xcus=#{xcus, jdbcType=VARCHAR},
+			xwh=#{xwh, jdbcType=VARCHAR},
+			xhwh=#{xhwh, jdbcType=VARCHAR},
+			xstatusreq=#{xstatusreq, jdbcType=VARCHAR},
+			xref=#{xref, jdbcType=VARCHAR},
+			xquotnum=#{xquotnum, jdbcType=VARCHAR},
+			xtotamt=#{xtotamt, jdbcType=DECIMAL},
+			xpreparer=#{xpreparer, jdbcType=VARCHAR},
+			xprepdate=#{xprepdate, jdbcType=TIMESTAMP},
+			xnote=#{xnote, jdbcType=VARCHAR},
+			xsignatory1=#{xsignatory1, jdbcType=VARCHAR},
+			xstatus=#{xstatus, jdbcType=VARCHAR},
+			xsignatorynote1=#{xsignatorynote1, jdbcType=VARCHAR},
+			xsignatorydate1=#{xsignatorydate1, jdbcType=TIMESTAMP},
+			xpornum=#{xpornum, jdbcType=VARCHAR},
+			xtypetrn=#{xtypetrn, jdbcType=VARCHAR},
+			xtrn=#{xtrn, jdbcType=VARCHAR},
+			
+			zactive=#{zactive, jdbcType=VARCHAR},
+			zauserid=#{zauserid, jdbcType=VARCHAR},
+			ztime=#{ztime, jdbcType=TIMESTAMP},
+			zutime=#{zutime, jdbcType=TIMESTAMP},
+			zuuserid=#{zuuserid, jdbcType=VARCHAR}
+		WHERE
+			xporeqnum=#{xporeqnum, jdbcType=VARCHAR}
+			AND zid=#{zid, jdbcType=VARCHAR}
+	</update>
+
+	<delete id="deletePoreqheader" parameterType="Poreqheader">
+		DELETE FROM poreqheader WHERE  xporeqnum=#{xporeqnum} AND zactive='1' AND zid=#{zid}
+	</delete>
+	
+	<select id="getALllPoreqheaderByXpreparer" resultType="Poreqheader">
+		SELECT 
+			poreqheader.*,
+			cacus.xorg as xorg,
+			x.xlong as xwhdesc
+		FROM 
+			poreqheader 
+			left join cacus on cacus.xcus = poreqheader.xcus and cacus.zid = poreqheader.zid 
+			left join xcodes x ON x.xcode = poreqheader.xwh AND x.zid = poreqheader.zid AND x.xtype='Store'
+			
+		WHERE 
+			poreqheader.zid=#{zid} 
+			AND poreqheader.xpreparer=#{xpreparer}
+		order by 
+			poreqheader.ztime desc
+	</select>
+	
+	<select id="getALllPoreqheader" resultType="Poreqheader">
+		SELECT 
+			poreqheader.*,
+			cacus.xorg as xorg,
+			x.xlong as xwhdesc,
+			y.xlong as projectName
+		FROM 
+			poreqheader 
+			left join cacus on cacus.xcus = poreqheader.xcus and cacus.zid = poreqheader.zid 
+			left join xcodes x ON x.xcode = poreqheader.xwh AND x.zid = poreqheader.zid AND x.xtype='Store'
+			left join xcodes y on y.xcode = poreqheader.xhwh and y.zid= poreqheader.zid and y.xtype='Project'
+			
+		WHERE 
+			poreqheader.zid=#{zid} 
+		order by 
+			poreqheader.ztime desc
+	</select>
+
+	<select id="findByPoreqheader" resultType="Poreqheader">
+		SELECT 
+			poreqheader.*,
+			spell_number(poreqheader.xtotamt) as spellword,
+			spell_number(substr(to_char(poreqheader.xtotamt-floor(poreqheader.xtotamt)),2,2)) as xprimeword,
+			cacus.xorg as xorg,
+			p.xname as xpreparername,
+			s.xname as xsignatoryname,
+			x.xlong as storeName,
+			y.xlong as projectName
+		FROM 
+			poreqheader 
+			left join cacus on cacus.xcus = poreqheader.xcus and cacus.zid = poreqheader.zid and cacus.zactive='1'
+			left join xcodes x ON x.xcode = poreqheader.xwh AND x.zid = poreqheader.zid AND x.zactive='1' AND x.xtype='Store'
+			left join pdmst p on p.xstaff = poreqheader.xpreparer and p.zid= poreqheader.zid
+			left join pdmst s on s.xstaff = poreqheader.xsignatory1 and s.zid= poreqheader.zid
+			left join xcodes y on y.xcode = poreqheader.xhwh and y.zid= poreqheader.zid and y.xtype='Project'
+		WHERE 
+			poreqheader.zid=#{zid} 
+			AND poreqheader.xporeqnum=#{xporeqnum}
+	</select>
+
+	<select id="getPoreqheadersByXtypetrn" resultType="Poreqheader">
+		SELECT 
+			poreqheader.*,
+			cacus.xorg as xorg,
+			p.xname as xpreparername,
+			s.xname as xsignatoryname,
+			x.xlong as storeName,
+			y.xlong as projectName
+		FROM 
+			poreqheader 
+			left join cacus on cacus.xcus = poreqheader.xcus and cacus.zid = poreqheader.zid and cacus.zactive='1'
+			left join xcodes x ON x.xcode = poreqheader.xwh AND x.zid = poreqheader.zid AND x.zactive='1' AND x.xtype='Store'
+			left join pdmst p on p.xstaff = poreqheader.xpreparer and p.zid= poreqheader.zid
+			left join pdmst s on s.xstaff = poreqheader.xsignatory1 and s.zid= poreqheader.zid
+			left join xcodes y on y.xcode = poreqheader.xhwh and y.zid= poreqheader.zid and y.xtype='Project'
+		WHERE 
+			poreqheader.xtypetrn=#{xtypetrn}
+			AND poreqheader.zid=#{zid} 
+		ORDER BY 
+			poreqheader.xporeqnum DESC
+	</select>
+
+	<select id="topPoreqheader" resultType="Poreqheader">
+		select 
+			* 
+		from (
+			select
+				* 
+			from 
+				poreqheader 
+			where 
+				zid=#{zid} 
+				and substr(xporeqnum, 1,4)='SVRQ'
+				order by xporeqnum
+			) 
+		where 
+			rownum &lt;=1
+	</select>
+
+	<select id="bottomPoreqheader" resultType="Poreqheader">
+		select 
+			* 
+		from (
+			select
+				* 
+			from 
+				poreqheader 
+			where 
+				zid=#{zid} 
+				and substr(xporeqnum, 1,4)='SVRQ'
+				order by xporeqnum desc
+			) 
+		where 
+			rownum &lt;=1
+	</select>
+
+	<select id="nextPoreqheader" resultType="Poreqheader">
+		select 
+			* 
+		from (
+			select
+				* 
+			from 
+				poreqheader 
+			where 
+				zid=#{zid} 
+				and substr(xporeqnum, 1,4)='SVRQ'
+				order by xporeqnum
+			) 
+		where 
+			rownum &lt;=1
+			and xporeqnum &gt;#{xporeqnum}
+	</select>
+
+	<select id="previousPoreqheader" resultType="Poreqheader">
+		select 
+			* 
+		from (
+			select
+				* 
+			from 
+				poreqheader 
+			where 
+				zid=#{zid} 
+				and substr(xporeqnum, 1,4)='SVRQ'
+				order by xporeqnum desc
+			) 
+		where 
+			rownum &lt;=1
+			and xporeqnum &lt;#{xporeqnum}
+	</select>
+
+	<!-- Details -->
+	<insert id="savePoreqdetail" parameterType="Poreqdetail">
+		<selectKey keyProperty="xrow" resultType="Integer" order="BEFORE">
+			SELECT COALESCE(Max(xrow), 0) + 1 FROM poreqdetail WHERE xporeqnum=#{xporeqnum} AND zid=#{zid}
+		</selectKey>
+		INSERT INTO poreqdetail
+		(
+			xporeqnum,
+			xrow,
+			xitem,
+			xunitpur,
+			xqtypur,
+			xrate,
+			xlineamt,
+			xspecification,
+			xcfpur,
+			xnote,
+			xpurpose,
+			xgitem,
+			
+			zid,
+			zauserid,
+			zuuserid,
+			zaip,
+			zuip,
+			zactive,
+			ztime,
+			zutime
+		)
+		VALUES
+		(
+			#{xporeqnum, jdbcType=VARCHAR},
+			#{xrow},
+			#{xitem, jdbcType=VARCHAR},
+			#{xunitpur, jdbcType=VARCHAR},
+			#{xqtypur, jdbcType=DECIMAL},
+			#{xrate, jdbcType=DECIMAL},
+			#{xlineamt, jdbcType=DECIMAL},
+			#{xspecification, jdbcType=VARCHAR},
+			#{xcfpur, jdbcType=DECIMAL},
+			#{xnote, jdbcType=VARCHAR},
+			#{xpurpose, jdbcType=VARCHAR},
+			#{xgitem, jdbcType=VARCHAR},
+			
+			#{zid, jdbcType=VARCHAR},
+			#{zauserid, jdbcType=VARCHAR},
+			#{zuuserid, jdbcType=VARCHAR},
+			#{zaip, jdbcType=VARCHAR},
+			#{zuip, jdbcType=VARCHAR},
+			#{zactive, jdbcType=VARCHAR},
+			#{ztime, jdbcType=TIMESTAMP},
+			#{zutime, jdbcType=TIMESTAMP}
+		) 
+	</insert>
+
+	<update id="updatePoreqdetail" parameterType="Poreqdetail">
+		UPDATE 
+			poreqdetail
+		SET
+			xitem=#{xitem, jdbcType=VARCHAR},
+			xunitpur=#{xunitpur, jdbcType=VARCHAR},
+			xqtypur=#{xqtypur, jdbcType=DECIMAL},
+			xrate=#{xrate, jdbcType=DECIMAL},
+			xlineamt=#{xlineamt, jdbcType=DECIMAL},
+			xspecification=#{xspecification, jdbcType=VARCHAR},
+			xcfpur=#{xcfpur, jdbcType=DECIMAL},
+			xnote=#{xnote, jdbcType=VARCHAR},
+			xpurpose=#{xpurpose, jdbcType=VARCHAR},
+			xgitem=#{xgitem, jdbcType=VARCHAR},
+			
+			zuuserid=#{zuuserid, jdbcType=VARCHAR},
+			zaip=#{zaip, jdbcType=VARCHAR},
+			zuip=#{zuip, jdbcType=VARCHAR},
+			zactive=#{zactive, jdbcType=VARCHAR},
+			ztime=#{ztime, jdbcType=TIMESTAMP},
+			zutime=#{zutime, jdbcType=TIMESTAMP}
+		WHERE
+			xporeqnum=#{xporeqnum, jdbcType=VARCHAR}
+			AND xrow=#{xrow, jdbcType=INTEGER}
+			AND zid=#{zid, jdbcType=VARCHAR}
+	</update>
+
+	<delete id="deletePoreqdetail" parameterType="Poreqdetail">
+		DELETE 
+		FROM 
+			poreqdetail 
+		WHERE 
+			xrow=#{xrow} 
+			AND xporeqnum=#{xporeqnum} 
+			AND zid=#{zid}
+	</delete>
+
+	<select id="findPoreqdetailByXporeqnum" resultType="Poreqdetail">
+		SELECT 
+			det.*, 
+			caitem.xdesc as "xitemdesc"
+		FROM 
+			poreqdetail det
+			JOIN caitem on caitem.xitem=det.xitem AND caitem.zid=#{zid}
+			left join xcodes on xcodes.xcode = caitem.xcatitem and xcodes.zid = caitem.zid and xcodes.zactive='1' AND xcodes.xtype='Store'
+		WHERE 
+			det.xporeqnum=#{xporeqnum} 
+			AND det.zid=#{zid} 
+		ORDER BY 
+			xcodes.seqn, det.xrow 
+	</select>
+
+	<select id="findPoreqdetailByXporeqnumAndXrow" resultType="Poreqdetail">
+		SELECT 
+			poreqdetail.*,
+			caitem.xdesc as "xitemdesc"
+		FROM 
+			poreqdetail 
+			JOIN caitem on caitem.xitem=poreqdetail.xitem AND caitem.zid=#{zid}
+			
+		WHERE 
+			poreqdetail.xporeqnum=#{xporeqnum} 
+			AND poreqdetail.xrow=#{xrow} 
+			AND poreqdetail.zid=#{zid}
+	</select>
+
+	<select id="findPoreqdetailByXporeqnumAndXitem" resultType="Poreqdetail">
+		SELECT 
+			* 
+		FROM 
+			poreqdetail 
+		WHERE 
+			xporeqnum=#{xporeqnum} 
+			AND xitem=#{xitem} 
+			AND zid=#{zid}
+	</select>
+
+	<update id="updatePoreqheaderTotalAmt">
+		Update 
+			poreqheader
+		SET xtotamt = (select sum(xlineamt)
+		FROM 
+			poreqdetail
+		WHERE 
+			xporeqnum=#{xporeqnum} 
+			AND zid=#{zid})
+		WHERE 
+			xporeqnum=#{xporeqnum} 
+			AND zid=#{zid}
+	</update>
+
+	<select id = "procSP_CREATEPO_FROMPRQ" statementType = "CALLABLE">
+		{call SP_CREATEPO_FROMPRQ
+		(
+		#{zid, jdbcType = VARCHAR, mode = IN}, 
+		#{user, jdbcType = VARCHAR, mode = IN}, 
+		#{xporeqnum, jdbcType = VARCHAR, mode = IN},
+		#{p_screen, jdbcType = VARCHAR, mode = IN}, 
+		#{p_seq, jdbcType = VARCHAR, mode = IN}
+		)}
+	</select>
+</mapper>

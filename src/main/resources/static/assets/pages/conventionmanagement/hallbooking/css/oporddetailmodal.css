@@ -1,0 +1,44 @@
+.modal-body{
+	height: 400px;
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+.modal-body::-webkit-scrollbar-track {
+	-webkit-box-shadow: inset 0 0 6px rgba(253, 251, 251, 0.3);
+	background-color: #fff;
+}
+
+.modal-body::-webkit-scrollbar {
+	width: 8px;
+	background-color: #fff;
+}
+
+.modal-body::-webkit-scrollbar-thumb {
+	-webkit-box-shadow: inset 0 0 6px rgba(255, 251, 251, 0.3);
+	background-color: #29af70;
+}
+.item-section{
+	margin-bottom: 30px;
+}
+.item-section h4{
+	margin: 10px 0;
+	padding: 0;
+	padding-left: 10px;
+}
+.item-container{
+	border-bottom: 1px solid #ddd;
+	margin-bottom: 10px;
+}
+.item-box, .item-box2{
+	text-align: left;
+	padding: 5px !important;
+	width: 99%;
+	margin: 5px;
+	border-radius: 5px;
+	cursor: pointer;
+	float: left;
+}
+.item-box p, .item-box2 p{
+	margin: 0;
+	padding: 0;
+}

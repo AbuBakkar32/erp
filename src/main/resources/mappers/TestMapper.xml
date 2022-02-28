@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.asl.mapper.TestMapper">
+
+	<insert id="saveTest" parameterType="Test">
+		<selectKey keyProperty="xpornum" resultType="String" order="BEFORE">
+			SELECT Func_GetTrn('${zid}', '${xtypetrn}', '${xtrn}', 6) FROM DUAL
+		</selectKey>
+		INSERT INTO catest
+		(
+			xpornum,
+			xcus,
+			xsup,
+			xref,
+			xdate,
+			xwh,
+			xtotamt,
+			xtype,
+			xtypetrn,
+			xtrn,
+			xstatuspor,
+			xnote,
+			xgrnnum,
+			xordernum,
+			xreqtype,
+			xpiref,
+			xpidate,
+			xshipdate,
+			xdeliloc,
+			xlcno,
+			xcur,
+			xexch,
+			xvatrate,
+			xdisc,
+			xdiscf,
+			xtransport,
+			xdateeta,
+			xdateetd,
+			xstatus,
+			xrem,
+			xporeqnum,
+			xnote1,
+			xpreparer,
+			xvatamt,
+			xregi,
+			xsign,
+			xprime,
+			xbasetransport,
+			xtwh,
+			xsignreject,
+			xtornum,
+			xquotnum,
+			xprepdate,
+			xsignatory1,
+			xsignatorynote1,
+			xsignatorydate1,
+			xdatedel,
+
+			zid,
+			zauserid,
+			zaip,
+			zactive,
+			ztime
+		)
+		VALUES
+		(
+			#{xpornum, jdbcType=VARCHAR},
+			#{xcus,jdbcType=VARCHAR},
+			#{xsup, jdbcType=VARCHAR},
+			#{xref, jdbcType=VARCHAR},
+			#{xdate, jdbcType=DATE},
+			#{xwh, jdbcType=VARCHAR},
+			#{xtotamt, jdbcType=DECIMAL},
+			#{xtype, jdbcType=VARCHAR},
+			#{xtypetrn, jdbcType=VARCHAR},
+			#{xtrn, jdbcType=VARCHAR},
+			#{xstatuspor, jdbcType=VARCHAR},
+			#{xnote, jdbcType=VARCHAR},
+			#{xgrnnum, jdbcType=VARCHAR},
+			#{xordernum, jdbcType=VARCHAR},
+			#{xreqtype, jdbcType=VARCHAR},
+			#{xpiref, jdbcType=VARCHAR},
+			#{xpidate, jdbcType=DATE},
+			#{xshipdate, jdbcType=DATE},
+			#{xdeliloc, jdbcType=VARCHAR},
+			#{xlcno, jdbcType=VARCHAR},
+			#{xcur, jdbcType=VARCHAR},
+			#{xexch, jdbcType=DECIMAL},
+			#{xvatrate, jdbcType=DECIMAL},
+			#{xdisc, jdbcType=DECIMAL},
+			#{xdiscf, jdbcType=DECIMAL},
+			#{xtransport, jdbcType=DECIMAL},
+			#{xdateeta, jdbcType=DATE},
+			#{xdateetd, jdbcType=DATE},
+			#{xstatus, jdbcType=VARCHAR},
+			#{xrem, jdbcType=VARCHAR},
+			#{xporeqnum, jdbcType=VARCHAR},
+			#{xnote1, jdbcType=VARCHAR},
+			#{xpreparer, jdbcType=VARCHAR},
+			#{xvatamt, jdbcType=DECIMAL},
+			#{xregi, jdbcType=VARCHAR},
+			#{xsign, jdbcType=VARCHAR},
+			#{xprime, jdbcType=DECIMAL},
+			#{xbasetransport, jdbcType=VARCHAR},
+			#{xtwh, jdbcType=VARCHAR},
+			#{xsignreject, jdbcType=VARCHAR},
+			#{xtornum, jdbcType=VARCHAR},
+			#{xquotnum, jdbcType=VARCHAR},
+			#{xprepdate, jdbcType=TIMESTAMP},
+			#{xsignatory1, jdbcType=VARCHAR},
+			#{xsignatorynote1, jdbcType=VARCHAR},
+			#{xsignatorydate1, jdbcType=TIMESTAMP},
+			#{xdatedel, jdbcType=DATE},
+
+			#{zid, jdbcType=VARCHAR},
+			#{zauserid, jdbcType=VARCHAR},
+			#{zaip, jdbcType=VARCHAR},
+			#{zactive, jdbcType=VARCHAR},
+			#{ztime, jdbcType=TIMESTAMP}
+		) 
+	</insert>
+
+	<update id="updateTest" parameterType="Test">
+		UPDATE
+			catest
+		SET
+			xcus=#{xcus, jdbcType=VARCHAR},
+			xsup=#{xsup, jdbcType=VARCHAR},
+			xref=#{xref, jdbcType=VARCHAR},
+			xdate=#{xdate, jdbcType=DATE},
+			xwh=#{xwh, jdbcType=VARCHAR},
+			xtotamt=#{xtotamt, jdbcType=DECIMAL},
+			xtype=#{xtype, jdbcType=VARCHAR},
+			xtypetrn=#{xtypetrn, jdbcType=VARCHAR},
+			xtrn=#{xtrn, jdbcType=VARCHAR},
+			xstatuspor=#{xstatuspor, jdbcType=VARCHAR},
+			xnote=#{xnote, jdbcType=VARCHAR},
+			xgrnnum=#{xgrnnum, jdbcType=VARCHAR},
+			xordernum=#{xordernum, jdbcType=VARCHAR},
+			xreqtype=#{xreqtype, jdbcType=VARCHAR},
+			xpiref=#{xpiref, jdbcType=VARCHAR},
+			xpidate=#{xpidate, jdbcType=DATE},
+			xshipdate=#{xshipdate, jdbcType=DATE},
+			xdeliloc=#{xdeliloc, jdbcType=VARCHAR},
+			xlcno=#{xlcno, jdbcType=VARCHAR},
+			xcur=#{xcur, jdbcType=VARCHAR},
+			xexch=#{xexch, jdbcType=DECIMAL},
+			xvatrate=#{xvatrate, jdbcType=DECIMAL},
+			xdisc=#{xdisc, jdbcType=DECIMAL},
+			xdiscf=#{xdiscf, jdbcType=DECIMAL},
+			xtransport=#{xtransport, jdbcType=DECIMAL},
+			xdateeta=#{xdateeta, jdbcType=DATE},
+			xdateetd=#{xdateetd, jdbcType=DATE},
+			xstatus=#{xstatus, jdbcType=VARCHAR},
+			xrem=#{xrem, jdbcType=VARCHAR},
+			xporeqnum=#{xporeqnum, jdbcType=VARCHAR},
+			xnote1=#{xnote1, jdbcType=VARCHAR},
+			xpreparer=#{xpreparer, jdbcType=VARCHAR},
+			xvatamt=#{xvatamt, jdbcType=DECIMAL},
+			xregi=#{xregi, jdbcType=VARCHAR},
+			xsign=#{xsign, jdbcType=VARCHAR},
+			xprime=#{xprime, jdbcType=DECIMAL},
+			xbasetransport=#{xbasetransport, jdbcType=VARCHAR},
+			xtwh=#{xtwh, jdbcType=VARCHAR},
+			xsignreject=#{xsignreject, jdbcType=VARCHAR},
+			xtornum=#{xtornum, jdbcType=VARCHAR},
+			xquotnum=#{xquotnum, jdbcType=VARCHAR},
+			xprepdate=#{xprepdate, jdbcType=TIMESTAMP},
+			xsignatory1=#{xsignatory1, jdbcType=VARCHAR},
+			xsignatorynote1=#{xsignatorynote1, jdbcType=VARCHAR},
+			xsignatorydate1=#{xsignatorydate1, jdbcType=TIMESTAMP},
+			xdatedel=#{xdatedel, jdbcType=DATE},
+
+			zuuserid=#{zuuserid, jdbcType=VARCHAR},
+			zuip=#{zuip, jdbcType=VARCHAR},
+			zactive=#{zactive, jdbcType=VARCHAR},
+			zutime=#{zutime, jdbcType=TIMESTAMP}
+		WHERE
+			xpornum=#{xpornum, jdbcType=VARCHAR}
+			AND zid=#{zid, jdbcType=VARCHAR}
+	</update>
+
+	<delete id="deleteTest" parameterType="Test">
+		DELETE 
+		FROM 
+			catest 
+		WHERE 
+			xpornum=#{xpornum} 
+			AND zid=#{zid}
+	</delete>
+
+	<select id="findTestByXpornum" resultType="Test">
+		SELECT 
+			*
+		FROM 
+			catest 
+		WHERE 
+			xpornum=#{xpornum} 
+			AND zid=#{zid}
+	</select>
+
+
+	<select id="getAllTest" resultType="Test">
+		SELECT 
+			* 
+		FROM 
+			catest 
+		WHERE 
+			zid=#{zid} 
+		ORDER BY 
+			xpornum DESC
+	</select>
+
+	<select id="getTestByXtypetrn" resultType="Test">
+		SELECT 
+			*
+		FROM 
+			catest
+		WHERE 
+			xtypetrn=#{xtypetrn}
+			AND zid=#{zid} 
+		ORDER BY 
+			xpornum DESC
+	</select>
+</mapper>

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.asl.mapper.PSVMapper">
+
+	<insert id="savePSV" parameterType="PSV">
+		INSERT INTO PSV
+		(
+			xchalan,
+			xbatch,
+			xrawitem,
+			xprod,
+			zid,
+			zauserid,
+			zuuserid,
+			zaip,
+			zuip,
+			zactive,
+			ztime,
+			zutime
+		)
+		VALUES
+		(
+			#{xchalan, jdbcType=VARCHAR},
+			#{xbatch, jdbcType=VARCHAR},
+			#{xrawitem, jdbcType=VARCHAR},
+			#{xprod, jdbcType=DECIMAL},
+			#{zid, jdbcType=VARCHAR},
+			#{zauserid, jdbcType=VARCHAR},
+			#{zuuserid, jdbcType=VARCHAR},
+			#{zaip, jdbcType=VARCHAR},
+			#{zuip, jdbcType=VARCHAR},
+			#{zactive, jdbcType=VARCHAR},
+			#{ztime, jdbcType=TIMESTAMP},
+			#{zutime, jdbcType=TIMESTAMP}
+		) 
+	</insert>
+
+	<update id="updatePSV" parameterType="PSV">
+		UPDATE
+			PSV
+		SET
+			xrawitem=#{xrawitem, jdbcType=VARCHAR},
+			xprod=#{xprod, jdbcType=DECIMAL},
+			zuuserid=#{zuuserid, jdbcType=VARCHAR},
+			zaip=#{zaip, jdbcType=VARCHAR},
+			zuip=#{zuip, jdbcType=VARCHAR},
+			zactive=#{zactive, jdbcType=VARCHAR},
+			ztime=#{ztime, jdbcType=TIMESTAMP},
+			zutime=#{zutime, jdbcType=TIMESTAMP}
+		WHERE
+			xchalan=#{xchalan, jdbcType=VARCHAR}
+			AND xbatch=#{xbatch, jdbcType=VARCHAR}
+			AND zid=#{zid, jdbcType=VARCHAR}
+	</update>
+
+	<select id="findByXchalanAndXbatchAndXrawitem" resultType="PSV">
+		SELECT 
+			* 
+		FROM 
+			PSV 
+		WHERE 
+			zid=#{zid} 
+			AND xchalan=#{xchalan}
+			AND xbatch=#{xbatch}
+			AND xrawitem=#{xrawitem}
+	</select>
+
+	<select id="getTotalRawUsedExceptCurrentBatch" resultType="DECIMAL">
+		SELECT 
+			NVL(SUM(xprod),0)
+		FROM 
+			PSV 
+		WHERE 
+			zid=#{zid} 
+			AND xchalan=#{xchalan}
+			AND xrawitem=#{xrawitem}
+			AND xbatch != #{xbatch}
+	</select>
+
+	<delete id="deletePSV" parameterType="PSV">
+		DELETE
+		FROM
+			PSV
+		WHERE
+			zid=#{zid} 
+			AND xchalan=#{xchalan}
+			AND xrawitem=#{xrawitem}
+			AND xbatch=#{xbatch}
+	</delete>
+	
+</mapper>

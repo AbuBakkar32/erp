@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.asl.mapper.CawhbudgetMapper">
+
+	<insert id="saveCawhbudget" parameterType="Cawhbudget">
+		<selectKey keyProperty="xbudget" resultType="String" order="BEFORE">
+			SELECT Func_GetTrn('${zid}', '${xtypetrn}', '${xtrn}', 6) FROM DUAL
+		</selectKey>
+		INSERT INTO cawhbudget
+		(
+			xbudget,
+			xwh,
+			xdate,
+			xtotamt,
+			xref,
+			xnote,
+			xstatus,
+			xtype,
+			xprepdate,
+			xproject,
+			xcus,
+			xtrn,
+			xtypetrn,
+			zactive,
+			zauserid,
+			zid,
+			ztime,
+			zutime,
+			zuuserid
+		)
+		VALUES
+		(
+			#{xbudget, jdbcType=VARCHAR},
+			#{xwh, jdbcType=VARCHAR},
+			#{xdate, jdbcType=DATE},
+			#{xtotamt, jdbcType=DECIMAL},
+			#{xref, jdbcType=VARCHAR},
+			#{xnote, jdbcType=VARCHAR},
+			#{xstatus, jdbcType=VARCHAR},
+			#{xtype, jdbcType=VARCHAR},
+			#{xprepdate, jdbcType=DATE},
+			#{xproject, jdbcType=VARCHAR},
+			#{xcus, jdbcType=VARCHAR},
+			#{xtrn, jdbcType=VARCHAR},
+			#{xtypetrn, jdbcType=VARCHAR},
+			#{zactive, jdbcType=VARCHAR},
+			#{zauserid, jdbcType=VARCHAR},
+			#{zid, jdbcType=VARCHAR},
+			#{ztime, jdbcType=TIMESTAMP},
+			#{zutime, jdbcType=TIMESTAMP},
+			#{zuuserid, jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<update id="updateCawhbudget" parameterType="Cawhbudget">
+		UPDATE 
+			cawhbudget
+		SET
+			xwh=#{xwh, jdbcType=VARCHAR},
+			xdate=#{xdate, jdbcType=DATE},
+			xtotamt=#{xtotamt, jdbcType=DECIMAL},
+			xref=#{xref, jdbcType=VARCHAR},
+			xnote=#{xnote, jdbcType=VARCHAR},
+			xstatus=#{xstatus, jdbcType=VARCHAR},
+			xtype=#{xtype, jdbcType=VARCHAR},
+			xprepdate=#{xprepdate, jdbcType=DATE},
+			xproject=#{xproject, jdbcType=VARCHAR},
+			xcus=#{xcus, jdbcType=VARCHAR},
+			xtrn=#{xtrn, jdbcType=VARCHAR},
+			xtypetrn=#{xtypetrn, jdbcType=VARCHAR},
+			zactive=#{zactive, jdbcType=VARCHAR},
+			zauserid=#{zauserid, jdbcType=VARCHAR},
+			ztime=#{ztime, jdbcType=TIMESTAMP},
+			zutime=#{zutime, jdbcType=TIMESTAMP},
+			zuuserid=#{zuuserid, jdbcType=VARCHAR}
+		WHERE
+			xbudget=#{xbudget, jdbcType=VARCHAR}
+			AND zid=#{zid, jdbcType=VARCHAR}
+	</update>
+
+	<delete id="deleteCawhbudget" parameterType="Cawhbudget">
+		DELETE FROM cawhbudget WHERE xbudget=#{xbudget} AND zactive='1' AND zid=#{zid}
+	</delete>
+
+	<update id="updateCawhbudgetTotalAmt" parameterType="Cawhbudget">
+		UPDATE 
+			cawhbudget
+		SET
+			xtotamt=(SELECT SUM(xamount) FROM cawhbudgetdt WHERE xbudget=#{xbudget} AND zid=#{zid})
+		WHERE
+			xbudget=#{xbudget} 
+			AND zid=#{zid}
+	</update>
+
+	<select id="getAllCawhbudget" resultType="Cawhbudget">
+		SELECT 
+			cawhbudget.*,
+			cacus.xorg as xorg,
+			x.xlong as siteName,
+			<!-- p.xname as projectName -->
+			d.xlong as projectName
+		FROM 
+			cawhbudget 
+			LEFT JOIN cacus on cacus.xcus = cawhbudget.xcus and cacus.zid = cawhbudget.zid and cacus.zactive='1'
+			left join cawh c on c.xwh = cawhbudget.xwh and c.zid= cawhbudget.zid
+			left join caproject p on p.xproject = cawhbudget.xproject and p.zid= cawhbudget.zid
+			left join xcodes x on x.xcode = cawhbudget.xwh and x.zid= cawhbudget.zid and x.xtype='Site'
+			left join xcodes d on d.xcode = cawhbudget.xproject and d.zid= cawhbudget.zid and d.xtype='Project'
+		WHERE 
+			cawhbudget.zid=#{zid} 
+			AND cawhbudget.zactive ='1'
+		order by 
+			cawhbudget.xbudget desc
+	</select>
+
+	<select id="getAllCawhbudgetByXwh" resultType="Cawhbudget">
+		SELECT 
+			cawhbudget.*,
+			cacus.xorg as xorg,
+			x.xlong as siteName,
+			<!-- p.xname as projectName -->
+			d.xlong as projectName
+		FROM 
+			cawhbudget 
+			LEFT JOIN cacus on cacus.xcus = cawhbudget.xcus and cacus.zid = cawhbudget.zid and cacus.zactive='1'
+			left join cawh c on c.xwh = cawhbudget.xwh and c.zid= cawhbudget.zid
+			left join caproject p on p.xproject = cawhbudget.xproject and p.zid= cawhbudget.zid
+			left join xcodes x on x.xcode = cawhbudget.xwh and x.zid= cawhbudget.zid and x.xtype='Site'
+			left join xcodes d on d.xcode = cawhbudget.xproject and d.zid= cawhbudget.zid and d.xtype='Project'
+		WHERE 
+			cawhbudget.zid=#{zid} 
+			AND cawhbudget.zactive ='1'
+			AND cawhbudget.xwh=#{xwh} 
+		order by 
+			cawhbudget.xbudget desc
+	</select>
+
+	<select id="findByCawhbudget" resultType="Cawhbudget">
+		SELECT 
+			cawhbudget.*,
+			cacus.xorg as xorg,
+			x.xlong as siteName,
+			<!-- p.xname as projectName -->		
+			d.xlong as projectName	
+		FROM 
+			cawhbudget 
+			LEFT JOIN cacus on cacus.xcus = cawhbudget.xcus and cacus.zid = cawhbudget.zid and cacus.zactive='1'
+			left join cawh c on c.xwh = cawhbudget.xwh and c.zid= cawhbudget.zid
+			left join caproject p on p.xproject = cawhbudget.xproject and p.zid= cawhbudget.zid	
+			left join xcodes x on x.xcode = cawhbudget.xwh and x.zid= cawhbudget.zid and x.xtype='Site'
+			left join xcodes d on d.xcode = cawhbudget.xproject and d.zid= cawhbudget.zid and d.xtype='Project'	
+		WHERE 
+			cawhbudget.zid=#{zid} 
+			AND cawhbudget.xbudget=#{xbudget}
+		order by cawhbudget.xbudget
+	</select>
+
+	<!-- For Budget Details -->
+		
+	<insert id="saveCawhbudgetdt" parameterType="Cawhbudgetdt">
+
+		<selectKey keyProperty="xrow" resultType="Integer" order="BEFORE">
+			SELECT COALESCE(Max(xrow), 0) + 1 FROM cawhbudgetdt WHERE zactive='1' AND zid=#{zid}
+		</selectKey>
+		INSERT INTO cawhbudgetdt
+		(
+			xrow,
+			xbudget,
+			xpurpose,
+			xamount,
+			xtolerance,
+			xnote, 
+			zactive,
+			zauserid,
+			zid,
+			ztime,
+			zutime,
+			zuuserid
+		)
+		VALUES
+		(
+			
+			#{xrow},
+			#{xbudget, jdbcType=VARCHAR},
+			#{xpurpose, jdbcType=VARCHAR},
+			#{xamount, jdbcType=DECIMAL},
+			#{xtolerance, jdbcType=DECIMAL},
+			#{xnote, jdbcType=VARCHAR},
+			#{zactive, jdbcType=VARCHAR},
+			#{zauserid, jdbcType=VARCHAR},
+			#{zid, jdbcType=VARCHAR},
+			#{ztime, jdbcType=TIMESTAMP},
+			#{zutime, jdbcType=TIMESTAMP},
+			#{zuuserid, jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<update id="updateCawhbudgetdt" parameterType="Cawhbudgetdt">
+		UPDATE 
+			cawhbudgetdt
+		SET
+			xpurpose=#{xpurpose, jdbcType=VARCHAR},
+			xamount=#{xamount, jdbcType=DECIMAL},
+			xtolerance=#{xtolerance, jdbcType=DECIMAL},
+			xnote=#{xnote, jdbcType=VARCHAR},
+			zactive=#{zactive, jdbcType=VARCHAR},
+			zauserid=#{zauserid, jdbcType=VARCHAR},
+			zid=#{zid, jdbcType=VARCHAR},
+			ztime=#{ztime, jdbcType=TIMESTAMP},
+			zutime=#{zutime, jdbcType=TIMESTAMP},
+			zuuserid=#{zuuserid, jdbcType=VARCHAR}
+		WHERE
+			xbudget=#{xbudget, jdbcType=VARCHAR}
+			AND xrow=#{xrow, jdbcType=INTEGER}
+			AND zid=#{zid, jdbcType=VARCHAR}
+	</update>
+
+	<select id="getAllCawhbudgetdt" resultType="Cawhbudgetdt">
+		SELECT 
+			* 
+		FROM 
+			cawhbudgetdt 
+		WHERE 
+			zid=#{zid} 
+			AND zactive='1'
+		order by 
+			ztime desc
+	</select>
+
+	<select id="findByCawhbudgetdt" resultType="Cawhbudgetdt">
+		SELECT * FROM cawhbudgetdt WHERE xbudget=#{xbudget} AND zid=#{zid} AND zactive='1'
+	</select>
+
+	<select id="findCawhbudgetdtByXbudgetAndXrow" resultType="Cawhbudgetdt">
+		SELECT * FROM cawhbudgetdt WHERE xbudget=#{xbudget} AND xrow=#{xrow} AND zid=#{zid} AND zactive='1'
+	</select>
+	
+	<delete id="deleteCawhbudgetdt" parameterType="Cawhbudgetdt">
+		DELETE FROM cawhbudgetdt WHERE xrow=#{xrow} AND xbudget=#{xbudget} AND zactive='1' AND zid=#{zid}
+	</delete>
+	
+	<select id = "procIM_confirmProjectBudget" statementType = "CALLABLE">
+		{call IM_confirmProjectBudget
+		(
+		#{zid, jdbcType = VARCHAR, mode = IN}, 
+		#{user, jdbcType = VARCHAR, mode = IN}, 
+		#{xbudget, jdbcType = VARCHAR, mode = IN}, 
+		#{p_seq, jdbcType = VARCHAR, mode = IN}
+		)}
+	</select>
+</mapper>

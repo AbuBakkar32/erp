@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<title th:text="#{allor.page.title}">All Order Requisitions</title>
+		<meta th:remove="tag" th:include="commons :: common-meta" />
+		<meta th:remove="tag" th:include="commons :: common-css" />
+		<meta th:remove="tag" th:include="commons :: common-js" />
+	</head>
+	<body>
+		<!-- Header section -->
+		<div class="header-section" th:include="commons :: header-section"></div>
+
+		<!-- Menu section -->
+		<div th:if="${menuVersion != null and menuVersion eq 'MENU_V2'}" class="menuv2" th:include="commons :: main-menu"></div>
+
+		<div th:if="${menuVersion == null or menuVersion eq 'MENU_V1'}" class="navbar-inverse menu-section">
+			<div class="container-fluid">
+				<div class="row">
+					<nav class="navbar navbar-inverse">
+						<div class="container-fluid">
+							<div class="row">
+								<div class="navbar-header">
+									<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+										<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+									</button>
+								</div>
+								<div class="collapse navbar-collapse" id="myNavbar">
+									<div class="nav navbar-nav">
+										<li><a th:href="@{/}"><i class="fas fa-home"></i> Home</a></li>
+										<li class="active"><a th:href="@{/procurement/requisition/allrequisition}" th:text="#{allor.page.title}">All Order Requisitions</a></li>
+									</div>
+									<ul class="nav navbar-nav navbar-right" th:include="ckbigmenu :: dashboard-menu"></ul>
+								</div>
+							</div>
+						</div>
+					</nav>
+				</div>
+			</div>
+		</div>
+
+		<!-- Content section -->
+		<div>
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-md-12 content-area">
+
+						<div class="row">
+							<div class="col-md-12">
+								<!-- Section list head -->
+								<section id="data-maintenance" style="margin-top: 30px;">
+									<div class="section-header sectionbartoggle">
+										<h1 th:text="#{allor.page.heading}">All Requisitions</h1>
+									</div>
+									<div class="section-body">
+										<table class="table table-striped table-bordered datatable nowrap">
+											<thead>
+												<tr>
+													<th th:text="#{allor.table.heading.xpornum}">Requisition</th>
+													<th th:text="#{allor.table.heading.xdate}">Requisition Date</th>
+													<th th:text="#{allor.table.heading.xstatuspor}">Status</th>
+												</tr>
+											</thead>
+											<tbody th:with="df=${'E, dd-MMM-yyyy'}">
+												<tr th:each="poord : ${reqs}">
+													<td>
+														<a target="_blank" th:href="@{/procurement/requisition/} + ${poord.xpornum}" th:text="${poord.xpornum}"></a>
+													</td>
+													<td  th:text="${#dates.format(poord.xdate, df)}"></td>
+													<td th:text="${poord.xstatuspor}"></td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</section>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Modal -->
+		<div id="poorddetailmodal-section"></div>
+
+		<!-- Footer section -->
+		<div class="footer-section" th:include="commons :: footer-section"></div>
+		
+		<script type="text/javascript">
+			$(document).ready(function(){
+				$('.item-qty').off('blur').on('blur', function(){
+					if($(this).val() == '' || isNaN($(this).val() == '') || Number($(this).val()) < 0){
+						$(this).val(0);
+					}
+				})
+
+				$('.req-confirm-btn').off('click').on('click', function(e){
+					e.preventDefault();
+
+					var poordheader = {};
+					poordheader.xpornum = $('#xpornum').val();
+					
+					var items = [];
+					$('.requisition-table .item-qty').each(function(i, row){
+						items.push({
+							"xitem" : $(row).attr('id'),
+							"xqtyord" : $(row).val(),
+							"xunitpur" : $(row).data('xunitpur'),
+							"xitemdesc" : $(row).data('xitemdesc'),
+							"xcatitem" : $(row).data('xcatitem'),
+							"xgitem" : $(row).data('xgitem'),
+							"xrate" : $(row).data('xrate')
+						});
+					});
+					
+					poordheader.items = items;
+					console.log({poordheader});
+
+					$.ajax({
+						url : getBasepath() + '/procurement/requisition/save',
+						type : 'POST',
+						dataType : 'json', 
+						data: JSON.stringify(poordheader),
+						beforeSend: function(xhr) {
+							xhr.setRequestHeader("Accept", "application/json");
+							xhr.setRequestHeader("Content-Type", "application/json");
+						},
+						success : function(data) {
+							loadingMask2.hide();
+							if(data.status == 'SUCCESS'){
+								$('div.modal').modal('hide');
+								showMessage(data.status.toLowerCase(), data.message);
+								if(data.triggermodalurl){
+									modalLoader(getBasepath() + data.triggermodalurl, data.modalid);
+								} else {
+									if(data.redirecturl){
+										setTimeout(() => {
+											window.location.replace(getBasepath() + data.redirecturl);
+										}, 1000);
+									} else if(data.reloadurl){
+										doSectionReloadWithNewData(data);
+									}
+								}
+							} else {
+								showMessage(data.status.toLowerCase(), data.message);
+							}
+						},
+						error : function(jqXHR, status, errorThrown){
+							showMessage(status, "Something went wrong .... ");
+							loadingMask2.hide()
+						}
+					})
+
+				})
+
+				
+				
+			});
+		</script>
+	</body>
+</html>

@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<title th:text="#{sto.page.title}">Store Transfer Order</title>
+		<meta th:remove="tag" th:include="commons :: common-meta" />
+		<meta th:remove="tag" th:include="commons :: common-css" />
+		<meta th:remove="tag" th:include="commons :: common-js" />
+	</head>
+	<body>
+		<!-- Header section -->
+		<div class="header-section" th:include="commons :: header-section"></div>
+
+		<!-- Menu section -->
+		<div th:if="${menuVersion != null and menuVersion eq 'MENU_V2'}" class="menuv2" th:include="commons :: main-menu"></div>
+
+		<div th:if="${menuVersion == null or menuVersion eq 'MENU_V1'}" class="navbar-inverse menu-section">
+			<div class="container-fluid">
+				<div class="row">
+					<nav class="navbar navbar-inverse">
+						<div class="container-fluid">
+							<div class="row">
+								<div class="navbar-header">
+									<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+										<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+									</button>
+								</div>
+								<div class="collapse navbar-collapse" id="myNavbar">
+									<div class="nav navbar-nav">
+										<li><a th:href="@{/}"><i class="fas fa-home"></i> Home</a></li>
+										<li class="active"><a th:href="@{/inventory/transferorder}">Store Transfer Order</a></li>
+									</div>
+									<ul class="nav navbar-nav navbar-right" th:include="ckbigmenu :: dashboard-menu"></ul>
+								</div>
+							</div>
+						</div>
+					</nav>
+				</div>
+			</div>
+		</div>
+
+		<!-- Content section -->
+		<div>
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-md-12 content-area">
+						<div class="row">
+							<h1 class="text-center" th:text="#{sto.page.heading}">Store Transfer Order</h1>
+						</div>
+
+						<div class="row">
+							<div class="col-md-6">
+								<!-- Section list head -->
+								<section id="data-maintenance" style="margin-top: 30px;">
+									<div class="section-header sectionbartoggle">
+									</div>
+									<div class="form-action-button">
+										<a th:href="@{/inventory/transferorder}" class="btn btn-sm btn-default"><i class="fas fa-redo-alt"></i> <span style="margin-left:2px;" th:text="#{button.value.xclear}"> Clear</span></a>
+										<a th:if="${#strings.isEmpty(imtorheader.xtornum)}" th:href="@{/inventory/transferorder}" class="btn btn-sm btn-success confirm-btn"><i class="fas fa-save"></i> <span style="margin-left:2px;" th:text="#{button.value.xsave}"> Save</span></a>
+										<a th:if="${not #strings.isEmpty(imtorheader.xtornum) and imtorheader.xstatustor != 'Confirmed' and imtorheader.zactive == true}" href="#" class="btn btn-sm btn-success update-btn"><i class="fas fa-edit"></i> <span style="margin-left:2px;" th:text="#{button.value.xupdate}"> Update</span></a>
+										<a th:if="${not #strings.isEmpty(imtorheader.xtornum) and imtorheader.xstatustor != 'Confirmed' and imtorheader.zactive == true}" th:href="@{/inventory/transferorder/archive/} + ${imtorheader.xtornum}" class="btn btn-sm btn-danger archive-btn-link"><i class="fas fa-trash-alt"></i> <span style="margin-left:2px;" th:text="#{button.value.xdelete}"> Delete</span></a>
+										<a th:if="${not #strings.isEmpty(imtorheader.xtornum) and imtorheader.xstatustor != 'Confirmed' and imtorheader.zactive == true}" th:href="@{/inventory/transferorder/confirmimtor/} + ${imtorheader.xtornum}" class="btn btn-sm btn-warning confirm-btn-link"><i class="fas fa-paper-plane"></i> <span style="margin-left:2px;" th:text="#{button.value.xconfirm}"> Confirm</span></a>
+										<a th:if="${not #strings.isEmpty(imtorheader.xtornum)}" th:href="@{/inventory/transferorder/print/} + ${imtorheader.xtornum}" class="btn btn-sm btn-primary print-btn-link" target="_blank"><i class="fas fa-print"></i> Print</a>
+									</div>
+									<div class="section-body section-border">
+										<form id="mainform" class="form-horizontal" th:action="@{/inventory/transferorder/save}" th:object="${imtorheader}" method="post" th:with="df=${'E, dd-MMM-yyyy'}">
+											<input type="hidden" class="form-control" th:field="*{xtypetrn}">
+											<input type="hidden" th:if="${not #strings.isEmpty(imtorheader.xtornum)}" class="form-control" th:field="*{xtornum}">
+											<div class="row">
+												<div class="col-md-6">
+
+													<div class="form-group" th:if="${#strings.isEmpty(imtorheader.xtornum)}">
+														<label class="control-label col-md-4" for="xtrn" th:text="#{sto.form.label.xtrn}">Prefix</label>
+														<div class="col-md-6">
+															<select class="form-control" th:field="*{xtrn}">
+																<option th:each="prefix : ${imtorprefix}" th:value="${prefix.xtrn}" th:text="${prefix.xtrn}"></option>
+															</select>
+														</div>
+													</div>
+
+													<div class="form-group" th:if="${not #strings.isEmpty(imtorheader.xtornum)}">
+														<label class="control-label col-md-4" for="xtornum" th:text="#{sto.form.label.xtornum}">T.O. Number</label>
+														<div class="col-md-8">
+															<input type="text" class="form-control" th:value="*{xtornum}" disabled="disabled">
+														</div>
+													</div>
+
+													<div class="form-group datepicker">
+														<label class="control-label col-md-4" for="xdate" th:text="#{sto.form.label.xdate}">Date</label>
+														<div class="input-group date col-md-7 datepicker">
+															<input 	type="datepicker" 
+																	class="form-control" 
+																	id="xdate"
+																	name="xdate"
+																	required="required"
+																	th:value="${imtorheader.xdate == null ? #dates.format(#dates.createNow(), df) : #dates.format(imtorheader.xdate, df)}"/>
+															<div class="input-group-addon">
+																<span class="glyphicon glyphicon-calendar"></span>
+															</div>
+														</div>
+													</div>
+
+													<!--<div class="form-group">
+														<label class="control-label col-md-4" for="xfwh" th:text="#{sto.form.label.xfwh}">From Warehouse</label>
+														<div class="col-md-8">
+															<select class="form-control" th:field="*{xfwh}">
+																<option th:each="wh : ${warehouses}" th:value="${wh.xcode}" th:text="${wh.xcode} +' - '+${wh.xlong}"></option>
+															</select>
+														</div>
+													</div>
+
+													<div class="form-group">
+														<label class="control-label col-md-4" for="xtwh" th:text="#{sto.form.label.xtwh}">To Warehouse</label>
+														<div class="col-md-8">
+															<select class="form-control" th:field="*{xtwh}">
+																<option th:each="wh : ${warehouses}" th:value="${wh.xcode}" th:text="${wh.xcode}+' - '+${wh.xlong}"></option>
+															</select>
+														</div>
+													</div>-->
+													
+													<div class="form-group">
+														<label class="control-label col-md-4" for="xfhwh">Project/Business</label>
+														<div class="col-sm-8">
+															<input 	type="text" 
+																class="form-control searchsuggest xfhwhsearch" 
+																placeholder="Search..." 
+																th:value="${#strings.isEmpty(imtorheader.xfhwh) ? '' : imtorheader.xfhwh + '-' + imtorheader.fPojectName}" 
+																th:attr="search-url='search/allproject'"
+																/>
+															<input type="hidden" class="required" id="search-val" th:field="*{xfhwh}" value=""/>
+															<input type="hidden" id="search-des" th:value="*{xfhwh}"/>
+														</div>
+													</div>
+
+													<div class="form-group">
+														<label class="control-label col-sm-4" for="xfwh" >From Site/Store</label>
+														<div class="col-sm-8">
+															<select th:field="*{xfwh}" class="form-control">
+																<option value="">-- Select --</option>
+																<option th:each="s : ${allcodes}" th:value="${s.xcode}" th:text="${s.xcode + ' - ' + s.xcodename}"></option>
+															</select>
+														</div>
+													</div>
+
+													<div class="form-group">
+														<label class="control-label col-sm-4" for="xtwh" >To Site/Store</label>
+														<div class="col-sm-8">
+															<select th:field="*{xtwh}" class="form-control">
+																<option value="">-- Select --</option>
+																<option th:each="s : ${allcodes}" th:value="${s.xcode}" th:text="${s.xcode + ' - ' + s.xcodename}"></option>
+															</select>
+														</div>
+													</div>
+
+												</div>
+												<div class="col-md-6">
+
+													<div class="form-group">
+														<label class="control-label col-md-4" for="xstaff">Employee</label>
+														<div class="col-sm-8">
+															<input 	type="text" 
+																class="form-control searchsuggest" 
+																placeholder="Search..." 
+																th:value="${#strings.isEmpty(imtorheader.xstaff) ? '' : imtorheader.xstaff + ' - ' + imtorheader.xstaffName}" 
+																th:attr="search-url='search/staff'"/>
+															<input type="hidden" class="required" id="search-val" th:field="*{xstaff}" value=""/>
+															<input type="hidden" id="search-des" th:value="*{xstaff}"/>
+														</div>
+													</div>
+
+													<div class="form-group">
+														<label class="control-label col-md-4" for="xstatustor" th:text="#{sto.form.label.xstatustor}">Status</label>
+														<div class="col-md-8">
+															<input type="hidden" class="form-control" th:field="*{xstatustor}">
+															<input type="text" class="form-control" th:value="*{xstatustor}" disabled="disabled">
+														</div>
+													</div>
+
+													<div class="form-group">
+														<label class="control-label col-md-4" for="xref" th:text="#{sto.form.label.xref}">Ref</label>
+														<div class="col-md-8">
+															<input type="text" class="form-control" th:field="*{xref}">
+														</div>
+													</div>
+
+													<div class="form-group">
+														<label class="control-label col-md-4" for="xlong" th:text="#{sto.form.label.xlong}">Note</label>
+														<div class="col-md-8">
+															<textarea class="form-control" th:field="*{xlong}" rows="3"></textarea>
+														</div>
+													</div>
+
+												</div>
+											</div>
+										</form>
+									</div>
+								</section>
+							</div>
+							<div class="col-md-6">
+								<section id="list-manager" style="margin-top: 30px;">
+									<div class="section-header sectionbartoggle">
+										<h1>All Transfer Orders</h1>
+									</div>
+									<div class="section-body">
+										<div style="overflow-x: auto">
+											<table class="table table-striped table-bordered datatable">
+												<thead>
+													<tr>
+														<th th:text="#{sto.table.heading.xtornum}">Transfer Order</th>
+														<th th:text="#{sto.table.heading.xdate}">Date</th>
+														<th>Project/Business</th>
+														<th th:text="#{sto.table.heading.xfwh}">From</th>
+														<th th:text="#{sto.table.heading.xtwh}">To</th>
+														<th th:text="#{sto.table.heading.xstatustor}">Status</th>
+													</tr>
+												</thead>
+												<tbody th:with="df=${'E, dd-MMM-yyyy'}">
+													<tr th:each="imtor : ${allImtorHeaders}">
+														<td>
+															<a th:href="@{/inventory/transferorder/} + ${imtor.xtornum}" th:text="${imtor.xtornum}"></a>
+														</td>
+														<td  th:text="${#dates.format(imtor.xdate, df)}"></td>
+														<td th:text="${#strings.isEmpty(imtor.xfhwh)? '' : imtor.xfhwh + ' - ' + imtor.fPojectName}"></td>
+														<td th:text="${#strings.isEmpty(imtor.xfwh)? '' : imtor.xfwh + ' - ' + imtor.xfwhdesc}"></td>
+														<td th:text="${#strings.isEmpty(imtor.xtwh)? '' : imtor.xtwh + ' - ' + imtor.xtwhdesc}"></td>
+														<td th:text="${imtor.xstatustor}"></td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</section>
+
+							</div>
+						</div>
+						
+					</div>
+
+					<div class="col-md-12">
+						<!-- imtordetail section -->
+						<section th:if="${not #strings.isEmpty(imtorheader.xtornum)}" id="data-maintenance" style="margin-top: 30px;">
+							<a id="listlines-url" th:href="@{/inventory/transferorder/imtordetails/} + ${imtorheader.xtornum}"></a>
+							<div class="section-header sectionbartoggle">
+								<h1>Transfer Order Details of <span th:text="${imtorheader.xtornum}"></span></h1>
+							</div>
+							<div class="section-body">
+								<table class="table table-striped table-bordered normal-table nowrap" id="imtordetailtable" th:fragment="imtordetailtable">
+									<thead>
+										<tr>
+											<th th:text="#{sto.modal.table.heading.xrow}">Row</th>
+											<th th:text="#{sto.modal.table.heading.xitem}">Item Code</th>
+											<th th:text="#{sto.modal.table.heading.xqtyord}" class="text-right">Qty</th>
+											<th th:text="#{sto.modal.table.heading.xunit}">Unit</th>
+											<th th:if="${imtorheader.xstatustor eq 'Open'}" data-nosort="Y" style="text-align: right;">
+												<button type="button" class="btn btn-success btn-add" th:attr="data-url=@{/inventory/transferorder/} + ${imtorheader.xtornum} + '/imtordetail/new/show', data-target-modal='imtordetailmodal'"><i class="fas fa-plus"></i></button>
+											</th>
+										</tr>
+									</thead>
+									<tbody>
+										<!--<tr th:each="d,n : ${imtordetailsList}">
+											<td th:text="${d.xrow}"></td>
+											<td>
+												<a th:href="@{/mastersetup/caitem/} + ${d.xitem}" target="_blank" th:text="${d.xitem} + ' - ' + ${d.xitemdesc}"></a>
+											</td>-->
+										<tr th:each="d : ${imtordetailsList}">
+											<td th:text="${d.xrow}"></td>
+											<td>
+												<a th:href="@{/mastersetup/caitem/} + ${d.xitem}" target="_blank" th:text="${d.xitem} + ' - ' + ${d.xitemdesc}"></a>
+											</td>
+											<td class="text-right" th:text="${d.xqtyord}"></td>
+											<td th:text="${d.xunit}"></td>
+											<td th:if="${imtorheader.xstatustor eq 'Open'}" data-nosort="Y" style="text-align: right; font-size: 11px;">
+												<button type="button" class="btn btn-default btn-edit editmode" th:attr="data-url=@{/inventory/transferorder/} + ${imtorheader.xtornum} + '/imtordetail/' + ${d.xrow} + '/show', data-target-modal='imtordetailmodal'"><i class="fas fa-edit"></i></button>
+												<button type="button" class="btn btn-danger btn-delete editmode" th:attr="data-url=@{/inventory/transferorder/} + ${imtorheader.xtornum} + '/imtordetail/' + ${d.xrow} + '/delete'"><i class="fas fa-trash"></i></button>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</section>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Modal -->
+		<div id="imtordetailmodal-section"></div>
+
+		<!-- Footer section -->
+		<div class="footer-section" th:include="commons :: footer-section"></div>
+	</body>
+	
+	<script type="text/javascript">
+		$(document).ready(function(){
+			// Init ui for modal
+			ck.ui.config.buttonevent();
+
+			$('.xfhwhsearch').on('blur', function(){
+				setTimeout(() => {
+					if($('input[name="xfhwh"]').val() == ''){
+						$("#xfwh option").remove(); 
+						var mySelect1 = $('#xfwh');
+						mySelect1.append(
+							$('<option></option>').val("").html("-- Select --")
+						);
+						return;
+						
+						$("#xtwh option").remove(); 
+						var mySelect2 = $('#xtwh');
+						mySelect2.append(
+							$('<option></option>').val("").html("-- Select --")
+						);
+						return;
+					}
+
+
+					loadingMask2.show();
+					$.ajax({
+						url : getBasepath() + '/inventory/storereq/allcodesbyproject/' + $('input[name="xfhwh"]').val(),
+						type : 'GET',
+						success : function(data) {
+							loadingMask2.hide();
+							if(data == undefined || data == null) return;
+
+							$("#xfwh option").remove(); 
+							var mySelect1 = $('#xfwh');
+							mySelect1.append(
+								$('<option></option>').val("").html("-- Select --")
+							);
+							
+							$("#xtwh option").remove(); 
+							var mySelect2 = $('#xtwh');
+							mySelect2.append(
+								$('<option></option>').val("").html("-- Select --")
+							);
+							$.each(data, function(val, obj) {
+								mySelect1.append(
+									$('<option></option>').val(obj.xcode).html(obj.xcode + ' - ' + obj.xcodename)
+								);
+								
+								mySelect2.append(
+									$('<option></option>').val(obj.xcode).html(obj.xcode + ' - ' + obj.xcodename)
+								);
+							});
+
+						},
+						error : function(jqXHR, status, errorThrown){
+							showMessage(status, "Something went wrong .... ");
+							loadingMask2.hide();
+						}
+					})
+				}, 1000);
+			});
+		});
+	</script>
+</html>

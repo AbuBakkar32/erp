@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<title th:text="${reportName}"></title>
+		<meta th:remove="tag" th:include="commons :: common-meta"/>
+		<meta th:remove="tag" th:include="commons :: common-css"/>
+		<meta th:remove="tag" th:include="commons :: common-js"/>
+	</head>
+	<body>
+
+		<!-- Header section -->
+		<div class="header-section" th:include="commons :: header-section"></div>
+
+		<!-- Menu section -->
+		<div th:if="${menuVersion != null and menuVersion eq 'MENU_V2'}" class="menuv2" th:include="commons :: main-menu"></div>
+
+		<div th:if="${menuVersion == null or menuVersion eq 'MENU_V1'}" class="navbar-inverse menu-section">
+			<div class="container-fluid">
+				<div class="row">
+					<nav class="navbar navbar-inverse">
+						<div class="container-fluid">
+							<div class="row">
+								<div class="navbar-header">
+									<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+										<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+									</button>
+								</div>
+								<div class="collapse navbar-collapse" id="myNavbar">
+									<div class="nav navbar-nav">
+										<li><a th:href="@{/}">Dashboard</a></li>
+										<li class="active"><a th:href="@{/report}">Report</a></li>
+									</div>
+									<ul class="nav navbar-nav navbar-right" th:include="ckbigmenu :: dashboard-menu"></ul>
+								</div>
+							</div>
+						</div>
+					</nav>
+				</div>
+			</div>
+		</div>
+
+		<!-- Content section -->
+		<div>
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-md-12 content-area">
+						<!-- Section data maintenance -->
+						<section id="data-maintenance" style="margin-top: 10px;">
+							<div class="section-header">
+								<h1>Stock List</h1>
+							</div>
+							<div class="section-body togglebox">
+
+								<form id="reportform" class="form-horizontal" th:action="@{/report2/STOCKL/print}" method="POST">
+									<div class="col-md-6">
+										<div class="form-group">
+											<label class="control-label col-md-4" for="xwh">Warehouse : </label>
+											<div class="col-md-6">
+												<select class="form-control" id="xwh" name="xwh">
+													<option value="">-- Select --</option>
+													<option th:each="wh : ${xwh}" th:value="${wh.xcode}" th:text="${wh.xcode}"></option>
+												</select>
+											</div>
+										</div>
+									</div>
+									<div class="col-md-6">
+										<div class="form-group">
+											<label class="control-label col-sm-4" for="xitem">Item : </label>
+											<div class="col-sm-6">
+												<input 	type="text" 
+														class="form-control searchsuggest xitemsearch" 
+														placeholder="Search..." 
+														required="required"
+														th:attr="search-url='search/report/stock/xitem'"/>
+												<input type="hidden" id="search-val" name="xitem" value=""/>
+												<input type="hidden" id="search-des" value=""/>
+											</div>
+										</div>
+									</div>
+								</form>
+								<div class="col-md-12" style="margin-top: 20px;">
+									<button class="btn btn-success pull-right confirm-rpt-birt-btn">Generate</button>
+								</div>
+							</div>
+						</section>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Footer section -->
+		<div class="footer-section" th:include="commons :: footer-section"></div>
+
+		<script>
+			$(document).ready(function(){
+
+				$('.confirm-rpt-birt-btn').off('click').on('click', function(e){
+					e.preventDefault();
+
+					var targettedForm = $('form#reportform');
+					if(!targettedForm.smkValidate()) return;
+
+					var submitUrl = targettedForm.attr('action');
+					var submitType = targettedForm.attr('method');
+					var formData = $(targettedForm).serializeArray();
+					var reportType = $('#reportType').val();
+					var reportName = $('#reportName').val() != '' ? $('#reportName').val() : 'report';
+
+					$.ajax({
+						url : submitUrl,
+						type : submitType,
+						data : formData,
+						beforeSend : loadingMask2.show(),
+						success : function(data) {
+							loadingMask2.hide();
+							var reporturl = getBirtUrl() + data;
+							console.log(reporturl);
+							document.getElementById('reportIframe').src = "";
+							document.getElementById('reportIframe').src = reporturl;
+						},
+						error : function(jqXHR, status, errorThrown){
+							loadingMask2.hide();
+							showMessage(status, "Something went wrong .... ");
+						}
+					})
+				});
+			});
+		</script>
+	</body>
+</html>

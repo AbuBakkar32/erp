@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.asl.mapper.CawhMapper">
+
+	<insert id="saveCawh" parameterType="Cawh">
+		
+		INSERT INTO cawh
+		(
+			xwh,
+			xname,
+			xproject,
+			xcus,
+			xlocation,
+			xsupervisor,
+			xdate,
+			xstartdate,
+			xenddate,
+			xamountbudgt,
+			xamountcost,
+			xref,
+			xnote,
+			xstatus,
+			xdesc,
+			xtotamt,
+			xtrn,
+
+			zactive,
+			zauserid,
+			zid,
+			ztime,
+			zutime,
+			zuuserid
+		)
+		VALUES
+		(
+			#{xwh, jdbcType=VARCHAR},
+			#{xname, jdbcType=VARCHAR},
+			#{xproject, jdbcType=VARCHAR},
+			#{xcus, jdbcType=VARCHAR},
+			#{xlocation, jdbcType=VARCHAR},
+			#{xsupervisor, jdbcType=VARCHAR},
+			#{xdate, jdbcType=DATE},
+			#{xstartdate, jdbcType=DATE},
+			#{xenddate, jdbcType=DATE},
+			#{xamountbudgt, jdbcType=DECIMAL},
+			#{xamountcost, jdbcType=DECIMAL},
+			#{xref, jdbcType=VARCHAR},
+			#{xnote, jdbcType=VARCHAR},
+			#{xstatus, jdbcType=VARCHAR},
+			#{xdesc, jdbcType=VARCHAR},
+			#{xtotamt, jdbcType=DECIMAL},
+			#{xtrn, jdbcType=VARCHAR},
+
+			#{zactive, jdbcType=VARCHAR},
+			#{zauserid, jdbcType=VARCHAR},
+			#{zid, jdbcType=VARCHAR},
+			#{ztime, jdbcType=TIMESTAMP},
+			#{zutime, jdbcType=TIMESTAMP},
+			#{zuuserid, jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<update id="updateCawh" parameterType="Cawh">
+		UPDATE 
+			cawh
+		SET
+			xname=#{xname, jdbcType=VARCHAR},
+			xproject=#{xproject, jdbcType=VARCHAR},
+			xcus=#{xcus, jdbcType=VARCHAR},
+			xlocation=#{xlocation, jdbcType=VARCHAR},
+			xsupervisor=#{xsupervisor, jdbcType=VARCHAR},
+			xdate=#{xdate, jdbcType=DATE},
+			xstartdate=#{xstartdate, jdbcType=DATE},
+			xenddate=#{xenddate, jdbcType=DATE},
+			xamountbudgt=#{xamountbudgt, jdbcType=DECIMAL},
+			xamountcost=#{xamountcost, jdbcType=DECIMAL},
+			xref=#{xref, jdbcType=VARCHAR},
+			xnote=#{xnote, jdbcType=VARCHAR},
+			xstatus=#{xstatus, jdbcType=VARCHAR},
+			xdesc=#{xdesc, jdbcType=VARCHAR},
+			xtotamt=#{xtotamt, jdbcType=DECIMAL},
+			xtrn=#{xtrn, jdbcType=VARCHAR},
+
+			zactive=#{zactive, jdbcType=VARCHAR},
+			zauserid=#{zauserid, jdbcType=VARCHAR},
+			ztime=#{ztime, jdbcType=TIMESTAMP},
+			zutime=#{zutime, jdbcType=TIMESTAMP},
+			zuuserid=#{zuuserid, jdbcType=VARCHAR}
+		WHERE
+			xwh=#{xwh, jdbcType=VARCHAR}
+			AND zid=#{zid, jdbcType=VARCHAR}
+	</update>
+
+	<delete id="deleteCawh" parameterType="Cawh">
+		DELETE FROM cawh WHERE  xwh=#{xwh} AND zactive='1' AND zid=#{zid}
+	</delete>
+	
+	<select id="getAllCawh" resultType="Cawh">
+		SELECT 
+			cawh.*,
+			cacus.xorg as xorg,
+			p.xname as xsupervisorName,
+			d.xlong as projectName,
+			x.xlong as xdesc
+		FROM 
+			cawh 
+			LEFT JOIN cacus on cacus.xcus = cawh.xcus and cacus.zid = cawh.zid and cacus.zactive='1'
+			left join pdmst p on p.xstaff = cawh.xsupervisor and p.zid= cawh.zid
+			left join caproject c on c.xproject = cawh.xproject and c.zid= cawh.zid
+			left join xcodes x on x.xcode = cawh.xwh and x.zid= cawh.zid and x.xtype='Site'
+            left join xcodes d on d.xcode = cawh.xproject and d.zid= cawh.zid and d.xtype='Project'
+		WHERE 
+			cawh.zid=#{zid} 
+			AND cawh.zactive ='1'
+		order by 
+			cawh.xwh desc
+	</select>
+
+	<select id="findByCawh" resultType="Cawh">
+		SELECT 
+			cawh.*,
+			cacus.xorg as xorg,
+			p.xname as xsupervisorName,
+			d.xlong as projectName,
+			x.xlong as xdesc
+		FROM 
+			cawh 
+			LEFT JOIN cacus on cacus.xcus = cawh.xcus and cacus.zid = cawh.zid and cacus.zactive='1'
+			left join pdmst p on p.xstaff = cawh.xsupervisor and p.zid= cawh.zid
+			left join caproject c on c.xproject = cawh.xproject and c.zid= cawh.zid
+			left join xcodes x on x.xcode = cawh.xwh and x.zid= cawh.zid and x.xtype='Site'
+            left join xcodes d on d.xcode = cawh.xproject and d.zid= cawh.zid and d.xtype='Project'
+		WHERE 
+			cawh.zid=#{zid} 
+			AND cawh.xwh=#{xwh}
+		order  by cawh.xwh
+	</select>
+
+	<select id="getCawhBYProject" resultType="Cawh">
+		SELECT 
+			cawh.*,
+			cacus.xorg as xorg,
+			p.xname as xsupervisorName,
+			x.xlong as xwhName,
+			x.xlong as xdesc
+		FROM 
+			cawh 
+			LEFT JOIN cacus on cacus.xcus = cawh.xcus and cacus.zid = cawh.zid and cacus.zactive='1'
+			left join pdmst p on p.xstaff = cawh.xsupervisor and p.zid= cawh.zid
+			left join xcodes x ON x.xcode = cawh.xwh AND x.zid = cawh.zid AND x.zactive='1' AND x.xtype='Site'
+		WHERE 
+			cawh.zid=#{zid} 
+			AND cawh.xproject=#{xproject}
+		order by cawh.xproject
+	</select>
+
+	<select id="searchSite" resultType="Cawh">
+		SELECT * FROM cawh WHERE (UPPER(xwh) LIKE '%' || #{xwh} || '%' OR UPPER(xname) LIKE '%' || #{xwh} || '%' ) AND zid=#{zid} AND zactive='1'
+	</select>
+
+	<!-- For Estimated Cost Details -->
+	<insert id="saveCawhcostest" parameterType="Cawhcostest">
+	
+		<selectKey keyProperty="xrow" resultType="Integer" order="BEFORE">
+			SELECT COALESCE(Max(xrow), 0) + 1 FROM cawhcostest WHERE zactive='1' AND zid=#{zid}
+		</selectKey>
+		INSERT INTO cawhcostest
+		(
+			xwh,
+			xrow,
+			xpurpose,
+			xitem,
+			xunit,
+			xqty, 
+			xrate,
+			xlineamt,
+			xnote,
+			xfdate,
+			xtdate,
+			xgitem,
+			
+			zactive,
+			zauserid,
+			zid,
+			ztime,
+			zutime,
+			zuuserid
+		)
+		VALUES
+		(
+			#{xwh, jdbcType=VARCHAR},
+			#{xrow},
+			#{xpurpose, jdbcType=VARCHAR},
+			#{xitem, jdbcType=VARCHAR},
+			#{xunit, jdbcType=VARCHAR},
+			#{xqty, jdbcType=DECIMAL},
+			#{xrate, jdbcType=DECIMAL},
+			#{xlineamt, jdbcType=DECIMAL},
+			#{xnote, jdbcType=VARCHAR},
+			#{xfdate, jdbcType=DATE},
+			#{xtdate, jdbcType=DATE},
+			#{xgitem, jdbcType=VARCHAR},
+			
+			#{zactive, jdbcType=VARCHAR},
+			#{zauserid, jdbcType=VARCHAR},
+			#{zid, jdbcType=VARCHAR},
+			#{ztime, jdbcType=TIMESTAMP},
+			#{zutime, jdbcType=TIMESTAMP},
+			#{zuuserid, jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<update id="updateCawhcostest" parameterType="Cawhcostest">
+		UPDATE 
+			cawhcostest
+		SET
+			xpurpose=#{xpurpose, jdbcType=VARCHAR},
+			xitem=#{xitem, jdbcType=VARCHAR},
+			xunit=#{xunit, jdbcType=VARCHAR},
+			xqty=#{xqty, jdbcType=DECIMAL},
+			xrate=#{xrate, jdbcType=DECIMAL},
+			xlineamt=#{xlineamt, jdbcType=DECIMAL},
+			xnote=#{xnote, jdbcType=VARCHAR},
+			xfdate=#{xfdate, jdbcType=DATE},
+			xtdate=#{xtdate, jdbcType=DATE},
+			xgitem=#{xgitem, jdbcType=VARCHAR},
+			
+			zactive=#{zactive, jdbcType=VARCHAR},
+			zauserid=#{zauserid, jdbcType=VARCHAR},
+			zid=#{zid, jdbcType=VARCHAR},
+			ztime=#{ztime, jdbcType=TIMESTAMP},
+			zutime=#{zutime, jdbcType=TIMESTAMP},
+			zuuserid=#{zuuserid, jdbcType=VARCHAR}
+		WHERE
+			xwh=#{xwh, jdbcType=VARCHAR}
+			AND xrow=#{xrow, jdbcType=INTEGER}
+			AND zid=#{zid, jdbcType=VARCHAR}
+	</update>
+
+	<delete id="deleteCawhcostest" parameterType="Cawhcostest">
+		DELETE 
+		FROM 
+			cawhcostest 
+		WHERE 
+			xrow=#{xrow} 
+			AND xwh=#{xwh} 
+			AND zactive='1' 
+			AND zid=#{zid}
+	</delete>
+
+	<select id="getAllCawhcostest" resultType="Cawhcostest">
+		SELECT 
+			* 
+		FROM 
+			cawhcostest 
+		WHERE 
+			zid=#{zid} 
+			AND zactive='1'
+		order by 
+			ztime desc
+	</select>
+
+	<select id="findByCawhcostest" resultType="Cawhcostest">
+		SELECT 
+			c.*, 
+			i.xdesc as "xitemdesc"
+		FROM 
+			cawhcostest  c
+			JOIN caitem i on i.xitem=c.xitem AND i.zid=#{zid}
+		WHERE 
+			c.xwh=#{xwh} 
+			AND c.zid=#{zid} 
+			AND c.zactive='1'
+	</select>
+
+	<select id="findCawhcostestByXwhAndXrow" resultType="Cawhcostest">
+		SELECT 
+			c.*, 
+			i.xdesc as "xitemdesc"
+		FROM 
+			cawhcostest c
+			JOIN caitem i on i.xitem=c.xitem AND i.zid=#{zid} 
+		WHERE 
+			c.xwh=#{xwh} 
+			AND c.xrow=#{xrow} 
+			AND c.zid=#{zid} 
+			AND c.zactive='1'
+	</select>
+	
+	<select id="findCawhcostestByXwhAndXitem" resultType="Cawhcostest">
+		SELECT 
+			* 
+		FROM 
+			cawhcostest 
+		WHERE 
+			xwh=#{xwh} 
+			AND xitem=#{xitem} 
+			AND zid=#{zid}
+	</select>
+
+	<update id="updateCawhTotalAmt">
+		Update 
+			cawh
+		SET xtotamt = (select sum(xlineamt)
+		FROM 
+			cawhcostest
+		WHERE 
+			xwh=#{xwh}
+			AND zid=#{zid})
+		WHERE 
+			xwh=#{xwh}
+			AND zid=#{zid}
+	</update>
+
+</mapper>

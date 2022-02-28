@@ -1,0 +1,110 @@
+<!-- Modal -->
+<div id="caprojectplanmodal" th:fragment="caprojectplanmodal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="true" xmlns:th="http://www.thymeleaf.org">
+	<div class="modal-dialog modal-lg">
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h4 class="modal-title">Add/Update Item</h4>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<form id="mainform-modal" th:action="@{/project/caproject/caprojectplan/save}" method="post" class="form-horizontal" th:object="${caprojectplan}" th:with="df=${'E, dd-MMM-yyyy'}">
+						<input type="hidden" th:field="*{xproject}"/>
+						<input type="hidden" th:field="*{xrow}"/>
+						<div class="col-md-6">
+
+							<div class="form-group">
+								<label class="control-label col-sm-4" for="xwh">Site</label>
+								<div class="col-sm-8">
+									<select class="form-control" th:field="*{xwh}">
+										<option value="">--Select--</option>
+										<option th:each="cu : ${sites}" th:text="${cu.xcode + ' - ' + cu.xcodename}" th:value="${cu.xcode}"></option>
+									</select>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="control-label col-md-4" for="xstaff">Responsible Parson</label>
+								<div class="col-sm-8">
+									<input 	type="text" 
+											class="form-control searchsuggest" 
+											placeholder="Search..." 
+											th:value="${#strings.isEmpty(caprojectplan.xstaff) ? '' : caprojectplan.xstaff + ' - ' + caprojectplan.xstaffName}" 
+											th:attr="search-url='search/staff'"/>
+									<input type="hidden" class="required" id="search-val" th:field="*{xstaff}" value=""/>
+									<input type="hidden" id="search-des" th:value="*{xstaff}"/>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="control-label col-sm-4" for="xrole">Role</label>
+								<div class="col-sm-8">
+									<input type="text"  class="form-control" th:field="*{xrole}"/>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="control-label col-sm-4" for="xresponsibility">Responsibility</label>
+								<div class="col-sm-8">
+									<input type="text"  class="form-control" th:field="*{xresponsibility}"/>
+								</div>
+							</div>
+
+						</div>
+
+						<div class="col-md-6">
+
+							<div class="form-group datepicker">
+								<label class="control-label col-md-3" for="xfdate">Involvement Date</label>
+								<div class="input-group date col-md-7 datepicker">
+									<input 	type="datepicker" 
+											class="form-control" 
+											id="xfdate"
+											name="xfdate"
+											th:value="${caprojectplan.xfdate == null ? #dates.format(#dates.createNow(), df) : #dates.format(caprojectplan.xfdate, df)}"/>
+									<div class="input-group-addon">
+										<span class="glyphicon glyphicon-calendar"></span>
+									</div>
+								</div>
+							</div>
+
+							<div class="form-group datepicker">
+								<label class="control-label col-md-3" for="xtdate">Completion Date</label>
+								<div class="input-group date col-md-7 datepicker">
+									<input 	type="datepicker" 
+											class="form-control" 
+											id="xtdate"
+											name="xtdate"
+											th:value="${caprojectplan.xtdate == null ? #dates.format(#dates.createNow(), df) : #dates.format(caprojectplan.xtdate, df)}"/>
+									<div class="input-group-addon">
+										<span class="glyphicon glyphicon-calendar"></span>
+									</div>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="control-label col-sm-3" for="xnote">Remarks</label>
+								<div class="col-sm-8">
+									<textarea rows="3" cols="" class="form-control" th:field="*{xnote}"></textarea>
+								</div>
+							</div>
+
+						</div>
+					</form>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-success btn-sm confirm-btn-modal">Submit</button>
+				<button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+		<script type="text/javascript" th:src="@{/assets/js/ck-ui/ck-search-suggest.js}"></script>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				ck.ui.config.buttonevent();
+				ck.ui.config.dateAndTimepicker();
+			})
+		</script>
+	</div>
+</div>

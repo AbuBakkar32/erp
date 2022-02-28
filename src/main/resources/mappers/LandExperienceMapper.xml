@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.asl.mapper.LandExperienceMapper">
+
+	<insert id="saveExPerson" parameterType="LandExperience">
+		<selectKey keyProperty="xrow" resultType="Integer" order="BEFORE">
+			SELECT COALESCE(Max(xrow), 0) + 1 FROM caexperience WHERE zactive='1' AND zid=#{zid}
+		</selectKey>
+		INSERT INTO caexperience
+		(
+			xperson,
+			xrow,
+			xname,
+			xduration,
+			xdesignation,
+			xtypetrn,
+			xtype,
+			xnote,
+			zactive,
+			zauserid,
+			zid,
+			ztime,
+			zutime,
+			zuuserid,
+			zuip,
+			zaip
+		)
+		VALUES
+		(
+			#{xperson, jdbcType=VARCHAR},
+			#{xrow},
+			#{xname, jdbcType=VARCHAR},
+			#{xduration, jdbcType=INTEGER},
+			#{xdesignation, jdbcType=VARCHAR},
+			#{xtypetrn, jdbcType=VARCHAR},
+			#{xtype, jdbcType=VARCHAR},
+			#{xnote, jdbcType=VARCHAR},
+			#{zactive, jdbcType=VARCHAR},
+			#{zauserid, jdbcType=VARCHAR},
+			#{zid, jdbcType=VARCHAR},
+			#{ztime, jdbcType=TIMESTAMP},
+			#{zutime, jdbcType=TIMESTAMP},
+			#{zuuserid, jdbcType=VARCHAR},
+			#{zuip, jdbcType=VARCHAR},
+			#{zaip, jdbcType=VARCHAR}
+		) 
+	</insert>
+	
+	<update id="updateExPerson" parameterType="LandExperience">
+		UPDATE 
+			caexperience
+		SET
+			xname=#{xname, jdbcType=VARCHAR},
+			xduration=#{xduration, jdbcType=INTEGER},
+			xdesignation=#{xdesignation, jdbcType=VARCHAR},
+			xtypetrn=#{xtypetrn, jdbcType=VARCHAR},
+			xtype=#{xtype, jdbcType=VARCHAR},
+			xnote=#{xnote, jdbcType=VARCHAR},
+			zactive=#{zactive, jdbcType=VARCHAR},
+			zauserid=#{zauserid, jdbcType=VARCHAR},
+			ztime=#{ztime, jdbcType=TIMESTAMP},
+			zutime=#{zutime, jdbcType=TIMESTAMP},
+			zuuserid=#{zuuserid, jdbcType=VARCHAR},
+			zuip=#{zuip, jdbcType=VARCHAR},
+			zaip=#{zaip, jdbcType=VARCHAR}
+		WHERE
+			xperson=#{xperson, jdbcType=VARCHAR}
+			AND xrow=#{xrow, jdbcType=INTEGER}
+			AND zid=#{zid, jdbcType=VARCHAR}
+	</update>
+	
+
+	<select id="getAllLandExperience" resultType="LandExperience">
+		SELECT 
+			* 
+		FROM 
+			caexperience 
+		WHERE 
+			zid=#{zid} 
+			AND zactive='1'
+		order by 
+			ztime desc
+	</select>
+
+	<select id="findByLandExperiencePerson" resultType="LandExperience">
+		SELECT 
+			* 
+		FROM 
+			caexperience 
+		WHERE 
+			zid=#{zid} 
+			AND xperson=#{xperson}
+	</select>
+	
+	<select id="findByPersonExperience" resultType="LandExperience">
+		SELECT * FROM caexperience WHERE xperson=#{xperson} AND zid=#{zid} AND zactive='1'
+	</select>
+	
+	<select id="findByXpersonAndXrow" resultType="LandExperience">
+		SELECT 
+			* 
+		FROM 
+			caexperience 
+		WHERE 
+			zid=#{zid} 
+			AND xperson=#{xperson}
+			AND xrow=#{xrow}
+	</select>
+	<select id="findByXpersonAndXname" resultType="LandExperience">
+		SELECT 
+			* 
+		FROM 
+			caexperience 
+		WHERE 
+			zid=#{zid} 
+			AND xperson=#{xperson}
+			AND xname=#{xname}
+	</select>
+	
+	<delete id="deleteDetail" parameterType="LandExperience">
+		DELETE FROM caexperience WHERE xrow=#{xrow} AND xperson=#{xperson} AND zactive='1' AND zid=#{zid}
+	</delete>
+</mapper>

@@ -1,0 +1,99 @@
+<!-- Modal -->
+<div id="menuprofilelinemodal" th:fragment="menuprofilelinemodal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="true">
+	<div class="modal-dialog modal-lg">
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h4 class="modal-title">Update profile line</h4>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<form id="mainform-modal" th:action="@{/system/profile/profileline/save}" method="post" class="form-horizontal" th:object="${profileline}">
+						<input type="hidden" th:field="*{profileId}"/>
+						<input type="hidden" th:field="*{profileLineId}"/>
+						<input type="hidden" th:field="*{profileCode}"/>
+						<input type="hidden" th:field="*{seqn}"/>
+						<input type="hidden" th:field="*{profileType}"/>
+						<div class="col-md-6">
+							<div class="form-group">
+								<label class="control-label col-sm-4" for="hidden">Display: </label>
+								<div class="col-sm-8">
+									<div class="checkbox">
+										<label><input type="checkbox" th:field="*{display}" value="Y"></label>
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="control-label col-sm-4" for="screenPrompts">Screen prompt: </label>
+								<div class="col-sm-8">
+									<input type="text" class="form-control" th:field="*{screenPrompt}"/>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-success confirm-btn-modal">Submit</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				// Init ui for modal
+				ck.ui.config.buttonevent();
+			})
+		</script>
+	</div>
+</div>
+
+<!-- Modal -->
+<div id="menuprofilelinemodal" th:fragment="reportprofilelinemodal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="true">
+	<div class="modal-dialog modal-lg">
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h4 class="modal-title">Update profile line</h4>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<form id="mainform-modal" th:action="@{/system/profile/profileline/save}" method="post" class="form-horizontal" th:object="${profileline}">
+						<input type="hidden" th:field="*{profileId}"/>
+						<input type="hidden" th:field="*{profileLineId}"/>
+						<input type="hidden" th:field="*{profileCode}"/>
+						<input type="hidden" th:field="*{seqn}"/>
+						<input type="hidden" th:field="*{profileType}"/>
+						<div class="col-md-6">
+							<div class="form-group">
+								<label class="control-label col-sm-4" for="hidden">Display: </label>
+								<div class="col-sm-8">
+									<div class="checkbox">
+										<label><input type="checkbox" th:field="*{display}" value="Y"></label>
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="control-label col-sm-4" for="screenPrompts">Screen prompt: </label>
+								<div class="col-sm-8">
+									<input type="text" class="form-control" th:field="*{screenPrompt}"/>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-success confirm-btn-modal">Submit</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				// Init ui for modal
+				ck.ui.config.buttonevent();
+			})
+		</script>
+	</div>
+</div>

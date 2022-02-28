@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.asl.mapper.AccountGroupMapper">
+	<insert id="save" parameterType="AccountGroup">
+		INSERT INTO acgroup
+		(
+			xagcode,
+			xagtype,
+			xaglevel,
+			xagname,
+			xagparent,
+
+			zid,
+			zauserid,
+			zuuserid,
+			zaip,
+			zuip,
+			zactive,
+			ztime,
+			zutime
+		)
+		VALUES
+		(
+			#{xagcode, jdbcType=VARCHAR},
+			#{xagtype, jdbcType=VARCHAR},
+			#{xaglevel, jdbcType=INTEGER},
+			#{xagname, jdbcType=VARCHAR},
+			#{xagparent, jdbcType=VARCHAR},
+
+			#{zid, jdbcType=VARCHAR},
+			#{zauserid, jdbcType=VARCHAR},
+			#{zuuserid, jdbcType=VARCHAR},
+			#{zaip, jdbcType=VARCHAR},
+			#{zuip, jdbcType=VARCHAR},
+			#{zactive, jdbcType=VARCHAR},
+			#{ztime, jdbcType=TIMESTAMP},
+			#{zutime, jdbcType=TIMESTAMP}
+		)
+	</insert>
+
+	<update id="update" parameterType="AccountGroup">
+		UPDATE 
+			acgroup 
+		SET
+			xagtype=#{xagtype, jdbcType=VARCHAR},
+			xaglevel=#{xaglevel, jdbcType=INTEGER},
+			xagname=#{xagname, jdbcType=VARCHAR},
+			xagparent=#{xagparent, jdbcType=VARCHAR},
+
+			zuuserid=#{zuuserid, jdbcType=VARCHAR},
+			zuip=#{zuip, jdbcType=VARCHAR},
+			zactive=#{zactive, jdbcType=VARCHAR},
+			zutime=#{zutime, jdbcType=TIMESTAMP}
+		WHERE
+			zid=#{zid, jdbcType=VARCHAR}
+			AND xagcode=#{xagcode, jdbcType=VARCHAR}
+	</update>
+
+	<select id="getAllByLevelAndType" resultType="AccountGroup">
+		SELECT
+			*
+		FROM
+			acgroup
+		WHERE
+			xaglevel=#{xaglevel}
+			AND xagtype=#{xagtype}
+			AND zid=#{zid}
+	</select>
+
+	<select id="getAllByLevel" resultType="AccountGroup">
+		SELECT
+			*
+		FROM
+			acgroup
+		WHERE
+			xaglevel=#{xaglevel}
+			AND zid=#{zid}
+	</select>
+
+	<select id="findByCode" resultType="AccountGroup">
+		SELECT
+			*
+		FROM
+			acgroup
+		WHERE
+			xagcode=#{xagcode}
+			AND zid=#{zid}
+	</select>
+
+	<select id="getAllByXagparent" resultType="AccountGroup">
+		SELECT
+			*
+		FROM
+			acgroup
+		WHERE
+			xagparent=#{xagparent}
+			AND zid=#{zid}
+	</select>
+
+	<delete id="delete">
+		DELETE
+		FROM
+			acgroup
+		WHERE
+			xagcode=#{xagcode}
+			AND zid=#{zid}
+	</delete>
+
+	<select id="searchByCodeOrName" resultType="AccountGroup">
+		SELECT 
+			* 
+		FROM 
+			acgroup 
+		WHERE 
+			zid=#{zid} 
+			AND ((UPPER(xagcode) LIKE '%' || #{hint} || '%') 
+			OR (UPPER(xagname) LIKE '%' || #{hint} || '%'))
+		ORDER BY 
+			xagcode, xagname
+	</select>
+
+</mapper>

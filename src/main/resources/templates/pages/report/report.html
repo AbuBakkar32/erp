@@ -1,0 +1,105 @@
+  <!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<title th:text="${reportName}"></title>
+		<meta th:remove="tag" th:include="commons :: common-meta"/>
+		<meta th:remove="tag" th:include="commons :: common-css"/>
+		<meta th:remove="tag" th:include="commons :: common-js"/>
+	</head>
+	<body>
+
+		<!-- Header section -->
+		<div class="header-section" th:include="commons :: header-section"></div>
+
+		<!-- Menu section -->
+		<div th:if="${menuVersion != null and menuVersion eq 'MENU_V2'}" class="menuv2" th:include="commons :: main-menu"></div>
+
+		<div th:if="${menuVersion == null or menuVersion eq 'MENU_V1'}" class="navbar-inverse menu-section">
+			<div class="container-fluid">
+				<div class="row">
+					<nav class="navbar navbar-inverse">
+						<div class="container-fluid">
+							<div class="row">
+								<div class="navbar-header">
+									<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+										<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+									</button>
+								</div>
+								<div class="collapse navbar-collapse" id="myNavbar">
+									<div class="nav navbar-nav">
+										<li><a th:href="@{/}"><i class="fas fa-home"></i> Home</a></li>
+										<li class="active"><a th:href="@{/report}">Report</a></li>
+									</div>
+									<ul class="nav navbar-nav navbar-right" th:include="ckbigmenu :: dashboard-menu"></ul>
+								</div>
+							</div>
+						</div>
+					</nav>
+				</div>
+			</div>
+		</div>
+
+		<!-- Content section -->
+		<div>
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-md-12 content-area">
+						<!-- Section data maintenance -->
+						<section id="data-maintenance" style="margin-top: 10px;">
+							<div class="section-header">
+								<h1><span th:text="${reportName}"></span></h1>
+							</div>
+							<div class="section-body togglebox">
+								<!-- <form id="reportform" class="form-horizontal" th:action="@{/report/print}" method="POST">
+									<input type="hidden" id="reportName" th:value="${reportName}"/>
+									<input type="hidden" name="reportCode" th:value="${reportCode}"/>
+									<div th:include="pages/report/reports :: report-fields" th:with="df=${'E, dd-MMM-yyyy'}"></div>
+								</form> -->
+								<form th:if="${not fopEnabled}" id="reportform" class="form-horizontal" th:action="@{/report/print}" method="POST">
+									<input type="hidden" id="reportName" th:value="${reportName}"/>
+									<input type="hidden" name="reportCode" th:value="${reportCode}"/>
+									<div th:include="pages/report/reports :: report-fields" th:with="df=${'E, dd-MMM-yyyy'}"></div>
+								</form>
+								<form th:if="${fopEnabled}" id="reportform" class="form-horizontal" th:action="@{/report/print/fop}" method="POST">
+									<input type="hidden" id="reportName" th:value="${reportName}"/>
+									<input type="hidden" name="reportCode" th:value="${reportCode}"/>
+									<div th:include="pages/report/reports :: report-fields" th:with="df=${'E, dd-MMM-yyyy'}"></div>
+								</form>
+								<div class="col-md-6" style="margin-top: 20px;">
+									<div class="col-md-6 col-md-offset-4" style="padding-left:10px;">
+										<!-- <button class="btn btn-sm btn-success confirm-rpt-birt-btn">Generate</button> -->
+										<button th:if="${not fopEnabled}" class="btn btn-sm btn-success confirm-rpt-birt-btn">Generate</button>
+										<button th:if="${fopEnabled}" class="btn btn-sm btn-success confirm-rpt-btn">Generate</button>
+									</div>
+								</div>
+							</div>
+						</section>
+					</div>
+					<div class="col-md-12 content-area">
+						<section id="data-maintenance" style="margin-top: 10px;">
+							<!-- <div class="section-header">
+								<h1><span th:text="${reportName} + ' - Report'"></span></h1>
+							</div> -->
+							<div class="section-body togglebox" style="height: 700px">
+								<iframe id="reportIframe" 
+										name="reportIframe"
+										scrolling="no" 
+										frameborder="0" 
+										height="100%" 
+										width="100%"
+										marginheight="0" 
+										marginwidth="10px">
+									
+								</iframe>
+							</div>
+						</section>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Footer section -->
+		<div class="footer-section" th:include="commons :: footer-section"></div>
+		<script type="text/javascript" th:src="@{/assets/pages/reports/reports.js}"></script>
+	</body>
+</html>

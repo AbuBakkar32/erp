@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.asl.mapper.AcyearendMapper">
+
+	<select id="acYearEnd" statementType="CALLABLE">
+		{call
+		AC_YEAREND(#{zid, jdbcType = VARCHAR, mode = IN}, #{xuser, jdbcType
+		= VARCHAR, mode = IN}, #{xyear, jdbcType = INTEGER, mode = IN},
+		#{xdate, jdbcType = DATE, mode = IN}, #{p_seq, jdbcType =
+		VARCHAR, mode = IN})}
+	</select>
+	
+</mapper>

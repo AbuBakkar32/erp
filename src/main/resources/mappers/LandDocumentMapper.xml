@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.asl.mapper.LandDocumentMapper">
+	<insert id="saveLandDocument" parameterType="LandDocument">
+		<selectKey keyProperty="xrow" resultType="Integer" order="BEFORE">
+			SELECT COALESCE(Max(xrow), 0) + 1 FROM cadocument WHERE zactive='1' AND zid=#{zid}
+		</selectKey>
+		
+		INSERT INTO cadocument
+		(
+			xdoc,
+			xrow,
+			xperson,
+			xsurveyor,
+			xland,
+			xdoctype,
+			xname,
+			xdocument,
+			xnote,
+			xproject,
+			xdesc,
+			xwh,
+			xnameold,
+			xtypetrn,
+			xtrn,
+			xstaff,
+			zactive,
+			zauserid,
+			zid,
+			ztime,
+			zutime,
+			zuuserid
+		)
+		VALUES
+		(
+			#{xdoc, jdbcType=VARCHAR},
+			#{xrow, jdbcType=INTEGER},
+			#{xperson, jdbcType=VARCHAR},
+			#{xsurveyor, jdbcType=VARCHAR},
+			#{xland, jdbcType=VARCHAR},
+			#{xdoctype, jdbcType=VARCHAR},
+			#{xname, jdbcType=VARCHAR},
+			#{xdocument, jdbcType=VARCHAR},
+			#{xnote, jdbcType=VARCHAR},
+			#{xproject, jdbcType=VARCHAR},
+			#{xdesc, jdbcType=VARCHAR},
+			#{xwh, jdbcType=VARCHAR},
+			#{xnameold, jdbcType=VARCHAR},
+			#{xtypetrn, jdbcType=VARCHAR},
+			#{xtrn, jdbcType=VARCHAR},
+			#{xstaff, jdbcType=VARCHAR},
+			#{zactive, jdbcType=VARCHAR},
+			#{zauserid, jdbcType=VARCHAR},
+			#{zid, jdbcType=VARCHAR},
+			#{ztime, jdbcType=TIMESTAMP},
+			#{zutime, jdbcType=TIMESTAMP},
+			#{zuuserid, jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<update id="updateLandDocument" parameterType="LandDocument">
+		UPDATE 
+			cadocument
+		SET
+			xperson=#{xperson, jdbcType=VARCHAR},
+			xsurveyor=#{xsurveyor, jdbcType=VARCHAR},
+			xland=#{xland, jdbcType=VARCHAR},
+			xdoctype=#{xdoctype, jdbcType=VARCHAR},
+			xname=#{xname, jdbcType=VARCHAR},
+			xdesc=#{xdesc, jdbcType=VARCHAR},
+			xdocument=#{xdocument, jdbcType=VARCHAR},
+			xnote=#{xnote, jdbcType=VARCHAR},
+			xproject=#{xproject, jdbcType=VARCHAR},
+			xwh=#{xwh, jdbcType=VARCHAR},
+			xnameold=#{xnameold, jdbcType=VARCHAR},
+			xtypetrn=#{xtypetrn, jdbcType=VARCHAR},
+			xtrn=#{xtrn, jdbcType=VARCHAR},
+			xstaff=#{xstaff, jdbcType=VARCHAR},
+			zactive=#{zactive, jdbcType=VARCHAR},
+			zauserid=#{zauserid, jdbcType=VARCHAR},
+			ztime=#{ztime, jdbcType=TIMESTAMP},
+			zutime=#{zutime, jdbcType=TIMESTAMP},
+			zuuserid=#{zuuserid, jdbcType=VARCHAR}
+		WHERE
+			xdoc=#{xdoc, jdbcType=VARCHAR}
+			AND xrow=#{xrow, jdbcType=INTEGER}
+			AND zid=#{zid, jdbcType=VARCHAR}
+	</update>
+
+	<select id="getAllLandDocument" resultType="LandDocument">
+		SELECT 
+			* 
+		FROM 
+			cadocument 
+		WHERE 
+			zid=#{zid}
+			AND zactive='1'
+		order by 
+			ztime desc
+	</select>
+
+	<select id="findByLandDocument" resultType="LandDocument">
+		SELECT 
+			* 
+		FROM 
+			cadocument 
+		WHERE 
+			zid=#{zid} 
+			AND xdoc=#{xdoc}
+	</select>
+	
+	<select id="findByLandPersonDocument" resultType="LandDocument">
+		SELECT 
+			* 
+		FROM 
+			cadocument 
+		WHERE 
+			zid=#{zid} 
+			AND xperson=#{xperson}
+	</select>
+	
+	<select id="findByLandSurveyorDocument" resultType="LandDocument">
+		SELECT 
+			* 
+		FROM 
+			cadocument 
+		WHERE 
+			zid=#{zid} 
+			AND xsurveyor=#{xsurveyor}
+	</select>
+	
+	<select id="findByAllLandDocument" resultType="LandDocument">
+		SELECT 
+			* 
+		FROM 
+			cadocument 
+		WHERE 
+			zid=#{zid} 
+			AND xland=#{xland}
+	</select>
+	
+	<select id="findLandPersonDocumentByXpersonAndXrow" resultType="LandDocument">
+		SELECT * FROM cadocument WHERE xperson=#{xperson} AND xrow=#{xrow} AND zid=#{zid} AND zactive='1'
+	</select>
+	
+	<select id="findLandSurveyorDocumentBySurveyorAndXrow" resultType="LandDocument">
+		SELECT * FROM cadocument WHERE xsurveyor=#{xsurveyor} AND xrow=#{xrow} AND zid=#{zid} AND zactive='1'
+	</select>
+	
+	<select id="findLandLandDocumentByLandAndXrow" resultType="LandDocument">
+		SELECT * FROM cadocument WHERE xland=#{xland} AND xrow=#{xrow} AND zid=#{zid} AND zactive='1'
+	</select>
+	
+	<select id="searchServeyorId" resultType="LandSurveyor">
+		SELECT xsurveyor FROM casurveyor WHERE (UPPER(xsurveyor) LIKE '%' || #{xsurveyor} || '%') AND zid=#{zid} AND zactive='1'
+	</select>
+	
+	<delete id="deleteDetail" parameterType="LandDocument">
+		DELETE FROM cadocument WHERE xrow=#{xrow} AND xdoc=#{xdoc} AND zactive='1' AND zid=#{zid}
+	</delete>
+	
+
+	<select id="findByHRDocument" resultType="LandDocument">
+		SELECT 
+			* 
+		FROM 
+			cadocument 
+		WHERE 
+			zid=#{zid} 
+			AND xstaff=#{xstaff}
+	</select>
+	
+	<select id="findHRDocumentByXstaffAndXrow" resultType="LandDocument">
+		SELECT 
+			* 
+		FROM 
+			cadocument 
+		WHERE 
+			xstaff=#{xstaff} 
+			AND xrow=#{xrow} 
+			AND zid=#{zid} 
+			AND zactive='1'
+	</select>
+	
+	<select id="findByAllProjectDocument" resultType="LandDocument">
+		SELECT 
+			cadocument.*
+		FROM 
+			cadocument 
+		WHERE 
+			cadocument.zid=#{zid} 
+			AND cadocument.xproject=#{xproject}
+			AND cadocument.xwh is null
+		ORDER BY
+				cadocument.xdoc
+	</select>
+
+	<select id="findByAllProjectsSiteDocument" resultType="LandDocument">
+		SELECT 
+			cadocument.*,
+			cawh.xdesc as siteName 
+		FROM 
+			cadocument 
+			left join cawh on cawh.xwh=cadocument.xwh and cawh.zid=cadocument.zid
+		WHERE 
+			cadocument.zid=#{zid} 
+			AND cadocument.xproject=#{xproject}
+			AND cadocument.xwh is not null
+		ORDER BY
+				cadocument.xdoc
+	</select>
+	
+	<select id="findDocumentByXprojectAndXrow" resultType="LandDocument">
+		SELECT * FROM cadocument WHERE xproject=#{xproject} AND xrow=#{xrow} AND zid=#{zid} AND zactive='1'
+	</select>
+	
+	<select id="findByAllSiteDocument" resultType="LandDocument">
+		SELECT 
+			* 
+		FROM 
+			cadocument 
+		WHERE 
+			zid=#{zid} 
+			AND xwh=#{xwh}
+	</select>
+	
+	<select id="findSiteDocumentByXwhAndXrow" resultType="LandDocument">
+		SELECT * FROM cadocument WHERE xwh=#{xwh} AND xrow=#{xrow} AND zid=#{zid} AND zactive='1'
+	</select>
+</mapper>

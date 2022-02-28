@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<title>Sales Order Matrix</title>
+		<meta th:remove="tag" th:include="commons :: common-meta" />
+		<meta th:remove="tag" th:include="commons :: common-css" />
+		<meta th:remove="tag" th:include="commons :: common-js" />
+	</head>
+	<body>
+		<!-- Header section -->
+		<div class="header-section" th:include="commons :: header-section"></div>
+
+		<!-- Menu section -->
+		<div th:if="${menuVersion != null and menuVersion eq 'MENU_V2'}" class="menuv2" th:include="commons :: main-menu"></div>
+
+		<div th:if="${menuVersion == null or menuVersion eq 'MENU_V1'}" class="navbar-inverse menu-section">
+			<div class="container-fluid">
+				<div class="row">
+					<nav class="navbar navbar-inverse">
+						<div class="container-fluid">
+							<div class="row">
+								<div class="navbar-header">
+									<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+										<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+									</button>
+								</div>
+								<div class="collapse navbar-collapse" id="myNavbar">
+									<div class="nav navbar-nav">
+										<li><a th:href="@{/}"><i class="fas fa-home"></i> Home</a></li>
+										<li class="active"><a th:href="@{/salesninvoice/salesorder/detailmatrix}">Sales Order Matrix</a></li>
+									</div>
+									<ul class="nav navbar-nav navbar-right" th:include="ckbigmenu :: dashboard-menu"></ul>
+								</div>
+							</div>
+						</div>
+					</nav>
+				</div>
+			</div>
+		</div>
+		
+		
+		<!-- Content section -->
+		<div>
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-md-12">
+						<section id="data-maintenance" style="margin-top: 30px;">
+							<div class="section-header sectionbartoggle">
+								<h1>Date Wise Query</h1>
+							</div>
+							<div class="section-body section-border">
+								<div class="row">
+									<div class="col-md-6">
+										<form id="mainform" class="form-horizontal" th:action="@{/salesninvoice/salesorder/query/matrix}" method="post" th:with="df=${'E, dd-MMM-yyyy'}">
+											<div class="form-group datepicker">
+												<label class="control-label col-md-4" for="xdate">Requisitions Date : </label>
+												<div class="input-group date col-md-8 datepicker">
+													<input 	type="datepicker" 
+															class="form-control" 
+															id="xdate"
+															name="xdate"
+															th:value="${#dates.format(#dates.createNow(), df)}"/>
+													<div class="input-group-addon">
+														<span class="glyphicon glyphicon-calendar"></span>
+													</div>
+												</div>
+											</div>
+										</form>
+									</div>
+									<div class="col-md-6">
+										<div class="">
+											<button class="btn btn-sm btn-success query-submit-btn" type="submit"><i class="fas fa-search"></i></button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</section>
+					</div>
+
+					<div class="col-md-12">
+						<!-- rqls list section -->
+						<section id="data-maintenance" style="margin-top: 30px;">
+							<div class="section-header sectionbartoggle">
+								<h1>Sales Order Matrix</h1>
+							</div>
+
+							<div class="section-body" style="overflow-x:scroll;">
+								<table class="table table-striped table-bordered nowrap" id="salesordersmatrixtable" th:fragment="salesordersmatrixtable">
+									<thead>
+										<tr>
+											<th th:attr="colspan=${#lists.size(distinctItems) + 1}">
+												<a target="_blank" th:href="@{/salesninvoice/salesorder/details/} + ${datadate} + '/print'"><i class="fas fa-print"></i> Print</a>
+											</th>
+										</tr>
+										<tr>
+											<th rowspan="3">
+												Item <i class="fas fa-arrow-right"></i>
+												<br/>
+												Branch <i class="fas fa-arrow-down"></i>
+											</th>
+											<th th:each="col : ${distinctItems}" style="text-align: right;">
+												<a th:href="@{/mastersetup/caitem/} + ${col.xitem}" th:text="${col.xitem}" target="_blank"></a>
+											</th>
+										</tr>
+										<tr>
+											<th th:each="col : ${distinctItems}" th:text="${col.xdesc}" style="text-align: right;"></th>
+										</tr>
+										<tr style="background: #eee;">
+											<th th:each="col : ${distinctItems}" th:text="${col.xunitpur}" style="text-align: right;"></th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr th:each="br : ${distinctBranch}">
+											<td th:text="${br.zorg}"></td>
+											<td th:each="col : ${distinctItems}" style="text-align: right;">
+												<span 	th:each="britem : ${br.items}" 
+														th:if="${britem.xitem eq col.xitem}" 
+														th:text="${britem.xqtyord}">
+												</span>
+											</td>
+										</tr>
+									</tbody>
+									<tfoot>
+										<tr>
+											<th>Total <i class="fas fa-arrow-right"></i></th>
+											<th th:each="col : ${distinctItems}" th:text="${col.totalQty}" style="text-align: right;"></th>
+										</tr>
+									</tfoot>
+								</table>
+							</div>
+						</section>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Modal -->
+		<div id="poorddetailmodal-section"></div>
+
+		<!-- Footer section -->
+		<div class="footer-section" th:include="commons :: footer-section"></div>
+
+		<script type="text/javascript">
+			$(document).ready(function(){
+				
+				$('.query-submit-btn').on('click', function(e){
+					e.preventDefault();
+					submitMainForm();
+				})
+				
+			})
+		</script>
+	</body>
+</html>

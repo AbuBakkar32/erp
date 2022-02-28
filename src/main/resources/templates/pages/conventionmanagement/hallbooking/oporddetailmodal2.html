@@ -1,0 +1,113 @@
+<!-- Modal -->
+<div id="oporddetailmodal2" th:fragment="oporddetailmodal2" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="true" xmlns:th="http://www.thymeleaf.org">
+	<div class="modal-dialog modal-lg">
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h4 class="modal-title">Add/Update Item</h4>
+			</div>
+			<div class="modal-body" style="height: auto;">
+				<div class="row">
+					<form id="mainform-modal" th:action="@{/conventionmanagement/hallbooking/oporddetail/save}" method="post" class="form-horizontal" th:object="${oporddetail}">
+						<input type="hidden" th:field="*{xordernum}"/>
+						<input type="hidden" th:field="*{xrow}"/>
+						<input type="hidden" th:field="*{xcatitem}"/>
+						<input type="hidden" th:field="*{xdesc}"/>
+						<input type="hidden" th:field="*{xgitem}"/>
+						<input type="hidden" th:field="*{xunit}"/>
+						<div class="col-md-6">
+							<div class="form-group">
+								<label class="control-label col-sm-4" for="xitem" th:text="#{hbook.modal1.form.label.xitem}">Item : </label>
+								<div class="col-sm-8">
+									<input type="text" th:value="${oporddetail.xitem} + ' - ' + ${oporddetail.xdesc}" disabled="disabled" class="form-control"/>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="control-label col-sm-4" for="xrate" th:text="#{hbook.modal1.form.label.xrate}">Rate : </label>
+								<div class="col-sm-8">
+									<input type="text"  class="form-control" th:field="*{xrate}" min="0"/>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="control-label col-sm-4" for="xqtyord" th:text="#{hbook.modal1.form.label.xqtyord}">Qty : </label>
+								<div class="col-sm-8">
+									<input type="number" class="form-control qty" th:field="*{xqtyord}" min="1"/>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="control-label col-sm-4" for="xlineamt" th:text="#{hbook.modal1.form.label.xlineamt}">Total Amount : </label>
+								<div class="col-sm-8">
+									<input type="text" class="form-control" th:field="*{xlineamt}" disabled="disabled"/>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="form-group">
+								<label class="control-label col-sm-4" for="xlong" th:text="#{hbook.modal1.form.label.xlong}">Note : </label>
+								<div class="col-sm-8">
+									<textarea rows="4" cols="" class="form-control" th:field="*{xlong}"></textarea>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-success btn-sm confirm-btn-modal">Submit</button>
+				<button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+		<script type="text/javascript" th:src="@{/assets/js/ck-ui/ck-search-suggest.js}"></script>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				// Init ui for modal
+				ck.ui.config.buttonevent();
+				$(".xitemsearch").click();
+
+				$('#xqtyord').on('blur', function(e){
+					e.preventDefault();
+					calculateRateAmount();
+				});
+
+				$('#xrate').on('blur', function(e){
+					e.preventDefault();
+					calculateRateAmount();
+				});
+			
+				function calculateRateAmount(){
+					var qty = $('#xqtyord').val();
+					var rate = $('#xrate').val();
+					$('#xlineamt').val(qty * rate);
+				}				
+				
+				// Get item purchase unit
+				$('.xitemsearch').on('blur', function(){
+					if($(this).val() == '')
+						return;
+					setTimeout(() => {
+						$.ajax({
+							url : getBasepath() + '/mastersetup/caitem/itemdetail/' + $('input[name="xitem"]').val(),
+							type : 'GET',
+							beforeSend : loadingMask2.show(),
+							success : function(data) {
+								loadingMask2.hide();	
+								$('input[name="xrate"]').val(data.xrate);
+								$(".qty").val('1');
+								$(".qty").focus();
+								$('input[name="xlineamt"]').val(parseFloat($('input[name="xrate"]').val()) * parseInt($('input[name="xqtyord"]').val()));
+								
+								$("input[name='xcatitem']").val(data.xcatitem);
+							},							
+							error : function(jqXHR, status, errorThrown){
+								showMessage(status, "Something went wrong .... ");
+								loadingMask2.hide();
+							}
+						})
+					}, 1000);
+				});
+
+			});
+		</script>
+	</div>
+</div>

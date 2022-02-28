@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.asl.mapper.ImtrnMapper">
+
+	<insert id="saveImtrn" parameterType="Imtrn">
+		<selectKey keyProperty="ximtrnnum" resultType="String" order="BEFORE">
+			SELECT Func_GetTrn('${zid}', '${xtype}', '${xtrn}', 6) FROM DUAL
+		</selectKey>
+		INSERT INTO Imtrn
+		(
+			ximtrnnum,
+			xtype,
+			xdate,
+			xwh,
+			xitem,
+			xqty,
+			xordernum,
+			xrate,
+			xref,
+			xval,
+			xdocnum,
+			xstatus,
+			xdocrow,
+			xstatusjv,
+			xsign,
+			xvoucher,
+			xnote,
+			xunit,
+			xtrn,
+			xvalpost,
+			xcqtyuse,
+			xrateavg,
+			xpornum,
+			xhwh,
+			
+			zid,
+			zauserid,
+			zuuserid,
+			zaip,
+			zuip,
+			zactive,
+			ztime,
+			zutime
+		)
+		VALUES
+		(
+			#{ximtrnnum},
+			#{xtype, jdbcType=VARCHAR},
+			#{xdate, jdbcType=DATE},
+			#{xwh, jdbcType=VARCHAR},
+			#{xitem, jdbcType=VARCHAR},
+			#{xqty, jdbcType=DECIMAL},
+			#{xordernum, jdbcType=VARCHAR},	
+			#{xrate, jdbcType=DECIMAL},
+			#{xref, jdbcType=VARCHAR},
+			#{xval, jdbcType=DECIMAL},
+			#{xdocnum, jdbcType=DECIMAL},
+			#{xstatus, jdbcType=VARCHAR},
+			#{xdocrow, jdbcType=INTEGER},
+			#{xstatusjv, jdbcType=VARCHAR},
+			#{xsign, jdbcType=INTEGER},
+			#{xvoucher, jdbcType=VARCHAR},
+			#{xnote, jdbcType=VARCHAR},
+			#{xunit, jdbcType=VARCHAR},
+			#{xtrn, jdbcType=VARCHAR},
+			#{xvalpost, jdbcType=DECIMAL},
+			#{xcqtyuse, jdbcType=DECIMAL},
+			#{xrateavg, jdbcType=DECIMAL},
+			#{xpornum, jdbcType=VARCHAR},
+			#{xhwh, jdbcType=VARCHAR},
+			
+			#{zid, jdbcType=VARCHAR},
+			#{zauserid, jdbcType=VARCHAR},
+			#{zuuserid, jdbcType=VARCHAR},
+			#{zaip, jdbcType=VARCHAR},
+			#{zuip, jdbcType=VARCHAR},
+			#{zactive, jdbcType=VARCHAR},
+			#{ztime, jdbcType=TIMESTAMP},
+			#{zutime, jdbcType=TIMESTAMP}
+		) 
+	</insert>
+
+	<update id="updateImtrn" parameterType="Imtrn">
+		UPDATE
+			Imtrn
+		SET
+			xtype=#{xtype, jdbcType=VARCHAR},
+			xdate=#{xdate, jdbcType=DATE},
+			xwh=#{xwh, jdbcType=VARCHAR},
+			xitem=#{xitem, jdbcType=VARCHAR},
+			xqty=#{xqty, jdbcType=DECIMAL},
+			xordernum=#{xordernum, jdbcType=VARCHAR},
+			xrate=#{xrate, jdbcType=DECIMAL},
+			xref=#{xref, jdbcType=VARCHAR},
+			xval=#{xval, jdbcType=DECIMAL},
+			xdocnum=#{xdocnum, jdbcType=VARCHAR},
+			xstatus=#{xstatus, jdbcType=VARCHAR},
+			xdocrow=#{xdocrow, jdbcType=INTEGER},
+			xstatusjv=#{xstatusjv, jdbcType=VARCHAR},
+			xsign=#{xsign, jdbcType=INTEGER},
+			xvoucher=#{xvoucher, jdbcType=VARCHAR},
+			xnote=#{xnote, jdbcType=VARCHAR},
+			xunit=#{xunit, jdbcType=VARCHAR},
+			xtrn=#{xtrn, jdbcType=VARCHAR},
+			xvalpost=#{xvalpost, jdbcType=DECIMAL},
+			xcqtyuse=#{xcqtyuse, jdbcType=DECIMAL},
+			xrateavg=#{xrateavg, jdbcType=DECIMAL},
+			xpornum=#{xpornum, jdbcType=VARCHAR},
+			xhwh=#{xhwh, jdbcType=VARCHAR},
+			
+			zuuserid=#{zuuserid, jdbcType=VARCHAR},
+			zaip=#{zaip, jdbcType=VARCHAR},
+			zuip=#{zuip, jdbcType=VARCHAR},
+			zactive=#{zactive, jdbcType=VARCHAR},
+			ztime=#{ztime, jdbcType=TIMESTAMP},
+			zutime=#{zutime, jdbcType=TIMESTAMP}
+		WHERE
+			ximtrnnum=#{ximtrnnum}
+			AND zid=#{zid, jdbcType=VARCHAR}
+	</update>
+
+	<select id="findImtrnByXimtrnnum" resultType="Imtrn">
+		SELECT 
+			imtrn.*,
+			y.xlong as projectName,
+			xcodes.xlong as storename,
+			caitem.xdesc as itemdes
+		FROM 
+			imtrn
+			left join xcodes y on y.xcode = imtrn.xhwh and y.zid= imtrn.zid and y.xtype='Project' 
+			left join xcodes on xcodes.xcode = imtrn.xwh and xcodes.zid = imtrn.zid and xcodes.zactive='1'
+			left join caitem on caitem.xitem = imtrn.xitem and caitem.zid = imtrn.zid
+		WHERE 
+			imtrn.ximtrnnum=#{ximtrnnum} 
+			AND imtrn.zid=#{zid} 
+			AND imtrn.zactive='1'
+	</select>
+
+	<delete id="deleteByXimtrnnum">
+		DELETE FROM imtrn WHERE ximtrnnum=#{ximtrnnum} AND zid=#{zid} AND zactive='1'
+	</delete>
+
+	<select id="getAllImtrn" resultType="Imtrn">
+		SELECT 
+			imtrn.*,
+			Func_GetItemName(imtrn.xitem, imtrn.zid) as itemdes,
+			xcodes.xlong as storename
+		FROM 
+			imtrn 
+			left join xcodes on xcodes.xcode = imtrn.xwh and xcodes.zid = imtrn.zid and xcodes.zactive='1' 
+		WHERE 
+			imtrn.zid=#{zid} 
+			AND imtrn.zactive='1'
+			AND imtrn.ximtrnnum like 'RE-%'
+	</select>
+	
+	<select id="getAllImtrnlist" resultType="Imtrn">
+		SELECT 
+			distinct
+			imtrn.*,
+			caitem.xitem||'-'||caitem.xdesc as itemdes,
+			imtrn.xwh||'-'||x.xlong as xlong,
+			x.xlong as storename
+		FROM
+			imtrn
+			left join caitem on caitem.xitem = imtrn.xitem and caitem.zid=imtrn.zid and caitem.zactive='1'
+			left join xcodes x ON x.xcode = imtrn.xwh AND x.zid = imtrn.zid AND x.zactive='1'
+		WHERE 
+			imtrn.xtype=#{xtype}
+			and imtrn.ximtrnnum like 'DMIS%'
+			AND imtrn.zid=#{zid}
+			order by imtrn.ximtrnnum desc
+	</select>
+
+</mapper>

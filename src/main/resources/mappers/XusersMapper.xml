@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.asl.mapper.XusersMapper">
+
+	<insert id="save" parameterType="Xusers">
+		INSERT INTO xusers
+		(
+			zemail,
+			xpassword,
+			xcus,
+			xrole,
+			xaccess,
+			xwh,
+			xsp,
+			xdformat,
+			xdsep,
+			xlastlogdate,
+			xname,
+			xoldpass,
+			xposition,
+			xpriority,
+			systemadmin,
+			xcontact,
+			xcrlimit,
+			xgcus,
+			xgsup,
+			xmadd,
+			xorg,
+			xphone,
+			xstatuscus,
+			xtype,
+			xvatregno,
+			xstaff,
+			admin,
+			xnote,
+
+			zid,
+			zauserid,
+			zaip,
+			zactive,
+			ztime
+		)
+		VALUES
+		(
+			#{zemail, jdbcType=VARCHAR},
+			#{xpassword, jdbcType=VARCHAR},
+			#{xcus, jdbcType=VARCHAR},
+			#{xrole, jdbcType=VARCHAR},
+			#{xaccess, jdbcType=VARCHAR},
+			#{xwh, jdbcType=VARCHAR},
+			#{xsp, jdbcType=VARCHAR},
+			#{xdformat, jdbcType=VARCHAR},
+			#{xdsep, jdbcType=VARCHAR},
+			#{xlastlogdate, jdbcType=VARCHAR},
+			#{xname, jdbcType=VARCHAR},
+			#{xoldpass, jdbcType=VARCHAR},
+			#{xposition, jdbcType=VARCHAR},
+			#{xpriority, jdbcType=VARCHAR},
+			#{systemadmin, jdbcType=BOOLEAN},
+			#{xcontact, jdbcType=VARCHAR},
+			#{xcrlimit, jdbcType=VARCHAR},
+			#{xgcus, jdbcType=VARCHAR},
+			#{xgsup, jdbcType=VARCHAR},
+			#{xmadd, jdbcType=VARCHAR},
+			#{xorg,jdbcType=VARCHAR},
+			#{xphone, jdbcType=VARCHAR},
+			#{xstatuscus, jdbcType=VARCHAR},
+			#{xtype, jdbcType=VARCHAR},
+			#{xvatregno, jdbcType=VARCHAR},
+			#{xstaff, jdbcType=VARCHAR},
+			#{admin, jdbcType=BOOLEAN},
+			#{xnote, jdbcType=VARCHAR},
+
+			#{zid, jdbcType=VARCHAR},
+			#{zauserid, jdbcType=VARCHAR},
+			#{zaip, jdbcType=VARCHAR},
+			#{zactive, jdbcType=VARCHAR},
+			#{ztime, jdbcType=TIMESTAMP}
+		)
+	</insert>
+
+	<update id="update" parameterType="Xusers">
+		UPDATE 
+			xusers 
+		SET
+			xpassword=#{xpassword, jdbcType=VARCHAR},
+			xcus=#{xcus, jdbcType=VARCHAR},
+			xrole=#{xrole, jdbcType=VARCHAR},
+			xaccess=#{xaccess, jdbcType=VARCHAR},
+			xwh=#{xwh, jdbcType=VARCHAR},
+			xsp=#{xsp, jdbcType=VARCHAR},
+			xdformat=#{xdformat, jdbcType=VARCHAR},
+			xdsep=#{xdsep, jdbcType=VARCHAR},
+			xlastlogdate=#{xlastlogdate, jdbcType=VARCHAR},
+			xname=#{xname, jdbcType=VARCHAR},
+			xoldpass=#{xoldpass, jdbcType=VARCHAR},
+			xposition=#{xposition, jdbcType=VARCHAR},
+			xpriority=#{xpriority, jdbcType=VARCHAR},
+			systemadmin=#{systemadmin, jdbcType=BOOLEAN},
+			xcontact=#{xcontact, jdbcType=VARCHAR},
+			xcrlimit=#{xcrlimit, jdbcType=VARCHAR},
+			xgcus=#{xgcus, jdbcType=VARCHAR},
+			xgsup=#{xgsup, jdbcType=VARCHAR},
+			xmadd=#{xmadd, jdbcType=VARCHAR},
+			xorg=#{xorg,jdbcType=VARCHAR},
+			xphone=#{xphone, jdbcType=VARCHAR},
+			xstatuscus=#{xstatuscus, jdbcType=VARCHAR},
+			xtype=#{xtype, jdbcType=VARCHAR},
+			xvatregno=#{xvatregno, jdbcType=VARCHAR},
+			xstaff=#{xstaff, jdbcType=VARCHAR},
+			admin=#{admin, jdbcType=BOOLEAN},
+			xnote=#{xnote, jdbcType=VARCHAR},
+
+			zuuserid=#{zuuserid, jdbcType=VARCHAR},
+			zuip=#{zuip, jdbcType=VARCHAR},
+			zactive=#{zactive, jdbcType=VARCHAR},
+			zutime=#{zutime, jdbcType=TIMESTAMP}
+		WHERE
+			zemail=#{zemail, jdbcType=VARCHAR}
+			and zid=#{zid, jdbcType=VARCHAR}
+	</update>
+
+	<delete id="delete">
+		delete
+		from
+			xusers
+		where 
+			zemail=#{zemail, jdbcType=VARCHAR}
+			and zid=#{zid, jdbcType=VARCHAR}
+	</delete>
+
+	<select id="getAllXusers" resultType="Xusers">
+		SELECT 
+			xusers.*,
+			pdmst.xname as staffname,
+			cacus.xorg as partyname,
+			xcodes.xlong as storename
+		FROM 
+			xusers 
+			LEFT JOIN pdmst ON pdmst.xstaff=xusers.xstaff AND pdmst.zid=xusers.zid AND pdmst.zactive='1'
+			LEFT JOIN cacus ON cacus.xcus=xusers.xcus AND cacus.zid = xusers.zid AND cacus.zactive='1'
+			LEFT JOIN xcodes ON xcodes.xcode = xusers.xwh AND xcodes.xtype='Store' and xcodes.zid = xusers.zid AND xcodes.zactive='1'
+		WHERE 
+			xusers.zid=#{zid} 
+		ORDER BY 
+			xusers.zemail DESC
+	</select>
+
+	<select id="findUserByXstaff" resultType="Xusers">
+		SELECT
+			* 
+		FROM
+			xusers
+		WHERE
+			xstaff=#{xstaff}
+			AND zid=#{zid}
+	</select>
+
+	<select id="findUserByZemail" resultType="Xusers">
+		SELECT 
+			xusers.*,
+			pdmst.xname as staffname,
+			cacus.xorg as partyname,
+			xcodes.xlong as storename
+		FROM 
+			xusers 
+			LEFT JOIN pdmst ON pdmst.xstaff=xusers.xstaff AND pdmst.zid=xusers.zid AND pdmst.zactive='1'
+			LEFT JOIN cacus ON cacus.xcus=xusers.xcus AND cacus.zid = xusers.zid AND cacus.zactive='1'
+			LEFT JOIN xcodes ON xcodes.xcode = xusers.xwh AND xcodes.xtype='Store' and xcodes.zid = xusers.zid AND xcodes.zactive='1'
+		WHERE 
+			xusers.zemail=#{zemail} 
+			AND xusers.zid=#{zid}
+	</select>
+
+	<select id="findAllUserByZemail" resultType="Xusers">
+		SELECT * FROM Xusers WHERE zemail=#{zemail}
+	</select>
+
+	<select id="findByZemailAndZid" resultType="Xusers">
+		SELECT 
+			xusers.*,
+			pdmst.xname as staffname,
+			cacus.xorg as partyname,
+			xcodes.xlong as storename,
+			cacus.xgcus as customergroup
+		FROM 
+			xusers 
+			LEFT JOIN pdmst ON pdmst.xstaff=xusers.xstaff AND pdmst.zid=xusers.zid AND pdmst.zactive='1'
+			LEFT JOIN cacus ON cacus.xcus=xusers.xcus AND cacus.zid = xusers.zid AND cacus.zactive='1'
+			LEFT JOIN xcodes ON xcodes.xcode = xusers.xwh AND xcodes.xtype='Store' and xcodes.zid = xusers.zid AND xcodes.zactive='1'
+		WHERE 
+			xusers.zemail=#{zemail} 
+			AND xusers.zid=#{zid}
+	</select>
+
+	<select id="findByZemailAndXpassword" resultType="Xusers">
+		SELECT * FROM Xusers WHERE zemail=#{zemail} AND xpassword=#{xpassword}
+	</select>
+
+	<select id="findUserByXcus" resultType="Xusers">
+		SELECT
+			* 
+		FROM
+			xusers
+		WHERE
+			xcus=#{xcus}
+			AND zid=#{zid}
+	</select>
+
+</mapper>

@@ -1,0 +1,61 @@
+<!-- Modal -->
+<div id="purchaseorderdetailmodal" th:fragment="purchaseorderdetailmodal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="true" xmlns:th="http://www.thymeleaf.org">
+	<div class="modal-dialog modal-lg">
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h4 class="modal-title">Details List</h4>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-md-12">
+						<table class="table table-striped table-bordered modal-datatable nowrap" id="branchorderreqdetailtable">
+							<thead>
+								<tr>
+									<th>Row</th>
+									<th>Item Code</th>
+									<th>Category</th>
+									<th>Group</th>
+									<th>Note</th>
+									<th>Qty</th>
+									<th>Rate</th>
+									<th>Unit</th>
+									<th>Net Amount</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="d : ${poorddetailsList}">
+									<td th:text="${d.xrow}"></td>
+									<td>
+										<a th:href="@{/mastersetup/caitem/} + ${d.xitem}" target="_blank" th:text="${d.xitem} + ' - ' + ${d.xitemdesc}"></a>
+									</td>
+									<td th:text="${d.xcatitem}"></td>
+									<td th:text="${d.xgitem}"></td>
+									<td th:text="${d.xnote}"></td>
+									<td th:text="${d.xqtyord}"></td>
+									<td th:text="${d.xrate}"></td>
+									<td th:text="${d.xunitpur}"></td>
+									<td th:text="${d.xlineamt}"></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+
+		<!-- ck ui -->
+		<script type="text/javascript" th:src="@{/assets/js/ck-ui/ck-search-suggest.js}"></script>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				// Init ui for modal
+				ck.ui.config.buttonevent();
+				modalDataTableInit();
+			})
+		</script>
+	</div>
+</div>

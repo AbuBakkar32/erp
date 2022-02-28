@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<title>Sales Orders Chalan</title>
+		<meta th:remove="tag" th:include="commons :: common-meta" />
+		<meta th:remove="tag" th:include="commons :: common-css" />
+		<meta th:remove="tag" th:include="commons :: common-js" />
+	</head>
+	<body>
+		<!-- Header section -->
+		<div class="header-section" th:include="commons :: header-section"></div>
+
+		<!-- Menu section -->
+		<div th:if="${menuVersion != null and menuVersion eq 'MENU_V2'}" class="menuv2" th:include="commons :: main-menu"></div>
+
+		<div th:if="${menuVersion == null or menuVersion eq 'MENU_V1'}" class="navbar-inverse menu-section">
+			<div class="container-fluid">
+				<div class="row">
+					<nav class="navbar navbar-inverse">
+						<div class="container-fluid">
+							<div class="row">
+								<div class="navbar-header">
+									<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+										<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+									</button>
+								</div>
+								<div class="collapse navbar-collapse" id="myNavbar">
+									<div class="nav navbar-nav">
+										<li><a th:href="@{/}">Dashboard</a></li>
+										<li><a th:href="@{/salesninvoice}">Sales & Invoicing</a></li>
+										<li class="active"><a th:href="@{/salesninvoice/salesorderchalan}">Sales Orders Chalan</a></li>
+									</div>
+									<ul class="nav navbar-nav navbar-right" th:include="ckbigmenu :: dashboard-menu"></ul>
+								</div>
+							</div>
+						</div>
+					</nav>
+				</div>
+			</div>
+		</div>
+		
+		
+		<!-- Content section -->
+		<div>
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-md-12">
+						<section id="data-maintenance" style="margin-top: 30px;">
+							<div class="section-header sectionbartoggle">
+								<h1>Date Wise Query</h1>
+							</div>
+							<div class="section-body section-border">
+								<div class="row">
+									<div class="col-md-6">
+										<form id="mainform" class="form-horizontal" th:action="@{/salesninvoice/salesorderchalan/query}" method="post" th:with="df=${'E, dd-MMM-yyyy'}">
+											<div class="form-group datepicker">
+												<label class="control-label col-md-4" for="xdate">Chalan Date : </label>
+												<div class="input-group date col-md-8 datepicker">
+													<input 	type="datepicker" 
+															class="form-control" 
+															id="xdate"
+															name="xdate"
+															th:value="${#dates.format(#dates.createNow(), df)}"/>
+													<div class="input-group-addon">
+														<span class="glyphicon glyphicon-calendar"></span>
+													</div>
+												</div>
+											</div>
+										</form>
+									</div>
+									<div class="col-md-6">
+										<div class="">
+											<button class="btn btn-sm btn-success query-submit-btn" type="submit"><i class="fas fa-search"></i></button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</section>
+					</div>
+					<div class="col-md-12">
+						<!-- rqls list section -->
+						<section id="data-maintenance" style="margin-top: 30px;">
+							<div class="section-header sectionbartoggle">
+								<h1>Sales Orders Chalan</h1>
+							</div>
+							<div class="section-body" id="salesorderchalansection" th:fragment="salesorderchalansection">
+								<div class="cold-md-6">
+									<form class="form-horizontal" th:with="df=${'E, dd-MMM-yyyy'}">
+										<div class="form-group">
+											<label class="control-label col-md-4" for="xordernum">Chalan Number : </label>
+											<div class="col-md-8">
+												<input type="text" class="form-control" th:value="${chalan.xordernum}" disabled="disabled"/>
+											</div>
+										</div>
+										<div class="form-group datepicker">
+											<label class="control-label col-md-4" for="xdate">Chalan Date : </label>
+											<div class="input-group date col-md-8 datepicker">
+												<input 	type="datepicker" 
+														class="form-control" 
+														id="xdate"
+														name="xdate"
+														th:value="${#dates.format(chalan.xdate, df)}"
+														disabled="disabled"/>
+												<div class="input-group-addon">
+													<span class="glyphicon glyphicon-calendar"></span>
+												</div>
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="control-label col-md-4" for="xstatus">Status : </label>
+											<div class="col-md-8">
+												<input type="text" class="form-control" th:value="${chalan.xstatus}" disabled="disabled"/>
+											</div>
+										</div>
+									</form>
+								</div>
+
+								<div class="col-md-12" style="text-align: center; padding: 20px; 0px;">
+									<a th:href="@{/production/suggestion/create/} + ${chalan.xordernum}" class="btn btn-success">Create Suggestion</a>
+								</div>
+
+								<table class="table table-striped table-bordered datatable nowrap" id="salesorderchalantable" th:fragment="salesorderchalantable">
+									<thead>
+										<tr>
+											<th>Item</th>
+											<th>Qty</th>
+											<th>Unit</th>
+											<th>Category</th>
+											<th>Group</th>
+										</tr>
+									</thead>
+									<tbody th:with="df=${'E, dd-MMM-yyyy'}">
+										<tr th:each="cd : ${chalanDetails}">
+											<td>
+												<a th:href="@{/mastersetup/caitem/} + ${cd.xitem}" target="_blank" th:text="${cd.xitem}"></a>
+											</td>
+											<td th:text="${cd.xqtyord}"></td>
+											<td th:text="${cd.xunit}"></td>
+											<td th:text="${cd.xcatitem}"></td>
+											<td th:text="${cd.xgitem}"></td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</section>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Modal -->
+		<div id="salesorderdetailmodal-section"></div>
+
+		<!-- Footer section -->
+		<div class="footer-section" th:include="commons :: footer-section"></div>
+
+		<script type="text/javascript">
+			$(document).ready(function(){
+				
+				$('.query-submit-btn').on('click', function(e){
+					e.preventDefault();
+					submitMainForm();
+				})
+				
+			})
+		</script>
+	</body>
+</html>

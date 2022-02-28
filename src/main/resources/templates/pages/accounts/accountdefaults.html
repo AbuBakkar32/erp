@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<title>Account Defaults</title>
+		<meta th:remove="tag" th:include="commons :: common-meta" />
+		<meta th:remove="tag" th:include="commons :: common-css" />
+		<meta th:remove="tag" th:include="commons :: common-js" />
+	</head>
+	<body>
+		<!-- Header section -->
+		<div class="header-section" th:include="commons :: header-section"></div>
+
+		<!-- Menu section -->
+		<div th:if="${menuVersion != null and menuVersion eq 'MENU_V2'}" class="menuv2" th:include="commons :: main-menu"></div>
+		
+		<div th:if="${menuVersion == null or menuVersion eq 'MENU_V1'}" class="navbar-inverse menu-section">
+			<div class="container-fluid">
+				<div class="row">
+					<nav class="navbar navbar-inverse">
+						<div class="container-fluid">
+							<div class="row">
+								<div class="navbar-header">
+									<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+										<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+									</button>
+								</div>
+								<div class="collapse navbar-collapse" id="myNavbar">
+									<div class="nav navbar-nav">
+										<li><a th:href="@{/}">Home</a></li>
+										<li class="active"><a th:href="@{/accountdefaults}">Account Defaults</a></li>
+									</div>
+									<ul class="nav navbar-nav navbar-right" th:include="ckbigmenu :: dashboard-menu"></ul>
+								</div>
+							</div>
+						</div>
+					</nav>
+				</div>
+			</div>
+		</div>
+		
+		
+		<!-- Content section -->
+		<div>
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-md-12 content-area">
+						<div class="row">
+							<div class="col-md-12">
+								<!-- Section list head -->
+								<section id="data-maintenance" style="margin-top: 30px;">
+									<div class="section-header sectionbartoggle">
+										<h1>Account Defaults</h1>
+									</div>
+									<div class="form-action-button">
+										<a th:href="@{/accountdefaults}" class="btn btn-sm btn-default"><i class="fas fa-redo-alt"></i> Clear</a>
+										<a href="#" class="btn btn-sm btn-success confirm-btn"><i class="fas fa-save"></i> Add</a>
+										<a href="#" class="btn btn-sm btn-success update-btn"><i class="fas fa-edit"></i> Update</a>
+										
+									</div>
+									<div class="section-body section-border">
+										<form id="mainform" class="form-horizontal"  th:with="df=${'E, dd-MMM-yyyy'}">
+											<div class="row">
+												<div class="col-md-5">
+													 <div class="form-group">
+														<label class="control-label col-md-6">Year </label>
+														<div class="col-md-6">
+															<input type="number" class="form-control" placeholder="2021">
+														</div>
+													</div>
+
+													<div class="form-group">
+														<label class="control-label col-md-6">Period</label>
+														<div class="col-md-6">
+															<input type="number" class="form-control" placeholder="6">
+														</div>
+													</div>
+
+													<div class="form-group">
+															<label class="control-label col-md-6">Period Offset </label>
+															<div class="col-md-6">
+																<input type="number" class="form-control" placeholder="6">
+															</div>
+													</div>
+	
+													<div class="form-group">
+														<label class="control-label col-md-6">Profit & Loss Appropriation ACC</label>
+														<div class="col-md-6">
+															<input type="text" class="form-control" placeholder="1022345" >
+														</div>
+													</div>
+
+													<div class="form-group">
+														<label class="control-label col-md-6">Rule</label>
+															<div class="col-md-6">
+																<select class="form-control">
+																	<option>3-Open</option>
+																	<option th:each="d : ${designationTypes}" th:value="${d.xcode}" th:text="${d.xcode}"></option>
+																</select>
+															</div>
+													</div>
+												</div>	
+
+												<div class="col-md-5">
+												
+													<div class="form-group">
+														<label class="control-label col-md-5">Get Accounting Period</label>
+														<div class="col-md-6">
+															<select class="form-control">
+																<option>1-From Date</option>
+																<option th:each="d : ${designationTypes}" th:value="${d.xcode}" th:text="${d.xcode}"></option>
+															</select>
+														</div>
+													</div>
+	
+													<div class="form-group">
+														<label class="control-label col-md-5">Trn Length</label>
+														<div class="col-md-6">
+															<input type="number" class="form-control"  readonly placeholder="1011">
+														</div>
+													</div>
+	
+													<div class="form-group">
+														<label class="control-label col-md-5">Follow Approval?</label>
+														<div class="col-md-6">
+															<select class="form-control">
+																<option>No</option>
+																<option>Yes</option>
+																<option th:each="d : ${designationTypes}" th:value="${d.xcode}" th:text="${d.xcode}"></option>
+															</select>
+														</div>
+													</div>
+	
+													<div class="form-group datepicker">
+														<label class="control-label col-md-5" for="xdateexp">Expiration Date</label>
+														<div class="input-group date col-md-5 datepicker">
+															<input 	type="datepicker" 
+																	class="form-control" 
+																	id="xdateexp"
+																	name="xdateexp"
+																	required="required"
+																	/>
+															<div class="input-group-addon">
+																<span class="glyphicon glyphicon-calendar"></span>
+															</div>
+														</div>
+													</div>
+	
+													<div class="form-group">
+														<label class="control-label col-md-5">Back Lock Entry</label>
+														<div class="col-md-6">
+															<select class="form-control">
+																<option>No</option>
+																<option>Yes</option>
+																<option th:each="d : ${designationTypes}" th:value="${d.xcode}" th:text="${d.xcode}"></option>
+															</select>
+														</div>
+													</div>
+
+												</div>
+										</div>
+									</form>
+								</div>
+							</section>
+						</div>
+							
+					</div>			
+				</div>
+			</div>
+		</div>
+	</div>
+
+		<!-- Footer section -->
+		<div class="footer-section" th:include="commons :: footer-section"></div>
+
+		<script type="text/javascript" th:src="@{/assets/js/ck-ui/ck-search-suggest.js}"></script>
+		
+	</body>
+</html>

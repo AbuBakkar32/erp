@@ -1,0 +1,138 @@
+<!-- Modal -->
+<div id="imtordetailmodal" th:fragment="imtordetailmodal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="true" xmlns:th="http://www.thymeleaf.org">
+	<div class="modal-dialog modal-lg">
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h4 class="modal-title">Add/Update T.O. Items</h4>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<form id="mainform-modal" th:action="@{/inventory/transferorder/imtordetail/save}" method="post" class="form-horizontal" th:object="${imtordetail}">
+						<input type="hidden" th:field="*{xtornum}"/>
+						<input type="hidden" th:field="*{xchalanref}"/>
+						<input type="hidden" th:if="${xrow ne 0}" th:field="*{xrow}"/>
+						<input type="hidden" id="xfwh" name="xfwh" th:value="${fromWarehouse}"/>
+						<input type="hidden" id="xtwh" name="xtwh" th:value="${toWarehouse}"/>
+						<div class="col-md-6">
+							<div class="form-group">
+								<label class="control-label col-sm-4" for="xitem" th:text="#{sto.modal.form.label.xitem}">Item Code : </label>
+								<div class="col-sm-8">
+									<input 	type="text" 
+											class="form-control searchsuggest xitemsearch" 
+											placeholder="Search..." 
+											th:value="${imtordetail.xitem}" 
+											th:attr="search-url='search/caitem'"/>
+									<input type="hidden" id="search-val" th:field="*{xitem}" class="search-xitem" value=""/>
+									<input type="hidden" id="search-des" th:value="*{xitem}"/>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="control-label col-sm-4" for="xunit" th:text="#{sto.modal.form.label.xunit}">Unit : </label>
+								<div class="col-sm-8">
+									<input type="hidden" class="form-control " th:field="*{xunit}"/>
+									<input type="text" th:value="*{xunit}" class="form-control xunit-display" disabled="disabled"/>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="control-label col-sm-4" for="xqtyord" th:text="#{sto.modal.form.label.xqtyord}">Qty : </label>
+								<div class="col-sm-8">
+									<input type="text" class="form-control qty" th:field="*{xqtyord}" min="1"/>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="control-label col-sm-4" for="xrate" th:text="#{sto.modal.form.label.xrate}">Rate : </label>
+								<div class="col-sm-8">
+									<input type="hidden"  th:field="*{xrate}" min="0"/>
+									<input type="text" th:value="*{xrate}" class="form-control xrate-display" min="0" disabled="disabled"/>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="control-label col-sm-4" for="xnote" th:text="#{sto.modal.form.label.xnote}">Note : </label>
+								<div class="col-sm-8">
+									<textarea rows="6" cols="" class="form-control" th:field="*{xnote}"></textarea>
+								</div>
+							</div>
+						</div>
+						<!-- <div class="col-md-6">
+							<h4 class="text-center">Available Quantity In Stock</h4>
+							<div>
+								<table class="table table-bordered table-stripped" id="stocktable" th:fragment="stocktable">
+									<thead>
+										<tr>
+											<th th:text="#{sto.modal.form.table.heading.xwh}">Warehouse</th>
+											<th th:text="#{sto.modal.form.table.heading.xqtyrt}">Incoming</th>
+											<th th:text="#{sto.modal.form.table.heading.xinhand}">In Hand</th>
+											<th th:text="#{sto.modal.form.table.heading.xavail}">Available</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr th:each="a : ${availablestock}">
+											<td th:text="${a.xwh}"></td>
+											<td th:text="${a.xqtyrt}"></td>
+											<td th:text="${a.xinhand}"></td>
+											<td th:text="${a.xavail}"></td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div> -->
+					</form>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-success btn-sm confirm-btn-modal">Submit</button>
+				<button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+		<script type="text/javascript" th:src="@{/assets/js/ck-ui/ck-search-suggest.js}"></script>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				// Init ui for modal
+				ck.ui.config.buttonevent();
+				
+				// Get item purchase unit
+				$('.xitemsearch').on('blur', function(){
+					setTimeout(() => {
+						if($('input[name="xitem"]').val() == ''){
+							$('input[name="xunit"]').val("");
+							$('input.xunit-display').val("");
+							$('input[name="xrate"]').val(0);
+							$(".xrate-display").val(0);
+
+							var rdata = {};
+							rdata.reloadurl = '/inventory/transferorder/stock/blankitem';
+							rdata.reloadelementid = 'stocktable';
+							doSectionReloadWithNewData(rdata);
+							return;
+						}
+
+						loadingMask2.show(),
+						$.ajax({
+							url : getBasepath() + '/inventory/transferorder/itemdetail/' + $('input[name="xitem"]').val(),
+							type : 'GET',
+							success : function(data) {
+								loadingMask2.hide();
+								$('input[name="xunit"]').val(data.xunitpur);
+								$('input.xunit-display').val(data.xunitpur);
+								$('input[name="xrate"]').val(data.xrate);
+								$(".xrate-display").val(data.xrate);
+
+								var rdata = {};
+								rdata.reloadurl = '/inventory/transferorder/stock/' + $('input[name="xitem"]').val();
+								rdata.reloadelementid = 'stocktable';
+								doSectionReloadWithNewData(rdata);
+							},
+							error : function(jqXHR, status, errorThrown){
+								showMessage(status, "Something went wrong .... ");
+								loadingMask2.hide();
+							}
+						})
+					}, 1000);
+				});
+
+			});
+		</script>
+	</div>
+</div>

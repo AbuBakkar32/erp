@@ -1,0 +1,157 @@
+<!-- Modal -->
+<div id="dftermsdetailmodal" th:fragment="dftermsdetailmodal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="true" xmlns:th="http://www.thymeleaf.org">
+	<div class="modal-dialog modal-lg">
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h4 class="modal-title">Add/Update Terms & Conditions</h4>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<form id="mainform-modal" th:action="@{/procurement/workorder/dftermsdetail/save}" method="post" class="form-horizontal" th:object="${dftermsdetail}">
+						<input type="hidden" th:field="*{xdocnum}"/>
+						<div class="col-md-6">
+							<div class="form-group">
+								<label class="control-label col-md-4" for="xtype">Type</label>
+								<div class="col-md-8">
+									<input type="hidden" class="form-control" th:field="*{xtype}">
+									<input type="text" class="form-control" th:value="*{xtype}" disabled="disabled"/>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="control-label col-sm-4" for="xterm">Terms</label>
+								<div class="col-sm-8">
+									<input type="text"  class="form-control" th:field="*{xterm}"/>
+								</div>
+							</div>
+							
+							<div class="form-group">
+								<label class="control-label col-sm-4" for="xdesc">Terms Detail</label>
+								<div class="col-sm-8">
+									<textarea rows="6" cols="" class="form-control" th:field="*{xdesc}"></textarea>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-6">
+							
+							<div class="form-group">
+								<label class="control-label col-sm-4" for="xnote">Additional Info</label>
+								<div class="col-sm-8">
+									<textarea rows="6" cols="" class="form-control" th:field="*{xnote}"></textarea>
+								</div>
+							</div>
+							
+							<div class="form-group">
+								<label class="control-label col-sm-4" for="xserial">View Scequence</label>
+								<div class="col-sm-8">
+									<input type="number"  class="form-control" th:field="*{xserial}"/>
+								</div>
+							</div>
+							
+						</div>
+					</form>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-success btn-sm confirm-btn-modal">Submit</button>
+				<button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+		<script type="text/javascript" th:src="@{/assets/js/ck-ui/ck-search-suggest.js}"></script>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				// Init ui for modal
+				ck.ui.config.buttonevent();
+				//$(".xitemsearch").click();
+
+				$('#xqtypur').on('blur', function(e){
+					e.preventDefault();
+					calculateLineAmount();
+				});
+
+				$('#xrate').on('blur', function(e){
+					e.preventDefault();
+					calculateLineAmount();
+				});
+
+				function calculateLineAmount(){
+					var qty = $('#xqtypur').val();
+					var rate = $('#xrate').val();
+					$('.xlineamt').val(qty * rate);
+					$('#xlineamt').val(qty * rate);
+				}
+				
+				if($('#xgitem').val() == 'Services'){
+					$('.purpose-selection').removeClass('nodisplay');
+				}
+				if($('#xgitem').val() == 'Service'){
+					$('.purpose-selection').removeClass('nodisplay');
+				}
+				if($('#xgitem').val() == 'Cost'){
+					$('.purpose-selection').removeClass('nodisplay');
+				}
+				
+				var olditem = $('input[name="xitem"]').val();
+
+				// Get item purchase unit
+				$('.xitemsearch').on('blur', function(){
+					setTimeout(() => {
+						if($('input[name="xitem"]').val() == ''){
+							$('input.xunitpur-display').val('');
+							$('input[name="xrate"]').val('');
+							$(".qty").val('1');
+							$('.xlineamt').val('0');
+							$('#xlineamt').val('0');
+							return;
+						}
+
+						if(olditem != '' && olditem == $('input[name="xitem"]').val()) return;
+
+						loadingMask2.show();
+						$.ajax({
+							url : getBasepath() + '/procurement/workorder/itemdetail/' + $('input[name="xitem"]').val(),
+							type : 'GET',
+							success : function(data) {
+								loadingMask2.hide();
+								if(data == undefined || data == null) return;
+
+								$('input[name="xunitpur"]').val(data.xunitpur);
+								$('input.xunitpur-display').val(data.xunitpur);	
+
+								$('input[name="xrate"]').val(data.xrate);
+
+								$('input[name="xgitem"]').val(data.xgitem);
+								$('input.xgitem-display').val(data.xgitem);	
+
+								if($('input.xgitem-display').val() == 'Services'){
+									$('.purpose-selection').removeClass('nodisplay');
+								}
+								else if($('input.xgitem-display').val() == 'Service'){
+									$('.purpose-selection').removeClass('nodisplay');
+								}
+								else if($('input.xgitem-display').val() == 'Cost'){
+									$('.purpose-selection').removeClass('nodisplay');
+								}
+								else{
+									$('.purpose-selection').addClass('nodisplay');
+								}
+
+								if($(".qty").val() == '') $(".qty").val('1');
+
+								$(".qty").focus();
+								$('.xlineamt').val($(".qty").val() * data.xrate);
+								$('#xlineamt').val($(".qty").val() * data.xrate);
+							},
+							error : function(jqXHR, status, errorThrown){
+								showMessage(status, "Something went wrong .... ");
+								loadingMask2.hide();
+							}
+						})
+					}, 1000);
+				});
+
+			});
+		</script>
+	</div>
+</div>

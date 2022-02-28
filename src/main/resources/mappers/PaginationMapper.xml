@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.asl.mapper.PaginationMapper">
+
+	<select id="getResultMap" resultType="java.util.HashMap">
+		SELECT 
+			<foreach item="col" index="index" collection="columns" open="" separator="," close="">
+				${col}
+			</foreach> 
+		FROM 
+			ListHead 
+		WHERE zid=#{zid} ORDER BY listHeadid ASC
+	</select>
+
+	<select id="getAllCaitems" resultType="Caitem">
+		${query}
+	</select>
+
+	<select id="getData" resultType="java.util.HashMap">
+		SELECT * FROM
+		(
+			SELECT a.*, rownum r__ FROM
+			(
+				${query}
+ 			) a
+			WHERE rownum &lt; ((#{page} * #{limit}) + 1)
+		)
+		WHERE r__ &gt;= (((#{page} - 1) * #{limit}) + 1)
+	</select>
+
+	<select id="getCountOfData" resultType="Long">
+		${query}
+	</select>
+</mapper>

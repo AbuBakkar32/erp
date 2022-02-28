@@ -1,0 +1,99 @@
+<!-- Modal -->
+<div id="eventmembermodal" th:fragment="eventmembermodal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="true" xmlns:th="http://www.thymeleaf.org">
+	<div class="modal-dialog modal-lg">
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h4 class="modal-title">Add/Update Event Member</h4>
+			</div>
+			
+			<div class="modal-body">
+				<div class="row">
+				<form id="mainform-modal" class="form-horizontal"  method="post" th:action="@{/landevents/eventmember/save}" th:object="${lem}">
+				<input type="hidden" th:if="${xrow ne 0}" th:field="*{xrow}"/>
+					<div class="row">
+						<div class="col-md-12">
+							<div class="row">
+								<div class="col-md-12">
+									<div class="section-header sectionbartoggle">
+										<h1></h1>
+									</div>
+								</div>
+							</div>
+						</div>
+						</div><br>
+						<div class="row">
+							<div class="col-md-12">
+								<div class="row">
+									<div class="col-md-6">
+
+										<div class="form-group" >
+											<label class="control-label col-md-4" for="xevent" th:text=#{lce.modal.form.label.xevent}>Event ID</label>
+											<div class="col-md-7">
+												<input type="hidden" class="form-control" th:field="*{xevent}"/>
+												<input type="text" class="form-control" th:value="*{xevent}" disabled="disabled" />
+											</div>
+										</div>
+										
+										<div class="form-group" >
+											<label class="control-label col-md-4" for="xperson" th:text=#{lce.modal.form.label.xperson}>Person ID</label>
+											<div class="col-sm-7">
+												<input 	type="text" 
+														class="form-control searchsuggest" 
+														placeholder="Search..." 
+														th:value="${lem.xperson}" 
+														th:attr="search-url='search/personId'"/>
+												<input type="hidden" id="search-val" th:field="*{xperson}"/>
+												<input type="hidden" id="search-des" th:value="*{xperson}"/>
+											</div>
+										</div>
+
+										<div class="form-group">
+											<label class="control-label col-md-4" for="xmembertype" th:text=#{lce.modal.form.label.xmembertype}>Member Type</label>
+											<div class="col-md-7">
+												<select class="form-control" th:field="*{xmembertype}">
+													<option th:each="d : ${eventMemberTypes}" th:value="${d.xcode}" th:text="${d.xcode}"></option>
+												</select>
+											</div>
+										</div>
+
+									</div>
+
+									<div class="col-md-6">
+
+										<div class="form-group">
+											<label class="control-label col-md-3" for="xname" th:text=#{lce.modal.form.label.xname}>Other Member Name</label>
+											<div class="col-md-7">
+												<input type="text" class="form-control" th:field="*{xname}" maxlength="100"/>
+											</div>
+										</div>
+
+										<div class="form-group">
+											<label class="control-label col-md-3" for="xnote" th:text=#{lce.modal.form.label.xnote}>Note</label>
+											<div class="col-md-7">
+												<textarea class="form-control" rows="3" th:field="*{xnote}" placeholder="Note"></textarea>
+											</div>
+										</div>
+									</div>
+									
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-success btn-sm confirm-btn-modal">Submit</button>
+				<button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript" th:src="@{/assets/js/ck-ui/ck-search-suggest.js}"></script>
+	<script type="text/javascript">
+			$(document).ready(function(){
+				// Init ui for modal
+				ck.ui.config.buttonevent();
+			});
+		</script>
+</div>

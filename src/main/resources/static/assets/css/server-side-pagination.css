@@ -1,0 +1,10 @@
+.col-sort-arrow{
+	margin-top: 3px;
+	opacity: 0.25;
+}
+.col-sort-arrow-active{
+	opacity: 1;
+}
+.sortable-row{
+	cursor: pointer;
+}

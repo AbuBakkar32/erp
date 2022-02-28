@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.asl.mapper.ZusersMapper">
+	<insert id="save" parameterType="Zusers">
+		<!-- <selectKey keyProperty="ximtrnnum" resultType="String" order="BEFORE">
+			SELECT Func_GetTrn('${zid}', '${xtype}', '${xtrnimtrn}', 6) FROM DUAL
+		</selectKey> -->
+		INSERT INTO Zusers
+		(
+			userid,
+			zemail,
+			xpassword,
+			xsalute,
+			xfirst,
+			xmiddle,
+			xlast,
+			xtitle,
+			xorg,
+			xadd1,
+			xadd2,
+			xcity,
+			xstate,
+			xzip,
+			xcountry,
+			xphone,
+			xfax,
+			xurl,
+			zref,
+			xemailc
+		)
+		VALUES
+		(
+			#{userid, jdbcType=VARCHAR},
+			#{zemail, jdbcType=VARCHAR},
+			#{xpassword, jdbcType=VARCHAR},
+			#{xsalute, jdbcType=VARCHAR},
+			#{xfirst, jdbcType=VARCHAR},
+			#{xmiddle, jdbcType=VARCHAR},
+			#{xlast, jdbcType=VARCHAR},
+			#{xtitle, jdbcType=VARCHAR},
+			#{xorg, jdbcType=VARCHAR},
+			#{xadd1, jdbcType=VARCHAR},
+			#{xadd2, jdbcType=VARCHAR},
+			#{xcity, jdbcType=VARCHAR},
+			#{xstate, jdbcType=VARCHAR},
+			#{xzip, jdbcType=VARCHAR},
+			#{xcountry, jdbcType=VARCHAR},
+			#{xphone, jdbcType=VARCHAR},
+			#{xfax, jdbcType=VARCHAR},
+			#{xurl, jdbcType=VARCHAR},
+			#{zref, jdbcType=VARCHAR},
+			#{xemailc, jdbcType=VARCHAR},
+				
+		) 
+	</insert>
+	
+	<update id="update" parameterType="Zusers">
+		UPDATE
+			Zusers
+		SET
+			zemail=#{zemail, jdbcType=VARCHAR},
+			xpassword=#{xpassword, jdbcType=VARCHAR},
+			xsalute=#{xsalute, jdbcType=VARCHAR},
+			xfirst=#{xfirst, jdbcType=VARCHAR},
+			xmiddle=#{xmiddle, jdbcType=VARCHAR},
+			xlast=#{xlast, jdbcType=VARCHAR},
+			xtitle=#{xtitle, jdbcType=VARCHAR},
+			xorg=#{xorg, jdbcType=VARCHAR},
+			xadd1=#{xadd1, jdbcType=VARCHAR},
+			xadd2=#{xadd2, jdbcType=VARCHAR},
+			xcity=#{xcity, jdbcType=VARCHAR},
+			xstate=#{xstate, jdbcType=VARCHAR},
+			xzip=#{xzip, jdbcType=VARCHAR},
+			xcountry=#{xcountry, jdbcType=VARCHAR},
+			xphone=#{xphone, jdbcType=VARCHAR},
+			xfax=#{xfax, jdbcType=VARCHAR},
+			xurl=#{xurl, jdbcType=VARCHAR},
+			zref=#{zref, jdbcType=VARCHAR},
+			xemailc=#{xemailc, jdbcType=VARCHAR},
+		WHERE
+			userid=#{userid, jdbcType=VARCHAR}
+	</update>
+	
+	<select id="getAllZusers" resultType="Zusers">
+		SELECT * FROM Zusers WHERE userid=#{userid}
+	</select>
+</mapper>

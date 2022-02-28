@@ -1,0 +1,356 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.asl.mapper.MoMapper">
+
+	<insert id="saveMoHeader" parameterType="Moheader">
+		<selectKey keyProperty="xbatch" resultType="String" order="BEFORE">
+			SELECT Func_GetTrn('${zid}', '${xtypetrn}', '${xtrn}', 6) FROM DUAL
+		</selectKey>
+		INSERT INTO moheader
+		(
+			xbatch,
+			zemail,
+			xdate,
+			xitem,
+			xbomkey,
+			xwh,
+			xqtyprd,
+			xqtycom,
+			xlong,
+			xsup,
+			xstatusmor,
+			xcus,
+			xordernum,
+			xtypetrn,
+			xtrn,
+			xchalan,
+			bomexploaded,
+			xdesc,
+			xproduction,
+			xqtyreq,
+			zid,
+			zauserid,
+			zuuserid,
+			zaip,
+			zuip,
+			zactive,
+			ztime,
+			zutime
+		)
+		VALUES
+		(
+			#{xbatch, jdbcType=VARCHAR},
+			#{zemail, jdbcType=VARCHAR},
+			#{xdate, jdbcType=DATE},
+			#{xitem, jdbcType=VARCHAR},
+			#{xbomkey, jdbcType=VARCHAR},
+			#{xwh, jdbcType=VARCHAR},
+			#{xqtyprd, jdbcType=DECIMAL},
+			#{xqtycom, jdbcType=DECIMAL},
+			#{xlong, jdbcType=VARCHAR},
+			#{xsup, jdbcType=VARCHAR},
+			#{xstatusmor, jdbcType=VARCHAR},
+			#{xcus, jdbcType=VARCHAR},
+			#{xordernum, jdbcType=VARCHAR},
+			#{xtypetrn, jdbcType=VARCHAR},
+			#{xtrn, jdbcType=VARCHAR},
+			#{xchalan, jdbcType=VARCHAR},
+			#{bomexploaded, jdbcType=BOOLEAN},
+			#{xdesc, jdbcType=VARCHAR},
+			#{xproduction, jdbcType=DECIMAL},
+			#{xqtyreq, jdbcType=DECIMAL},
+			#{zid, jdbcType=VARCHAR},
+			#{zauserid, jdbcType=VARCHAR},
+			#{zuuserid, jdbcType=VARCHAR},
+			#{zaip, jdbcType=VARCHAR},
+			#{zuip, jdbcType=VARCHAR},
+			#{zactive, jdbcType=VARCHAR},
+			#{ztime, jdbcType=TIMESTAMP},
+			#{zutime, jdbcType=TIMESTAMP}
+		) 
+	</insert>
+
+	<update id="updateMoHeader" parameterType="Moheader">
+		UPDATE moheader
+		SET
+			zemail=#{zemail, jdbcType=VARCHAR},
+			xdate=#{xdate, jdbcType=DATE},
+			xitem=#{xitem, jdbcType=VARCHAR},
+			xbomkey=#{xbomkey, jdbcType=VARCHAR},
+			xwh=#{xwh, jdbcType=VARCHAR},
+			xqtyprd=#{xqtyprd, jdbcType=DECIMAL},
+			xqtycom=#{xqtycom, jdbcType=DECIMAL},
+			xlong=#{xlong, jdbcType=VARCHAR},
+			xsup=#{xsup, jdbcType=VARCHAR},
+			xstatusmor=#{xstatusmor, jdbcType=VARCHAR},
+			xcus=#{xcus, jdbcType=VARCHAR},
+			xordernum=#{xordernum, jdbcType=VARCHAR},
+			xtypetrn=#{xtypetrn, jdbcType=VARCHAR},
+			xtrn=#{xtrn, jdbcType=VARCHAR},
+			xchalan=#{xchalan, jdbcType=VARCHAR},
+			bomexploaded=#{bomexploaded, jdbcType=BOOLEAN},
+			xdesc=#{xdesc, jdbcType=VARCHAR},
+			xproduction=#{xproduction, jdbcType=DECIMAL},
+			xqtyreq=#{xqtyreq, jdbcType=DECIMAL},
+			zuuserid=#{zuuserid, jdbcType=VARCHAR},
+			zaip=#{zaip, jdbcType=VARCHAR},
+			zuip=#{zuip, jdbcType=VARCHAR},
+			zactive=#{zactive, jdbcType=VARCHAR},
+			ztime=#{ztime, jdbcType=TIMESTAMP},
+			zutime=#{zutime, jdbcType=TIMESTAMP}
+		WHERE
+			xbatch=#{xbatch, jdbcType=VARCHAR}
+			AND zid=#{zid, jdbcType=VARCHAR}
+	</update>
+
+	<insert id="saveMoDetail" parameterType="Modetail">
+		<selectKey keyProperty="xrow" resultType="Integer" order="BEFORE">
+			SELECT COALESCE(Max(xrow), 0) + 1 FROM modetail WHERE xbatch=#{xbatch} AND zactive='1' AND zid=#{zid}
+		</selectKey>
+		INSERT INTO modetail
+		(
+			xrow,
+			xbatch,
+			zemail,
+			xstype,
+			xitem,
+			xqtyreq,
+			xunit,
+			xwh,
+			xlong,
+			xtype,
+			xbomrow,
+			xqtyactual,
+			zid,
+			zauserid,
+			zuuserid,
+			zaip,
+			zuip,
+			zactive,
+			ztime,
+			zutime
+		)
+		VALUES
+		(
+			#{xrow},
+			#{xbatch, jdbcType=VARCHAR},
+			#{zemail, jdbcType=VARCHAR},
+			#{xstype, jdbcType=VARCHAR},
+			#{xitem, jdbcType=VARCHAR},
+			#{xqtyreq, jdbcType=DECIMAL},
+			#{xunit, jdbcType=VARCHAR},
+			#{xwh, jdbcType=VARCHAR},
+			#{xlong, jdbcType=VARCHAR},
+			#{xtype, jdbcType=VARCHAR},
+			#{xbomrow, jdbcType=INTEGER},
+			#{xqtyactual, jdbcType=DECIMAL},
+			#{zid, jdbcType=VARCHAR},
+			#{zauserid, jdbcType=VARCHAR},
+			#{zuuserid, jdbcType=VARCHAR},
+			#{zaip, jdbcType=VARCHAR},
+			#{zuip, jdbcType=VARCHAR},
+			#{zactive, jdbcType=VARCHAR},
+			#{ztime, jdbcType=TIMESTAMP},
+			#{zutime, jdbcType=TIMESTAMP}
+		) 
+	</insert>
+
+	<update id="updateMoDetail" parameterType="Modetail">
+		UPDATE 
+			modetail
+		SET
+			zemail=#{zemail, jdbcType=VARCHAR},
+			xstype=#{xstype, jdbcType=VARCHAR},
+			xitem=#{xitem, jdbcType=VARCHAR},
+			xqtyreq=#{xqtyreq, jdbcType=INTEGER},
+			xunit=#{xunit, jdbcType=VARCHAR},
+			xwh=#{xwh, jdbcType=VARCHAR},
+			xlong=#{xlong, jdbcType=VARCHAR},
+			xtype=#{xtype, jdbcType=VARCHAR},
+			xbomrow=#{xbomrow, jdbcType=INTEGER},
+			xqtyactual=#{xqtyactual, jdbcType=DECIMAL},
+			zuuserid=#{zuuserid, jdbcType=VARCHAR},
+			zaip=#{zaip, jdbcType=VARCHAR},
+			zuip=#{zuip, jdbcType=VARCHAR},
+			zactive=#{zactive, jdbcType=VARCHAR},
+			ztime=#{ztime, jdbcType=TIMESTAMP},
+			zutime=#{zutime, jdbcType=TIMESTAMP}
+		WHERE
+			xrow=#{xrow, jdbcType=INTEGER}
+			AND xbatch=#{xbatch, jdbcType=VARCHAR}
+			AND zid=#{zid, jdbcType=VARCHAR}
+	</update>
+
+	<update id="deleteModetail" parameterType="Modetail">
+		DELETE FROM
+			modetail
+		WHERE
+			xrow=#{xrow, jdbcType=INTEGER}
+			AND xbatch=#{xbatch, jdbcType=VARCHAR}
+			AND zid=#{zid, jdbcType=VARCHAR}
+	</update>
+
+	<delete id="deleteModetailByXbatch">
+		DELETE FROM
+			modetail
+		WHERE
+			xbatch=#{xbatch, jdbcType=VARCHAR}
+			AND zid=#{zid, jdbcType=VARCHAR}
+	</delete>
+
+	<select id="findMoHeaderByXbatch" resultType="Moheader">
+		SELECT 
+			moheader.*,
+			caitem.xdesc AS "xdesc",
+			caitem.xunitpur AS "xqtyprdunit"
+		FROM 
+			moheader 
+			LEFT JOIN caitem ON caitem.xitem = moheader.xitem AND caitem.zid=#{zid}
+		WHERE 
+			moheader.xbatch=#{xbatch} 
+			AND moheader.zid=#{zid} 
+			AND moheader.zactive='1'
+	</select>
+
+	<select id="findMoHeaderByXchalan" resultType="Moheader">
+		SELECT 
+			moheader.*,
+			caitem.xdesc AS "xdesc",
+			caitem.xunitpur AS "xqtyprdunit"
+		FROM 
+			moheader 
+			LEFT JOIN caitem ON caitem.xitem = moheader.xitem AND caitem.zid=#{zid}
+		WHERE 
+			moheader.xchalan=#{xchalan} 
+			AND moheader.zid=#{zid} 
+			AND moheader.zactive='1'
+	</select>
+
+	<select id="findModetailByXrowAndXbatch" resultType="Modetail">
+		SELECT 
+			modetail.*,
+			caitem.xdesc AS "xdesc",
+			caitem.xunitpur AS "xqtyprdunit"
+		FROM 
+			modetail 
+			LEFT JOIN caitem ON caitem.xitem = modetail.xitem AND caitem.zid=#{zid}
+		WHERE 
+			modetail.xrow=#{xrow} 
+			AND modetail.xbatch=#{xbatch} 
+			AND modetail.zid=#{zid} 
+			AND modetail.zactive='1'
+	</select>
+
+	<select id="findModetailByXbatch" resultType="Modetail">
+		SELECT 
+			modetail.*,
+			caitem.xdesc AS "xdesc",
+			caitem.xunitpur AS "xqtyprdunit"
+		FROM 
+			modetail 
+			LEFT JOIN caitem ON caitem.xitem = modetail.xitem AND caitem.zid=modetail.zid AND caitem.zactive='1'
+		WHERE 
+			modetail.xbatch=#{xbatch} 
+			AND modetail.zid=#{zid} 
+		ORDER BY
+			modetail.xrow DESC
+	</select>
+
+	<select id="getAllMoheader" resultType="Moheader">
+		SELECT 
+			moheader.*,
+			caitem.xdesc AS "xdesc",
+			caitem.xunitpur AS "xqtyprdunit"
+		FROM 
+			moheader 
+			LEFT JOIN caitem ON caitem.xitem = moheader.xitem AND caitem.zid=#{zid}
+		WHERE 
+			moheader.zid=#{zid} 
+			AND moheader.zactive='1'
+		ORDER BY 
+			moheader.xbatch DESC
+	</select>
+
+	<select id="findMoheaderByXchalanAndXitem" resultType="Moheader">
+		SELECT 
+			moheader.*,
+			caitem.xdesc AS xitemdesc, 
+			caitem.xunitpur AS "xqtyprdunit"
+		FROM 
+			moheader 
+			LEFT JOIN caitem ON caitem.xitem = moheader.xitem AND caitem.zid=moheader.zid and caitem.zactive='1'
+		WHERE 
+			moheader.xchalan=#{xchalan} 
+			AND moheader.xitem=#{xitem} 
+			AND moheader.zid=#{zid} 
+	</select>
+
+	<select id="findModetailByXbatchAndXitem" resultType="Modetail">
+		SELECT 
+			modetail.*,
+			caitem.xdesc AS "xdesc",
+			caitem.xunitpur AS "xqtyprdunit"
+		FROM 
+			modetail 
+			LEFT JOIN caitem ON caitem.xitem = modetail.xitem AND caitem.zid=#{zid}
+		WHERE
+			modetail.xbatch=#{xbatch} 
+			AND modetail.xitem=#{xitem} 
+			AND modetail.zid=#{zid} 
+			AND modetail.zactive='1'
+	</select>
+
+	<select id = "processProduction" statementType = "CALLABLE">
+		{call MO_processProduction(#{zid, jdbcType = VARCHAR, mode = IN}, #{user, jdbcType = VARCHAR, mode = IN}, #{batch, jdbcType = VARCHAR, mode = IN}, #{action, jdbcType = VARCHAR, mode = IN}, #{errseq, jdbcType = VARCHAR, mode = IN})}
+	</select>
+
+	<select id="findModetailByXbatchAndXtype" resultType="Modetail">
+		SELECT 
+			modetail.*,
+			caitem.xdesc AS "xdesc",
+			caitem.xunitpur AS "xqtyprdunit"
+		FROM 
+			modetail 
+			LEFT JOIN caitem ON caitem.xitem = modetail.xitem AND caitem.zid=#{zid}
+		WHERE
+			modetail.xbatch=#{xbatch} 
+			AND modetail.xtype=#{xtype}
+			AND modetail.zid=#{zid} 
+			AND modetail.zactive='1'
+	</select>
+
+	<select id="findModetailXbatch" resultType="Moheader">
+		SELECT distinct xbatch FROM moheader WHERE (UPPER(xbatch) LIKE '%' || #{xbatch} || '%') AND zid=#{zid}
+	</select>
+
+	<select id="findModetailByXtype" resultType="Modetail">
+		SELECT distinct xtype FROM modetail WHERE (UPPER(xtype) LIKE '%' || #{xtype} || '%') AND zid=#{zid}
+	</select>
+
+	<select id="dailyProductionReport" resultType="DailyProductionBatchDetail">
+		select
+			moh.xbatch,
+			moh.xdate,
+			moh.xitem,
+			Func_GetItemName(moh.xitem, moh.zid) finishedgood,
+			bmd.xbomcomp,
+			Func_GetItemName(bmd.xbomcomp, bmd.zid) rawmaterial,
+			NVL(moh.xproduction, 0) xproduction,
+			NVL(moh.xqtyprd, 0) xqtyprd,
+			NVL(moh.xqtycom, 0) xqtycom,
+			NVL(modw.xqtyactual, 0) wastage,
+			(moh.xqtycom - moh.xqtyprd) deviation 
+		from
+			moheader moh
+			left join bmbomheader bmh on bmh.xbomkey = moh.xbomkey and bmh.zid = moh.zid and bmh.zactive='1'
+			left join bmbomdetail bmd on bmd.xbomkey = bmh.xbomkey and bmd.zid = bmh.zid and bmh.zactive='1'
+			left join modetail modw on modw.xbatch = moh.xbatch and modw.zid = moh.zid and modw.zactive='1' and modw.xitem=bmd.xbomcomp and modw.xtype='Wastage'
+		where 
+			moh.zid=#{zid}
+			and moh.zactive='1'
+			and moh.xchalan=#{xchalan}
+		order by 
+			moh.xbatch desc
+	</select>
+</mapper>

@@ -1,0 +1,193 @@
+<!-- COMMON MEAT INFO -->
+<head th:fragment="common-meta" xmlns:th="http://www.thymeleaf.org">
+	<meta charset="utf-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1"/>
+	<link th:if="${not isKhanas}" th:href="@{/assets/img/favicon.ico}" rel="icon" type="image/x-icon" />
+	<link th:if="${isKhanas}" th:href="@{/assets/img/khanas_favicon.ico}" rel="icon" type="image/x-icon" />
+</head>
+
+<!-- COMMON-CSS -->
+<head th:fragment="common-css" xmlns:th="http://www.thymeleaf.org">
+	<link rel="stylesheet" th:href="@{/assets/css/bootstrap.css}"/>
+	<link rel="stylesheet" th:href="@{/assets/css/bootstrap-datatable.css}"/>
+	<link rel="stylesheet" th:href="@{/assets/css/fixedheader-bootstrap.css}"/>
+	<link rel="stylesheet" th:href="@{/assets/css/responsive-bootstrap.css}"/>
+
+	<link rel="stylesheet" th:href="@{/assets/css/fontawesome/fontawesome.css}"/>
+	<link rel="stylesheet" th:href="@{/assets/css/fontawesome/brands.css}"/>
+	<link rel="stylesheet" th:href="@{/assets/css/fontawesome/solid.css}"/>
+
+	<link rel="stylesheet" type="text/css" th:href="@{/assets/css/lobibox/lobibox.min.css}"/>
+	<link rel="stylesheet" type="text/css" th:href="@{/assets/css/smoke/smoke.css}"/>
+
+	<link rel="stylesheet" th:href="@{/assets/css/bootstrap-datetimepicker.min.css}"/>
+
+	<link th:href="@{/assets/css/ck-ui/ck-select2.css}" rel="stylesheet" />
+
+	<link rel="stylesheet" type="text/css" th:href="@{/assets/css/ck-ui/ck-select.css}">
+	<link th:if="${!isKhanas}" rel="stylesheet" type="text/css" th:href="@{/assets/css/ck-ui/ck-ui.css}"/>
+	<link th:if="${isKhanas}" rel="stylesheet" type="text/css" th:href="@{/assets/css/ck-ui/khanas-ui.css}"/>
+</head>
+
+<!-- COMMON-JS -->
+<head th:fragment="common-js" xmlns:th="http://www.thymeleaf.org">
+	<script th:src="@{/assets/js/jquery-3.5.1.js}"></script>
+	<script th:src="@{/assets/js/bootstrap-3.3.7.js}"></script>
+
+	<script type="text/javascript" th:src="@{/assets/js/jquery.mousewheel.js}"></script>
+	<script type="text/javascript" th:src="@{/assets/js/moment.js}"></script>
+
+	<!-- Data table -->
+	<script type="text/javascript" th:src="@{/assets/js/jquery-datatable.js}"></script>
+	<script type="text/javascript" th:src="@{/assets/js/bootstrap-datatable.js}"></script>
+
+	<!-- Alert message -->
+	<script type="text/javascript" th:src="@{/assets/js/lobibox/lobibox.min.js}"></script>
+	<script type="text/javascript" th:src="@{/assets/js/lobibox/messageboxes.min.js}"></script>
+	<script type="text/javascript" th:src="@{/assets/js/lobibox/notifications.js}"></script>
+
+	<!-- Form validator -->
+	<script type="text/javascript" th:src="@{/assets/js/smoke/smoke.js}"></script>
+
+	<!-- Date picker -->
+	<script type="text/javascript" th:src="@{/assets/js/moment.js}"></script>
+	<script type="text/javascript" th:src="@{/assets/js/bootstap-datepicker.js}"></script>
+
+	<!-- Cookie (jQuery) -->
+	<!-- <script type="text/javascript" th:src="@{/assets/js/jquery.cookie.js}"></script> -->
+	<script type="text/javascript" th:src="@{/assets/js/js.cookie.js}"></script>
+
+	<script th:src="@{/assets/js/ck-ui/ck-select2.js}" type="text/javascript"></script>
+
+	<!-- ck ui -->
+	<script type="text/javascript" th:src="@{/assets/js/ck-ui/ck-select.js}"></script>
+	<script type="text/javascript" th:src="@{/assets/js/ck-ui/ck-functions.js}"></script>
+	<script type="text/javascript" th:src="@{/assets/js/ck-ui/ck-ui.js}"></script>
+	<script type="text/javascript" th:src="@{/assets/js/ck-ui/ck-search-suggest.js}"></script>
+</head>
+
+<!-- Main Menu -->
+<div th:fragment="main-menu" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+	<!-- Sidebar -->
+	<div class="ck-sidebar-menu menu-close">
+		<ul class="ck-siderbar-menu-ul">
+			<div class="ck-sidebar-menu-header">Modules</div>
+			<li 
+				th:if="${m.roleHasAccess and (m != null and m.display and m.screenprompt != null) and ((isCentral and m.centralAccess) OR (isBranch and m.branchAccess))}" 
+				th:each="m : ${modules}"
+				th:classappend="${m.activeMenu ? 'active' : ''}">
+					<a class="ck-module-button" th:attr="data-menucode=${m.profilelinecode}, data-parentcode=${m.parent}" th:href="@{/module/} + ${m.profilelinecode}" th:text="${m.screenprompt}">Master Setup</a>
+			</li>
+		</ul>
+	</div>
+	<div class="ck-sidebar-menu-toggler">
+		<i class="fas fa-caret-right"></i>
+	</div>
+
+	<!-- Custom Menu Section -->
+	<div class="container-fluid">
+		<div class="row">
+			<div class="ck-menu-section">
+				<ul class="ck-main-menu">
+					<li th:classappend="${selectedModule ne null ? '' : 'active'}" class="homemenu"><a th:href="@{/}">Home</a></li>
+					<li th:if="${selectedModule ne null and selectedModule.roleHasAccess}" th:classappend="${selectedModule ne null ? 'active' : ''}">
+						<a th:id="${selectedModule.profilelinecode}" th:href="@{/module/} + ${selectedModule.profilelinecode}" class="ck-clickable-submenu"><span th:attr="data-menucode=${selectedModule.profilelinecode}, data-parentcode=${selectedModule.parent}" th:text="${selectedModule.screenprompt}">Module Name</span> <i th:if="${not #lists.isEmpty(selectedModule.submenus)}" class="fas fa-caret-down pull-right dropdown-indicator"></i></a>
+						<div class="ck-sub-menu-section" th:if="${not #lists.isEmpty(selectedModule.submenus)}">
+							<ul class="ck-sub-menu">
+								<li th:each="sub : ${selectedModule.submenus}" th:if="${sub.roleHasAccess and (sub != null and sub.display and sub.screenprompt != null) and ((isCentral and sub.centralAccess) OR (isBranch and sub.branchAccess))}">
+									<a th:id="${sub.profilelinecode}" th:attr="data-menucode=${sub.profilelinecode}, data-parentcode=${sub.parent}" th:classappend="${#lists.isEmpty(sub.submenus) ? 'ck-clickable-menu' : 'ck-clickable-submenu'}" th:href="@{/} + ${sub.url}"><span th:text="${sub.screenprompt}">Sub Menu Name</span> <i th:if="${not #lists.isEmpty(sub.submenus)}" class="fas fa-caret-right pull-right dropdown-indicator"></i></a>
+									<div th:replace="commons :: submenu-argument(sub4 = ${sub})" th:if="${not #lists.isEmpty(sub.submenus)}"></div>
+								</li>
+							</ul>
+						</div>
+					</li>
+					<li class="pull-right"><a th:href="@{/logout}"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+					<li class="pull-right"><a th:href="@{/userprofile}"><i class="fas fa-user"></i> Profile</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- SUB MENU Repeater -->
+<div th:fragment="submenu-argument(sub4)" xmlns:th="http://www.thymeleaf.org" class="ck-sub-menu-section-l2">
+	<ul class="ck-sub-menu-l2">
+		<li th:each="sub5 : ${sub4.submenus}" th:if="${sub5.roleHasAccess and (sub5 != null and sub5.display and sub5.screenprompt != null) and ((isCentral and sub5.centralAccess) OR (isBranch and sub5.branchAccess))}">
+			<a th:id="${sub5.profilelinecode}" th:attr="data-menucode=${sub5.profilelinecode}, data-parentcode=${sub5.parent}" th:classappend="${#lists.isEmpty(sub5.submenus) ? 'ck-clickable-menu' : 'ck-clickable-submenu'}" th:href="@{/} + ${sub5.url}"><span th:text="${sub5.screenprompt}"></span> <i th:if="${not #lists.isEmpty(sub5.submenus)}" class="fas fa-caret-right pull-right dropdown-indicator"></i></a>
+			<div th:replace="commons :: submenu-argument(sub4 = ${sub5})" th:if="${not #lists.isEmpty(sub5.submenus)}"></div>
+		</li>
+	</ul>
+</div>
+
+<!-- HEADER -->
+<div class="header-section" th:fragment="header-section" xmlns:th="http://www.thymeleaf.org">
+	<a th:href="@{/}" class="basePath"></a>
+	<a th:href="${birtUrl}" class="birtUrl"></a>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-md-12">
+				<h1 class="brand-name" style="display: inline-block; float: left;">
+					<a th:if="${!isKhanas}" th:href="@{/}" th:utext="${brandName}" style="color: #29af70; font-weight: bold; text-decoration: none;"></a>
+					<a th:if="${isKhanas}" th:href="@{/}" th:utext="${brandName}" style="color: #961b39; font-weight: bold; text-decoration: none;"></a>
+					<span th:if="${zbusiness != null}" style="display: block; font-size: 12px; font-weight: bold; color: #961b39;" th:text="${zbusiness.zorg} + ' - ' + ${loggedInUser.fullName}"></span>
+				</h1>
+				<img th:if="${zbusiness != null and not #strings.isEmpty(zbusiness.xbimage)}" th:src="@{/} + ${zbusiness.xresource} + ${zbusiness.xbimage}" style="height: 100px; float: right; padding: 10px;"/>
+				<img th:if="${zbusiness != null and #strings.isEmpty(zbusiness.xbimage)}" th:src="@{/assets/img/asl.png}" style="height: 100px; float: right; padding: 10px;"/>
+				<img th:if="${zbusiness == null and isKhanas}" class="org-logo" th:src="@{/assets/img/khanas_logo.png}" style="max-width: 100px; float: right; padding: 10px;"/>
+				<!--<img th:if="${isIdeal}" class="org-logo" th:src="@{/assets/img/ideal.png}" style="max-width: 100px; float: right; padding: 10px;"/>
+				<img th:if="${isTcc}" class="org-logo" th:src="@{/assets/img/tcc.png}" style="max-width: 100px; float: right; padding: 10px;"/>
+				<img th:if="${isBoshila}" class="org-logo" th:src="@{/assets/img/boshila.png}" style="width: 100px; float: right; padding: 10px;"/>-->
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer-section" th:fragment="footer-section" xmlns:th="http://www.thymeleaf.org">
+	<div class="col-md-12 text-center" th:with="df=${'yyyy'}">
+		<span th:utext="${copyrightText}"></span> <span th:text="${#dates.format(#dates.createNow(), df)}"></span>
+	</div>
+	<span th:remove="tag" th:include="commons :: alert-section"></span>
+	<span th:remove="tag" th:include="commons :: loading-mask"></span>
+	<div th:remove="tag" th:replace="commons :: progressmask"></div>
+</div>
+
+<!-- Utility -->
+<!-- ALERT -->
+<div th:fragment="alert-section" xmlns:th="http://www.thymeleaf.org">
+	<div class="ck-alert nodisplay alert alert-dismissible fade in">
+		<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a> 
+		<strong class="ck-alert-identifier">Success!</strong> <span class="ck-alert-message">This alert box could indicate a successful or positive action.</span>
+	</div>
+</div>
+
+<!-- Loading mask -->
+<div th:fragment="loading-mask" xmlns:th="http://www.thymeleaf.org">
+	<div class="loading-mask nodisplay"></div>
+	<div id="loadingmask2" class="nodisplay">
+		<div id="loadingdots" class="nodisplay">
+			<div id="loadingdots_1" class="loadingdots nodisplay">L</div>
+			<div id="loadingdots_2" class="loadingdots nodisplay">O</div>
+			<div id="loadingdots_3" class="loadingdots nodisplay">A</div>
+			<div id="loadingdots_4" class="loadingdots nodisplay">D</div>
+			<div id="loadingdots_5" class="loadingdots nodisplay">I</div>
+			<div id="loadingdots_6" class="loadingdots nodisplay">N</div>
+			<div id="loadingdots_7" class="loadingdots nodisplay">G</div>
+		</div>
+	</div>
+</div>
+
+
+<div id="progressmask" th:fragment="progressmask" xmlns:th="http://www.thymeleaf.org">
+	<div class="progress-box">
+		<div class="progress">
+			<link rel="stylesheet" type="text/css" th:href="@{/assets/css/ck-ui/progressmask.css}" />
+			<div 	class="progress-bar progress-bar-success progress-bar-striped" 
+					role="progressbar"
+					aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+					0% complete
+			</div>
+		</div>
+	</div>
+</div>
+

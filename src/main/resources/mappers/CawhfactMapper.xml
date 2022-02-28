@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.asl.mapper.CawhfactMapper">
+<insert id="saveTask" parameterType="Cawhfact">
+		<selectKey keyProperty="xtrnnum" resultType="String" order="BEFORE">
+			SELECT Func_GetTrn('${zid}', '${xtypetrn}', '${xtrn}', 6) FROM DUAL
+		</selectKey>
+		INSERT INTO cawhfact
+		(
+			xtrnnum,
+			xproject,
+			xname,
+			xstatus,
+			xweight,
+			xnote,
+			xwh,
+			xtype,
+			xfdate,
+			xtdate,
+			xhours,
+			xstaff,
+			xprogress,
+			xtrn,
+			xdtrnnum,
+			xtypetrn,
+			zactive,
+			zauserid,
+			zid,
+			ztime,
+			zutime,
+			zuuserid
+		)
+		VALUES
+		(
+			#{xtrnnum, jdbcType=VARCHAR},
+			#{xproject, jdbcType=VARCHAR},
+			#{xname, jdbcType=VARCHAR},
+			#{xstatus, jdbcType=VARCHAR},
+			#{xweight, jdbcType=VARCHAR},
+			#{xnote, jdbcType=VARCHAR},
+			#{xwh, jdbcType=VARCHAR},
+			#{xtype, jdbcType=VARCHAR},			
+			#{xfdate, jdbcType=DATE},
+			#{xtdate, jdbcType=DATE},			
+			#{xhours, jdbcType=INTEGER},
+			#{xstaff, jdbcType=VARCHAR},
+			#{xprogress, jdbcType=INTEGER},
+			#{xtrn, jdbcType=VARCHAR},
+			#{xdtrnnum, jdbcType=VARCHAR},
+			#{xtypetrn, jdbcType=VARCHAR},			
+			#{zactive, jdbcType=VARCHAR},
+			#{zauserid, jdbcType=VARCHAR},
+			#{zid, jdbcType=VARCHAR},
+			#{ztime, jdbcType=TIMESTAMP},
+			#{zutime, jdbcType=TIMESTAMP},
+			#{zuuserid, jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<update id="updateTask" parameterType="Cawhfact">
+		UPDATE 
+			cawhfact
+		SET
+			xproject = #{xproject, jdbcType=VARCHAR},
+			xname = #{xname, jdbcType=VARCHAR},
+			xstatus = #{xstatus, jdbcType=VARCHAR},
+			xweight = #{xweight, jdbcType=VARCHAR},
+			xnote = #{xnote, jdbcType=VARCHAR},
+			xwh = #{xwh, jdbcType=VARCHAR},
+			xtype = #{xtype, jdbcType=VARCHAR},			
+			xfdate = #{xfdate, jdbcType=DATE},
+			xtdate = #{xtdate, jdbcType=DATE},			
+			xhours = #{xhours, jdbcType=INTEGER},
+			xstaff = #{xstaff, jdbcType=VARCHAR},
+			xprogress = #{xprogress, jdbcType=INTEGER},
+			xtrn = #{xtrn, jdbcType=VARCHAR},
+			xdtrnnum = #{xdtrnnum, jdbcType=VARCHAR},
+			xtypetrn = #{xtypetrn, jdbcType=VARCHAR},			
+			zactive = #{zactive, jdbcType=VARCHAR},
+			zauserid = #{zauserid, jdbcType=VARCHAR},
+			ztime = #{ztime, jdbcType=TIMESTAMP},
+			zutime = #{zutime, jdbcType=TIMESTAMP},
+			zuuserid = #{zuuserid, jdbcType=VARCHAR}
+		WHERE
+			xtrnnum = #{xtrnnum, jdbcType=VARCHAR}
+			AND zid = #{zid, jdbcType=VARCHAR}
+	</update>
+	
+	<delete id="deleteTask" parameterType="Cawhfact">
+		DELETE FROM cawhfact WHERE xtrnnum=#{xtrnnum}  AND zid=#{zid}
+	</delete>
+	
+	<select id="getAllTask" resultType="Cawhfact">
+		SELECT 
+			cawhfact.*,
+			x.xlong as siteName,
+			y.xlong as projectName
+		FROM 
+			cawhfact 
+			left join xcodes x ON x.xcode = cawhfact.xwh AND x.zid = cawhfact.zid
+			left join xcodes y on y.xcode = cawhfact.xproject and y.zid= cawhfact.zid and y.xtype='Project'
+		WHERE 
+			cawhfact.zid=#{zid} 
+			AND cawhfact.xtype = 'Task'
+		order by 
+			cawhfact.xtrnnum desc
+	</select>
+	
+	<select id="getAllTasksByProject" resultType="Cawhfact">
+		SELECT 
+			cawhfact.*,
+			x.xlong as siteName,
+			y.xlong as projectName
+		FROM 
+			cawhfact 
+			left join xcodes x ON x.xcode = cawhfact.xwh AND x.zid = cawhfact.zid
+			left join xcodes y on y.xcode = cawhfact.xproject and y.zid= cawhfact.zid and y.xtype='Project'
+		WHERE 
+			cawhfact.zid=#{zid} 
+			AND cawhfact.xproject =#{xproject}
+			AND cawhfact.xtype = 'Task'
+		order by 
+			cawhfact.xproject desc
+	</select>
+	
+	<select id="findByTaskId" resultType="Cawhfact">
+		SELECT 
+			cawhfact.*,
+			
+			p.xname as staffName,
+			y.xlong as projectName
+		FROM 
+			cawhfact 
+			left join pdmst p on p.xstaff = cawhfact.xstaff and p.zid= cawhfact.zid
+			left join xcodes y on y.xcode = cawhfact.xproject and y.zid= cawhfact.zid and y.xtype='Project'
+		WHERE 
+			cawhfact.zid=#{zid}
+			AND cawhfact.xtrnnum = #{xtrnnum}
+			AND cawhfact.xtype = 'Task'
+		order by 
+			cawhfact.xtrnnum desc
+	</select>
+	
+	
+	
+
+	
+
+	
+	<select id="searchDependsOn" resultType="Cawhfact">
+		SELECT
+			*
+		FROM
+			cawhfact
+		WHERE
+			(UPPER(xtrnnum) LIKE '%' || #{hint} || '%') 
+			AND zid=#{zid}
+			AND xtype = 'Task'
+		order by 
+			xtrnnum desc
+	</select>
+
+
+
+
+
+
+
+</mapper>

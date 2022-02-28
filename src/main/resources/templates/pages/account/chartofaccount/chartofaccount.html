@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<title th:text="#{coa.page.title}"></title>
+		<meta th:remove="tag" th:include="commons :: common-meta" />
+		<meta th:remove="tag" th:include="commons :: common-css" />
+		<meta th:remove="tag" th:include="commons :: common-js" />
+	</head>
+	<body>
+		<!-- Header section -->
+		<div class="header-section" th:include="commons :: header-section"></div>
+
+		<!-- Menu section -->
+		<div th:if="${menuVersion != null and menuVersion eq 'MENU_V2'}" class="menuv2" th:include="commons :: main-menu"></div>
+		
+		<div th:if="${menuVersion == null or menuVersion eq 'MENU_V1'}" class="navbar-inverse menu-section">
+			<div class="container-fluid">
+				<div class="row">
+					<nav class="navbar navbar-inverse">
+						<div class="container-fluid">
+							<div class="row">
+								<div class="navbar-header">
+									<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+										<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+									</button>
+								</div>
+								<div class="collapse navbar-collapse" id="myNavbar">
+									<div class="nav navbar-nav">
+										<li><a th:href="@{/}"><i class="fas fa-home"></i> Home</a></li>
+										<li class="active"><a th:href="@{/account/coa}">Chart of Account</a></li>
+									</div>
+									<ul class="nav navbar-nav navbar-right" th:include="ckbigmenu :: dashboard-menu"></ul>
+								</div>
+							</div>
+						</div>
+					</nav>
+				</div>
+			</div>
+		</div>
+
+		<!-- Content section -->
+		<div>
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-md-12 content-area">
+						<div class="row">
+							<h1 class="text-center" th:text="#{coa.page.heading}">Chart of Account</h1>
+						</div>
+						<div class="row">
+							<div class="col-md-6">
+								<!-- Section list head -->
+								<section id="data-maintenance" style="margin-top: 30px;">
+									<div class="section-header sectionbartoggle"></div>
+									<div class="form-action-button">
+										<a th:href="@{/account/coa}" class="btn btn-sm btn-default"><i class="fas fa-redo-alt"></i> <span style="margin-left:2px;" th:text="#{button.value.xclear}"> Clear</span></a>
+										<a th:if="${#strings.isEmpty(acmst.xacc)}" href="#" class="btn btn-sm btn-success confirm-btn"><i class="fas fa-save"></i> <span style="margin-left:2px;" th:text="#{button.value.xsave}"> Save</span></a>
+										<a th:if="${not #strings.isEmpty(acmst.xacc)}" href="#" class="btn btn-sm btn-success update-btn"><i class="fas fa-edit"></i> <span style="margin-left:2px;" th:text="#{button.value.xupdate}"> Update</span></a>
+										<a th:if="${not #strings.isEmpty(acmst.xacc)}" th:href="@{/account/coa/archive/} + ${acmst.xacc}" class="btn btn-sm btn-danger archive-btn-link"><i class="fas fa-trash-alt"></i> <span style="margin-left:2px;" th:text="#{button.value.xdelete}"> Delete</span></a>
+									</div>
+									<div class="section-body section-border">
+										<form id="mainform" class="form-horizontal" th:action="@{/account/coa/save}" method="post" th:object="${acmst}" th:with="df=${'E, dd-MMM-yyyy'}">
+											<div class="row">
+												<div class="col-md-6">
+													<div class="form-group" th:if="${#strings.isEmpty(acmst.xacc)}">
+														<label class="control-label col-sm-4" for="xgroup" th:text="#{coa.form.label.xgroup}">Group</label>
+														<div class="col-sm-8">
+															<input 	type="text" 
+																	class="form-control searchsuggest xitemsearch" 
+																	placeholder="Search..." 
+																	th:value="${not #strings.isEmpty(acmst.xgroup) ? acmst.xgroup + ' - ' + acmst.xgroupname : ''}"
+																	th:attr="search-url='search/acgroup'"/>
+															<input type="hidden" id="search-val" class="search-xitem" th:field="*{xgroup}"/>
+															<input type="hidden" id="search-des" th:value="*{xgroup}"/>
+														</div>
+													</div>
+
+													<div class="form-group" th:if="${not #strings.isEmpty(acmst.xacc)}">
+														<label class="control-label col-md-4" for="xgroup" th:text="#{coa.form.label.xgroup}">Group</label>
+														<div class="col-md-8">
+															<input type="hidden" class="form-control" th:field="*{xgroup}">
+															<input type="text" class="form-control" th:value="${acmst.xgroup} + ' - ' + ${acmst.xgroupname}" disabled="disabled">
+														</div>
+													</div>
+
+													<div class="form-group" th:if="${not #strings.isEmpty(acmst.xacc)}">
+														<label class="control-label col-md-4" for="xacc" th:text="#{coa.form.label.xacc}">Account</label>
+														<div class="col-md-8">
+															<input type="hidden" class="form-control" th:field="*{xacc}">
+															<input type="text" class="form-control" th:value="*{xacc}" disabled="disabled">
+														</div>
+													</div>
+
+													<div class="form-group">
+														<label class="control-label col-md-4" for="xdesc" th:text="#{coa.form.label.xdesc}">Account Name</label>
+														<div class="col-md-8">
+															<input type="text" class="form-control" th:field="*{xdesc}" required="required">
+														</div>
+													</div>
+
+													<div class="form-group">
+														<label class="control-label col-md-4" for="xaccusage" th:text="#{coa.form.label.xaccusage}">Account Usage </label>
+														<div class="col-sm-8 ">
+															<div class="radio">
+																<label><input type="radio" th:field="*{xaccusage}" value="Ledger" required="required"/>Ledger</label>
+															</div>
+															<div class="radio">
+																<label><input type="radio" th:field="*{xaccusage}" value="AR" required="required"/>AR</label>
+															</div>
+															<div class="radio">
+																<label><input type="radio" th:field="*{xaccusage}" value="AP" required="required"/>AP</label>
+															</div>
+															<div class="radio">
+																<label><input type="radio" th:field="*{xaccusage}" value="Advance" required="required"/>Advance</label>
+															</div>
+															<div class="radio">
+																<label><input type="radio" th:field="*{xaccusage}" value="Expense" required="required"/>Expense</label>
+															</div>
+															
+														</div>
+													</div> 
+
+													<div class="form-group">
+														<label class="control-label col-md-4" for="xlong" th:text="#{coa.form.label.xlong}">Note</label>
+														<div class="col-md-8">
+															<textarea class="form-control" rows="3" th:field="*{xlong}" placeholder="Note here.."></textarea>
+														</div>
+													</div>
+													
+												</div>
+
+
+												<div class="col-md-6">
+													<div class="form-group" th:if="${not #strings.isEmpty(acmst.xacc)}">
+														<label class="control-label col-md-4" for="xacctype" th:text="#{coa.form.label.xacctype}">Account Type</label>
+														<div class="col-md-8">
+															<input type="text" class="form-control" th:field="*{xacctype}" disabled="disabled">
+														</div>
+													</div>
+
+													<div class="form-group" th:if="${not #strings.isEmpty(acmst.xacc) and not #strings.isEmpty(acmst.xhrc1)}">
+														<label class="control-label col-md-4" for="xhrc1" th:text="#{coa.form.label.xhrc1}">Level 1</label>
+														<div class="col-md-8">
+															<textarea class="form-control" rows="2" cols="" th:field="*{xhrc1}" disabled="disabled"></textarea>
+														</div>
+													</div>
+
+													<div class="form-group" th:if="${not #strings.isEmpty(acmst.xacc) and not #strings.isEmpty(acmst.xhrc2)}">
+														<label class="control-label col-md-4" for="xhrc2" th:text="#{coa.form.label.xhrc2}">Level 2</label>
+														<div class="col-md-8">
+															<textarea class="form-control" rows="2" cols="" th:field="*{xhrc2}" disabled="disabled"></textarea>
+														</div>
+													</div>
+
+													<div class="form-group" th:if="${not #strings.isEmpty(acmst.xacc) and not #strings.isEmpty(acmst.xhrc3)}">
+														<label class="control-label col-md-4" for="xhrc3" th:text="#{coa.form.label.xhrc3}">Level 3</label>
+														<div class="col-md-8">
+															<textarea class="form-control" rows="2" cols="" th:field="*{xhrc3}" disabled="disabled"></textarea>
+														</div>
+													</div>
+
+													<div class="form-group" th:if="${not #strings.isEmpty(acmst.xacc) and not #strings.isEmpty(acmst.xhrc4)}">
+														<label class="control-label col-md-4" for="xhrc4" th:text="#{coa.form.label.xhrc4}">Level 4</label>
+														<div class="col-md-8">
+															<textarea class="form-control" rows="2" cols="" th:field="*{xhrc4}" disabled="disabled"></textarea>
+														</div>
+													</div>
+
+													<div class="form-group" th:if="${not #strings.isEmpty(acmst.xacc) and not #strings.isEmpty(acmst.xhrc5)}">
+														<label class="control-label col-md-4" for="xhrc5" th:text="#{coa.form.label.xhrc5}">Level 5</label>
+														<div class="col-md-8">
+															<textarea class="form-control" rows="2" cols="" th:field="*{xhrc5}" disabled="disabled"></textarea>
+														</div>
+													</div>
+
+												</div>
+											</div>
+										</form>
+									</div>
+								</section>
+							</div>
+								<div class="col-md-6">
+									<section id="list-manager" style="margin-top: 30px;">
+										<div class="section-header sectionbartoggle">
+											<h1 th:text="#{coa.form.table.heading}">List of COA</h1>
+										</div>
+										<div class="section-body">
+											<div style="overflow-x: auto;">
+												<table class="table table-striped table-bordered datatable nowrap">
+													<thead>
+														<tr>
+															<th th:text="#{coa.form.table.heading.xacc}">Account</th>
+															<th th:text="#{coa.form.table.heading.xgroup}">Group</th>
+															<th th:text="#{coa.form.table.heading.xaccusage}">Account Usage</th>
+															<th th:text="#{coa.form.table.heading.xacctype}">Account Type</th>
+														</tr>
+													</thead>
+													<tbody>
+														<tr th:each="ac : ${acmstlist}">
+															<td>
+																<a th:href="@{/account/coa/} + ${ac.xacc}" th:text="${ac.xacc} + ' - ' + ${ac.xdesc}"></a>
+															</td>
+															<td th:text="${ac.xgroup} + ' - ' + ${ac.xgroupname}"></td>
+															<td th:text="${ac.xaccusage}"></td>
+															<td th:text="${ac.xacctype}"></td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+										</div>
+									</section>
+								</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Footer section -->
+		<div class="footer-section" th:include="commons :: footer-section"></div>
+
+		<script type="text/javascript" th:src="@{/assets/js/ck-ui/ck-search-suggest.js}"></script>
+		
+	</body>
+</html>

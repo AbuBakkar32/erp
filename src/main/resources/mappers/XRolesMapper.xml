@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.asl.mapper.XRolesMapper">
+
+	<insert id="saveXroles" parameterType="Xroles">
+		INSERT INTO Xroles
+		(
+			xrole,
+			xaccess,
+			xdesc,
+			xmaxdisc,
+			xmaxdiscf,
+			xshopno,
+			zactive,
+			zauserid,
+			zid,
+			ztime,
+			zutime,
+			zuuserid
+		)
+		VALUES
+		(
+			#{xrole , jdbcType=VARCHAR},
+			#{xaccess, jdbcType=VARCHAR},
+			#{xdesc, jdbcType=VARCHAR},
+			#{xmaxdisc, jdbcType=DECIMAL},
+			#{xmaxdiscf, jdbcType=DECIMAL},
+			#{xshopno, jdbcType=VARCHAR},
+			#{zactive, jdbcType=VARCHAR},
+			#{zauserid, jdbcType=VARCHAR},
+			#{zid, jdbcType=VARCHAR},
+			#{ztime, jdbcType=TIMESTAMP},
+			#{zutime, jdbcType=TIMESTAMP},
+			#{zuuserid, jdbcType=VARCHAR}
+
+		)
+	</insert>
+
+	<update id="updateXroles" parameterType="Xroles">
+		UPDATE 
+			xroles
+		SET
+			xaccess=#{xaccess, jdbcType=VARCHAR},
+			xdesc=#{xdesc, jdbcType=VARCHAR},
+			xmaxdisc=#{xmaxdisc, jdbcType=DECIMAL},
+			xmaxdiscf=#{xmaxdiscf, jdbcType=DECIMAL},
+			xshopno=#{xshopno, jdbcType=VARCHAR},
+			zactive=#{zactive, jdbcType=VARCHAR},
+			zauserid=#{zauserid, jdbcType=VARCHAR},
+			ztime=#{ztime, jdbcType=TIMESTAMP},
+			zutime=#{zutime, jdbcType=TIMESTAMP},
+			zuuserid=#{zuuserid, jdbcType=VARCHAR}
+		WHERE
+			xrole=#{xrole , jdbcType=VARCHAR}
+			AND zid=#{zid, jdbcType=VARCHAR}
+	</update>
+
+	<select id="getAllXroles" resultType="Xroles">
+		SELECT * FROM Xroles WHERE zid=#{zid} 
+		order by ztime desc
+	</select>
+	
+	<select id="findByXrole" resultType="Xroles">
+		SELECT 
+			* 
+		FROM 
+			xroles 
+		WHERE 
+			zid=#{zid} 
+			AND xrole=#{xrole}
+	</select>
+</mapper>

@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<title>Knit Production Plan</title>
+		<meta th:remove="tag" th:include="commons :: common-meta" />
+		<meta th:remove="tag" th:include="commons :: common-css" />
+		<meta th:remove="tag" th:include="commons :: common-js" />
+	</head>
+	<body>
+		<!-- Header section -->
+		<div class="header-section" th:include="commons :: header-section"></div>
+
+		<!-- Menu section -->
+		<div th:if="${menuVersion != null and menuVersion eq 'MENU_V2'}" class="menuv2" th:include="commons :: main-menu"></div>
+
+		<div th:if="${menuVersion == null or menuVersion eq 'MENU_V1'}" class="navbar-inverse menu-section">
+			<div class="container-fluid">
+				<div class="row">
+					<nav class="navbar navbar-inverse">
+						<div class="container-fluid">
+							<div class="row">
+								<div class="navbar-header">
+									<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+										<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+									</button>
+								</div>
+								<div class="collapse navbar-collapse" id="myNavbar">
+									<div class="nav navbar-nav">
+										<li><a th:href="@{/}">Home</a></li>
+										<li class="active"><a th:href="@{/proplan}">Knit Production Plan</a></li>
+									</div>
+									<ul class="nav navbar-nav navbar-right" th:include="ckbigmenu :: dashboard-menu"></ul>
+								</div>
+							</div>
+						</div>
+					</nav>
+				</div>
+			</div>
+		</div>
+		
+		
+		<!-- Content section -->
+		<div>
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-md-12 content-area">
+						<div class="row">
+							<div class="col-md-6">
+								<!-- Section list head -->
+								<section id="data-maintenance" style="margin-top: 30px;">
+									<div class="section-header sectionbartoggle">
+										<h1>Knit Production Plan</h1>
+									</div>
+									<div class="form-action-button">
+										<a th:href="@{/proplan}" class="btn btn-sm btn-default"><i class="fas fa-redo-alt"></i> Clear</a>
+										<a href="#" class="btn btn-sm btn-success confirm-btn"><i class="fas fa-save"></i> Add</a>
+										<a href="#" class="btn btn-sm btn-success update-btn"><i class="fas fa-edit"></i> Update</a>
+										<a href="#" class="btn btn-sm btn-danger archive-btn-link"><i class="fas fa-trash-alt"></i> Delete</a>
+										<a th:href="@{/countde}" class="btn btn-info"></i>Yarn Count Details</a>
+									</div>
+									<div class="section-body section-border">
+										<form id="mainform" class="form-horizontal"  th:with="df=${'E, dd-MMM-yyyy'}">
+											<div class="row">
+												<div class="col-md-6">
+													 <div class="form-group">
+														<label class="control-label col-md-4">Plan ID</label>
+														<div class="col-md-8">
+															<input type="text" class="form-control"  placeholder="KPLAN000001">
+														</div>
+													</div>
+
+													<div class="form-group datepicker">
+														<label class="control-label col-md-4" for="">Plan Date</label>
+														<div class="input-group date col-md-7 datepicker">
+															<input 	type="datepicker" 
+																	class="form-control" 
+																	id="]"
+																	name=""
+																	required="required"
+																	/>
+															<div class="input-group-addon">
+																<span class="glyphicon glyphicon-calendar"></span>
+															</div>
+														</div>
+													</div>
+
+													<div class="form-group">
+															<label class="control-label col-md-4">Planning For</label>
+															<div class="col-md-8">
+																<select class="form-control" >
+																	<option>Indoor</option>
+																	<option>Outdoor</option>
+																	<option th:each="d : ${prefixes}" th:value="${d.xtrn}" th:text="${d.xtrn}"></option>
+																</select>
+															</div>
+													</div>
+
+													<!-- for Outdoor -->
+													<div class="form-group">
+														<label class="control-label col-md-4">Sub Contract Factory </label>
+														<div class="col-md-8">
+															<input type="text" class="form-control" placeholder="Through Search" >
+														</div>
+													</div>
+													
+													<div class="form-group datepicker">
+														<label class="control-label col-md-4" for="">Plan Closing Date</label>
+														<div class="input-group date col-md-7 datepicker">
+															<input 	type="datepicker" 
+																	class="form-control" 
+																	id="]"
+																	name=""
+																	required="required"
+																	/>
+															<div class="input-group-addon">
+																<span class="glyphicon glyphicon-calendar"></span>
+															</div>
+														</div>
+													</div>
+													
+													<div class="form-group">
+														<label class="control-label col-md-4">Plan purpose </label>
+														<div class="col-md-8">
+															<select class="form-control" >
+																<option>Knitting</option>
+																<option>Dyeing</option>
+																<option th:each="d : ${prefixes}" th:value="${d.xtrn}" th:text="${d.xtrn}"></option>
+															</select>
+														</div>
+													</div>
+													
+													<div class="form-group">
+														<label class="control-label col-md-4">FO Number </label>
+														<div class="col-md-8">
+															<input type="text" class="form-control" placeholder="Through Search"  >
+														</div>
+													</div>
+													
+													<div class="form-group">
+														<label class="control-label col-md-4">Buyer Number </label>
+														<div class="col-md-8">
+															<input type="text" class="form-control" placeholder="Through Search"  >
+														</div>
+													</div>
+													
+													<div class="form-group">
+														<label class="control-label col-md-4">Planning Raw Material </label>
+														<div class="col-md-8">
+															<select class="form-control" >
+																<option>Raw Yarn</option>
+																<option>Chemical</option>
+																<option th:each="d : ${prefixes}" th:value="${d.xtrn}" th:text="${d.xtrn}"></option>
+															</select>
+														</div>
+													</div>
+													
+													<div class="form-group">
+														<label class="control-label col-md-4">Plan Qty in kg.</label>
+														<div class="col-md-8">
+															<input type="text" class="form-control" value="" >
+														</div>
+													</div>
+													
+													<div class="form-group">
+														<label class="control-label col-md-4">Remarks</label>
+														<div class="col-md-8">
+															<textarea class="form-control" rows="3"  placeholder=""></textarea>
+														</div>
+													</div>
+
+													</div>
+
+ 												<div class="col-md-6">
+												<!-- For Indoor -->
+													
+													<div class="form-group">
+														<label class="control-label col-md-4">Machine No</label>
+														<div class="col-md-8">
+															<input type="text" class="form-control" placeholder="Through Search">
+														</div>
+													</div>
+													
+													<div class="form-group">
+														<label class="control-label col-md-4">Machine Capacity</label>
+														<div class="col-md-8">
+															<input type="text" class="form-control" placeholder="Defaultly come with Machine No.">
+														</div>
+													</div>
+													
+													<div class="form-group">
+														<label class="control-label col-md-4">Machine Dia / Finished Dia</label>
+														<div class="col-md-8">
+															<input type="text" class="form-control" value="" >
+														</div>
+													</div>
+													
+													<div class="form-group">
+														<label class="control-label col-md-4">Gauge</label>
+														<div class="col-md-8">
+															<input type="text" class="form-control" value="" >
+														</div>
+													</div>
+													
+													<div class="form-group">
+														<label class="control-label col-md-4">GSM</label>
+														<div class="col-md-8">
+															<input type="text" class="form-control" value="" >
+														</div>
+													</div>
+													
+													<div class="form-group">
+														<label class="control-label col-md-4">Machine heads</label>
+														<div class="col-md-8">
+															<input type="text" class="form-control" value="" >
+														</div>
+													</div>
+													
+													<div class="form-group">
+														<label class="control-label col-md-4">Length</label>
+														<div class="col-md-8">
+															<input type="text" class="form-control" value="" >
+														</div>
+													</div>
+													
+													<div class="form-group">
+														<label class="control-label col-md-4">Width</label>
+														<div class="col-md-8">
+															<input type="text" class="form-control" value="" >
+														</div>
+													</div>
+													
+													<div class="form-group">
+														<label class="control-label col-md-4">Color</label>
+														<div class="col-md-8">
+															<input type="text" class="form-control" value="" >
+														</div>
+													</div>
+													
+													<div class="form-group">
+														<label class="control-label col-md-4">Rate</label>
+														<div class="col-md-8">
+															<input type="text" class="form-control" value="" >
+														</div>
+													</div>
+													
+													<div class="form-group">
+														<label class="control-label col-md-4">Feeder</label>
+														<div class="col-md-8">
+															<input type="text" class="form-control" value="" >
+														</div>
+													</div>
+													
+													<div class="form-group">
+														<label class="control-label col-md-4">No of Needle</label>
+														<div class="col-md-8">
+															<input type="text" class="form-control" value="" >
+														</div>
+													</div>
+													
+													<div class="form-group">
+														<label class="control-label col-md-4">RPM</label>
+														<div class="col-md-8">
+															<input type="text" class="form-control" value="" >
+														</div>
+													</div>
+													
+													<div class="form-group">
+														<label class="control-label col-md-4">Fabric type</label>
+														<div class="col-md-8">
+															<select class="form-control" >
+																<option>Single Jersey</option>
+																<option>Corchet</option>
+																<option>Wrap Knitted Fabric</option>
+																<option th:each="d : ${prefixes}" th:value="${d.xtrn}" th:text="${d.xtrn}"></option>
+															</select>
+														</div>
+													</div>
+													
+													<div class="form-group">
+														<label class="control-label col-md-4">Ply</label>
+														<div class="col-md-8">
+															<input type="text" class="form-control" value="" >
+														</div>
+													</div>
+													
+													<div class="form-group">
+														<label class="control-label col-md-4">CPI</label>
+														<div class="col-md-8">
+															<input type="text" class="form-control" value="" >
+														</div>
+													</div>
+													
+													<div class="form-group">
+														<label class="control-label col-md-4">Process Loss(Percentage)</label>
+														<div class="col-md-8">
+															<input type="text" class="form-control" value="" >
+														</div>
+													</div>
+													
+													<div class="form-group">
+														<label class="control-label col-md-4">Confirmed by</label>
+														<div class="col-md-8">
+															<input type="text" class="form-control" value="abc@gmail.com" disabled="disabled">
+														</div>
+													</div>
+
+													<div class="form-group">
+														<label class="control-label col-md-4" for="">Note</label>
+														<div class="col-md-8">
+															<textarea class="form-control" rows="3"  placeholder="Note.."></textarea>
+														</div>
+													</div>
+	
+												</div>
+										</div>
+									</form>
+								</div>
+							</section>
+						</div>
+							<div class="col-md-6">
+								<section id="list-manager" style="margin-top: 30px;">
+									<div class="section-header sectionbartoggle">
+										<h1>List of Knit Production Plans</h1>
+									</div>
+									<div class="section-body">
+										<table class="table table-striped table-bordered datatable nowrap">
+											<thead>
+												<tr>
+													<th>Plan ID</th>
+													<th>Plan Date </th>
+													<th>Production Date</th>
+													<th>Planning For</th>
+													<th>Status</th>
+												</tr>
+											</thead>
+											<tbody>
+												
+											</tbody>
+										</table>
+									</div>
+								</section>
+							</div>
+					</div>			
+				</div>
+			</div>
+		</div>
+	</div>
+
+		<!-- Footer section -->
+		<div class="footer-section" th:include="commons :: footer-section"></div>
+
+		<script type="text/javascript" th:src="@{/assets/js/ck-ui/ck-search-suggest.js}"></script>
+		
+	</body>
+</html>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.asl.mapper.ZaudittrailMapper">
+	<insert id="save" parameterType="Zaudittrail">
+		<!-- <selectKey keyProperty="ximtrnnum" resultType="String" order="BEFORE">
+			SELECT Func_GetTrn('${zid}', '${xtype}', '${xtrnimtrn}', 6) FROM DUAL
+		</selectKey> -->
+		INSERT INTO Zaudittrail
+		(
+			zauditid,
+			zemail,
+			zscreen,
+			zstatement,
+			zpkey,
+			zmessage,
+			zcommand,
+		)
+		VALUES
+		(
+			#{zauditid, jdbcType=VARCHAR},
+			#{zemail, jdbcType=VARCHAR},
+			#{zscreen, jdbcType=VARCHAR},
+			#{zstatement, jdbcType=VARCHAR},
+			#{zpkey, jdbcType=VARCHAR},
+			#{zmessage, jdbcType=VARCHAR},
+			#{zcommand, jdbcType=VARCHAR},
+				
+		) 
+	</insert>
+	
+	<update id="update" parameterType="Zaudittrail">
+		UPDATE
+			Zaudittrail
+		SET
+			zemail=#{zemail, jdbcType=VARCHAR},
+			zscreen=#{zscreen, jdbcType=VARCHAR},
+			zstatement=#{zstatement, jdbcType=VARCHAR},
+			zpkey=#{zpkey, jdbcType=VARCHAR},
+			zmessage=#{zmessage, jdbcType=VARCHAR},
+			zcommand=#{zcommand, jdbcType=VARCHAR},
+		WHERE
+			zauditid=#{zauditid, jdbcType=VARCHAR}
+	</update>
+	
+	<select id="getAllZaudittrail" resultType="Zaudittrail">
+		SELECT * FROM Zaudittrail WHERE zauditid=#{zauditid}
+	</select>
+</mapper>

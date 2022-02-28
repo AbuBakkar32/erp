@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+	<head>
+		<title>Permissions</title>
+		<meta th:remove="tag" th:include="commons :: common-meta"/>
+		<meta th:remove="tag" th:include="commons :: common-css"/>
+		<meta th:remove="tag" th:include="commons :: common-js"/>
+	</head>
+	<body>
+
+		<!-- Header section -->
+		<div class="header-section" th:include="commons :: header-section"></div>
+		
+
+
+		<!-- Menu section -->
+		<div th:if="${menuVersion != null and menuVersion eq 'MENU_V2'}" class="menuv2" th:include="commons :: main-menu"></div>
+
+		<div th:if="${menuVersion == null or menuVersion eq 'MENU_V1'}" class="navbar-inverse menu-section">
+			<div class="container-fluid">
+				<div class="row">
+					<nav class="navbar navbar-inverse">
+						<div class="container-fluid">
+							<div class="row">
+								<div class="navbar-header">
+									<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+										<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+									</button>
+								</div>
+								<div class="collapse navbar-collapse" id="myNavbar">
+									<div class="nav navbar-nav">
+										<li><a th:href="@{/}">Dashboard</a></li>
+										<li class="active"><a th:href="@{/permissions}">Permissions</a></li>
+									
+									</div>
+								
+								</div>
+							</div>
+						</div>
+					</nav>
+				</div>
+			</div>
+		</div>
+		
+		
+			<!-- Content section -->
+		<div>
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-md-12 content-area">
+
+						<div class="row">
+							<!-- Section list head -->
+								<section id="data-maintenance" style="margin-top: 30px;">
+									<div id="permissionsform" th:fragment="permissionsform">
+										<div class="section-header sectionbartoggle">
+											<h1>Permissions</h1>
+										</div>
+									<div class="form-action-button">
+										<a href="#" class="btn btn-sm btn-success update-btn"><i class="fas fa-edit"></i> Update</a>
+									</div>
+									
+									<div class="section-body section-border">
+										<form id="mainform" class="form-horizontal" method="post" th:action="@{/permissions/save}">
+											<div class="row">
+												<div class="col-md-6">
+													<div class="row">
+														<div class="col-md-6">
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xgitem">Role</label>
+																<div class="col-md-8">
+																	<select class="form-control" id="xrole" name="xrole">
+																		<option value="">-- Select --</option>
+																		<option th:each="r : ${roleTypes}" th:selected="${selectedRole eq r.xcode}" th:value="${r.xcode}" th:text="${r.xcode}">Admin</option>
+																	</select>
+																</div>
+															</div>
+															<div class="row">
+																<div class="col-md-12">
+																	<div class="form-group input2">
+																		<div class="col-sm-8 col-sm-offset-4">
+																			<div class="checkbox">
+																				<label><input type="checkbox" class="form-control-input2 poscheck" th:checked="${posSign}" data-prompt="Reopen POS Sign In"/>Reopen POS Sign In</label>
+																			</div>
+																		</div>
+																	</div>
+																</div>
+															</div>
+															<div class="row">
+																<div class="col-md-12">
+																	<div class="form-group input2">
+																		<div class="col-sm-8 col-sm-offset-4">
+																			<div class="checkbox">
+																				<label><input type="checkbox" class="form-control-input2 poscheck" th:checked="${saleOnPOS}" data-prompt="Sale on POS"/>Can sale on POS</label>
+																			</div>
+																		</div>
+																	</div>
+																</div>
+															</div>
+															<div class="row">
+																<div class="col-md-12">
+																	<div class="form-group input2">
+																		<div class="col-sm-8 col-sm-offset-4">
+																			<div class="checkbox">
+																				<label><input type="checkbox" class="form-control-input2 poscheck" th:checked="${giftComplimentary}" data-prompt="Gift on Complimentary"/>Gift on Complimentary</label>
+																			</div>
+																		</div>
+																	</div>
+																</div>
+															</div>
+															<div class="row">
+																<div class="col-md-12">
+																	<div class="form-group input2">
+																		<div class="col-sm-8 col-sm-offset-4">
+																			<div class="checkbox">
+																				<label><input type="checkbox" class="form-control-input2 poscheck" th:checked="${discount}" data-prompt="Discount"/>Discount & SP Discount</label>
+																			</div>
+																		</div>
+																	</div>
+																</div>
+															</div>
+															<div class="row">
+																<div class="col-md-12">
+																	<div class="form-group input2">
+																		<div class="col-sm-8 col-sm-offset-4">
+																			<div class="checkbox">
+																				<label><input type="checkbox" class="form-control-input2 poscheck" th:checked="${billsView}" data-prompt="Bills view"/>Bills view</label>
+																			</div>
+																		</div>
+																	</div>
+																</div>
+															</div>
+															<div class="row">
+																<div class="col-md-12">
+																	<div class="form-group input2">
+																		<div class="col-sm-8 col-sm-offset-4">
+																			<div class="checkbox">
+																				<label><input type="checkbox" class="form-control-input2 poscheck" th:checked="${billCancellation}" data-prompt="Bill cancellation"/>Bill cancellation</label>
+																			</div>
+																		</div>
+																	</div>
+																</div>
+															</div>
+															<div class="row">
+																<div class="col-md-12">
+																	<div class="form-group input2">
+																		<div class="col-sm-8 col-sm-offset-4">
+																			<div class="checkbox">
+																				<label><input type="checkbox" class="form-control-input2 poscheck" th:checked="${printBill}" data-prompt="Print bill"/>Print bill from bills view</label>
+																			</div>
+																		</div>
+																	</div>
+																</div>
+															</div>
+															<div class="row">
+																<div class="col-md-12">
+																	<div class="form-group input2">
+																		<div class="col-sm-8 col-sm-offset-4">
+																			<div class="checkbox">
+																				<label><input type="checkbox" class="form-control-input2 poscheck" th:checked="${reportsView}" data-prompt="Reports View"/>Reports View</label>
+																			</div>
+																		</div>
+																	</div>
+																</div>
+															</div>
+															<div class="row">
+																<div class="col-md-12">
+																	<div class="form-group input2">
+																		<div class="col-sm-8 col-sm-offset-4">
+																			<div class="checkbox">
+																				<label><input type="checkbox" class="form-control-input2 poscheck" th:checked="${settings}" data-prompt="Settings"/>Settings</label>
+																			</div>
+																		</div>
+																	</div>
+																</div>
+															</div>
+															<div class="row">
+																<div class="col-md-12">
+																	<div class="form-group input2">
+																		<div class="col-sm-8 col-sm-offset-4">
+																			<div class="checkbox">
+																				<label><input type="checkbox" class="form-control-input2 poscheck" th:checked="${checkOnItem}" data-prompt="Check On Item"/>Show Discount Not Applicable Check On Item Settings</label>
+																			</div>
+																		</div>
+																	</div>
+																</div>
+															</div>
+															<div class="row">
+																<div class="col-md-12">
+																	<div class="form-group input2">
+																		<div class="col-sm-8 col-sm-offset-4">
+																			<div class="checkbox">
+																				<label><input type="checkbox" class="form-control-input2 poscheck" th:checked="${permissionsModify}" data-prompt="Permissions modify"/>Permissions modify</label>
+																			</div>
+																		</div>
+																	</div>
+																</div>
+															</div>
+															
+														</div>
+														
+													</div>
+											</div>
+										</div>
+									</form>
+								</div>
+								<script type="text/javascript">
+									$(document).ready(function(){
+										
+										$('#xrole').off('change').on('change', function(e){
+											
+											console.log($(this).val());
+											
+											loadingMask2.show();
+											$.ajax({
+												url : getBasepath() + '/permissions/loadformbyxrole/' + $(this).val(),
+												type :'POST',
+												success : function(data) {
+													loadingMask2.hide();
+													if(data.status == 'SUCCESS'){
+														showMessage(data.status.toLowerCase(), data.message);
+														if(data.triggermodalurl){
+															modalLoader(getBasepath() + data.triggermodalurl, data.modalid);
+														} else {
+															if(data.reloadurl){
+																doSectionReloadWithNewData(data);
+															} else if(data.redirecturl){
+																setTimeout(() => {
+																	window.location.replace(getBasepath() + data.redirecturl);
+																}, 1000);
+															}
+														}
+													} else {
+														showMessage(data.status.toLowerCase(), data.message);
+													}
+												}, 
+												error : function(jqXHR, status, errorThrown){
+													showMessage(status, "Something went wrong .... ");
+													loadingMask2.hide();
+												}
+											});
+											
+											
+										});
+												
+										$('.poscheck').off('click').on('click', function(e){
+													
+											console.log($('#xrole').val());
+											console.log($(this).data('prompt'));
+											console.log($(this).prop("checked"));
+													
+											loadingMask2.show();
+											$.ajax({
+												url : getBasepath() + '/permissions/save',
+												type : 'POST',
+												data : {
+													name : $(this).data('prompt'),
+													status : $(this).prop("checked"),
+													xrole : $('#xrole').val()
+												},
+												success : function(data) {
+													loadingMask2.hide();
+													if(data.status == 'SUCCESS'){
+														showMessage(data.status.toLowerCase(), data.message);
+														if(data.triggermodalurl){
+															modalLoader(getBasepath() + data.triggermodalurl, data.modalid);
+													} else {
+														if(data.reloadurl){
+															doSectionReloadWithNewData(data);
+														} else if(data.redirecturl){
+															setTimeout(() => {
+																window.location.replace(getBasepath() + data.redirecturl);
+															}, 1000);
+														}
+													}
+												} else {
+													showMessage(data.status.toLowerCase(), data.message);
+												}
+											}, 
+											error : function(jqXHR, status, errorThrown){
+												loadingMask2.hide();
+												showMessage(status, "Something went wrong .... ");
+											}
+										});
+									});
+								})
+							</script>
+						</div>
+					</section>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</div>
+		
+
+		  <!-- Footer section -->
+		<div class="footer-section" th:include="commons :: footer-section"></div>
+	</body>
+</html>

@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+	<head>
+		<title th:text="#{lcli.page.title}">LC Info</title>
+		<meta th:remove="tag" th:include="commons :: common-meta"/>
+		<meta th:remove="tag" th:include="commons :: common-css"/>
+		<meta th:remove="tag" th:include="commons :: common-js"/>
+	</head>
+	<body>
+
+		<!-- Header section -->
+		<div class="header-section" th:include="commons :: header-section"></div>
+
+		<!-- Menu section -->
+		<div th:if="${menuVersion != null and menuVersion eq 'MENU_V2'}" class="menuv2" th:include="commons :: main-menu"></div>
+
+		<div th:if="${menuVersion == null or menuVersion eq 'MENU_V1'}" class="navbar-inverse menu-section">
+			<div class="container-fluid">
+				<div class="row">
+					<nav class="navbar navbar-inverse">
+						<div class="container-fluid">
+							<div class="row">
+								<div class="navbar-header">
+									<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+										<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+									</button>
+								</div>
+								<div class="collapse navbar-collapse" id="myNavbar">
+									<div class="nav navbar-nav">
+										<li><a th:href="@{/}"><i class="fas fa-home"></i> Home</a></li>
+										<li class="active"><a th:href="@{/landcommitteeinfo}">LC Info</a></li>
+									</div>
+								</div>
+							</div>
+						</div>
+					</nav>
+				</div>
+			</div>
+		</div>
+
+		<!-- Content section -->
+		<div>
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-md-12 content-area">
+						<div class="row">
+							<div class="col-md-6">
+								<!-- Section list head -->
+								<section id="data-maintenance" style="margin-top: 30px;">
+									<div class="row">
+										<div class="col-md-12">
+											<div class="row">
+												<div class="col-md-12">
+													<div class="section-header sectionbartoggle">
+														<h1 th:text="#{lcli.page.heading}"> LC Info</h1>
+													</div>
+													<div class="form-action-button">
+														<a th:href="@{/cost/lcinfo}"  class="btn btn-sm btn-default"><i class="fas fa-redo-alt"></i> <span style="margin-left:2px;" th:text="#{button.value.xclear}"> Clear</span></a>
+														<a th:if="${#strings.isEmpty(lcinfo.xlcno)}" th:href="@{/cost/lcinfo/save}" class="btn btn-sm btn-success confirm-btn"><i class="fas fa-save"></i> Save</a>
+														<a th:if="${not #strings.isEmpty(lcinfo.xlcno) and lcinfo.zactive == true}"  class="btn btn-sm btn-success confirm-btn"><i class="fas fa-save"></i> <span style="margin-left:2px;" th:text="#{button.value.xupdate}"> Update</span></a>
+														<a th:if="${not #strings.isEmpty(lcinfo.xlcno) and lcinfo.zactive == true}" th:href="@{/cost/lcinfo/delete/} + ${lcinfo.xlcno}"  class="btn btn-sm btn-danger archive-btn-link"><i class="fas fa-trash-alt"></i> <span style="margin-left:2px;" th:text="#{button.value.xdelete}"> Delete</span></a>
+														<a th:if="${not #strings.isEmpty(lcinfo.xlcno)}" th:href="@{/cost/lcinfo/confirm/} + ${lcinfo.xlcno}" class="btn btn-sm btn-primary confirm-btn-link"><i class="fas fa-clipboard-check"></i> <span style="margin-left:2px;" th:text="#{button.value.xconfirm}"> Confirm</span></a>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="section-body section-border">
+										<form id="mainform" class="form-horizontal" method="post" th:action="@{/cost/lcinfo/save}"  th:object="${lcinfo}" th:with="df=${'E, dd-MMM-yyyy'}">
+											
+											<input type="hidden" th:field="*{xlcno}"/>
+											<div class="row">
+												<div class="col-md-12">
+													<div class="row">
+														<div class="col-md-6">
+
+															<div class="form-group" th:if="${#strings.isEmpty(lcinfo.xlcno)}">
+																<label class="control-label col-md-4" for="xlcno" th:text="#{lcli.form.label.xlcno}">LC No.</label>
+																<div class="col-md-8">
+																	<input type="text" class="form-control" th:value="*{xlcno}"/>
+																</div>
+															</div>
+
+															<div class="form-group" th:if="${not #strings.isEmpty(lcinfo.xlcno)}" >
+																<label class="control-label col-md-4" for="xlcno" th:text="#{lcli.form.label.xlcno}">LC No.</label>
+																<div class="col-md-8">
+																	<input type="text" class="form-control" th:value="*{xlcno}" disabled="disabled"/>
+																</div>
+															</div>
+
+															<div class="form-group datepicker">
+																<label class="control-label col-md-4" for="xshipdate">LC Issue Date </label>
+																<div class="input-group date col-md-7 datepicker">
+																	<input 	type="datepicker" 
+																			class="form-control" 
+																			id="xlcissuedate"
+																			name="xlcissuedate"
+																			th:value="${lcinfo.xlcissuedate == null ? #dates.format(#dates.createNow(), df) : #dates.format(lcinfo.xlcissuedate, df)}"/>
+																	<div class="input-group-addon">
+																		<span class="glyphicon glyphicon-calendar"></span>
+																	</div>
+																</div>
+															</div>
+
+															<div class="form-group datepicker">
+																<label class="control-label col-md-4" for="xshipdate">LC Ship Date </label>
+																<div class="input-group date col-md-7 datepicker">
+																	<input 	type="datepicker" 
+																			class="form-control" 
+																			id="xshipdate"
+																			name="xshipdate"
+																			th:value="${lcinfo.xshipdate == null ? #dates.format(#dates.createNow(), df) : #dates.format(lcinfo.xshipdate, df)}"/>
+																	<div class="input-group-addon">
+																		<span class="glyphicon glyphicon-calendar"></span>
+																	</div>
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xcus" th:text="#{lcli.form.label.xcus}">Supplier</label>
+																<div class="col-sm-8">
+																	<input 	type="text" 
+																			class="form-control searchsuggest" 
+																			placeholder="Search..." 
+																			th:value="${#strings.isEmpty(lcinfo.xcus) ? '' : lcinfo.xcus + ' - ' + lcinfo.xorg}" 
+																			th:attr="search-url='search/supplier'"
+																			required="required"/>
+																	<input type="hidden" class="required" id="search-val" th:field="*{xcus}" value=""/>
+																	<input type="hidden" id="search-des" th:value="*{xcus}"/>
+																</div>
+															</div>
+
+															<div class="form-group datepicker">
+																<label class="control-label col-md-4" for="xexpirydate" th:text="#{lcli.form.label.xexpirydate}">Expiry Date </label>
+																<div class="input-group date col-md-7 datepicker">
+																	<input 	type="datepicker" 
+																			class="form-control" 
+																			id="xexpirydate"
+																			name="xexpirydate"
+																			th:value="${lcinfo.xexpirydate == null ? #dates.format(#dates.createNow(), df) : #dates.format(lcinfo.xexpirydate, df)}"/>
+																	<div class="input-group-addon">
+																		<span class="glyphicon glyphicon-calendar"></span>
+																	</div>
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xstatuspor" th:text="#{lcli.form.label.xstatuspor}">Doc Retirement Status</label>
+																<div class="col-md-6">
+																	<input type="hidden" class="form-control" th:field="*{xstatuspor}">
+																	<input type="text" class="form-control" th:field="*{xstatuspor}" disabled="disabled">
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xcur" th:text="#{lcli.form.label.xcur}">LC Currency</label>
+																<div class="col-md-8">
+																	<select class="form-control" th:field="*{xcur}">
+																		<option th:each="b : ${curruency}" th:value="${b.xcode}" th:text="${b.xcode}"></option>
+																	</select>
+																</div>
+															</div>
+															
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xtype">Type</label>
+																<div class="col-md-8">
+																	<select class="form-control" th:field="*{xtype}">
+																		<option value="Import">Import</option>
+																		<option value="Export">Export</option>
+																	</select>
+																</div>
+															</div>
+
+														</div>
+
+														<div class="col-md-6">
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xlctype">LC Type</label>
+																<div class="col-md-8">
+																	<select class="form-control" th:field="*{xlctype}">
+																		<option value="">-- Select --</option>
+																		<option value="At Sight">At Sight</option>
+																		<option value="30 Days Sight">30 Days Sight</option>
+																		<option value="90 Days Sight">90 Days Sight</option>
+																		<option value="Deferred LC">Deferred LC</option>
+																	</select>
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xexch">Exchange Rate</label>
+																<div class="col-md-8">
+																	<input type="text" class="form-control" th:field="*{xexch}">
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xlcmargin" th:text="#{lcli.form.label.xlcmargin}">LC Margin</label>
+																<div class="col-md-8">
+																	<input type="text" class="form-control" th:field="*{xlcmargin}">
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xpiref" th:text="#{lcli.form.label.xpiref}">PI Reference</label>
+																<div class="col-md-8">
+																	<input type="text" class="form-control" th:field="*{xpiref}">
+																</div>
+															</div>
+
+															<div class="form-group datepicker">
+																<label class="control-label col-md-4" for="xdatepi" th:text="#{lcli.form.label.xdatepi}">PI Date </label>
+																<div class="input-group date col-md-7 datepicker">
+																	<input 	type="datepicker" 
+																			class="form-control" 
+																			id="xdatepi"
+																			name="xdatepi"
+																			th:value="${lcinfo.xdatepi == null ? #dates.format(#dates.createNow(), df) : #dates.format(lcinfo.xdatepi, df)}"/>
+																	<div class="input-group-addon">
+																		<span class="glyphicon glyphicon-calendar"></span>
+																	</div>
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xopenbank" th:text="#{lcli.form.label.xopenbank}">Opening Bank</label>
+																<div class="col-sm-8">
+																	<input 	type="text" 
+																			class="form-control searchsuggest" 
+																			placeholder="Search..." 
+																			th:value="${#strings.isEmpty(lcinfo.xopenbank) ? '' : lcinfo.xopenbank + ' - ' + lcinfo.xname}" 
+																			th:attr="search-url='search/bank'"
+																			/>
+																	<input type="hidden" class="required" id="search-val" th:field="*{xopenbank}" value=""/>
+																	<input type="hidden" id="search-des" th:value="*{xopenbank}"/>
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xadvisingbank" th:text="#{lcli.form.label.xadvisingbank}">Advising Bank</label>
+																<div class="col-sm-8">
+																	<input 	type="text" 
+																			class="form-control searchsuggest" 
+																			placeholder="Search..." 
+																			th:value="${#strings.isEmpty(lcinfo.xadvisingbank) ? '' : lcinfo.xadvisingbank + ' - ' + lcinfo.xname}" 
+																			th:attr="search-url='search/bank'"
+																			/>
+																	<input type="hidden" class="required" id="search-val" th:field="*{xadvisingbank}" value=""/>
+																	<input type="hidden" id="search-des" th:value="*{xadvisingbank}"/>
+																</div>
+															</div>
+
+														</div>
+														
+													</div>
+												</div>
+											</div>
+										</form>
+									</div>
+								</section>
+							</div>
+							<div class="col-md-6">
+								<section id="list-manager" style="margin-top: 30px;">
+									<div class="section-header sectionbartoggle">
+										<h1>All LC Info</h1>
+									</div>
+									<div class="section-body">
+										<div style="overflow-x: scroll;">
+											<table class="table table-striped table-bordered datatable nowrap">
+												<thead>
+													<tr>
+														<th th:text="#{lcli.table.heading.xlcno}">LC No.</th>
+														<th>LC Type</th>
+														<th>LC Issue Date</th>
+														<th>Supplier</th>
+													</tr>
+													
+												</thead>
+												<tbody>
+													<tr th:each="ar : ${allLcInfos}">
+														<td><a th:href="@{/cost/lcinfo/} + ${ar.xlcno}" th:text="${ar.xlcno}"></a></td>
+														<td th:text="${ar.xlctype}"></td>
+														<td th:text="${ar.xlcissuedate}"></td>
+														<td th:text="${ar.xcus + ' - ' + ar.xorg}"></td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</section>
+							</div>
+
+							<div class="col-md-12">
+								<section th:if="${not #strings.isEmpty(lcinfo.xlcno)}" id="data-maintenance" style="margin-top: 30px;">
+									<div class="section-header sectionbartoggle">
+										<h1 th:text="#{lcli.modal.table.heading.title}"> Ammendment Details of <lebel th:text="${lcinfo.xlcno}"></lebel> </h1>
+										
+									</div>
+									<div class="section-body">
+										<table class="table table-striped table-bordered normal-table" id="lcamendtable" th:fragment="lcamendtable">
+											<thead>
+												<tr>
+													<th th:text="#{lcli.modal.table.heading.count}">Row</th>
+													<th th:text="#{lcli.modal.table.heading.xdate}">Date</th>
+													<th th:text="#{lcli.modal.table.heading.xapprover}">Approved By</th>
+													<th th:text="#{lcli.modal.table.heading.xnote}">Amendment </th>
+													<th data-nosort="Y" style="text-align: right;">
+														<button type="button" class="btn btn-success btn-add" th:attr="data-url=@{/cost/lcinfo/} + ${lcinfo.xlcno} + '/lcamend/new/show', data-target-modal='lcamendmodal'"><i class="fas fa-plus"></i></button>
+													</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr th:each="d, n : ${lcmlist}">
+													<td th:text="${n.count}"></td>
+													<td th:text="${d.xdate}"></td>
+													<td th:text="${d.xapprover}"></td>
+													<td th:text="${d.xnote}"></td>
+													<td data-nosort="Y" style="text-align: right; font-size: 11px;">
+														<button type="button" class="btn btn-default btn-edit editmode" th:attr="data-url=@{/cost/lcinfo/} + ${lcinfo.xlcno} + '/lcamend/' + ${d.xrow} + '/show', data-target-modal='lcamendmodal'"><i class="fas fa-edit"></i></button>
+														<button type="button" class="btn btn-danger btn-delete editmode" th:attr="data-url=@{/cost/lcinfo/} + ${lcinfo.xlcno} + '/lcamend/' + ${d.xrow} + '/delete'"><i class="fas fa-trash"></i></button>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</section>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+	
+		<!-- Modal -->
+		<div id="lcamendmodal-section"></div>
+		  <!-- Footer section -->
+		<div class="footer-section" th:include="commons :: footer-section"></div>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				// Init ui for modal
+				ck.ui.config.buttonevent();
+				
+			});
+		</script>
+	</body>
+</html>

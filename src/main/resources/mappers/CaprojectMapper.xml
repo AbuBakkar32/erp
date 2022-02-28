@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.asl.mapper.CaprojectMapper">
+
+	<insert id="saveCaproject" parameterType="Caproject">
+		<!-- <selectKey keyProperty="xproject" resultType="String" order="BEFORE">
+			SELECT Func_GetTrn('${zid}', '${xtypetrn}', '${xtrn}', 6) FROM DUAL
+		</selectKey> -->
+		INSERT INTO caproject
+		(
+			xproject,
+			xcus,
+			xdate,
+			xestartdate,
+			xeenddate,
+			xastartdate,
+			xaenddate,
+			xstatus,
+			xnote,
+			xamountbudgt,
+			xamountcost,
+			xcontact,
+			xref,
+			xplannedby,
+			xdesc,
+			xtrn,
+			xtypetrn,
+			xlong,
+
+			zactive,
+			zauserid,
+			zid,
+			ztime,
+			zutime,
+			zuuserid
+		)
+		VALUES
+		(
+			#{xproject, jdbcType=VARCHAR},
+			#{xcus, jdbcType=VARCHAR},
+			#{xdate, jdbcType=DATE},
+			#{xestartdate, jdbcType=DATE},
+			#{xeenddate, jdbcType=DATE},
+			#{xastartdate, jdbcType=DATE},
+			#{xaenddate, jdbcType=DATE},
+			#{xstatus, jdbcType=VARCHAR},
+			#{xnote, jdbcType=VARCHAR},
+			#{xamountbudgt, jdbcType=DECIMAL},
+			#{xamountcost, jdbcType=DECIMAL},
+			#{xcontact, jdbcType=VARCHAR},
+			#{xref, jdbcType=VARCHAR},
+			#{xplannedby, jdbcType=VARCHAR},
+			#{xdesc, jdbcType=VARCHAR},
+			#{xtrn, jdbcType=VARCHAR},
+			#{xtypetrn, jdbcType=VARCHAR},
+			#{xlong, jdbcType=VARCHAR},
+
+			#{zactive, jdbcType=VARCHAR},
+			#{zauserid, jdbcType=VARCHAR},
+			#{zid, jdbcType=VARCHAR},
+			#{ztime, jdbcType=TIMESTAMP},
+			#{zutime, jdbcType=TIMESTAMP},
+			#{zuuserid, jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<update id="updateCaproject" parameterType="Caproject">
+		UPDATE 
+			caproject
+		SET
+			xcus=#{xcus, jdbcType=VARCHAR},
+			xdate=#{xdate, jdbcType=DATE},
+			xestartdate=#{xestartdate, jdbcType=DATE},
+			xeenddate=#{xeenddate, jdbcType=DATE},
+			xastartdate=#{xastartdate, jdbcType=DATE},
+			xaenddate=#{xaenddate, jdbcType=DATE},
+			xstatus=#{xstatus, jdbcType=VARCHAR},
+			xnote=#{xnote, jdbcType=VARCHAR},
+			xamountbudgt=#{xamountbudgt, jdbcType=DECIMAL},
+			xamountcost=#{xamountcost, jdbcType=DECIMAL},
+			xcontact=#{xcontact, jdbcType=VARCHAR},
+			xref=#{xref, jdbcType=VARCHAR},
+			xplannedby=#{xplannedby, jdbcType=VARCHAR},
+			xdesc=#{xdesc, jdbcType=VARCHAR},
+			xtrn=#{xtrn, jdbcType=VARCHAR},
+			xtypetrn=#{xtypetrn, jdbcType=VARCHAR},
+			xlong=#{xlong, jdbcType=VARCHAR},
+
+			zactive=#{zactive, jdbcType=VARCHAR},
+			zauserid=#{zauserid, jdbcType=VARCHAR},
+			ztime=#{ztime, jdbcType=TIMESTAMP},
+			zutime=#{zutime, jdbcType=TIMESTAMP},
+			zuuserid=#{zuuserid, jdbcType=VARCHAR}
+		WHERE
+			xproject=#{xproject , jdbcType=VARCHAR}
+			AND zid=#{zid, jdbcType=VARCHAR}
+	</update>
+
+	<delete id="deleteCaproject" parameterType="Caproject">
+		DELETE FROM caproject WHERE  xproject=#{xproject} AND zactive='1' AND zid=#{zid}
+	</delete>
+	
+	<select id="getAllCaproject" resultType="Caproject">
+		SELECT 
+			caproject.*,
+			cacus.xorg as xorg,
+			p.xname as xcontactName,
+			s.xname as xplannedbyName,
+			x.xlong as xdesc
+		FROM 
+			caproject 
+			LEFT JOIN cacus on cacus.xcus = caproject.xcus and cacus.zid = caproject.zid and cacus.zactive='1'
+			left join pdmst p on p.xstaff = caproject.xcontact and p.zid= caproject.zid
+			left join pdmst s on s.xstaff = caproject.xplannedby and s.zid= caproject.zid
+			left join xcodes x on x.xcode = caproject.xproject and x.zid= caproject.zid
+		WHERE 
+			caproject.zid=#{zid} 
+			AND caproject.zactive ='1'
+		order by 
+			caproject.xproject desc
+	</select>
+
+	<select id="findByCaproject" resultType="Caproject">
+		SELECT 
+			caproject.*,
+			cacus.xorg as xorg,
+			p.xname as xcontactName,
+			s.xname as xplannedbyName,
+			x.xlong as xdesc
+			
+		FROM 
+			caproject 
+			LEFT JOIN cacus on cacus.xcus = caproject.xcus and cacus.zid = caproject.zid and cacus.zactive='1'
+			left join pdmst p on p.xstaff = caproject.xcontact and p.zid= caproject.zid
+			left join pdmst s on s.xstaff = caproject.xplannedby and s.zid= caproject.zid
+			left join xcodes x on x.xcode = caproject.xproject and x.zid= caproject.zid
+		WHERE 
+			caproject.zid=#{zid} 
+			AND caproject.xproject=#{xproject}
+		order by caproject.xproject
+	</select>
+	
+	<select id="searchProjectFromCaproject" resultType="Caproject">
+		SELECT 
+			*
+		FROM 
+			caproject
+		WHERE 
+			(UPPER(xproject) LIKE '%' || #{xproject} || '%' OR UPPER(xdesc) LIKE '%' || #{xproject} || '%') 
+			AND zid=#{zid} AND zactive='1'
+	</select>
+	
+	
+	<!-- For Project Planning Details -->
+	<insert id="saveCaprojectplan" parameterType="Caprojectplan">
+	
+		<selectKey keyProperty="xrow" resultType="Integer" order="BEFORE">
+			SELECT COALESCE(Max(xrow), 0) + 1 FROM caprojectplan WHERE zactive='1' AND zid=#{zid}
+		</selectKey>
+		INSERT INTO caprojectplan
+		(
+			xproject,
+			xrow,
+			xwh,
+			xstaff,
+			xrole,
+			xresponsibility, 
+			xfdate,
+			xtdate,
+			xnote,
+			
+			zactive,
+			zauserid,
+			zid,
+			ztime,
+			zutime,
+			zuuserid
+		)
+		VALUES
+		(
+			#{xproject, jdbcType=VARCHAR},
+			#{xrow},
+			#{xwh, jdbcType=VARCHAR},
+			#{xstaff, jdbcType=VARCHAR},
+			#{xrole, jdbcType=VARCHAR},
+			#{xresponsibility, jdbcType=VARCHAR},
+			#{xfdate, jdbcType=DATE},
+			#{xtdate, jdbcType=DATE},
+			#{xnote, jdbcType=VARCHAR},
+			
+			#{zactive, jdbcType=VARCHAR},
+			#{zauserid, jdbcType=VARCHAR},
+			#{zid, jdbcType=VARCHAR},
+			#{ztime, jdbcType=TIMESTAMP},
+			#{zutime, jdbcType=TIMESTAMP},
+			#{zuuserid, jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<update id="updateCaprojectplan" parameterType="Caprojectplan">
+		UPDATE 
+			caprojectplan
+		SET
+			xwh=#{xwh, jdbcType=VARCHAR},
+			xstaff=#{xstaff, jdbcType=VARCHAR},
+			xrole=#{xrole, jdbcType=VARCHAR},
+			xresponsibility=#{xresponsibility, jdbcType=VARCHAR},
+			xfdate=#{xfdate, jdbcType=DATE},
+			xtdate=#{xtdate, jdbcType=DATE},
+			xnote=#{xnote, jdbcType=VARCHAR},
+			
+			zactive=#{zactive, jdbcType=VARCHAR},
+			zauserid=#{zauserid, jdbcType=VARCHAR},
+			zid=#{zid, jdbcType=VARCHAR},
+			ztime=#{ztime, jdbcType=TIMESTAMP},
+			zutime=#{zutime, jdbcType=TIMESTAMP},
+			zuuserid=#{zuuserid, jdbcType=VARCHAR}
+		WHERE
+			xproject=#{xproject, jdbcType=VARCHAR}
+			AND xrow=#{xrow, jdbcType=INTEGER}
+			AND zid=#{zid, jdbcType=VARCHAR}
+	</update>
+
+	<delete id="deleteCaprojectplan" parameterType="Caprojectplan">
+		DELETE 
+		FROM 
+			caprojectplan 
+		WHERE 
+			xrow=#{xrow} 
+			AND xproject=#{xproject} 
+			AND zactive='1' 
+			AND zid=#{zid}
+	</delete>
+
+	<select id="getAllCaprojectplan" resultType="Caprojectplan">
+		SELECT 
+			c.*,
+			p.xname as xstaffName
+		FROM 
+			caprojectplan c
+			left join pdmst p on p.xstaff=c.xstaff and p.zid=c.zid
+		WHERE 
+			c.zid=#{zid} 
+			AND c.zactive='1'
+		order by 
+			c.ztime desc
+	</select>
+
+	<select id="findByCaprojectplan" resultType="Caprojectplan">
+		SELECT 
+			c.*,
+			p.xname as xstaffName,
+			x.xlong as siteName
+		FROM 
+			caprojectplan c
+			left join pdmst p on p.xstaff=c.xstaff and p.zid=c.zid
+			left join xcodes x on x.xcode=c.xwh and x.zid=c.zid
+		WHERE 
+			c.xproject=#{xproject} 
+			AND c.zid=#{zid} 
+			AND c.zactive='1'
+	</select>
+
+	<select id="findCaprojectplanByXprojectAndXrow" resultType="Caprojectplan">
+		SELECT 
+			c.*,
+			p.xname as xstaffName
+		FROM 
+			caprojectplan c
+			left join pdmst p on p.xstaff=c.xstaff and p.zid=c.zid
+		WHERE 
+			c.xproject=#{xproject} 
+			AND c.xrow=#{xrow} 
+			AND c.zid=#{zid} 
+			AND c.zactive='1'
+	</select>
+</mapper>

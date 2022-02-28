@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.asl.mapper.AcsubMapper">
+	<insert id="save" parameterType="Acsub">
+		INSERT INTO acsub
+		(
+			xacc,
+			xsub,
+			xdesc,
+			xtypeobj,
+
+			zid,
+			zauserid,
+			zaip,
+			zactive,
+			ztime
+		)
+		VALUES
+		(
+			#{xacc, jdbcType=VARCHAR},
+			#{xsub, jdbcType=INTEGER},
+			#{xdesc, jdbcType=VARCHAR},
+			#{xtypeobj, jdbcType=INTEGER},
+
+			#{zid, jdbcType=VARCHAR},
+			#{zauserid, jdbcType=VARCHAR},
+			#{zaip, jdbcType=VARCHAR},
+			#{zactive, jdbcType=VARCHAR},
+			#{ztime, jdbcType=TIMESTAMP}
+		)
+	</insert>
+
+	<update id="update" parameterType="Acsub">
+		UPDATE 
+			acsub 
+		SET
+			xdesc=#{xdesc, jdbcType=VARCHAR},
+			xtypeobj=#{xtypeobj, jdbcType=INTEGER},
+
+			zuuserid=#{zuuserid, jdbcType=VARCHAR},
+			zuip=#{zuip, jdbcType=VARCHAR},
+			zactive=#{zactive, jdbcType=VARCHAR},
+			zutime=#{zutime, jdbcType=TIMESTAMP}
+		WHERE
+			zid=#{zid, jdbcType=VARCHAR}
+			AND xacc=#{xacc, jdbcType=VARCHAR}
+			AND xsub=#{xsub, jdbcType=INTEGER}
+	</update>
+
+	<delete id="delete">
+		DELETE
+		FROM
+			acsub
+		WHERE
+			zid=#{zid, jdbcType=VARCHAR}
+			AND xacc=#{xacc, jdbcType=VARCHAR}
+			AND xsub=#{xsub, jdbcType=INTEGER}
+	</delete>
+
+	<select id="getAll" resultType="Acsub">
+		SELECT
+			acsub.*,
+			acmst.xdesc as accname
+		FROM
+			acsub
+			left join acmst on acmst.xacc = acsub.xacc AND acmst.zid = acsub.zid
+		WHERE
+			acsub.zid=#{zid}
+	</select>
+
+	<select id="findByXaccAndXsub" resultType="Acsub">
+		SELECT
+			acsub.*,
+			acmst.xdesc as accname
+		FROM
+			acsub
+			left join acmst on acmst.xacc = acsub.xacc AND acmst.zid = acsub.zid
+		WHERE
+			acsub.zid=#{zid}
+			AND acsub.xacc=#{xacc}
+			AND acsub.xsub=#{xsub}
+	</select>
+	
+</mapper>

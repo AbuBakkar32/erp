@@ -1,0 +1,101 @@
+<!-- Modal -->
+<div id="experiencemodal" th:fragment="experiencemodal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="true" xmlns:th="http://www.thymeleaf.org">
+	<div class="modal-dialog modal-lg">
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h4 class="modal-title">Add/Update Experience Information</h4>
+			</div>
+			
+			<div class="modal-body">
+				<div class="row">
+				<form id="mainform-modal" class="form-horizontal" th:action="@{/landperson/experience/save}" method="post" th:object="${lpex}">
+				<input type="hidden" th:field="*{xperson}"/>
+				<input type="hidden" th:if="${xrow ne 0}" th:field="*{xrow}"/>
+					<div class="row">
+						<div class="col-md-12">
+							<div class="row">
+								<div class="col-md-12">
+									<div class="section-header sectionbartoggle">
+										<h1></h1>
+									</div>
+								</div>
+							</div>
+						</div>
+						</div><br>
+						<div class="row">
+							<div class="col-md-12">
+								<div class="row">
+									<div class="col-md-6">
+										<!--<div class="form-group">
+											<label class="control-label col-md-4" for="xperson">Person ID </label>
+											<div class="col-md-7">
+												<input type="text" class="form-control" th:value="*{xperson}" disabled="disabled"/>
+											</div>
+										</div>-->
+
+										<div class="form-group">
+											<label class="control-label col-md-4" for="xname" th:text="#{pi.modal1.form.label.xname}">Title </label>
+											<div class="col-md-7">
+												<input type="text" class="form-control" th:field="*{xname}"/>
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="control-label col-md-4" for="xduration" th:text="#{pi.modal1.form.label.xduration}">Duration (Year) </label>
+											<div class="col-md-7">
+												<input type="number" min="0" max="30" title="Select Experience Duration" class="form-control" th:field="*{xduration}" maxlength="100"/>
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="control-label col-md-4" for="xdesignation" th:text="#{pi.modal1.form.label.xdesignation}">Designation </label>
+											<div class="col-md-7">
+												<input type="text" title="Write Your Designation" class="form-control" th:field="*{xdesignation}" maxlength="100"/>
+											</div>
+										</div>
+										</div>
+										<div class="col-md-6">
+										<div class="form-group">
+											<label class="control-label col-md-3" for="xtypetrn" th:text="#{pi.modal1.form.label.xtypetrn}">Experience Type</label>
+											<div class="col-md-7">
+												<select class="form-control" th:field="*{xtypetrn}">
+													<option th:each="d : ${ett}" th:value="${d.xcode}" th:text="${d.xcode}"></option>
+												</select>
+											</div>
+										</div>
+										
+										<div class="form-group">
+											<label class="control-label col-md-3" for="xtype" th:text="#{pi.modal1.form.label.xtype}">Type </label>
+											<div class="col-md-7">
+												<select class="form-control" th:field="*{xtype}">
+													<option th:each="t : ${et}" th:value="${t.xcode}" th:text="${t.xcode}"></option>
+												</select>
+											</div>
+										</div>
+										
+										<div class="form-group">
+											<label class="control-label col-md-3" for="xnote" th:text="#{pi.modal1.table.heading.xnote}">Note</label>
+											<div class="col-md-7">
+												<textarea class="form-control" title="Write Something About You"  th:field="*{xnote}" rows="3" placeholder="Note"></textarea>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-success btn-sm confirm-btn-modal">Submit</button>
+				<button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				// Init ui for modal
+				ck.ui.config.buttonevent();
+			});
+		</script>
+	</div>
+</div>

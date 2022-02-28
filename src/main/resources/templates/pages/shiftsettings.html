@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+	<head>
+		<title>Shift Settings</title>
+		<meta th:remove="tag" th:include="commons :: common-meta"/>
+		<meta th:remove="tag" th:include="commons :: common-css"/>
+		<meta th:remove="tag" th:include="commons :: common-js"/>
+	</head>
+	<body>
+
+		<!-- Header section -->
+		<div class="header-section" th:include="commons :: header-section"></div>
+		
+
+
+		<!-- Menu section -->
+		<div th:if="${menuVersion != null and menuVersion eq 'MENU_V2'}" class="menuv2" th:include="commons :: main-menu"></div>
+
+		<div th:if="${menuVersion == null or menuVersion eq 'MENU_V1'}" class="navbar-inverse menu-section">
+			<div class="container-fluid">
+				<div class="row">
+					<nav class="navbar navbar-inverse">
+						<div class="container-fluid">
+							<div class="row">
+								<div class="navbar-header">
+									<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+										<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+									</button>
+								</div>
+								<div class="collapse navbar-collapse" id="myNavbar">
+									<div class="nav navbar-nav">
+										<li><a th:href="@{/}">Dashboard</a></li>
+										<li class="active"><a th:href="@{/shiftsettings}">Shift Settings</a></li>
+									
+									</div>
+								
+								</div>
+							</div>
+						</div>
+					</nav>
+				</div>
+			</div>
+		</div>
+		
+		
+			<!-- Content section -->
+		<div>
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-md-12 content-area">
+
+						<div class="row">
+							<!-- Section list head -->
+								<section id="data-maintenance" style="margin-top: 30px;">
+									<div class="section-header sectionbartoggle">
+										<h1>Shift Settings</h1>
+									</div>
+									<div class="form-action-button">
+										<a href="#" class="btn btn-sm btn-success confirm-btn"><i class="fas fa-save"></i> Save</a>
+									</div>
+									
+									<div class="section-body section-border">
+										<form id="mainform" class="form-horizontal" method="post" th:action="@{/shiftsettings/save}" th:object="${shifts}">
+											<input type="hidden" th:field="*{xacc}"/>
+											<div class="row">
+												<div class="col-md-4">
+													<div class="row">
+														<div class="col-md-6">
+															<div class="form-group input2">
+																<label class="control-label col-sm-10" for="xacc">Shift Active</label>
+																<div class="col-sm-2">
+																	<div class="checkbox">
+																		<label><input type="checkbox" class="form-control-input2 shift" th:field="*{zactive}" value="Active Shifts"/></label>
+																	</div>
+																</div>
+															</div>
+														</div>
+														<div class="col-md-6">
+															<div class="form-group">
+																<div class="col-md-8">
+																	<input type="number" class="form-control shift-input" min="0" readonly="readonly" th:field="*{xlength}" />
+																</div>
+															</div>
+														</div>
+													</div>
+											</div>
+										</div>
+									</form>
+								</div>
+							</section>
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</div>
+		
+
+		<!-- Footer section -->
+		<div class="footer-section" th:include="commons :: footer-section"></div>
+		
+		<script type="text/javascript">
+			$(document).ready(function(){
+
+				if($('.shift').prop("checked")){
+					$('.shift-input').removeAttr('readonly');
+				} else {
+					$('.shift-input').attr('readonly','readonly');
+				}
+
+				$('.shift').off('click').on('click', function(e){
+					
+					if($(this).prop("checked")){
+						$('.shift-input').removeAttr('readonly');
+					} else {
+						$('.shift-input').attr('readonly','readonly');
+					}
+					
+				})
+				
+			})
+		</script>
+		
+	</body>
+</html>

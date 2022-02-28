@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.asl.mapper.PotoapiMapper">
+	<insert id="savePotoapi" parameterType="Potoapi">
+	
+		INSERT INTO potoapi
+		(
+			xtype, 
+			xgsup, 
+			xgitem,
+			xaccdr,
+			xacccr,
+			zid,
+			zauserid,
+			zuuserid,
+			zaip,
+			zuip,
+			zactive,
+			ztime,
+			zutime
+
+		)
+		VALUES
+		(
+			#{xtype, jdbcType=VARCHAR},
+			#{xgsup, jdbcType=VARCHAR},
+			#{xgitem, jdbcType=VARCHAR},
+			#{xaccdr, jdbcType=VARCHAR},
+			#{xacccr, jdbcType=VARCHAR},
+			#{zid, jdbcType=VARCHAR},
+			#{zauserid, jdbcType=VARCHAR},
+			#{zuuserid, jdbcType=VARCHAR},
+			#{zaip, jdbcType=VARCHAR},
+			#{zuip, jdbcType=VARCHAR},
+			#{zactive, jdbcType=VARCHAR},
+			#{ztime, jdbcType=TIMESTAMP},
+			#{zutime, jdbcType=TIMESTAMP}
+			
+		)
+	</insert>
+
+	<update id="updatePotoapi" parameterType="Potoapi">
+		UPDATE 
+			potoapi 
+		SET
+			xaccdr=#{xaccdr, jdbcType=VARCHAR},
+			xacccr=#{xacccr, jdbcType=VARCHAR},
+			zuuserid=#{zuuserid, jdbcType=VARCHAR},
+			zaip=#{zaip, jdbcType=VARCHAR},
+			zuip=#{zuip, jdbcType=VARCHAR},
+			zactive=#{zactive, jdbcType=VARCHAR},
+			ztime=#{ztime, jdbcType=TIMESTAMP},
+			zutime=#{zutime, jdbcType=TIMESTAMP}
+		WHERE
+			xtype=#{xtype, jdbcType=VARCHAR}
+			AND xgsup=#{xgsup, jdbcType=VARCHAR}
+			AND xgitem=#{xgitem, jdbcType=VARCHAR}
+			AND zid=#{zid, jdbcType=VARCHAR}
+	</update>
+
+	<delete id="deletePotoapi" parameterType="Potoapi">
+		DELETE
+		FROM
+			potoapi
+		WHERE
+			xtype=#{xtype}
+			AND xgsup=#{xgsup}
+			AND xgitem=#{xgitem}
+			AND zid=#{zid}
+			AND zactive='1'
+	</delete>
+	
+	<select id="getAllPotoapi" resultType="Potoapi">
+		SELECT 
+			potoapi.*,
+			x.xdesc as xddesc,
+			y.xdesc as xcdesc
+		FROM 
+			potoapi 
+			left join acmst x ON x.xacc = potoapi.xaccdr AND x.zid = potoapi.zid and x.zactive='1'
+			left join acmst y ON y.xacc = potoapi.xacccr AND y.zid = potoapi.zid and y.zactive='1'
+		WHERE 
+			potoapi.zid=#{zid} 
+		order by 
+			potoapi.ztime desc
+	</select>
+	
+	<select id="findByXtypeXgsupAndXgitem" resultType="Potoapi">
+		SELECT 
+			potoapi.*,
+			x.xdesc as xddesc,
+			y.xdesc as xcdesc
+		FROM 
+			potoapi 
+			left join acmst x ON x.xacc = potoapi.xaccdr AND x.zid = potoapi.zid and x.zactive='1'
+			left join acmst y ON y.xacc = potoapi.xacccr AND y.zid = potoapi.zid and y.zactive='1'
+		WHERE 
+		
+			potoapi.xtype=#{xtype} 
+			AND potoapi.xgsup=#{xgsup} 
+			AND potoapi.xgitem=#{xgitem} 
+			AND potoapi.zid=#{zid} 
+	</select>
+
+	
+</mapper>

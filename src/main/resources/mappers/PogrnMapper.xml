@@ -1,0 +1,614 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.asl.mapper.PogrnMapper">
+	<insert id="savePogrnHeader" parameterType="PogrnHeader">
+		<selectKey keyProperty="xgrnnum" resultType="String"
+			order="BEFORE">
+			SELECT Func_GetTrn('${zid}', '${xtypetrn}', '${xtrn}', 6) FROM DUAL
+		</selectKey>
+		INSERT INTO pogrnheader
+		(
+		xgrnnum,
+		xdate,
+		xdategl,
+		xcus,
+		xtype,
+		xwh,
+		xhwh,
+		xproject,
+		xstatusgrn,
+		xinvnum,
+		xpcnum,
+		xstatusap,
+		xref,
+		xtotamt,
+		xpornum,
+		xstatusjv,
+		xstatuscrn,
+		xvoucher,
+		xnote,
+		xtypetrn,
+		xvatait,
+		xvatamt,
+		xaitamt,
+		xdiscprime,
+		xgrandtot,
+		xdocnum,
+		xcrnnum,
+		xtrn,
+		xcur,
+		xexch,
+		xfreightcost,
+		xstatus,
+		xstatusimgl,
+		xtypeobj,
+		xstatusapgl,
+		xstatusjvgl,
+		xstatusinsp,
+		xstatusdoc,
+		xstatusclaim,
+		xpreparer,
+		xporeqnum,
+		xquotnum,
+		xdisc,
+		xamtother,
+		xprepdate,
+		xdirectsup,
+		xstatusprjtrn,
+		
+		zid,
+		zauserid,
+		zaip,
+		zactive,
+		ztime
+		)
+		VALUES
+		(
+		#{xgrnnum},
+		#{xdate, jdbcType=DATE},
+		#{xdategl, jdbcType=DATE},
+		#{xcus, jdbcType=VARCHAR},
+		#{xtype, jdbcType=VARCHAR},
+		#{xwh, jdbcType=VARCHAR},
+		#{xhwh, jdbcType=VARCHAR},
+		#{xproject, jdbcType=VARCHAR},
+		#{xstatusgrn, jdbcType=VARCHAR},
+		#{xinvnum, jdbcType=VARCHAR},
+		#{xpcnum, jdbcType=VARCHAR},
+		#{xstatusap, jdbcType=VARCHAR},
+		#{xref, jdbcType=VARCHAR},
+		#{xtotamt, jdbcType=DECIMAL},
+		#{xpornum, jdbcType=VARCHAR},
+		#{xstatusjv, jdbcType=VARCHAR},
+		#{xstatuscrn, jdbcType=VARCHAR},
+		#{xvoucher, jdbcType=VARCHAR},
+		#{xnote, jdbcType=VARCHAR},
+		#{xtypetrn, jdbcType=VARCHAR},
+		#{xvatait, jdbcType=VARCHAR},
+		#{xvatamt, jdbcType=DECIMAL},
+		#{xaitamt, jdbcType=DECIMAL},
+		#{xdiscprime, jdbcType=DECIMAL},
+		#{xgrandtot, jdbcType=DECIMAL},
+		#{xdocnum, jdbcType=VARCHAR},
+		#{xcrnnum, jdbcType=VARCHAR},
+		#{xtrn, jdbcType=VARCHAR},
+		#{xcur, jdbcType=VARCHAR},
+		#{xexch, jdbcType=DECIMAL},
+		#{xfreightcost, jdbcType=DECIMAL},
+		#{xstatus, jdbcType=VARCHAR},
+		#{xstatusimgl, jdbcType=VARCHAR},
+		#{xtypeobj, jdbcType=VARCHAR},
+		#{xstatusapgl, jdbcType=VARCHAR},
+		#{xstatusjvgl, jdbcType=VARCHAR},
+		#{xstatusinsp, jdbcType=VARCHAR},
+		#{xstatusdoc, jdbcType=VARCHAR},
+		#{xstatusclaim, jdbcType=VARCHAR},
+		#{xpreparer, jdbcType=VARCHAR},
+		#{xporeqnum, jdbcType=VARCHAR},
+		#{xquotnum, jdbcType=VARCHAR},
+		#{xdisc, jdbcType=DECIMAL},
+		#{xamtother, jdbcType=DECIMAL},
+		#{xprepdate, jdbcType=DATE},
+		#{xdirectsup, jdbcType=VARCHAR},
+		#{xstatusprjtrn, jdbcType=VARCHAR},
+
+		#{zid, jdbcType=VARCHAR},
+		#{zauserid, jdbcType=VARCHAR},
+		#{zaip, jdbcType=VARCHAR},
+		#{zactive, jdbcType=VARCHAR},
+		#{ztime, jdbcType=TIMESTAMP}
+		)
+	</insert>
+
+	<update id="updatePogrnHeader" parameterType="PogrnHeader">
+		UPDATE
+		pogrnheader
+		SET
+		xdate=#{xdate, jdbcType=DATE},
+		xdategl=#{xdategl, jdbcType=DATE},
+		xcus=#{xcus, jdbcType=VARCHAR},
+		xtype=#{xtype, jdbcType=VARCHAR},
+		xwh=#{xwh, jdbcType=VARCHAR},
+		xhwh=#{xhwh, jdbcType=VARCHAR},
+		xproject=#{xproject, jdbcType=VARCHAR},
+		xstatusgrn=#{xstatusgrn, jdbcType=VARCHAR},
+		xinvnum=#{xinvnum, jdbcType=VARCHAR},
+		xpcnum=#{xpcnum, jdbcType=VARCHAR},
+		xstatusap=#{xstatusap, jdbcType=VARCHAR},
+		xref=#{xref, jdbcType=VARCHAR},
+		xtotamt=#{xtotamt, jdbcType=DECIMAL},
+		xpornum=#{xpornum, jdbcType=VARCHAR},
+		xstatusjv=#{xstatusjv, jdbcType=VARCHAR},
+		xstatuscrn=#{xstatuscrn, jdbcType=VARCHAR},
+		xvoucher=#{xvoucher, jdbcType=VARCHAR},
+		xnote=#{xnote, jdbcType=VARCHAR},
+		xtypetrn=#{xtypetrn, jdbcType=VARCHAR},
+		xvatait=#{xvatait, jdbcType=VARCHAR},
+		xvatamt=#{xvatamt, jdbcType=DECIMAL},
+		xaitamt=#{xaitamt, jdbcType=DECIMAL},
+		xdiscprime=#{xdiscprime, jdbcType=DECIMAL},
+		xgrandtot=#{xgrandtot, jdbcType=DECIMAL},
+		xdocnum=#{xdocnum, jdbcType=VARCHAR},
+		xcrnnum=#{xcrnnum, jdbcType=VARCHAR},
+		xtrn=#{xtrn, jdbcType=VARCHAR},
+		xcur=#{xcur, jdbcType=VARCHAR},
+		xexch=#{xexch, jdbcType=DECIMAL},
+		xfreightcost=#{xfreightcost, jdbcType=DECIMAL},
+		xstatus=#{xstatus, jdbcType=VARCHAR},
+		xstatusimgl=#{xstatusimgl, jdbcType=VARCHAR},
+		xtypeobj=#{xtypeobj, jdbcType=VARCHAR},
+		xstatusapgl=#{xstatusapgl, jdbcType=VARCHAR},
+		xstatusjvgl=#{xstatusjvgl, jdbcType=VARCHAR},
+		xstatusinsp=#{xstatusinsp, jdbcType=VARCHAR},
+		xstatusdoc=#{xstatusdoc, jdbcType=VARCHAR},
+		xstatusclaim=#{xstatusclaim, jdbcType=VARCHAR},
+		xpreparer=#{xpreparer, jdbcType=VARCHAR},
+		xporeqnum=#{xporeqnum, jdbcType=VARCHAR},
+		xquotnum=#{xquotnum, jdbcType=VARCHAR},
+		xdisc=#{xdisc, jdbcType=DECIMAL},
+		xamtother=#{xamtother, jdbcType=DECIMAL},
+		xprepdate=#{xprepdate, jdbcType=DATE},
+		xdirectsup=#{xdirectsup, jdbcType=VARCHAR},
+		xstatusprjtrn=#{xstatusprjtrn, jdbcType=VARCHAR},
+
+		zuuserid=#{zuuserid, jdbcType=VARCHAR},
+		zuip=#{zuip, jdbcType=VARCHAR},
+		zactive=#{zactive, jdbcType=VARCHAR},
+		zutime=#{zutime, jdbcType=TIMESTAMP}
+		WHERE
+		xgrnnum=#{xgrnnum, jdbcType=VARCHAR}
+		AND zid=#{zid, jdbcType=VARCHAR}
+	</update>
+
+	<delete id="deletePogrnheader">
+		DELETE
+		FROM
+		pogrnheader
+		WHERE
+		xgrnnum=#{xgrnnum}
+		AND zid=#{zid}
+	</delete>
+
+	<update id="archiveDetailsByXgrnnum">
+		UPDATE
+		pogrndetail
+		SET
+		zactive='0',
+		zuuserid=#{zuuserid, jdbcType=VARCHAR}
+		WHERE
+		xgrnnum=#{xgrnnum}
+		AND zid=#{zid}
+	</update>
+
+	<update id="updatePogrnHeaderTotalAmt"
+		parameterType="PogrnDetail">
+		UPDATE
+		PogrnHeader
+		SET
+		xtotamt=Func_GetTotalAmtGRNDetails(xgrnnum, zid)
+		WHERE
+		xgrnnum=#{xgrnnum} AND zid=#{zid}
+	</update>
+
+	<update id="updatePogrnHeaderTotalAmtAndGrandTotalAmt">
+		UPDATE
+		pogrnheader pgh
+		SET
+		pgh.xtotamt=Func_GetTotalAmtGRNDetails(pgh.xgrnnum, pgh.zid)
+		WHERE
+		pgh.xgrnnum=#{xgrnnum}
+		AND pgh.zid=#{zid}
+	</update>
+
+	<insert id="savePogrnDetail" parameterType="PogrnDetail">
+		<selectKey keyProperty="xrow" resultType="Integer"
+			order="BEFORE">
+			SELECT COALESCE(Max(xrow), 0) + 1 FROM PogrnDetail WHERE
+			xgrnnum=#{xgrnnum} AND zid=#{zid}
+		</selectKey>
+		INSERT INTO PogrnDetail
+		(
+		xgrnnum,
+		xrow,
+		xdocrow,
+		xcomtype,
+		xitem,
+		xqtygrn,
+		xrate,
+		xlineamt,
+		xqtyprn,
+		xunitpur,
+		xnote,
+		xlong,
+		xpornum,
+		xbase,
+		xqtyrec,
+		xqtyclaim,
+		xdisc,
+		xdiscf,
+		xqtyinsp,
+		xcfpur,
+		xqtycom,
+		xstatusimgl,
+		xspecification,
+		xvatrate,
+		xvatamt,
+		xait,
+		xaitamt,
+		xamtother,
+		xqtypur,
+		xpurpose,
+		xgitem,
+
+		zid,
+		zauserid,
+		zaip,
+		zactive,
+		ztime
+		)
+		VALUES
+		(
+		#{xgrnnum, jdbcType=VARCHAR},
+		#{xrow},
+		#{xdocrow,jdbcType=INTEGER},
+		#{xcomtype, jdbcType=VARCHAR},
+		#{xitem, jdbcType=VARCHAR},
+		#{xqtygrn, jdbcType=DECIMAL},
+		#{xrate, jdbcType=DECIMAL},
+		#{xlineamt, jdbcType=DECIMAL},
+		#{xqtyprn, jdbcType=DECIMAL},
+		#{xunitpur, jdbcType=VARCHAR},
+		#{xnote, jdbcType=VARCHAR},
+		#{xlong, jdbcType=VARCHAR},
+		#{xpornum, jdbcType=VARCHAR},
+		#{xbase, jdbcType=DECIMAL},
+		#{xqtyrec, jdbcType=DECIMAL},
+		#{xqtyclaim, jdbcType=DECIMAL},
+		#{xdisc, jdbcType=DECIMAL},
+		#{xdiscf, jdbcType=DECIMAL},
+		#{xqtyinsp, jdbcType=DECIMAL},
+		#{xcfpur, jdbcType=DECIMAL},
+		#{xqtycom, jdbcType=DECIMAL},
+		#{xstatusimgl, jdbcType=VARCHAR},
+		#{xspecification, jdbcType=VARCHAR},
+		#{xvatrate, jdbcType=DECIMAL},
+		#{xvatamt, jdbcType=DECIMAL},
+		#{xait, jdbcType=DECIMAL},
+		#{xaitamt, jdbcType=DECIMAL},
+		#{xamtother, jdbcType=DECIMAL},
+		#{xqtypur, jdbcType=DECIMAL},
+		#{xpurpose, jdbcType=VARCHAR},
+		#{xgitem, jdbcType=VARCHAR},
+
+		#{zid, jdbcType=VARCHAR},
+		#{zauserid, jdbcType=VARCHAR},
+		#{zaip, jdbcType=VARCHAR},
+		#{zactive, jdbcType=VARCHAR},
+		#{ztime, jdbcType=TIMESTAMP}
+		)
+	</insert>
+
+	<update id="updatePogrnDetail" parameterType="PogrnDetail">
+		UPDATE
+			PogrnDetail
+		SET
+			xdocrow=#{xdocrow, jdbcType=INTEGER},
+			xcomtype=#{xcomtype, jdbcType=VARCHAR},
+			xitem=#{xitem, jdbcType=VARCHAR},
+			xqtygrn=#{xqtygrn, jdbcType=DECIMAL},
+			xrate=#{xrate, jdbcType=DECIMAL},
+			xlineamt=#{xlineamt, jdbcType=DECIMAL},
+			xqtyprn=#{xqtyprn, jdbcType=DECIMAL},
+			xunitpur=#{xunitpur, jdbcType=VARCHAR},
+			xnote=#{xnote, jdbcType=VARCHAR},
+			xlong=#{xlong, jdbcType=VARCHAR},
+			xbase=#{xbase, jdbcType=DECIMAL},
+			xqtyrec=#{xqtyrec, jdbcType=DECIMAL},
+			xqtyclaim=#{xqtyclaim, jdbcType=DECIMAL},
+			xdisc=#{xdisc, jdbcType=DECIMAL},
+			xdiscf=#{xdiscf, jdbcType=DECIMAL},
+			xqtyinsp=#{xqtyinsp, jdbcType=DECIMAL},
+			xcfpur=#{xcfpur, jdbcType=DECIMAL},
+			xqtycom=#{xqtycom, jdbcType=DECIMAL},
+			xstatusimgl=#{xstatusimgl, jdbcType=VARCHAR},
+			xspecification=#{xspecification, jdbcType=VARCHAR},
+			xvatrate=#{xvatrate, jdbcType=DECIMAL},
+			xvatamt=#{xvatamt, jdbcType=DECIMAL},
+			xait=#{xait, jdbcType=DECIMAL},
+			xaitamt=#{xaitamt, jdbcType=DECIMAL},
+			xamtother=#{xamtother, jdbcType=DECIMAL},
+			xqtypur=#{xqtypur, jdbcType=DECIMAL},
+			xpurpose=#{xpurpose, jdbcType=VARCHAR},
+			xgitem=#{xgitem, jdbcType=VARCHAR},
+	
+			zuuserid=#{zuuserid, jdbcType=VARCHAR},
+			zuip=#{zuip, jdbcType=VARCHAR},
+			zactive=#{zactive, jdbcType=VARCHAR},
+			zutime=#{zutime, jdbcType=TIMESTAMP}
+		WHERE
+			<!-- xpornum=#{xpornum, jdbcType=VARCHAR} -->
+			xgrnnum=#{xgrnnum, jdbcType=VARCHAR}
+			AND xrow=#{xrow, jdbcType=INTEGER}
+			AND zid=#{zid, jdbcType=VARCHAR}
+	</update>
+
+	<delete id="deletePogrnDetail" parameterType="PogrnHeader">
+		DELETE
+		FROM
+		pogrndetail
+		WHERE
+		xrow=#{xrow}
+		AND xgrnnum=#{xgrnnum}
+		AND zid=#{zid}
+	</delete>
+
+	<select id="countOfPogrndetailByXgrnnum" resultType="Long">
+		SELECT
+		COUNT(*) FROM pogrndetail WHERE xgrnnum=#{xgrnnum} AND zid=#{zid}
+	</select>
+
+	<select id="findPogrnHeaderByXgrnnum" resultType="PogrnHeader">
+		SELECT
+			pogrnheader.*,
+			spell_number(pogrnheader.xtotamt) as spellword,
+			spell_number(substr(to_char(pogrnheader.xtotamt-floor(pogrnheader.xtotamt)),2,2)) as xprimeword,
+			cacus.xorg,
+			p.xname as xpreparername,
+			x.xlong as storename,
+			y.xlong as projectName
+		FROM
+			pogrnheader
+			LEFT JOIN cacus ON cacus.xcus = pogrnheader.xcus AND cacus.zid = pogrnheader.zid AND cacus.zactive='1'
+			left join pdmst p on p.xstaff = pogrnheader.xpreparer and p.zid= pogrnheader.zid
+			left join xcodes x ON x.xcode = pogrnheader.xwh AND x.zid = pogrnheader.zid AND x.zactive='1' AND x.xtype='Store'
+			left join xcodes y on y.xcode = pogrnheader.xhwh and y.zid= pogrnheader.zid and y.xtype='Project'
+		WHERE
+			pogrnheader.xgrnnum=#{xgrnnum}
+			AND pogrnheader.zid=#{zid}
+	</select>
+
+	<select id="findPogrnHeaderByXpornum" resultType="PogrnHeader">
+		SELECT
+			ph.*,
+			cacus.xorg as xorg,
+			x.xlong as storename,
+			y.xlong as projectName
+		FROM
+			pogrnheader ph
+			left join cacus on cacus.xcus = ph.xcus AND cacus.zid = ph.zid AND cacus.zactive='1'
+			left join xcodes x on x.xcode = ph.xwh AND x.zid = ph.zid AND x.zactive='1'
+			left join xcodes y on y.xcode = ph.xhwh and y.zid= ph.zid and y.xtype='Project'
+		WHERE
+			ph.xpornum=#{xpornum}
+			AND ph.zid=#{zid}
+		ORDER BY
+			ph.xstatusgrn desc, 
+			ph.xgrnnum DESC
+	</select>
+
+	<select id="findPogrnDetailByXgrnnumAndXrow"
+		resultType="PogrnDetail">
+		SELECT
+			pogrndetail.*,
+			caitem.xdesc as "xitemdesc",
+			caitem.xcatitem
+		FROM
+			pogrndetail
+			LEFT JOIN caitem ON caitem.xitem = pogrndetail.xitem AND caitem.zid =
+			pogrndetail.zid AND caitem.zactive='1'
+		WHERE
+			pogrndetail.xgrnnum=#{xgrnnum}
+			AND pogrndetail.xrow=#{xrow}
+			AND pogrndetail.zid=#{zid}
+	</select>
+
+	<select id="findPogrnDetailByXgrnnum" resultType="PogrnDetail">
+		SELECT
+			pd.*,
+			caitem.xdesc as "xitemdesc",
+			caitem.xcatitem
+		FROM
+			PogrnDetail pd
+			JOIN caitem on caitem.xitem=pd.xitem AND caitem.zid=#{zid} AND
+			caitem.zactive='1'
+		WHERE
+			pd.xgrnnum=#{xgrnnum}
+			AND pd.zid=#{zid}
+			ORDER BY
+			pd.XROW ASC
+	</select>
+
+	<select id="getAllPogrnHeader" resultType="PogrnHeader">
+		SELECT
+			ph.*,
+			c.xorg,
+			x.xlong as storename,
+			y.xlong as projectName
+		FROM
+			pogrnheader ph
+			left join cacus c on c.xcus = ph.xcus AND c.zid = ph.zid and c.zactive='1'
+			left join xcodes x on x.xcode = ph.xwh AND x.zid = ph.zid AND x.zactive='1' AND x.xtype='Store'
+			left join xcodes y on y.xcode = ph.xhwh and y.zid= ph.zid and y.xtype='Project'
+		WHERE
+			ph.zid=#{zid}
+			AND ph.xtype = 'Other'
+			AND ph.xtrn='GRN-'
+		ORDER BY
+			ph.xgrnnum DESC
+	</select>
+
+	<select id="getAllQCPogrnHeader" resultType="PogrnHeader">
+		SELECT
+			ph.*,
+			c.xorg,
+			x.xlong as storename
+		FROM
+			pogrnheader ph
+			left join cacus c on c.xcus = ph.xcus AND c.zid = ph.zid and c.zactive='1'
+			left join xcodes x on x.xcode = ph.xwh AND x.zid = ph.zid AND x.zactive='1' AND x.xtype='Store'
+			
+		WHERE
+			ph.zid=#{zid}
+			AND ph.xtrn='QC--'
+		ORDER BY
+			ph.xgrnnum DESC
+	</select>
+
+	<select id="getAllDocumentPogrnHeader" resultType="PogrnHeader">
+		SELECT
+			ph.*,
+			c.xorg,
+			x.xlong as storename
+		FROM
+			pogrnheader ph
+			left join cacus c on c.xcus = ph.xcus AND c.zid = ph.zid and c.zactive='1'
+			left join xcodes x on x.xcode = ph.xwh AND x.zid = ph.zid AND x.zactive='1' AND x.xtype='Store'
+		WHERE
+			ph.zid=#{zid}
+			AND ph.xtype = 'LC'
+		ORDER BY
+			ph.xgrnnum DESC
+	</select>
+
+	<select id="getAllDirectPogrnHeader" resultType="PogrnHeader">
+		SELECT
+			ph.*,
+			c.xorg,
+			y.xlong as projectName
+		FROM
+			pogrnheader ph
+			left join cacus c on c.xcus = ph.xcus AND c.zid = ph.zid and c.zactive='1'
+			left join xcodes y on y.xcode = ph.xhwh and y.zid= ph.zid and y.xtype='Project'
+		WHERE
+			ph.zid=#{zid}
+			AND ph.xtype='Cash'
+		ORDER BY
+			ph.xgrnnum DESC
+	</select>
+
+	<select id="procTransferPOtoAP" statementType="CALLABLE">
+		{call
+			PO_transferPOtoAP(
+				#{zid, jdbcType = VARCHAR, mode = IN}, 
+				#{user, jdbcType = VARCHAR, mode = IN}, 
+				#{xgrnnum, jdbcType = VARCHAR, mode = IN}, 
+				#{p_seq, jdbcType = VARCHAR, mode = IN}
+			)
+		}
+	</select>
+
+	<select id="poTransferPOtoGL" statementType="CALLABLE">
+		{call
+			PO_transferPOtoGL(
+				#{zid, jdbcType = VARCHAR, mode = IN}, 
+				#{user, jdbcType = VARCHAR, mode = IN}, 
+				#{xgrnnum, jdbcType = VARCHAR, mode = IN},
+				#{pscreen, jdbcType = VARCHAR, mode = IN},
+				#{p_seq, jdbcType = VARCHAR, mode = IN}
+			)
+		}
+	</select>
+
+	<select id="searchPoord" resultType="PogrnHeader">
+		SELECT * FROM POGRNHEADER
+		WHERE (UPPER(xpornum) LIKE '%' || #{xpornum} || '%') AND zid=#{zid}
+		AND zactive='1'
+	</select>
+
+	<select id="searchGrn" resultType="PogrnHeader">
+		SELECT
+		*
+		FROM
+		POGRNHEADER
+		WHERE
+		(UPPER(xgrnnum) LIKE '%' || #{hint} || '%')
+		AND zid=#{zid}
+		<if test="xstatusgrn != null and xstatusgrn != ''">
+			AND xstatusgrn=#{xstatusgrn}
+		</if>
+	</select>
+
+	<select id="getTotalGRNQtyOfConfirmedGRNDetail"
+		resultType="Decimal">
+		SELECT
+		NVL(SUM(pogrndetail.xqtygrn), 0) as totalgrnqty
+		FROM
+		pogrndetail
+		LEFT JOIN pogrnheader ON pogrnheader.xgrnnum = pogrndetail.xgrnnum AND
+		pogrnheader.zid = pogrndetail.zid
+		WHERE
+		pogrnheader.zid=#{zid}
+		AND pogrnheader.xpornum=#{xpornum}
+		AND pogrndetail.xdocrow = #{xdocrow}
+		AND pogrnheader.xstatusgrn='Confirmed'
+	</select>
+
+	<update id="updatePogrnHeaderWithDetail">
+		UPDATE 
+			pogrnheader oph
+		SET
+			oph.xtotamt=(SELECT SUM(NVL(xlineamt, 0)) FROM pogrndetail WHERE xgrnnum=#{xgrnnum} AND zid=#{zid}),
+			oph.xvatamt=(SELECT SUM(NVL(xvatamt, 0)) FROM pogrndetail WHERE xgrnnum=#{xgrnnum} AND zid=#{zid}),
+			oph.xaitamt=(SELECT SUM(NVL(xaitamt, 0)) FROM pogrndetail WHERE xgrnnum=#{xgrnnum} AND zid=#{zid}),
+			oph.xdisc=(SELECT SUM(NVL(xdiscf, 0)) FROM pogrndetail WHERE xgrnnum=#{xgrnnum} AND zid=#{zid}),
+			oph.xamtother=(SELECT SUM(NVL(xamtother, 0)) FROM pogrndetail WHERE xgrnnum=#{xgrnnum} AND zid=#{zid})
+		WHERE
+			oph.xgrnnum=#{xgrnnum} 
+			AND oph.zid=#{zid} 
+	</update>
+
+	<select id="procPO_confirmGRN" statementType="CALLABLE">
+		{call
+			PO_confirmGRN(
+				#{zid, jdbcType = VARCHAR, mode = IN}, 
+				#{user, jdbcType = VARCHAR, mode = IN}, 
+				#{xgrnnum, jdbcType = VARCHAR, mode = IN}, 
+				#{p_seq, jdbcType = VARCHAR, mode = IN}
+			)
+		}
+	</select>
+
+	<select id="procPO_confirmGRN_ProjectCost" statementType="CALLABLE">
+		{call
+			PO_confirmGRN_ProjectCost(
+				#{zid, jdbcType = VARCHAR, mode = IN}, 
+				#{user, jdbcType = VARCHAR, mode = IN}, 
+				#{xgrnnum, jdbcType = VARCHAR, mode = IN}, 
+				#{p_seq, jdbcType = VARCHAR, mode = IN}
+			)
+		}
+	</select>
+
+	<select id="procPO_confirmProjectQC" statementType="CALLABLE">
+		{call
+			PO_confirmProjectQC(
+				#{zid, jdbcType = VARCHAR, mode = IN}, 
+				#{user, jdbcType = VARCHAR, mode = IN}, 
+				#{xgrnnum, jdbcType = VARCHAR, mode = IN}, 
+				#{p_seq, jdbcType = VARCHAR, mode = IN}
+			)
+		}
+	</select>
+
+</mapper>

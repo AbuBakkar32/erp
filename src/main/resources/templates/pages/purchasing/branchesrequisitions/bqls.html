@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<title th:text="#{aor.page.title}">Requisitions to Sales Order</title>
+		<meta th:remove="tag" th:include="commons :: common-meta" />
+		<meta th:remove="tag" th:include="commons :: common-css" />
+		<meta th:remove="tag" th:include="commons :: common-js" />
+	</head>
+	<body>
+		<!-- Header section -->
+		<div class="header-section" th:include="commons :: header-section"></div>
+
+		<!-- Menu section -->
+		<div th:if="${menuVersion != null and menuVersion eq 'MENU_V2'}" class="menuv2" th:include="commons :: main-menu"></div>
+
+		<div th:if="${menuVersion == null or menuVersion eq 'MENU_V1'}" class="navbar-inverse menu-section">
+			<div class="container-fluid">
+				<div class="row">
+					<nav class="navbar navbar-inverse">
+						<div class="container-fluid">
+							<div class="row">
+								<div class="navbar-header">
+									<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+										<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+									</button>
+								</div>
+								<div class="collapse navbar-collapse" id="myNavbar">
+									<div class="nav navbar-nav">
+										<li><a th:href="@{/}"><i class="fas fa-home"></i> Home</a></li>
+										<li class="active"><a th:href="@{/purchasing/bqls}">Requisitions to Sales Order</a></li>
+									</div>
+									<ul class="nav navbar-nav navbar-right" th:include="ckbigmenu :: dashboard-menu"></ul>
+								</div>
+							</div>
+						</div>
+					</nav>
+				</div>
+			</div>
+		</div>
+		
+		
+		<!-- Content section -->
+		<div>
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-md-4">
+						<section id="data-maintenance" style="margin-top: 90px;">
+							<div class="section-body">
+								<div class="row">
+									<div class="col-md-12">
+										<form id="mainform" class="form-horizontal" th:action="@{/purchasing/bqls/query}" method="post" th:with="df=${'E, dd-MMM-yyyy'}">
+											<div class="form-group datepicker">
+												<label class="control-label col-md-4" for="xdate">Requisition Date</label>
+												<div class="input-group date col-md-7 datepicker">
+													<input 	type="datepicker" 
+															class="form-control" 
+															id="xdate"
+															name="xdate"
+															th:value="${#dates.format(#dates.createNow(), df)}"/>
+													<div class="input-group-addon">
+														<span class="glyphicon glyphicon-calendar"></span>
+													</div>
+												</div>
+											</div>
+											<div class="form-group">
+												<label class="control-label col-md-4" for="xcus">Branch</label>
+												<div class="col-md-8">
+													<select class="form-control" id="xcus" name="xcus">
+														<option value="">-- Select --</option>
+														<option th:each="branch : ${branches}" th:text="${branch.xcus + ' - ' + branch.xorg}" th:value="${branch.xcus}"></option>
+													</select>
+												</div>
+											</div>
+											<div class="form-group">
+												<label class="control-label col-md-4"></label>
+												<div class="col-md-8">
+													<button class="btn btn-sm btn-success query-submit-btn" type="submit"><i class="fas fa-search"></i> Search</button>
+												</div>
+											</div>
+										</form>
+									</div>
+								</div>
+							</div>
+						</section>
+					</div>
+					<div class="col-md-8">
+						<!-- rqls list section -->
+						<section id="data-maintenance" style="margin-top: 30px;">
+							<div class="section-header sectionbartoggle">
+								<h1>Branches Requisitions </h1>
+								<div class="row">
+									<div class="col-md-12">
+										<a th:href="@{/purchasing/bqls/details}" target="_blank" class="btn btn-success btn-sm pull-right">Requisitions Matrix</a>
+									</div>
+								</div>
+							</div>
+							<div class="section-body">
+								<table class="table table-striped table-bordered normal-table" id="branchesorderrequisitiontable" th:fragment="branchesorderrequisitiontable">
+									<thead>
+										<tr>
+											<th th:text="#{aor.table.heading.xpornum}">REQ Number</th>
+											<th th:text="#{aor.table.heading.xdate}">Date</th>
+											<th>Branch</th>
+											<th th:text="#{aor.table.heading.xstatuspor}">Status</th>
+											<th th:text="#{aor.table.heading.xordernum}">Sales Order</th>
+											<th th:text="#{aor.table.heading.xaction}" data-nosort="Y" style="text-align: right">Action</th>
+										</tr>
+									</thead>
+									<tbody th:with="df=${'E, dd-MMM-yyyy'}">
+										<tr th:each="r : ${bqlsList}">
+											<td th:text="${r.xpornum}"></td>
+											<td th:text="${#dates.format(r.xdate, df)}"></td>
+											<td th:text="${r.zorg}"></td>
+											<td>
+												<span th:if="${r.xstatusreq == 'SO Created'}">Confirmed</span>
+    											<span th:unless="${r.xstatusreq == 'SO Created'}">Open</span>
+											</td>
+											<td>
+												<a th:href="@{/salesninvoice/opord/salesorderdetails/} + ${r.xsonumber}" th:text="${r.xsonumber}" target="_blank"></a>
+											</td>
+											<td style="text-align: right;">
+												<button type="button" class="btn btn-primary btn-edit editmode" title="View Details" th:attr="data-url=@{/purchasing/bqls/ordreqdetails/} + ${r.xpornum} + '/show', data-target-modal='branchorderreqdetailmodal'"><i class="fas fa-eye"></i></button>
+												<button th:if="${r.xstatusreq eq 'Open'}" type="button" title="Create Sales Order" class="btn btn-success btn-confirm editmode" th:attr="data-url=@{/purchasing/bqls/soconfirm/} + ${r.xpornum}"><i class="fas fa-check-square"></i></button>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</section>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Modal -->
+		<div id="branchorderreqdetailmodal-section"></div>
+
+		<!-- Footer section -->
+		<div class="footer-section" th:include="commons :: footer-section"></div>
+
+		<script type="text/javascript">
+			$(document).ready(function(){
+				
+				$('.query-submit-btn').on('click', function(e){
+					e.preventDefault();
+					submitMainForm();
+				})
+				
+			})
+		</script>
+	</body>
+</html>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.asl.mapper.DailyDistributionMapper">
+
+	<select id="getDailyDistribution" resultType="DailyDistribution">
+		SELECT
+			caitem.zid, caitem.xitem, caitem.xdesc, caitem.xunitpur,
+			nvl((select sum(xqty*xsign) from imtrn where imtrn.xitem=caitem.xitem and imtrn.zid=caitem.zid and imtrn.xdate &lt; #{currentDate}),0) as opening,
+			nvl((
+				select 
+					sum (moheader.xqtycom) 
+				from 
+					moheader 
+				where 
+					moheader.xitem=caitem.xitem 
+					and moheader.zid=caitem.zid
+					and moheader.zactive='1' 
+					and moheader.xdate &gt;= #{currentDate} and moheader.xdate &lt; #{nextDate}
+				group by 
+					moheader.xitem
+				), 0) as production,
+			nvl((
+				select 
+					sum(od.xqtyord)
+				from
+					opdoheader oh
+					join cacus c on c.xcus = oh.xcus and c.zid = oh.zid and c.zactive='1'
+					join zbusiness z on c.xcuszid=z.zid and z.branch='1' and z.centralzid=c.zid
+					join opdodetail od on od.xdornum=oh.xdornum and od.zid=oh.zid and od.zactive='1'
+				where
+					oh.zid=caitem.zid
+					and oh.zactive='1'
+					and od.xitem=caitem.xitem
+					and oh.xdate &gt;= #{currentDate} and oh.xdate &lt; #{nextDate}
+				group by
+					od.xitem
+			),0) as distribution
+		FROM 
+			caitem
+		where 
+			caitem.zid=#{zid}
+			and caitem.zactive='1'
+			and caitem.xproditem='1'
+		order by
+			caitem.xseqn, caitem.xitem asc
+	</select>
+</mapper>

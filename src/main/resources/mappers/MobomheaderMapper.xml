@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.asl.mapper.MobomheaderMapper">
+	<insert id="saveMobomheader" parameterType="Mobomheader">
+		<selectKey keyProperty="xbomkey" resultType="String" order="BEFORE">
+			SELECT Func_GetTrn('${zid}','BOM Number', '${xtrn}', 6) FROM DUAL
+		</selectKey>
+		INSERT INTO mobomheader
+		(
+			xbomkey,
+			xdesc,
+			xdate,
+			xitem,
+			xqty,
+			xunit,
+			xcost,
+			xcus,
+			xisdefaut,
+			xref,
+			xnote,
+			xtrn,
+
+			zid,
+			zauserid,
+			zaip,
+			zactive,
+			ztime
+		)
+		VALUES
+		(
+			#{xbomkey, jdbcType=VARCHAR},
+			#{xdesc, jdbcType=VARCHAR},
+			#{xdate, jdbcType=DATE},
+			#{xitem, jdbcType=VARCHAR},
+			#{xqty, jdbcType=DECIMAL},
+			#{xunit, jdbcType=VARCHAR},
+			#{xcost, jdbcType=DECIMAL},
+			#{xcus, jdbcType=VARCHAR},
+			#{xisdefaut, jdbcType=VARCHAR},
+			#{xref, jdbcType=VARCHAR},
+			#{xnote, jdbcType=VARCHAR},
+			#{xtrn, jdbcType=VARCHAR},
+
+			#{zid, jdbcType=VARCHAR},
+			#{zauserid, jdbcType=VARCHAR},
+			#{zaip, jdbcType=VARCHAR},
+			#{zactive, jdbcType=VARCHAR},
+			#{ztime, jdbcType=TIMESTAMP}
+		)
+	</insert>
+
+	<update id="updateMobomheader" parameterType="Mobomheader">
+		UPDATE 
+			mobomheader 
+		SET
+			xdesc=#{xdesc, jdbcType=VARCHAR},
+			xdate=#{xdate, jdbcType=DATE},
+			xitem=#{xitem, jdbcType=VARCHAR},
+			xqty=#{xqty, jdbcType=DECIMAL},
+			xunit=#{xunit, jdbcType=VARCHAR},
+			xcost=#{xcost, jdbcType=DECIMAL},
+			xcus=#{xcus, jdbcType=VARCHAR},
+			xisdefaut=#{xisdefaut, jdbcType=VARCHAR},
+			xref=#{xref, jdbcType=VARCHAR},
+			xnote=#{xnote, jdbcType=VARCHAR},
+			xtrn=#{xtrn, jdbcType=VARCHAR},
+
+			zuuserid=#{zuuserid, jdbcType=VARCHAR},
+			zuip=#{zuip, jdbcType=VARCHAR},
+			zactive=#{zactive, jdbcType=VARCHAR},
+			zutime=#{zutime, jdbcType=TIMESTAMP}
+		WHERE
+			zid=#{zid, jdbcType=VARCHAR}
+			AND xbomkey=#{xbomkey, jdbcType=VARCHAR}
+	</update>
+
+	<delete id="deleteMobomheader">
+		DELETE
+		FROM
+			mobomheader
+		WHERE
+			zid=#{zid}
+			AND xbomkey=#{xbomkey}
+	</delete>
+
+	<select id="getAllMobomheader" resultType="Mobomheader">
+		SELECT
+			*
+		FROM
+			mobomheader
+		WHERE 
+			zid=#{zid}
+		ORDER BY
+			xdate DESC
+	</select>
+
+	<select id="findMobomheaderByXbomkey" resultType="Mobomheader">
+		SELECT
+			*
+			
+		FROM
+			mobomheader
+		WHERE 
+			zid=#{zid}
+			AND xbomkey=#{xbomkey}
+	</select>
+
+	<insert id="saveMobomdetail" parameterType="Mobomdetail">
+		<selectKey keyProperty="xrow" resultType="Integer" order="BEFORE">
+			SELECT COALESCE(Max(xrow), 0) + 1 FROM mobomdetail WHERE xbomkey=#{xbomkey} AND zid=#{zid}
+		</selectKey>
+		INSERT INTO mobomdetail
+		(
+			xrow,
+			xbomkey,
+			xitem,
+			xqty,
+			xunit,
+			xref,
+			xtype,
+			xsign,
+
+			zid,
+			zauserid,
+			zaip,
+			zactive,
+			ztime
+		)
+		VALUES
+		(
+			#{xrow},
+			#{xbomkey, jdbcType=VARCHAR},
+			#{xitem, jdbcType=VARCHAR},
+			#{xqty, jdbcType=DECIMAL},
+			#{xunit, jdbcType=VARCHAR},
+			#{xref, jdbcType=VARCHAR},
+			#{xtype, jdbcType=VARCHAR},
+			#{xsign, jdbcType=INTEGER},
+
+			#{zid, jdbcType=VARCHAR},
+			#{zauserid, jdbcType=VARCHAR},
+			#{zaip, jdbcType=VARCHAR},
+			#{zactive, jdbcType=VARCHAR},
+			#{ztime, jdbcType=TIMESTAMP}
+		)
+	</insert>
+
+	<update id="updateMobomdetail" parameterType="Mobomdetail">
+		UPDATE 
+			mobomdetail 
+		SET
+			xitem=#{xitem, jdbcType=VARCHAR},
+			xqty=#{xqty, jdbcType=DECIMAL},
+			xunit=#{xunit, jdbcType=VARCHAR},
+			xref=#{xref, jdbcType=VARCHAR},
+			xtype=#{xtype, jdbcType=VARCHAR},
+			xsign=#{xsign, jdbcType=INTEGER},
+
+			zuuserid=#{zuuserid, jdbcType=VARCHAR},
+			zuip=#{zuip, jdbcType=VARCHAR},
+			zactive=#{zactive, jdbcType=VARCHAR},
+			zutime=#{zutime, jdbcType=TIMESTAMP}
+		WHERE
+			zid=#{zid, jdbcType=VARCHAR}
+			AND xrow=#{xrow, jdbcType=INTEGER}
+			AND xbomkey=#{xbomkey, jdbcType=VARCHAR}
+	</update>
+
+	<delete id="deleteMobomdetail">
+		DELETE
+		FROM
+			mobomdetail
+		WHERE
+			zid=#{zid}
+			AND xrow=#{xrow}
+			AND xbomkey=#{xbomkey}
+	</delete>
+
+	<select id="getAllMobomdetail" resultType="Mobomdetail">
+		SELECT
+			*
+		FROM
+			mobomdetail
+		WHERE
+			zid=#{zid}
+	</select>
+
+	<select id="findMobomdetailByXrowAndXbomkey" resultType="Mobomdetail">
+		SELECT
+			*
+		FROM
+			mobomdetail 
+		WHERE 
+			zid=#{zid}
+			AND xbomkey=#{xbomkey}
+			AND xrow=#{xrow}
+	</select>
+
+	<select id="findMobomdetailsByXbomkey" resultType="Mobomdetail">
+		SELECT
+			*
+		FROM
+			mobomdetail
+		WHERE 
+			zid=#{zid}
+			AND xbomkey=#{xbomkey}
+		ORDER BY 
+			xrow DESC
+	</select>
+
+</mapper>

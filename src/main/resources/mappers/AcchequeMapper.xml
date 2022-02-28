@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.asl.mapper.AcchequeMapper">
+	<insert id="saveAcchequeheader" parameterType="Acchequeheader">
+	
+		INSERT INTO Acchequeheader
+		(
+			xchqbookno,
+			xdate,
+			xref,
+			xdaterec,
+			xbank,
+			xnofleafs,
+			xprefix,
+			xfirstleaf,
+			xlastleaf,
+			xstatus,
+			xnote,
+			zid,
+			ztime,
+			zutime,
+			zauserid,
+			zuuserid
+
+		)
+		VALUES
+		(
+			#{xchqbookno, jdbcType=VARCHAR},
+			#{xdate, jdbcType=DATE},
+			#{xref, jdbcType=VARCHAR},
+			#{xdaterec, jdbcType=DATE},
+			#{xbank, jdbcType=VARCHAR},
+			#{xnofleafs, jdbcType=INTEGER},
+			#{xprefix, jdbcType=VARCHAR},
+			#{xfirstleaf, jdbcType=VARCHAR},
+			#{xlastleaf, jdbcType=VARCHAR},
+			#{xstatus, jdbcType=VARCHAR},
+			#{xnote, jdbcType=VARCHAR},
+			#{zid, jdbcType=VARCHAR},
+			#{ztime, jdbcType=TIMESTAMP},
+			#{zutime, jdbcType=TIMESTAMP},
+			#{zauserid, jdbcType=VARCHAR},
+			#{zuuserid, jdbcType=VARCHAR}
+			
+		)
+	</insert>
+
+	<update id="updateAcchequeheader" parameterType="Acchequeheader">
+		UPDATE 
+			Acchequeheader 
+		SET
+			xchqbookno=#{xchqbookno, jdbcType=VARCHAR},
+			xdate=#{xdate, jdbcType=DATE},
+			xref=#{xref, jdbcType=VARCHAR},
+			xdaterec=#{xdaterec, jdbcType=DATE},
+			xbank=#{xbank, jdbcType=VARCHAR},
+			xnofleafs=#{xnofleafs, jdbcType=INTEGER},
+			xprefix=#{xprefix, jdbcType=VARCHAR},
+			xfirstleaf=#{xfirstleaf, jdbcType=VARCHAR},
+			xlastleaf=#{xlastleaf, jdbcType=VARCHAR},
+			xstatus=#{xstatus, jdbcType=VARCHAR},
+			xnote=#{xnote, jdbcType=VARCHAR},
+			zid=#{zid, jdbcType=VARCHAR},
+			ztime=#{ztime, jdbcType=TIMESTAMP},
+			zutime=#{zutime, jdbcType=TIMESTAMP},
+			zauserid=#{zauserid, jdbcType=VARCHAR},
+			zuuserid=#{zuuserid, jdbcType=VARCHAR}
+		WHERE
+			zid=#{zid, jdbcType=VARCHAR}
+	</update>
+
+	<insert id="saveAcchequedetail" parameterType="Acchequedetail">
+	
+		INSERT INTO Acchequedetail
+		(
+			xchqbookno,
+			xchequeno,
+			xdate,
+			xmaturitydate,
+			xacc,
+			xvoucher,
+			xstatusjv,
+			xstatusap,
+			xcus,
+			xpaidto,
+			xamount,
+			xstatus,
+			xnote,
+			zid,
+			ztime,
+			zutime,
+			zauserid,
+			zuuserid
+
+		)
+		VALUES
+		(
+			#{xchqbookno, jdbcType=VARCHAR},
+			#{xchequeno, jdbcType=VARCHAR},
+			#{xdate, jdbcType=DATE},
+			#{xmaturitydate, jdbcType=DATE},
+			#{xacc, jdbcType=VARCHAR},
+			#{xvoucher, jdbcType=VARCHAR},
+			#{xstatusjv, jdbcType=VARCHAR},
+			#{xstatusap, jdbcType=VARCHAR},
+			#{xcus, jdbcType=VARCHAR},
+			#{xpaidto, jdbcType=VARCHAR},
+			#{xamount, jdbcType=INTEGER},
+			#{xstatus, jdbcType=VARCHAR},
+			#{xnote, jdbcType=VARCHAR},
+			#{zid, jdbcType=VARCHAR},
+			#{ztime, jdbcType=TIMESTAMP},
+			#{zutime, jdbcType=TIMESTAMP},
+			#{zauserid, jdbcType=VARCHAR},
+			#{zuuserid, jdbcType=VARCHAR}
+			
+		)
+	</insert>
+
+	<update id="updateAcchequedetail" parameterType="Acchequedetail">
+		UPDATE 
+			Acchequedetail 
+		SET
+			xchqbookno=#{xchqbookno, jdbcType=VARCHAR},
+			xchequeno=#{xchequeno, jdbcType=VARCHAR},
+			xdate=#{xdate, jdbcType=DATE},
+			xmaturitydate=#{xmaturitydate, jdbcType=DATE},
+			xacc=#{xacc, jdbcType=VARCHAR},
+			xvoucher=#{xvoucher, jdbcType=VARCHAR},
+			xstatusjv=#{xstatusjv, jdbcType=VARCHAR},
+			xstatusap=#{xstatusap, jdbcType=VARCHAR},
+			xcus=#{xcus, jdbcType=VARCHAR},
+			xpaidto=#{xpaidto, jdbcType=VARCHAR},
+			xamount=#{xamount, jdbcType=INTEGER},
+			xstatus=#{xstatus, jdbcType=VARCHAR},
+			xnote=#{xnote, jdbcType=VARCHAR},
+			zid=#{zid, jdbcType=VARCHAR},
+			ztime=#{ztime, jdbcType=TIMESTAMP},
+			zutime=#{zutime, jdbcType=TIMESTAMP},
+			zauserid=#{zauserid, jdbcType=VARCHAR},
+			zuuserid=#{zuuserid, jdbcType=VARCHAR}
+		WHERE
+			zid=#{zid, jdbcType=VARCHAR}
+	</update>
+
+
+</mapper>

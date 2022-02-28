@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.asl.mapper.ProductionSuggestionMapper">
+
+	<select id="getProductionSuggestion" resultType="com.asl.model.ProductionSuggestion">
+		SELECT
+			PRO_SUGG.*,
+			xcodes.seqn 
+		FROM
+			PRO_SUGG
+			left join caitem on caitem.xitem = PRO_SUGG.xitem and caitem.zid = PRO_SUGG.zid and caitem.zactive='1'
+			left join xcodes on xcodes.xcode = caitem.xcatitem and xcodes.zid = caitem.zid and xcodes.zactive='1'
+		WHERE
+			PRO_SUGG.chalan=#{chalan}
+			<if test="xdate != null and xdate != ''">
+				AND TO_CHAR(PRO_SUGG.xdate,'yyyy-MM-dd')=#{xdate}
+			</if>
+			AND PRO_SUGG.zid=#{zid}
+		order by
+			xcodes.seqn
+	</select>
+
+	<select id="getProductionSuggestionByChalan" resultType="com.asl.model.ProductionSuggestion">
+		SELECT
+			PRO_SUGG.*,
+			xcodes.seqn
+		FROM
+			PRO_SUGG
+			left join caitem on caitem.xitem = pro_sugg.xitem and caitem.zid = pro_sugg.zid and caitem.zactive='1'
+			left join xcodes on xcodes.xcode = caitem.xcatitem and xcodes.zid = caitem.zid and xcodes.zactive='1'
+		WHERE
+			PRO_SUGG.chalan=#{chalan}
+			AND PRO_SUGG.zid=#{zid}
+		order by
+			xcodes.seqn
+	</select>
+
+	<select id="getProductionSuggestionByXitemAndChalan" resultType="com.asl.model.ProductionSuggestion">
+		SELECT
+			PRO_SUGG.*,
+			xcodes.seqn
+		FROM
+			PRO_SUGG
+			left join caitem on caitem.xitem = pro_sugg.xitem and caitem.zid = pro_sugg.zid and caitem.zactive='1'
+			left join xcodes on xcodes.xcode = caitem.xcatitem and xcodes.zid = caitem.zid and xcodes.zactive='1'
+		WHERE
+			PRO_SUGG.chalan=#{chalan}
+			AND PRO_SUGG.xitem=#{xitem}
+			AND PRO_SUGG.zid=#{zid}
+		order by
+			xcodes.seqn
+	</select>
+
+	<select id = "createSuggestion" statementType = "CALLABLE">
+		{call proc_suggesstion(#{xordernum, jdbcType = VARCHAR, mode = IN}, #{zid, jdbcType = VARCHAR, mode = IN})}
+	</select>
+
+	<delete id="deleteSuggestion">
+		DELETE 
+		FROM 
+			PRO_SUGG 
+		WHERE 
+			chalan=#{chalan}
+			AND TO_CHAR(xdate,'yyyy-MM-dd')=#{xdate}
+			AND zid=#{zid}
+	</delete>
+
+	<select id="searchClananNumbers" resultType="String">
+		SELECT distinct chalan FROM pro_sugg WHERE UPPER(chalan) LIKE '%' || #{chalan} || '%' AND zid=#{zid}
+	</select>
+</mapper>

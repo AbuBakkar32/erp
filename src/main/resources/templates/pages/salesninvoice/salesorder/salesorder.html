@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<title th:text="#{aso.page.title}">Sales Order</title>
+<meta th:remove="tag" th:include="commons :: common-meta" />
+<meta th:remove="tag" th:include="commons :: common-css" />
+<meta th:remove="tag" th:include="commons :: common-js" />
+</head>
+<body>
+	<!-- Header section -->
+	<div class="header-section" th:include="commons :: header-section"></div>
+	
+		<!-- Menu section -->
+		<div th:if="${menuVersion != null and menuVersion eq 'MENU_V2'}" class="menuv2" th:include="commons :: main-menu"></div>
+
+		<div th:if="${menuVersion == null or menuVersion eq 'MENU_V1'}" class="navbar-inverse menu-section">
+			<div class="container-fluid">
+				<div class="row">
+					<nav class="navbar navbar-inverse">
+						<div class="container-fluid">
+							<div class="row">
+								<div class="navbar-header">
+									<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+										<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+									</button>
+								</div>
+								<div class="collapse navbar-collapse" id="myNavbar">
+									<div class="nav navbar-nav">
+										<li><a th:href="@{/}"><i class="fas fa-home"></i> Home</a></li>
+										<li class="active"><a th:href="@{/salesninvoice/opord}">Sales Order</a></li>
+									</div>
+									<ul class="nav navbar-nav navbar-right" th:include="ckbigmenu :: dashboard-menu"></ul>
+								</div>
+							</div>
+						</div>
+					</nav>
+				</div>
+			</div>
+		</div>
+
+		<!-- Content section -->
+		<div>
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-md-12 content-area">
+						<div class="row">
+							<h1 class="text-center" th:text="#{aso.page.heading}">Sales Order</h1>
+						</div>
+						<div class="row">
+							<div class="col-md-12">
+								<!-- Section list head -->
+								<section id="data-maintenance" style="margin-top: 30px;">
+									<div class="section-header sectionbartoggle"></div>
+									<div class="form-action-button">
+										<a th:href="@{/salesninvoice/opord/salesorderlist}" class="btn btn-sm btn-primary print-btn-link" target="_blank"><i class="fas fa-chevron-left"></i> <span style="margin-left:2px;">Sales Order List</span> </a>
+										<a th:href="@{/salesninvoice/opord}" class="btn btn-sm btn-default"><i class="fas fa-redo-alt"></i> <span style="margin-left:2px;" th:text="#{button.value.xclear}"> Clear</span></a>
+										<a th:if="${#strings.isEmpty(opordheader.xordernum)}" th:href="@{/salesninvoice/opord}" class="btn btn-sm btn-success confirm-btn"><i class="fas fa-save"></i> <span style="margin-left:2px;" th:text="#{button.value.xsave}"> Save</span></a>
+										<a th:if="${not #strings.isEmpty(opordheader.xordernum) and opordheader.xstatusord eq 'Open'}" href="#" class="btn btn-sm btn-success update-btn"><i class="fas fa-edit"></i>  <span style="margin-left:2px;" th:text="#{button.value.xupdate}"> Update</span></a>
+										<a th:if="${not #strings.isEmpty(opordheader.xordernum) and opordheader.xstatusord eq 'Open'}" th:href="@{/salesninvoice/opord/archive/} + ${opordheader.xordernum}" class="btn btn-sm btn-danger archive-btn-link"><i class="fas fa-trash-alt"></i> <span style="margin-left:2px;" th:text="#{button.value.xdelete}"> Delete</span></a>
+										
+										<a th:if="${not #strings.isEmpty(opordheader.xordernum) and opordheader.xstatusord eq 'Open'}" th:href="@{/salesninvoice/opord/confirm/} + ${opordheader.xordernum}" class="btn btn-sm btn-warning confirm-btn-link"><i class="fas fa-check-square"></i> <span style="margin-left:2px;" th:text="#{button.value.xconfirm}"> Confirm</span></a>
+										<a th:if="${not #strings.isEmpty(opordheader.xordernum)}" th:href="@{/salesninvoice/opord/print/} + ${opordheader.xordernum}" class="btn btn-sm btn-primary print-btn-link" target="_blank"><i class="fas fa-print"></i> <span style="margin-left:2px;" th:text="#{button.value.xprint}"> Print</span></a>
+										<a th:if="${not #strings.isEmpty(opordheader.xordernum) and (opordheader.xstatusord eq 'Confirmed' or opordheader.xstatusord eq 'DO Created')}" th:href="@{/salesninvoice/opord/createinvoice/} + ${opordheader.xordernum}" class="btn btn-sm btn-warning confirm-btn-link"><i class="fas fa-check-square"></i> Create Invoice</a>
+									</div>
+									<div class="section-body section-border">
+										<div id="opordheaderform" th:fragment="opordheaderform">
+											<form id="mainform" class="form-horizontal" th:action="@{/salesninvoice/opord/save}" th:object="${opordheader}" method="post" th:with="df=${'E, dd-MMM-yyyy'}">
+												<input type="hidden" class="form-control" th:field="*{xtypetrn}"/>
+												<input th:if="${not #strings.isEmpty(opordheader.xordernum)}" type="hidden" class="form-control" th:field="*{xtrn}"/>
+												<input type="hidden" th:if="${not #strings.isEmpty(opordheader.xordernum)}" class="form-control" th:field="*{xordernum}">
+												<input type="hidden" th:field="*{xtype}"/>
+												<div class="row">
+													<div class="col-md-4">
+
+														<div class="form-group" th:if="${#strings.isEmpty(opordheader.xordernum)}">
+															<label class="control-label col-md-4" for="xtrn" th:text="#{aso.form.label.xtrn}">SO Number</label>
+															<div class="col-md-6">
+																<select class="form-control" th:field="*{xtrn}">
+																	<option th:each="prefix : ${opordprefix}" th:value="${prefix.xtrn}" th:text="${prefix.xtrn}"></option>
+																</select>
+															</div>
+														</div>
+
+														<div class="form-group" th:if="${not #strings.isEmpty(opordheader.xordernum)}">
+															<label class="control-label col-md-4" for="xordernum" th:text="#{aso.form.label.xordernum}">SO Number</label>
+															<div class="col-md-8">
+																<input type="text" class="form-control" th:value="*{xordernum}" disabled="disabled">
+															</div>
+														</div>
+
+														<div class="form-group datepicker">
+															<label class="control-label col-md-4" for="xdate" th:text="#{aso.form.label.xdate}">Date</label>
+															<div class="input-group date col-md-7 datepicker">
+																<input 	type="datepicker" 
+																		class="form-control" 
+																		id="xdate"
+																		name="xdate"
+																		th:value="${opordheader.xdate == null ? #dates.format(#dates.createNow(), df) : #dates.format(opordheader.xdate, df)}"/>
+																<div class="input-group-addon">
+																	<span class="glyphicon glyphicon-calendar"></span>
+																</div>
+															</div>
+														</div>
+
+														<div class="form-group">
+															<label class="control-label col-md-4" for="xcus" th:text="#{aso.form.label.xcus}">Customer</label>
+															<div class="col-sm-8">
+																<input 	type="text" 
+																		class="form-control searchsuggest" 
+																		placeholder="Search..." 
+																		th:value="${#strings.isEmpty(opordheader.xcus) ? '' : opordheader.xcus + ' - ' + opordheader.xorg}"
+																		th:attr="search-url='search/customer'"/>
+																<input type="hidden" class="required" id="search-val" th:field="*{xcus}" value=""/>
+																<input type="hidden" id="search-des" th:value="*{xcus}"/>
+															</div>
+														</div>
+
+													</div>
+
+													<div class="col-md-4">
+														<!--<div class="form-group">
+															<label class="control-label col-md-4" for="xwh" th:text="#{aso.form.label.xwh}">Warehouse</label>
+															<div class="col-md-8">
+																<select class="form-control" th:field="*{xwh}">
+																	<option value="">-- Select --</option>
+																	<option th:each="wh : ${warehouses}" th:value="${wh.xcode}" th:text="${wh.xcode} + ' - ' + ${wh.xlong}"></option>
+																</select>
+															</div>
+														</div>-->
+														
+														<div class="form-group">
+																<label class="control-label col-md-4" for="xhwh">Project/Business</label>
+																<div class="col-sm-8">
+																	<input 	type="text" 
+																			class="form-control searchsuggest xhwhsearch" 
+																			placeholder="Search..." 
+																			th:value="${#strings.isEmpty(opordheader.xhwh) ? '' : opordheader.xhwh + '-' + opordheader.projectName}" 
+																			th:attr="search-url='search/allproject'"
+																			/>
+																	<input type="hidden" class="required" id="search-val" th:field="*{xhwh}" value=""/>
+																	<input type="hidden" id="search-des" th:value="*{xhwh}"/>
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-sm-4" for="xwh" >Site/Store</label>
+																<div class="col-sm-8">
+																	<select th:field="*{xwh}" class="form-control">
+																		<option value="">-- Select --</option>
+																		<option th:each="s : ${allcodes}" th:value="${s.xcode}" th:text="${s.xcode + ' - ' + s.xcodename}"></option>
+																	</select>
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xref" th:text="#{po.form.label.xref}">Reference</label>
+																<div class="col-md-8">
+																	<input type="text" class="form-control" th:field="*{xref}">
+																</div>
+															</div>
+														</div>
+
+														<div class="col-md-4">
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xtotamt" th:text="#{aso.form.label.xtotamt}">Total Amount</label>
+																<div class="col-md-6">
+																	<input type="hidden" class="form-control" th:field="*{xtotamt}">
+																	<input type="text" class="form-control xtotamt" th:value="*{xtotamt}" disabled="disabled">
+																</div>
+															</div>
+	
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xstatusord" th:text="#{aso.form.label.xstatus}">Status</label>
+																<div class="col-md-8">
+																	<input type="hidden" class="form-control" th:field="*{xstatusord}">
+																	<input type="text" class="form-control" th:value="*{xstatusord}" disabled="disabled">
+																</div>
+															</div>
+															
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xnote" th:text="#{aso.form.label.xnote}">Note</label>
+																<div class="col-md-8">
+																	<textarea class="form-control" th:field="*{xnote}" rows="3"></textarea>
+																</div>
+															</div>
+	
+															<!-- <div class="form-group">
+																<label class="control-label col-md-4" for="xvatait">Vat Tax ID : </label>
+																<div class="col-md-8">
+																	<select class="form-control vatait-select" th:field="*{xvatait}">
+																		<option th:each="s : ${vataitList}" th:text="${s.xvatait}" th:value="${s.xvatait}"></option>
+																	</select>
+																</div>
+															</div> -->
+	
+															<!-- <div class="form-group">
+																<label class="control-label col-md-4" for="xvatamt">Vat Amount : </label>
+																<div class="col-md-6">
+																	<input type="hidden" class="form-control" th:field="*{xvatamt}"/>
+																	<input type="text" class="form-control" th:value="*{xvatamt}" disabled="disabled">
+																</div>
+															</div> -->
+	
+															<!-- <div class="form-group">
+																<label class="control-label col-md-4" for="xaitamt">Tax Amount : </label>
+																<div class="col-md-6">
+																	<input type="hidden" class="form-control hidden" th:field="*{xaitamt}"/>
+																	<input type="text" class="form-control" th:value="*{xaitamt}" disabled="disabled"/>
+																</div>
+															</div> -->
+	
+															<!-- <div class="form-group">
+																<label class="control-label col-md-4" for="xdiscamt">Discount</label>
+																<div class="col-md-6">
+																	<input type="text"  class="form-control" th:field="*{xdiscamt}" min="0">
+																</div>
+															</div>
+	
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xgrandtot">Grand Amount</label>
+																<div class="col-md-6">
+																	<input type="text" class="form-control xgrandtot" th:field="*{xgrandtot}" disabled="disabled">
+																</div>
+															</div> -->
+														</div>
+													</div>
+												</form>
+											</div>
+										</div>
+									</section>
+								</div>
+
+									<div class="row">
+									<div class="col-md-6">
+										<section th:if="${not #strings.isEmpty(opordheader.xordernum)}" id="data-maintenance" style="margin-top: 30px;">
+											<a id="listlines-url" th:href="@{/salesninvoice/opord/oporddetail/} + ${opordheader.xordernum}"></a>
+											<div class="section-header sectionbartoggle">
+												<h1 th:text="'Order Details of ' + ${opordheader.xordernum}">Order Details</h1>
+											</div>
+											<div class="section-body">
+												<div class="porow" id="oporddetailtable" th:fragment="oporddetailtable">
+													<!--<button class="btn btn-primary btn-sm pull-right create-invoice-btn nodisplay" style="margin-bottom: 10px;"> Create Invoice (<span class="pocount">1</span>)</button>-->
+													<table class="table table-striped table-bordered normal-table nowrap potable">
+														<thead>
+															<tr>
+																<th th:text="#{aso.table2.heading.xrow}">Row</th>
+																<th th:text="#{aso.table2.heading.xitem}">Item</th>
+																<th class="text-right">Qty</th>
+																<th th:text="#{aso.table2.heading.xrate}" class="text-right">Rate</th>
+																<th th:text="#{aso.table2.heading.xunitpur}">Unit</th>
+																<th th:text="#{aso.table2.heading.xlineamt}" class="text-right">Line Amount</th>
+																<th>CF(Selling)</th>
+																<th th:text="#{aso.table2.heading.xnote}">Note</th>
+																<th>Completed Invoice Qty.</th>
+																<th th:if="${opordheader.xstatusord eq 'Open'}" data-nosort="Y" style="text-align: right;">
+																	<button type="button" class="btn btn-success btn-add" th:attr="data-url=@{/salesninvoice/opord/} + ${opordheader.xordernum} + '/oporddetail/new/show', data-target-modal='oporddetailmodal'"><i class="fas fa-plus"></i></button>
+																</th>
+															</tr>
+														</thead>
+														<tbody>
+															<tr th:each="d, n : ${opordDetailsList}" class="porow" th:attr="data-row=${d.xrow}, data-qty=${d.xqtyord}, data-qtydel=${d.xqtydel}" th:style="${d.xqtyord != d.xqtydel ? 'color: none' : 'color:balck; background: #f7ccd7'}" >
+																<td th:text="${d.xrow}"></td>
+																<td>
+																	<a th:href="@{/mastersetup/caitem/} + ${d.xitem}" target="_blank" th:text="${d.xitem} +' - '+ ${d.itemname}"></a>
+																</td>
+																<td th:text="${d.xqtyord}" class="text-right"></td>
+																<td th:text="${d.xrate}" class="text-right"></td>
+																<td th:text="${d.xunitsel}"></td>
+																<td th:text="${d.xlineamt}" class="text-right"></td>
+																<td th:text="${d.xcfsel}" class="text-right"></td>
+																<td th:text="${d.xlong}"></td>
+																<td th:text="${d.xqtydel}" class="text-right"></td>
+																<td th:if="${opordheader.xstatusord eq 'Open'}" data-nosort="Y" style="text-align: right; font-size: 11px;">
+																	<button type="button" class="btn btn-default btn-edit editmode" th:attr="data-url=@{/salesninvoice/opord/} + ${opordheader.xordernum} + '/oporddetail/' + ${d.xrow} + '/show', data-target-modal='oporddetailmodal'"><i class="fas fa-edit"></i></button>
+																	<button type="button" class="btn btn-danger btn-delete editmode" th:attr="data-url=@{/salesninvoice/opord/} + ${opordheader.xordernum} + '/oporddetail/' + ${d.xrow} + '/delete'"><i class="fas fa-trash"></i></button>
+																</td>
+															</tr>
+														</tbody>
+														<tfoot>
+															<th colspan="5" class="text-right">Total</th>
+															<th class="text-right" th:text="${totalLineAmount}">0</th>
+															
+														</tfoot>
+													</table>
+													
+													<script type="text/javascript">
+														var porow = [];
+														$(document).ready(function(){
+															
+															if($('#xstatusord').val()!='Open') {
+																$('table.potable tr.porow').off('click').on('click', function(e){
+																	e.preventDefault();
+											
+																if ($(this).data('qty') != $(this).data('qtydel')){
+																	$(this).toggleClass("selectedrow");
+																}
+											
+																	if(porow.includes($(this).data('row'))){
+																		const index = porow.indexOf($(this).data('row'));
+																		if (index > -1) {
+																			porow.splice(index, 1);
+																		}
+																	} else if ($(this).data('qty') != $(this).data('qtydel')) {
+																		porow.push($(this).data('row'));
+																	}
+											
+																	$('.pocount').html(porow.length);
+																	console.log(porow);
+											
+																	if(porow.length > 0) {
+																		$('.create-invoice-btn').removeClass('nodisplay');
+																	} else {
+																		$('.create-invoice-btn').addClass('nodisplay');
+																	}
+											
+																})
+											
+																$('.create-invoice-btn').off('click').on('click', function(e){
+																	e.preventDefault();
+											
+																	loadingMask2.show();
+																	$.ajax({
+																		url : getBasepath() + '/salesninvoice/opord/createinvoice',
+																		type : 'POST',
+																		data: {
+																			xordernum: $('#xordernum').val(),
+																			rows: porow
+																		},
+																		success : function(data) {
+																			loadingMask2.hide();
+																			if(data.status == 'SUCCESS'){ 
+																				showMessage(data.status.toLowerCase(), data.message);
+																				if(data.triggermodalurl){
+																					modalLoader(getBasepath() + data.triggermodalurl, data.modalid);
+																				} else {
+																					if(data.reloadurl){
+																						doSectionReloadWithNewData(data);
+																					} else if(data.redirecturl){
+																						setTimeout(() => {
+																							window.location.replace(getBasepath() + data.redirecturl);
+																						}, 1000);
+																					}
+																				}
+																			} else {
+																				showMessage(data.status.toLowerCase(), data.message);
+																			}
+																		},
+																		error : function(jqXHR, status, errorThrown){
+																			showMessage(status, "Something went wrong .... ");
+																			loadingMask2.hide()
+																		}
+																	});
+																})					
+															}
+														})
+													</script>
+												</div>
+											</div>
+										</section>
+									</div>
+
+									<div class="col-md-6" th:if="${not #strings.isEmpty(opordheader.xordernum)}">
+										<section id="list-manager" style="margin-top: 30px;" >
+											<div class="section-header sectionbartoggle">
+												<h1>Invoice List of <span th:text="${opordheader.xordernum}"></span></h1>
+											</div>
+											<div class="section-body">
+												<div style="overflow-x: auto;">
+													<table class="table table-striped table-bordered datatable nowrap">
+														<thead>
+															<tr>
+																<th th:text="#{aso.table1.heading.xdornum}">Invoice Number</th>
+																<th th:text="#{aso.table1.heading.xdate}">Date</th>
+																<th th:text="#{aso.table1.heading.xcus}">Customer</th>
+																<th th:text="#{aso.table1.heading.xstatus}">Status</th>
+															</tr>
+														</thead>
+														<tbody th:with="df=${'E, dd-MMM-yyyy'}">
+															<tr th:each="opdo : ${invoicelist}">
+																<td>
+																	<a th:href="@{/salesninvoice/salesandinvoice/} + ${opdo.xdornum}" th:text="${opdo.xdornum}" target="_blank"></a>
+																</td>
+																<td th:text="${#dates.format(opdo.xdate, df)}"></td>
+																<td th:text="${#strings.isEmpty(opdo.xcus) ? '' : opdo.xcus + ' - ' + opdo.xorg}"></td>
+																<td th:text="${opdo.xstatusord}"></td>
+															</tr>
+														</tbody>
+													</table>
+												</div>
+											</div>
+										</section>
+		
+									</div>
+								</div>
+						</div>
+						
+					</div>
+
+				</div>
+			</div>
+		</div>
+		
+	<!-- Modal -->
+	<div id="oporddetailmodal-section"></div>
+
+	<!-- Footer section -->
+	<div class="footer-section" th:include="commons :: footer-section"></div>
+</body>
+
+<script>
+		$(document).ready(function(){
+			
+			$('a.confirmopdo-btn-link').off('click').on('click', function(e){
+				e.preventDefault();
+				var dornum = $("#xordernum").val();
+				
+				$.ajax({
+					url: getBasepath() + "/salesninvoice/opord/confirmopdo/" + dornum,
+					success: function(result){
+						var status = result.status.toLowerCase();
+						
+						if(status == "success")
+							showMessage("success", "Invoice Confirmed");
+						else if(status == "error")
+							showMessage("error", result.message);
+						//location.reload(true);
+						setTimeout(() => {
+							location.reload(true);
+						}, 1200);
+					}
+				});
+			});
+			
+			/* $('a.returninvoice-btn-link').off('click').on('click', function(e){
+				e.preventDefault();
+				var grnNum = $("#xgrnnum").val();
+				
+				$.ajax({
+					url: getBasepath() + "/salesninvoice/opord/returngrn/" + grnNum,
+					success: function(result){
+						var status = result.status.toLowerCase()
+						
+						if(status == "success")
+							showMessage("success", "GRN return order created. Finalize from GRN return.");
+						else if(status == "error")
+							showMessage("error", "Somthing went wrong.....");
+						//location.reload(true);
+						setTimeout(() => {
+							location.reload(true);
+						}, 1200);
+					}
+				});
+			}); */
+			
+			$(".vatait-select").on("change", function(){
+				var vataitId = $(".vatait-select").val()
+				$.ajax({
+					url: getBasepath() + "/mastersetup/vatait/vataitdetail/" + vataitId,
+					type : 'GET',
+					beforeSend : loadingMask2.show(),
+					success: function(data){
+						loadingMask2.hide();
+						console.log(data.xvat);
+						var vatPercent = parseFloat(data.xvat);
+						var aitPercent = parseFloat(data.xaitamt);
+						var vatAmount = (parseFloat($("input[name='xtotamt']").val()) * vatPercent)/100;
+						var aitAmount = (parseFloat($("input[name='xtotamt']").val()) * aitPercent)/100;						
+						
+						$('input[name="xvatamt"]').val(vatAmount);
+						$('input.xvatamt-show').val(vatAmount);
+						$('input[name="xaitamt"]').val(aitAmount);
+						$('input.xaitamt-show').val(aitAmount);
+					},
+					error : function(jqXHR, status, errorThrown){
+						showMessage(status, "Something went wrong .... ");
+						loadingMask2.hide();
+					}
+				});
+			});
+			
+			
+		});
+	</script>
+	
+	<script type="text/javascript">
+			$(document).ready(function(){
+				// Init ui for modal
+				ck.ui.config.buttonevent();
+	
+				$('.xhwhsearch').on('blur', function(){
+					setTimeout(() => {
+						if($('input[name="xhwh"]').val() == ''){
+							$("#xwh option").remove(); 
+							var mySelect = $('#xwh');
+							mySelect.append(
+								$('<option></option>').val("").html("-- Select --")
+							);
+							return;
+						}
+	
+						loadingMask2.show();
+						$.ajax({
+							url : getBasepath() + '/salesninvoice/opord/allcodesbyproject/' + $('input[name="xhwh"]').val(),
+							type : 'GET',
+							success : function(data) {
+								loadingMask2.hide();
+								if(data == undefined || data == null) return;
+	
+								$("#xwh option").remove(); 
+								var mySelect = $('#xwh');
+								mySelect.append(
+									$('<option></option>').val("").html("-- Select --")
+								);
+								$.each(data, function(val, obj) {
+									mySelect.append(
+										$('<option></option>').val(obj.xcode).html(obj.xcode + ' - ' + obj.xcodename)
+									);
+								});
+	
+							},
+							error : function(jqXHR, status, errorThrown){
+								showMessage(status, "Something went wrong .... ");
+								loadingMask2.hide();
+							}
+						})
+					}, 1000);
+				});
+			});
+		</script>
+</html>

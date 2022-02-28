@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+	<head>
+		<title>Land Document</title>
+		<meta th:remove="tag" th:include="commons :: common-meta"/>
+		<meta th:remove="tag" th:include="commons :: common-css"/>
+		<meta th:remove="tag" th:include="commons :: common-js"/>
+	</head>
+	<body>
+
+		<!-- Header section -->
+		<div class="header-section" th:include="commons :: header-section"></div>
+		
+
+
+		<!-- Menu section -->
+		<div th:if="${menuVersion != null and menuVersion eq 'MENU_V2'}" class="menuv2" th:include="commons :: main-menu"></div>
+
+		<div th:if="${menuVersion == null or menuVersion eq 'MENU_V1'}" class="navbar-inverse menu-section">
+			<div class="container-fluid">
+				<div class="row">
+					<nav class="navbar navbar-inverse">
+						<div class="container-fluid">
+							<div class="row">
+								<div class="navbar-header">
+									<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+										<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+									</button>
+								</div>
+								<div class="collapse navbar-collapse" id="myNavbar">
+									<div class="nav navbar-nav">
+										<li><a th:href="@{/}"><i class="fas fa-home"></i> Home</a></li>
+										<li class="active"><a th:href="@{/landdocument}">Land Document</a></li>
+									
+									</div>
+								
+								</div>
+							</div>
+						</div>
+					</nav>
+				</div>
+			</div>
+		</div>
+		
+		<!-- Content section -->
+		<div>
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-md-12 content-area">
+						<div class="row">
+							<div class="col-md-6">
+								<!-- Section list head -->
+								<section id="data-maintenance" style="margin-top: 30px;">
+									<div class="section-body section-border">
+										<div class="row">
+											<div class="col-md-12">
+												<div class="row">
+													<div class="col-md-12">
+														<div class="section-header sectionbartoggle">
+															<h1>Land Document</h1>
+														</div>
+														<div class="form-action-button">
+															<a th:href="@{/landdocument}" class="btn btn-sm btn-default"><i class="fas fa-redo-alt"></i> Clear</a>
+															<a class="btn btn-sm btn-success confirm-btn"><i class="fas fa-save"></i> Save</a>
+															<a th:if="${not #strings.isEmpty(document.xdoc)}" class="btn btn-sm btn-success confirm-btn"><i class="fas fa-save"></i> Update</a>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+
+										<div class="row">
+											<div class="col-md-12">
+												<div class="row">
+													<form id="mainform" class="form-horizontal" method="POST" th:action="@{/landdocument/save}" th:object="${document}" enctype="multipart/form-data">
+														<input type="hidden" th:if="${xrow ne 0}" th:field="*{xrow}"/>
+														<input type="hidden" th:field="*{xtypetrn}"/>
+														<input type="hidden" th:field="*{xdoc}"/>
+														<div class="col-md-6">
+															<div class="form-group" th:if="${#strings.isEmpty(document.xdoc)}">
+																<label class="control-label col-md-4" for="xtrn"> Document ID</label>
+																<div class="col-md-8">
+																	<select class="form-control" th:field="*{xtrn}">
+																		<option th:each="d : ${prefixes}" th:value="${d.xtrn}" th:text="${d.xtrn}"></option>
+																	</select>
+																</div>
+															</div>
+															<div class="form-group" th:if="${not #strings.isEmpty(document.xdoc)}">
+																<label class="control-label col-md-4" for="xdoc">Document ID</label>
+																<div class="col-md-8">
+																	<input type="text" class="form-control" th:value="*{xdoc}" maxlength="100"/>
+																</div>
+															</div>
+															<div class="form-group" th:if="${#strings.isEmpty(document.xdoc)}">
+																<label class="control-label col-md-4" for="xperson">Person ID</label>
+																<div class="col-sm-8">
+																	<input 	type="text" 
+																			class="form-control searchsuggest" 
+																			placeholder="Search..." 
+																			th:value="${document.xperson}" 
+																			th:attr="search-url='search/personId'"/>
+																	<input type="hidden" id="search-val" th:field="*{xperson}"/>
+																	<input type="hidden" id="search-des" th:value="*{xperson}"/>
+																</div>
+															</div>
+															<div class="form-group" th:if="${not #strings.isEmpty(document.xdoc)}">
+																<label class="control-label col-md-4" for="xperson">Person ID </label>
+																<div class="col-md-8">
+																	<input type="hidden" class="form-control" th:field="*{xperson}"/>
+																	<input type="text" class="form-control" th:value="*{xperson}" disabled="disabled"/>
+																</div>
+															</div>
+															<div class="form-group" th:if="${#strings.isEmpty(document.xdoc)}">
+																<label class="control-label col-md-4" for="xsurveyor">Surveyor ID </label>
+																<div class="col-sm-8">
+																	<input 	type="text" 
+																			class="form-control searchsuggest" 
+																			placeholder="Search..." 
+																			th:value="${document.xsurveyor}" 
+																			th:attr="search-url='search/landSur'"/>
+																	<input type="hidden" id="search-val" th:field="*{xsurveyor}"/>
+																	<input type="hidden" id="search-des" th:value="*{xsurveyor}"/>
+																</div>
+															</div>
+															<div class="form-group" th:if="${not #strings.isEmpty(document.xdoc)}">
+																<label class="control-label col-md-4" for="xsurveyor">Surveyor ID</label>
+																<div class="col-md-8">
+																	<input type="hidden" class="form-control" th:field="*{xsurveyor}"/>
+																	<input type="text" class="form-control" th:value="*{xsurveyor}" disabled="disabled"/>
+																</div>
+															</div>
+															<div class="form-group" th:if="${#strings.isEmpty(document.xdoc)}">
+																<label class="control-label col-md-4" for="xland">Land ID</label>
+																<div class="col-sm-8">
+																	<input 	type="text" 
+																			class="form-control searchsuggest" 
+																			placeholder="Search..." 
+																			th:value="${document.xland}" 
+																			th:attr="search-url='search/landId'"/>
+																	<input type="hidden" id="search-val" th:field="*{xland}"/>
+																	<input type="hidden" id="search-des" th:value="*{xland}"/>
+																</div>
+															</div>
+															<div class="form-group" th:if="${not #strings.isEmpty(document.xdoc)}">
+																<label class="control-label col-md-4" for="xland">Land ID</label>
+																<div class="col-md-8">
+																	<input type="hidden" class="form-control" th:field="*{xland}"/>
+																	<input type="text" class="form-control" th:value="*{xland}" disabled="disabled"/>
+																</div>
+															</div>
+														</div>
+														<div class="col-md-6">
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xdoctype">Document Type</label>
+																<div class="col-md-8">
+																	<select class="form-control" th:field="*{xdoctype}">
+																		<option th:each="d : ${dt}" th:value="${d.xcode}" th:text="${d.xcode}"></option>
+																	</select>
+																</div>
+															</div>
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xname">Name</label>
+																<div class="col-md-8">
+																	<input type="text" class="form-control" th:field="*{xname}" maxlength="100"/>
+																</div>
+															</div>
+															<div class="form-group">
+																<label class="control-label col-sm-4" for="selectPhoto">Add Document</label>
+																<div class="input-group col-sm-8">
+																	<label class="input-group-btn">
+																		<span class="btn btn-default brows-btn">
+																			Brows &hellip; <input type="file" name="file" id="fileuploader" style="display: none;">
+																		</span>
+																	</label>
+																	<input type="text" class="form-control filepath-input" readonly="readonly">
+																</div>
+															</div>
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xnote">Note</label>
+																<div class="col-md-8">
+																	<textarea class="form-control" rows="3" th:field="*{xnote}" placeholder="Note"></textarea>
+																</div>
+															</div>
+														</div>
+													</form>
+												</div>
+											</div>
+										</div>
+									</div>
+								</section>
+							</div>
+							<div class="col-md-6">
+								<section id="list-manager" style="margin-top: 30px;">
+									<div class="section-header sectionbartoggle">
+										<h1>All Document</h1>
+									</div>
+									<div class="section-body">
+										<div style="overflow-x: scroll;">
+											<table class="table table-striped table-bordered datatable nowrap">
+												<thead>
+													<tr>
+														<th>Document ID</th>
+														<th>Person ID</th>
+														<th>Surveyor ID</th>
+														<th>Land ID</th>
+														<th>Document type</th>
+														<th>Document Path</th>
+													</tr>
+												</thead>
+												<tbody>
+													<tr th:each="ad: ${allDocument}">
+														<td>
+															<a th:href="@{/landdocument/} + ${ad.xdoc}" th:text="${ad.xdoc}"></a>
+														</td>
+														<td><a th:href="@{/landperson/} + ${ad.xperson}" target="_blank" th:text="${ad.xperson}"></a></td>
+														<td><a th:href="@{/landsurveyor/} + ${ad.xsurveyor}" target="_blank" th:text="${ad.xsurveyor}"></a></td>
+														<td><a th:href="@{/landinfo/} + ${ad.xland}" target="_blank" th:text="${ad.xland}"></a></td>
+														<td th:text="${ad.xdoctype}"></td>
+														<td th:text="${ad.xdocument}"></td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</section>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		  <!-- Footer section -->
+		<div class="footer-section" th:include="commons :: footer-section"></div>
+		
+		<script type="text/javascript">
+			$(document).ready(function(){
+				$(function () {
+					// We can attach the `fileselect` event to all file inputs on the page
+					$(document).on('change', ':file', function () {
+						var input = $(this),
+						numFiles = input.get(0).files ? input.get(0).files.length : 1,
+						label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+						input.trigger('fileselect', [numFiles, label]);
+					});
+					// We can watch for our custom `fileselect` event like this
+					$(document).ready(function () {
+						$(':file').on('fileselect', function (event, numFiles, label) {
+							var input = $(this).parents('.input-group').find(':text'),
+							log = numFiles > 1 ? numFiles + ' files selected' : label;
+							if (input.length) {
+								input.val(log);
+							} else {
+								if (log)
+								alert(log);
+							}
+						});
+					});
+				});
+			});
+			
+		</script>
+	</body>
+</html>

@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<title th:text="#{dcg.page.title}">Delivery Chalan (Group)</title>
+		<meta th:remove="tag" th:include="commons :: common-meta" />
+		<meta th:remove="tag" th:include="commons :: common-css" />
+		<meta th:remove="tag" th:include="commons :: common-js" />
+	</head>
+	<body>
+		<!-- Header section -->
+		<div class="header-section" th:include="commons :: header-section"></div>
+
+		<!-- Menu section -->
+		<div th:if="${menuVersion != null and menuVersion eq 'MENU_V2'}" class="menuv2" th:include="commons :: main-menu"></div>
+
+		<div th:if="${menuVersion == null or menuVersion eq 'MENU_V1'}" class="navbar-inverse menu-section">
+			<div class="container-fluid">
+				<div class="row">
+					<nav class="navbar navbar-inverse">
+						<div class="container-fluid">
+							<div class="row">
+								<div class="navbar-header">
+									<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+										<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+									</button>
+								</div>
+								<div class="collapse navbar-collapse" id="myNavbar">
+									<div class="nav navbar-nav">
+										<li><a th:href="@{/}"><i class="fas fa-home"></i> Home</a></li>
+										<li class="active"><a th:href="@{/salesninvoice/deliveryorderchalan}">Delivery Chalan (Group)</a></li>
+									</div>
+									<ul class="nav navbar-nav navbar-right" th:include="ckbigmenu :: dashboard-menu"></ul>
+								</div>
+							</div>
+						</div>
+					</nav>
+				</div>
+			</div>
+		</div>
+
+		<!-- Content section -->
+		<div>
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-md-12 content-area">
+
+						<div class="row">
+							<div class="col-md-6">
+								<!-- Section list head -->
+								<section id="data-maintenance" style="margin-top: 30px;">
+									<div class="section-header sectionbartoggle">
+										<h1 th:text="#{dcg.page.heading}">Delivery Chalan (Group)</h1>
+									</div>
+									<div class="form-action-button">
+										<a th:href="@{/salesninvoice/deliveryorderchalan}" class="btn btn-sm btn-default"><i class="fas fa-redo-alt"></i> <span style="margin-left:2px;" th:text="#{button.value.xclear}"> Clear</span></a>
+										<a th:if="${#strings.isEmpty(deliveryorderchalan.xdornum)}" th:href="@{/}" class="btn btn-sm btn-success confirm-btn"><i class="fas fa-save"></i> <span style="margin-left:2px;" th:text="#{button.value.xsave}"> Save</span></a>
+										<a th:if="${not #strings.isEmpty(deliveryorderchalan.xdornum) and deliveryorderchalan.zactive == true and deliveryorderchalan.xstatusord eq 'Open'}" href="#" class="btn btn-sm btn-success update-btn"><i class="fas fa-edit"></i> <span style="margin-left:2px;" th:text="#{button.value.xupdate}"> Update</span></a>
+										<!-- <a th:if="${not #strings.isEmpty(deliveryorderchalan.xdornum) and deliveryorderchalan.zactive == true and deliveryorderchalan.xstatusord eq 'Open'}" th:href="@{/salesninvoice/deliveryorderchalan/archive/} + ${deliveryorderchalan.xdornum}" class="btn btn-sm btn-danger archive-btn-link"><i class="fas fa-trash-alt"></i> Archive</a> -->
+										<a th:if="${not #strings.isEmpty(deliveryorderchalan.xdornum) and deliveryorderchalan.zactive == true and deliveryorderchalan.xstatusord eq 'Open'}" th:href="@{/salesninvoice/deliveryorderchalan/lockchalan/} + ${deliveryorderchalan.xdornum}" class="btn btn-sm btn-warning restore-btn-link"><i class="fas fa-unlock-alt"></i> Lock & Finalize Chalan</a>
+										<a th:if="${not #strings.isEmpty(deliveryorderchalan.xdornum) and deliveryorderchalan.zactive == true and deliveryorderchalan.xstatusord eq 'Confirmed'}" class="btn btn-sm btn-danger"><i class="fas fa-lock"></i> Delivered</a>
+									</div>
+									<div class="section-body section-border">
+										<form id="mainform" class="form-horizontal" th:action="@{/salesninvoice/deliveryorderchalan/save}" th:object="${deliveryorderchalan}" method="post" th:with="df=${'E, dd-MMM-yyyy'}">
+											<input type="hidden" class="form-control" th:field="*{xtypetrn}"/>
+											<input th:if="${not #strings.isEmpty(deliveryorderchalan.xdornum)}" type="hidden" class="form-control" th:field="*{xtrn}"/>
+											<input th:if="${not #strings.isEmpty(deliveryorderchalan.xdornum)}" type="hidden" class="form-control" th:field="*{xdornum}"/>
+											<div class="row">
+												<div class="col-md-8">
+
+													<div class="form-group" th:if="${#strings.isEmpty(deliveryorderchalan.xdornum)}">
+														<label class="control-label col-md-4" for="xtrn" th:text="#{dcg.form.label.xtrn}">Prefix : </label>
+														<div class="col-md-4">
+															<select class="form-control" th:field="*{xtrn}">
+																<option th:each="bp : ${deliveryorderchalanprefix}" th:text="${bp.xtrn}" th:value="${bp.xtrn}"></option>
+															</select>
+														</div>
+													</div>
+
+													<div class="form-group" th:if="${not #strings.isEmpty(deliveryorderchalan.xdornum)}">
+														<label class="control-label col-md-4" for="xtrn" th:text="#{dcg.form.label.xtrnn}">Chalan Code : </label>
+														<div class="col-md-4">
+															<input type="text" class="form-control" th:value="${deliveryorderchalan.xdornum}" disabled="disabled"/>
+														</div>
+													</div>
+
+													<div class="form-group">
+														<label class="control-label col-md-4" for="xstatusord" th:text="#{dcg.form.label.xstatusord}">Status : </label>
+														<div class="col-md-4">
+															<input type="text" class="form-control" th:field="*{xstatusord}" disabled="disabled"/>
+														</div>
+													</div>
+
+												</div>
+												<div class="col-md-4"></div>
+											</div>
+										</form>
+									</div>
+								</section>
+							</div>
+							<div class="col-md-6">
+								<section id="list-manager" style="margin-top: 30px;">
+									<div class="section-header sectionbartoggle">
+										<h1>Delivery Chalan List</h1>
+									</div>
+									<div class="section-body">
+										<table class="table table-striped table-bordered datatable nowrap">
+											<thead>
+												<tr>
+													<th th:text="#{dcg.table.heading.xdornum}">Chalan</th>
+													<th th:text="#{dcg.table.heading.xdate}">Date</th>
+													<th th:text="#{dcg.table.heading.xstatusord}">Status</th>
+													<th th:text="#{dcg.table.heading.xordernum}">Production Chalan</th>
+												</tr>
+											</thead>
+											<tbody th:with="df=${'E, dd-MMM-yyyy'}">
+												<tr th:each="bh : ${deliveryorderchalanList}">
+													<td>
+														<a th:href="@{/salesninvoice/deliveryorderchalan/} + ${bh.xdornum}" th:text="${bh.xdornum}"></a>
+													</td>
+													<td  th:text="${#dates.format(bh.xdate, df)}"></td>
+													<td th:text="${bh.xstatusord}"></td>
+													<td>
+														<a th:href="@{/salesninvoice/salesorderchalan/} + ${bh.xordernum}" th:text="${bh.xordernum}" target="_blank"></a>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</section>
+
+							</div>
+						</div>
+						
+					</div>
+
+
+					<div class="col-md-6" th:if="${not #strings.isEmpty(deliveryorderchalan.xdornum)}">
+						<section id="data-maintenance" style="margin-top: 30px;">
+							<div class="section-header sectionbartoggle">
+								<h1>
+									<span th:text="${deliveryorderchalan.xstatusord eq 'Open' ? 'All assigned & open Sales Invoices' : 'All assigned Sales Invoices'}"></span>
+								</h1>
+								<h3>
+									<a th:if="${not #strings.isEmpty(deliveryorderchalan.xdornum) and deliveryorderchalan.zactive == true and deliveryorderchalan.xstatusord eq 'Confirmed'}" th:href="@{/salesninvoice/deliveryorderchalan/print/chalan/delivery/} + ${deliveryorderchalan.xdornum}" class="" target="_blank"><i class="fas fa-print"></i> Delivery Chalan</a>
+									<a th:if="${not #strings.isEmpty(deliveryorderchalan.xdornum) and deliveryorderchalan.zactive == true and deliveryorderchalan.xstatusord eq 'Confirmed'}" th:href="@{/salesninvoice/deliveryorderchalan/print/chalan/invoices/} + ${deliveryorderchalan.xdornum}" class="" target="_blank"><i class="fas fa-print"></i> Invoices</a>
+								</h3>
+							</div>
+							<div class="section-body">
+								<div class="row" th:if="${deliveryorderchalan.xstatusord eq 'Open'}">
+									<div class="col-md-6">
+										<form id="mainform2" class="form-horizontal" th:action="@{/salesninvoice/deliveryorderchalan/opendeliveryorder/query}" method="post" th:with="df=${'E, dd-MMM-yyyy'}">
+											<input type="hidden" name="xdornum" th:value="${deliveryorderchalan.xdornum}"/>
+											<div class="form-group datepicker">
+												<label class="control-label col-md-4" for="xdate" th:text="#{dcg.table1.level.xdate}">Order Date : </label>
+												<div class="input-group date col-md-8 datepicker">
+													<input 	type="datepicker" 
+															class="form-control" 
+															id="xdate"
+															name="xdate"
+															th:value="${#dates.format(#dates.createNow(), df)}"/>
+													<div class="input-group-addon">
+														<span class="glyphicon glyphicon-calendar"></span>
+													</div>
+												</div>
+											</div>
+										</form>
+									</div>
+									<div class="col-md-6">
+										<div class="">
+											<button class="btn btn-sm btn-success query-submit-btn" type="submit"><i class="fas fa-search"></i></button>
+										</div>
+									</div>
+								</div>
+
+								<table class="table table-striped table-bordered datatable nowrap" id="opendeliveryorderstable" th:fragment="opendeliveryorderstable">
+									<thead>
+										<tr>
+											<th th:text="#{dcg.table1.heading.xdornum}">Invoice No.</th>
+											<th th:text="#{dcg.table1.heading.xdate}">Invoice Date</th>
+											<th th:text="#{dcg.table1.heading..xstatusord}">Invoice Status</th>
+											<th th:text="#{dcg.table1.heading.xordernum}">Sales Order</th>
+											<th th:text="#{dcg.table1.heading.xchalancreated}">Chalan Status</th>
+											<th data-nosort="Y" style="text-align: right">Action</th>
+										</tr>
+									</thead>
+									<tbody th:with="df=${'E, dd-MMM-yyyy'}">
+										<tr th:each="os : ${openinvoiceorders}">
+											<td>
+												<a th:href="@{/salesninvoice/salesandinvoice/} + ${os.xdornum}" target="_blank" th:text="${os.xdornum}"></a>
+											</td>
+											<!-- <td th:text="${os.xpornum} + ' - ' + ${os.branchname}"></td> -->
+											<td th:text="${#dates.format(os.xdate, df)}"></td>
+											<td th:text="${os.xstatusord}"></td>
+											<td th:text="${os.xordernum}"></td>
+											<td>
+												<span th:if="${os.xchalancreated == true}" class="text-success">Assigned</span>
+												<span th:if="${os.xchalancreated == false}" class="text-warning">Not Assigned</span>
+											</td>
+											<td style="text-align: right">
+												<button type="button" class="btn btn-warning btn-edit editmode" th:attr="data-url=@{/salesninvoice/deliveryorderchalan/ordreqdetails/} + ${os.xdornum} + '/show', data-target-modal='deliveryorderdetailmodal'"><i class="fas fa-eye"></i></button>
+												<button th:if="${os.xchalancreated == false and os.xstatusord eq 'Open' and deliveryorderchalan.xstatusord eq 'Open'}" type="button" class="btn btn-success btn-confirm editmode" th:attr="data-url=@{/salesninvoice/deliveryorderchalan/deliveryorderconfirm/} + ${deliveryorderchalan.xdornum}  + '/' + ${os.xdornum}"><i class="fas fa-check-square"></i></button>
+												<a th:if="${not #strings.isEmpty(deliveryorderchalan.xdornum)  and deliveryorderchalan.zactive == true and deliveryorderchalan.xstatusord eq 'Confirmed'}" target="_blank" type="button" class="btn btn-success" th:href="@{/salesninvoice/deliveryorderchalan/print/order/delivery/} + ${os.xdornum}"><i class="fas fa-truck"></i></a>
+												<a th:if="${not #strings.isEmpty(deliveryorderchalan.xdornum) and deliveryorderchalan.zactive == true and deliveryorderchalan.xstatusord eq 'Confirmed'}" target="_blank" type="button" class="btn btn-primary" th:href="@{/salesninvoice/deliveryorderchalan/print/order/invoice/} + ${os.xdornum}"><i class="fas fa-file-invoice-dollar"></i></a>
+												<button th:if="${os.xchalancreated == true and os.xstatusord eq 'Open' and deliveryorderchalan.xstatusord eq 'Open'}" type="button" class="btn btn-danger btn-delete editmode" th:attr="data-url=@{/salesninvoice/deliveryorderchalan/deliveryorderrevoke/} + ${deliveryorderchalan.xdornum}  + '/' + ${os.xdornum}"><i class="fas fa-trash"></i></button>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</section>
+					</div>
+
+					<div class="col-md-6" th:if="${not #strings.isEmpty(deliveryorderchalan.xdornum)}">
+						<!-- poorddetail section -->
+						<section id="data-maintenance" style="margin-top: 30px;">
+							<div class="section-header sectionbartoggle">
+								<h1>Chalan Item Details of <span th:text="${deliveryorderchalan.xdornum}"></span></h1>
+							</div>
+							<div class="section-body">
+								<table class="table table-striped table-bordered datatable nowrap" id="deliveryorderchalandetailtable" th:fragment="deliveryorderchalandetailtable">
+									<thead>
+										<tr>
+											<th th:text="#{dcg.modal.table.heading.xitem}">Item</th>
+											<th th:text="#{dcg.modal.table.heading.xqtyord}" class="text-right">Qty</th>
+											<th th:text="#{dcg.modal.table.heading.xunitsel}">Unit</th>
+											<th th:text="#{dcg.modal.table.heading.xcatitem}">Category</th>
+										</tr>
+									</thead>
+									<tbody th:with="df=${'E, dd-MMM-yyyy'}">
+										<tr th:each="cd : ${chalandetails}">
+											<td>
+												<a th:href="@{/mastersetup/caitem/} + ${cd.xitem}" target="_blank" th:text="${cd.xitem} + ' - ' + ${cd.xdesc}"></a>
+											</td>
+											<td class="text-right" th:text="${cd.xqtyord}"></td>
+											<td th:text="${cd.xunitsel}"></td>
+											<td th:text="${cd.xcatitem}"></td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</section>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Modal -->
+		<div id="deliveryorderchalandetailmodal-section"></div>
+		<div id="deliveryorderdetailmodal-section"></div>
+
+		<!-- Footer section -->
+		<div class="footer-section" th:include="commons :: footer-section"></div>
+
+		<script type="text/javascript">
+			$(document).ready(function(){
+				$('.query-submit-btn').on('click', function(e){
+					e.preventDefault();
+					submitMainForm($('#mainform2').attr('action'), $('#mainform2'));
+				})
+			})
+		</script>
+	</body>
+</html>

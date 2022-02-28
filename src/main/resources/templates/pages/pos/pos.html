@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>POS</title>
+    <meta th:include="commons :: common-meta" th:remove="tag"/>
+
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" th:href="@{/assets/css/pos/pos.css}" type="text/css"/>
+
+    <link rel="stylesheet" th:href="@{/assets/css/fontawesome/fontawesome.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/css/fontawesome/brands.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/css/fontawesome/solid.css}"/>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <script th:src="@{/assets/js/jquery.mousewheel.js}" type="text/javascript"></script>
+    <script th:src="@{/assets/js/moment.js}" type="text/javascript"></script>
+
+    <script th:src="@{/assets/js/pos/pos.js}" type="text/javascript"></script>
+    <script>
+        var count = 1;
+        var result = 0;
+        $(document).ready(function () {
+            $(".data").click(function () {
+                count = count + 1;
+                result = count % 2;
+                console.log("Clicked...Clicked...")
+                console.log($(".data").data('xcode'));
+                if (result == 0) {
+                     $(".selected").removeClass('active')
+                     $(".disactive").addClass('active')
+                     $("#subcategory").show();
+                } else {
+                     $(".selected").addClass('active')
+                     $(".disactive").removeClass('active')
+                     $("#subcategory").hide();
+                }
+            });
+        });
+    </script>
+</head>
+
+<body>
+
+<!-- Header -->
+<div class="header-bar">
+    <div class="col-md-3 header-logo">
+        <h1><a href="#">POS</a></h1>
+    </div>
+    <div class="col-md-6 header-timer"></div>
+    <div class="col-md-3 header-menu">
+        <ul>
+            <li><a href="#"><i class="fas fa-bell"></i></a></li>
+            <li><a th:href="@{/}"><i class="fas fa-tachometer-alt"></i></a></li>
+            <li><a href="#"><i class="fas fa-sign-out-alt"></i></a></li>
+            <li><a href="#"><i class="fas fa-user-tie"></i></a></li>
+        </ul>
+    </div>
+</div>
+
+<!-- Flex Container -->
+<div class="flex-container">
+
+    <!-- Category -->
+    <div class="flex-item1">
+        <ul class="category-menu">
+            <li class="active disactive">
+                <div class="category-menu-icon"><i class="fab fa-gripfire"></i></div>
+                <a href="#">All</a>
+            </li>
+            <li class="data selected" th:attr="data-xcode=${category.xcode}"
+                th:each="category : ${xitemCategories}">
+                <div class="category-menu-icon"><i class="fab fa-gripfire"></i></div>
+                <a href="#" id="category" th:text="${category.xcode}" th:value="${category.xcode}"></a>
+            </li>
+        </ul>
+    </div>
+
+
+    <!-- Flex item 2 -->
+    <div class="flex-item2">
+
+        <!-- Sub Category -->
+        <div class="col-md-12 subcategory-menu" id="subcategory" style="background-color: #bbdd; color:white; height:50px; display:none">
+            <p class="subcategory-menu-heading" style="padding-top:10px;"><i class="fas fa-angle-double-right"></i></p>
+            <ul class="sub-category-ul" style="padding-top:10px;" th:each="category : ${xsubCategories}">
+                <li id="button">
+                    <label class="checkbox-inline">
+                    <input name="subcategory" th:text="${category.xcode}"th:value="${category.xcode}" type="checkbox"/></label>
+                </li>
+            </ul>
+        </div>
+        <!-- Product Container -->
+        <div class="product-container">
+            <div class="sticky col-md-12">
+                <div class="col-md-6 product-search">
+                    <input class="form-control custom-search" placeholder="Search by Code or Name" type="text">
+                </div>
+                <div class="col-md-6 product-count">
+                    <button class="btn btn-success btn-sm" title="Hold Bills">3 <i class="fas fa-drumstick-bite"></i>
+                    </button>
+                    <button class="btn btn-warning btn-sm" title="Hold Bills"><i class="fas fa-list"></i></button>
+                </div>
+            </div>
+
+            <div class="col-md-2 image-product" th:each="caitem : ${caitem}">
+                <div class="product-image">
+                    <img th:unless="${#strings.isEmpty(caitem.xbimage)}" alt="" th:src="@{/} + ${caitem.xresource} + ${caitem.xbimage}"/>
+                </div>
+                <div class="col-md-12 image-product-box">
+                    <span th:text="${caitem.xitem}"></span><br/>
+                    <span th:text="${caitem.xdesc}"></span><br/>
+                    <span>Price: </span><span class="product-price" th:text="${caitem.xrate}"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cart Container -->
+        <div class="cart-container">
+            <div class="cart-header col-md-12">
+                <table lass="table cart-header-table">
+                    <tr class="main-item-row">
+                        <td class="item-trash" style="color: #fff !important;"><i class="fas fa-dumpster"></i></td>
+                        <td class="item-detail" colspan="2">
+                            <span class="item-title">Invoice : DO0000100</span><br/>
+                            <span>Customer : Shagor</span>
+                        </td>
+                        <td class="add-customer">
+                            <i class="fas fa-user-plus"></i>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-md-12 cart">
+                <table class="table table-bordered table-stripped cart-table">
+                    <tr>
+                        <td class="item-td">
+                            <table>
+                                <tr class="main-item-row">
+                                    <td class="item-trash"><i class="fas fa-trash-alt"></i></td>
+                                    <td class="item-detail">
+                                        <span class="item-title">Item name</span>
+                                        <span>20.00</span>
+                                    </td>
+                                    <td class="item-qty">
+                                        <div class="quantity">
+                                            <input min="1" step="1" type="number" value="1">
+                                        </div>
+                                    </td>
+                                    <td class="item-netamt">14005.50</td>
+                                </tr>
+                                <tr class="addon-item-row">
+                                    <td class="addon-item-trash"><i class="fas fa-trash-alt"></i></td>
+                                    <td class="addon-item-detail">
+                                        <span class="addon-item-title">Addon</span>
+                                        <span>20.00</span>
+                                    </td>
+                                    <td class="addon-item-qty">
+                                        <div class="quantity">
+                                            <input min="0" step="1" type="number" value="1">
+                                         </div>
+                                    </td>
+                                    <td class="addon-item-netamt">14005.50</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="item-td">
+                            <table>
+                                <tr class="main-item-row">
+                                    <td class="item-trash"><i class="fas fa-trash-alt"></i></td>
+                                    <td class="item-detail">
+                                        <span class="item-title">Item name</span>
+                                        <span>20.00</span>
+                                    </td>
+                                    <td class="item-qty">
+                                        <div class="quantity">
+                                            <input min="1" step="1" type="number" value="1">
+                                        </div>
+                                    </td>
+                                    <td class="item-netamt">14005.50</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="item-td">
+                            <table>
+                                <tr class="main-item-row">
+                                    <td class="item-trash"><i class="fas fa-trash-alt"></i></td>
+                                    <td class="item-detail">
+                                        <span class="item-title">Item name</span>
+                                        <span>20.00</span>
+                                    </td>
+                                    <td class="item-qty">
+                                        <div class="quantity">
+                                            <input min="1" step="1" type="number" value="1">
+                                        </div>
+                                    </td>
+                                    <td class="item-netamt">14005.50</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="item-td">
+                            <table>
+                                <tr class="main-item-row">
+                                    <td class="item-trash"><i class="fas fa-trash-alt"></i></td>
+                                    <td class="item-detail">
+                                        <span class="item-title">Item name</span>
+                                        <span>20.00</span>
+                                    </td>
+                                    <td class="item-qty">
+                                        <div class="quantity">
+                                            <input min="1" step="1" type="number" value="1">
+                                        </div>
+                                    </td>
+                                    <td class="item-netamt">14005.50</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="item-td">
+                            <table>
+                                <tr class="main-item-row">
+                                    <td class="item-trash"><i class="fas fa-trash-alt"></i></td>
+                                    <td class="item-detail">
+                                        <span class="item-title">Item name</span>
+                                        <span>20.00</span>
+                                    </td>
+                                    <td class="item-qty">
+                                        <div class="quantity">
+                                            <input min="1" step="1" type="number" value="1">
+                                        </div>
+                                    </td>
+                                    <td class="item-netamt">14005.50</td>
+                                </tr>
+                                <tr class="set-item-row">
+                                    <td class="set-item-trash"><i class="fas fa-plus"></i></td>
+                                    <td class="set-item-detail">
+                                        <span class="set-item-title">Set item 1</span>
+                                    </td>
+                                    <td class="set-item-qty">
+                                        1
+                                    </td>
+                                    <td class="set-item-netamt">0.00</td>
+                                </tr>
+                                <tr class="set-item-row">
+                                    <td class="set-item-trash"><i class="fas fa-plus"></i></td>
+                                    <td class="set-item-detail">
+                                        <span class="set-item-title">Set item 1</span>
+                                    </td>
+                                    <td class="set-item-qty">
+                                        1
+                                    </td>
+                                    <td class="set-item-netamt">0.00</td>
+                                </tr>
+                                <tr class="addon-item-row">
+                                    <td class="addon-item-trash"><i class="fas fa-trash-alt"></i></td>
+                                    <td class="addon-item-detail">
+                                        <span class="addon-item-title">Addon</span>
+                                        <span>20.00</span>
+                                    </td>
+                                    <td class="addon-item-qty">
+                                        <div class="quantity">
+                                            <input min="0" step="1" type="number" value="1">
+                                        </div>
+                                    </td>
+                                    <td class="addon-item-netamt">14005.50</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-md-12 invoice">
+                <table class="table invoice-table">
+                    <tr>
+                        <th>Invoice Total</th>
+                        <th>100.00</th>
+                    </tr>
+                    <tr>
+                        <td>(-) Discount <span>0.00%</span></td>
+                        <td class="invoice-red">100.00</td>
+                    </tr>
+                    <tr>
+                        <td>(-) SP Discount</td>
+                        <td class="invoice-red">100.00</td>
+                    </tr>
+                    <tr>
+                        <td>(+) VAT</td>
+                        <td class="invoice-green">100.00</td>
+                    </tr>
+                    <tr>
+                        <td>(+) SD</td>
+                        <td class="invoice-green">100.00</td>
+                    </tr>
+                    <tr>
+                        <th>Grand Total</th>
+                        <th>100.00</th>
+                    </tr>
+                    <tr>
+                        <th>Due</th>
+                        <th>100.00</th>
+                    </tr>
+                    <tr>
+                        <th>Paid Total</th>
+                        <th>100.00</th>
+                    </tr>
+                    <tr>
+                        <td><i class="fas fa-caret-right"></i> Cash</td>
+                        <td>100.00</td>
+                    </tr>
+                    <tr>
+                        <td><i class="fas fa-caret-right"></i> Card</td>
+                        <td>100.00</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- Bill Container -->
+        <div class="bill-container">
+            <div class="calculator-display">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="control-label col-sm-3" for="balance">Balance</label>
+                        <div class="col-sm-9">
+                            <input class="form-control" id="balance" placeholder="0.00" type="number">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-3" for="charged">Charged</label>
+                        <div class="col-sm-9">
+                            <input class="form-control" id="charged" placeholder="0.00" type="number">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="calculator-body">
+                <table class="table calculator-table">
+                    <tr>
+                        <td>
+                            <button class="btn btn-warning">1000</button>
+                        </td>
+                        <td>
+                            <button class="btn btn-warning">10</button>
+                        </td>
+                        <td>
+                            <button class="btn btn-default">7</button>
+                        </td>
+                        <td>
+                            <button class="btn btn-default">8</button>
+                        </td>
+                        <td>
+                            <button class="btn btn-default">9</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button class="btn btn-warning">500</button>
+                        </td>
+                        <td>
+                            <button class="btn btn-warning">20</button>
+                        </td>
+                        <td>
+                            <button class="btn btn-default">4</button>
+                        </td>
+                        <td>
+                            <button class="btn btn-default">5</button>
+                        </td>
+                        <td>
+                            <button class="btn btn-default">6</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button class="btn btn-info">%</button>
+                        </td>
+                        <td>
+                            <button class="btn btn-warning">50</button>
+                        </td>
+                        <td>
+                            <button class="btn btn-default">1</button>
+                        </td>
+                        <td>
+                            <button class="btn btn-default">2</button>
+                        </td>
+                        <td>
+                            <button class="btn btn-default">3</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button class="btn btn-info">Dis.</button>
+                        </td>
+                        <td>
+                            <button class="btn btn-warning">100</button>
+                        </td>
+                        <td>
+                            <button class="btn btn-default">.</button>
+                        </td>
+                        <td>
+                            <button class="btn btn-default">0</button>
+                        </td>
+                        <td>
+                            <button class="btn btn-danger">C</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="5">
+                            <button class="btn btn-default calc-sp">ALL</button>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="kot-note">
+                <textarea class="form-control" placeholder="KOT Note"></textarea>
+            </div>
+
+            <div class="payment-type">
+                <table class="table payment-type-table">
+                    <tr>
+                        <td>
+                            <button class="btn btn-default">Cash</button>
+                        </td>
+                        <td>
+                            <button class="btn btn-default">Card</button>
+                        </td>
+                        <td>
+                            <button class="btn btn-default">Due</button>
+                        </td>
+                        <td>
+                            <button class="btn btn-default">Serv.</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="padding-left: 5px !important;">Card Number</td>
+                        <td colspan="2"><input class="form-control" placeholder="9999" style="text-align: center;"
+                                               type="number"/></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="padding-left: 5px !important;">Card or Service</td>
+                        <td colspan="2">
+                            <select class="form-control">
+                                <option value="">-- Select --</option>
+                                <option value="bKash">bKash</option>
+                                <option value="VISA">VISA</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <button class="btn btn-success calc-sp"><i class="fas fa-print"></i> Submit</button>
+                        </td>
+                        <td>
+                            <button class="btn btn-warning">Hold</button>
+                        </td>
+                        <td>
+                            <button class="btn btn-danger">Reset</button>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+</body>
+		<script type="text/javascript" th:src="@{/assets/js/ck-ui/ck-search-suggest.js}"></script>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				// Init ui for modal
+				ck.ui.config.buttonevent();
+				//$(".xitemsearch").click();
+
+				$('#xqtyord').on('blur', function(e){
+					e.preventDefault();
+					calculateRateAmount();
+				});
+
+				$('#xrate').on('blur', function(e){
+					e.preventDefault();
+					calculateRateAmount();
+				});
+
+				function calculateRateAmount(){
+					var qty = $('#xqtyord').val();
+					var rate = $('#xrate').val();
+					$('#xlineamt').val(qty * rate);
+				}
+
+				var olditem = $('input[name="xitem"]').val();
+
+				// Get item purchase unit
+				$('.xitemsearch').on('blur', function(){
+					setTimeout(() => {
+						if($('input[name="xitem"]').val() == ''){
+							$('input.xunitpur-display').val('');
+							$('input[name="xrate"]').val('');
+							$(".qty").val('1');
+							$('#xlineamt').val('0');
+							return;
+						}
+
+						if(olditem != '' && olditem == $('input[name="xitem"]').val()) return;
+
+						loadingMask2.show();
+						$.ajax({
+							url : getBasepath() + '/procurements/poord/caitem/itemdetail/' + $('input[name="xitem"]').val(),
+							type : 'GET',
+							success : function(data) {
+								loadingMask2.hide();
+								if(data == undefined || data == null) return;
+
+								$('input[name="xunitpur"]').val(data.xunitpur);
+								$('input.xunitpur-display').val(data.xunitpur);	
+								$('input[name="xrate"]').val(data.xrate);
+								if($(".qty").val() == '') $(".qty").val('1');
+
+								$(".qty").focus();
+								$('#xlineamt').val($(".qty").val() * data.xrate);
+							},
+							error : function(jqXHR, status, errorThrown){
+								showMessage(status, "Something went wrong .... ");
+								loadingMask2.hide();
+							}
+						})
+					}, 1000);
+				});
+
+			});
+		</script>
+</html>

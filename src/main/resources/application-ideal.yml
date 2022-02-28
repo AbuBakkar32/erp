@@ -1,0 +1,101 @@
+logging:
+  level:
+    com: 
+      asl: 
+        mapper: TRACE
+    root: INFO
+    org:
+      springframework:
+        web: INFO
+    hibernate: 
+      SQL: DEBUG
+      type: DEBUG
+
+server:
+  servlet:
+    context-path: /aju-erp/
+    session: 
+      persistent: true
+  port: 8081
+  error:
+    whitelabel:
+      enabled: false
+spring: 
+  application:
+    name: aju-erp
+  thymeleaf:
+    cache: false
+  datasource: 
+    driver-class-name: oracle.jdbc.OracleDriver
+#    url: jdbc:oracle:thin:@localhost:1521:orcl
+#    username: RES_ERP
+#    password: Asl1234
+#    url: jdbc:oracle:thin:@103.231.135.60:1521:orcl
+#    username: res_erp
+#    password: res_erp
+# Ideal Test Server 
+#    url: jdbc:oracle:thin:@103.120.223.29:1521:IOM
+#    username: aju_ideal
+#    password: ideal123
+    url: jdbc:oracle:thin:@62.171.179.61:1521:orcl
+    username: aju_test
+    password: aju_test
+    tomcat:
+      max-wait: 200000
+      max-active: 500
+      max-idle: 20
+      min-idle: 15
+  jpa:
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    properties:
+      hibernate: 
+        dialect: org.hibernate.dialect.Oracle10gDialect
+        id:
+          new_generator_mappings: false
+  jackson:
+    serialization:
+      indent-output: true
+  banner:
+    location: banner.txt
+
+mybatis: 
+  config-location: classpath:mybatis-config.xml
+
+JNDIName: jdbcTemplate
+default: 
+#  birtUrl: http://localhost:8080/birt/frameset?__report=khanas/
+#  birtUrl: http://103.120.223.29:8080/birt/frameset?__report=ideal/
+  birtUrl: http://62.171.179.61:8080/birt/frameset?__report=ideal/
+  allow-system-admin: Y
+  site-title: AJU <span class="title-divider">ERP</span>
+  logo-name: ideal.png
+  copyright-text: Powered by <a href="http://www.automationservicesbd.com" target="_blank">ASL</a> &copy; Copyright
+  im-ex-path: D:/IDEAL/importexport
+  logging-path: D:/IDEAL/logs 
+  document-path: D:/IDEAL/documents
+  temp-directory: D:/IDEAL/tmp
+  businessId: 200000
+  report: 
+    template-path: D:/IDEAL/cr-reports
+    xsl-path: D:/IDEAL/xsl
+    saved-xml-path: D:/IDEAL/report/savedxml
+    logo: ideal.png
+ #Ideal Test Server
+#  allow-system-admin: Y
+#  site-title: AJU <span class="title-divider">ERP</span>
+#  logo-name: ideal.png
+#  copyright-text: Powered by <a href="http://www.automationservicesbd.com" target="_blank">ASL</a> &copy; Copyright
+#  im-ex-path: /opt/IDEAL/importexport
+#  logging-path: /opt/IDEAL/logs 
+#  document-path: /opt/IDEAL/documents
+#  temp-directory: /opt/IDEAL/tmp
+#  businessId: 200000
+#  report: 
+#    template-path: /opt/IDEAL/cr-reports
+#    xsl-path: /opt/IDEAL/xsl
+#    saved-xml-path: /opt/IDEAL/report/savedxml
+#    logo: ideal.png

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.asl.mapper.AcmstMapper">
+	<insert id="save" parameterType="Acmst">
+		<selectKey keyProperty="xacc" resultType="String" order="BEFORE">
+			SELECT COALESCE(Max(xacc), #{xgroup}) + 1 FROM acmst WHERE xgroup=#{xgroup} AND xacctype=#{xacctype} AND zid=#{zid}
+		</selectKey>
+		INSERT INTO acmst
+		(
+			xacc,
+			xgroup,
+			xdesc,
+			xacctype,
+			xnum,
+			xaccusage,
+			xlong,
+
+			zid,
+			zauserid,
+			zaip,
+			zactive,
+			ztime
+		)
+		VALUES
+		(
+			#{xacc},
+			#{xgroup, jdbcType=VARCHAR},
+			#{xdesc, jdbcType=VARCHAR},
+			#{xacctype, jdbcType=VARCHAR},
+			#{xnum, jdbcType=INTEGER},
+			#{xaccusage, jdbcType=VARCHAR},
+			#{xlong, jdbcType=VARCHAR},
+
+			#{zid, jdbcType=VARCHAR},
+			#{zauserid, jdbcType=VARCHAR},
+			#{zaip, jdbcType=VARCHAR},
+			#{zactive, jdbcType=VARCHAR},
+			#{ztime, jdbcType=TIMESTAMP}
+		)
+	</insert>
+
+	<update id="update" parameterType="Acmst">
+		UPDATE 
+			acmst 
+		SET
+			xgroup=#{xgroup, jdbcType=VARCHAR},
+			xdesc=#{xdesc, jdbcType=VARCHAR},
+			xacctype=#{xacctype, jdbcType=VARCHAR},
+			xnum=#{xnum, jdbcType=INTEGER},
+			xaccusage=#{xaccusage, jdbcType=VARCHAR},
+			xlong=#{xlong, jdbcType=VARCHAR},
+
+			zuuserid=#{zuuserid, jdbcType=VARCHAR},
+			zuip=#{zuip, jdbcType=VARCHAR},
+			zactive=#{zactive, jdbcType=VARCHAR},
+			zutime=#{zutime, jdbcType=TIMESTAMP}
+		WHERE
+			xacc=#{xacc, jdbcType=VARCHAR}
+			AND zid=#{zid, jdbcType=VARCHAR}
+	</update>
+
+	<select id="getAllAcmst" resultType="Acmst">
+		SELECT
+			acmst.*,
+			acgroup.xagname as xgroupname
+		FROM
+			acmst
+			left join acgroup on acgroup.xagcode = acmst.xgroup and acgroup.zid = acmst.zid
+		WHERE
+			acmst.zid=#{zid}
+	</select>
+
+	<select id="findByXacc" resultType="Acmst">
+		SELECT
+			acmst.*,
+			acgroup.xagname as xgroupname
+		FROM
+			acmst
+			left join acgroup on acgroup.xagcode = acmst.xgroup and acgroup.zid = acmst.zid
+		WHERE
+			acmst.zid=#{zid}
+			AND acmst.xacc=#{xacc}
+	</select>
+
+	<delete id="delete">
+		DELETE 
+		FROM 
+			acmst 
+		WHERE
+			zid=#{zid} 
+			AND xacc=#{xacc}
+	</delete>
+
+	<select id="searchByXaccORXdesc" resultType="Acmst">
+		SELECT * FROM acmst WHERE ((UPPER(xacc) LIKE '%' || #{hint} || '%') OR (UPPER(xdesc) LIKE '%' || #{hint} || '%')) AND zid=#{zid} ORDER BY xdesc, xacc
+	</select>
+	
+	<!-- For Report Search -->
+	<select id="getAllAcc" resultType="Acmst">
+		SELECT
+			*
+		FROM
+			acmst
+		WHERE
+			SELECT * FROM acmst WHERE ((UPPER(xacc) LIKE '%' || #{hint} || '%') OR (UPPER(xdesc) LIKE '%' || #{hint} || '%')) AND zid=#{zid}
+		order by acmst.xacc
+	</select>
+	
+	<select id="getAllSub" resultType="Acmst">
+		SELECT distinct xsub, xorg FROM acsubview WHERE ((UPPER(xsub) LIKE '%' || #{hint} || '%') OR (UPPER(xorg) LIKE '%' || #{hint} || '%')) AND zid=#{zid} ORDER BY xsub
+	</select>
+
+</mapper>

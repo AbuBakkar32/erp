@@ -1,0 +1,780 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.asl.mapper.OpordMapper">
+
+	<insert id="saveOpordHeader" parameterType="Opordheader">
+		<selectKey keyProperty="xordernum" resultType="String" order="BEFORE">
+			SELECT Func_GetTrn('${zid}', '${xtypetrn}', '${xtrn}', 6) FROM DUAL
+		</selectKey>
+		INSERT INTO opordheader
+		(
+			xordernum,
+			xdate,
+			xcus,
+			xref,
+			xstatusord,
+			xstatus,
+			xstaff,
+			xnote,
+			xpornum,
+			xtypetrn,
+			xtrn,
+			xchalanref,
+			batchcreated,
+			productioncompleted,
+			invoicecreated,
+			xfunction,
+			xtotguest,
+			xbookdate,
+			xfuncdate,
+			xstarttime,
+			xendtime,
+			xfacamt,
+			xfoodamt,
+			xhallamt,
+			xdiscamt,
+			xtotamt,
+			xgrandtot,
+			xadvamt,
+			xcheckindate,
+			xcheckoutdate,
+			xroomamt,
+			xdornum,
+			xtornum,
+			xstartdate,
+			xenddate,
+			xfunctionamt,
+			xvatait,
+			xvatamt,
+			xaitamt,
+			xpaymenttype,
+			xpaystatus,
+			xpaid,
+			xdue,
+			suggestionCreated,
+			rawxtornum,
+			finishedxtornum,
+			rawtocomp,
+			finishedtocomp,
+			xreqnum,
+			xtype,
+			xwh,
+			xhwh,
+			xreqitemtype,
+
+			zid,
+			zauserid,
+			zaip,
+			zactive,
+			ztime
+		)
+		VALUES
+		(
+			#{xordernum},
+			#{xdate, jdbcType=DATE},
+			#{xcus, jdbcType=VARCHAR},
+			#{xref, jdbcType=VARCHAR},
+			#{xstatusord, jdbcType=VARCHAR},
+			#{xstatus, jdbcType=VARCHAR},
+			#{xstaff, jdbcType=VARCHAR},
+			#{xnote, jdbcType=VARCHAR},
+			#{xpornum, jdbcType=VARCHAR},
+			#{xtypetrn, jdbcType=VARCHAR},
+			#{xtrn, jdbcType=VARCHAR},
+			#{xchalanref, jdbcType=VARCHAR},
+			#{batchcreated, jdbcType=BOOLEAN},
+			#{productioncompleted, jdbcType=BOOLEAN},
+			#{invoicecreated, jdbcType=BOOLEAN},
+			#{xfunction, jdbcType=VARCHAR},
+			#{xtotguest, jdbcType=INTEGER},
+			#{xbookdate, jdbcType=DATE},
+			#{xfuncdate, jdbcType=DATE},
+			#{xstarttime, jdbcType=VARCHAR},
+			#{xendtime, jdbcType=VARCHAR},
+			#{xfacamt, jdbcType=DECIMAL},
+			#{xfoodamt, jdbcType=DECIMAL},
+			#{xhallamt, jdbcType=DECIMAL},
+			#{xdiscamt, jdbcType=DECIMAL},
+			#{xtotamt, jdbcType=DECIMAL},
+			#{xgrandtot, jdbcType=DECIMAL},
+			#{xadvamt, jdbcType=DECIMAL},
+			#{xcheckindate, jdbcType=DATE},
+			#{xcheckoutdate, jdbcType=DATE},
+			#{xroomamt, jdbcType=DECIMAL},
+			#{xdornum, jdbcType=VARCHAR},
+			#{xtornum, jdbcType=VARCHAR},
+			#{xstartdate, jdbcType=DATE},
+			#{xenddate, jdbcType=DATE},
+			#{xfunctionamt, jdbcType=DECIMAL},
+			#{xvatait, jdbcType=VARCHAR},
+			#{xvatamt, jdbcType=DECIMAL},
+			#{xaitamt, jdbcType=DECIMAL},
+			#{xpaymenttype, jdbcType=VARCHAR},
+			#{xpaystatus, jdbcType=VARCHAR},
+			#{xpaid, jdbcType=DECIMAL},
+			#{xdue, jdbcType=DECIMAL},
+			#{suggestionCreated, jdbcType=BOOLEAN},
+			#{rawxtornum, jdbcType=VARCHAR},
+			#{finishedxtornum, jdbcType=VARCHAR},
+			#{rawtocomp, jdbcType=BOOLEAN},
+			#{finishedtocomp, jdbcType=BOOLEAN},
+			#{xreqnum, jdbcType=VARCHAR},
+			#{xtype, jdbcType=VARCHAR},
+			#{xwh, jdbcType=VARCHAR},
+			#{xhwh, jdbcType=VARCHAR},
+			#{xreqitemtype, jdbcType=VARCHAR},
+
+			#{zid, jdbcType=VARCHAR},
+			#{zauserid, jdbcType=VARCHAR},
+			#{zaip, jdbcType=VARCHAR},
+			#{zactive, jdbcType=VARCHAR},
+			#{ztime, jdbcType=TIMESTAMP}
+		) 
+	</insert>
+
+	<update id="updateOpordHeader" parameterType="Opordheader">
+		UPDATE opordheader
+		SET
+			xdate=#{xdate, jdbcType=DATE},
+			xcus=#{xcus, jdbcType=VARCHAR},
+			xref=#{xref, jdbcType=VARCHAR},
+			xstatusord=#{xstatusord, jdbcType=VARCHAR},
+			xstatus=#{xstatus, jdbcType=VARCHAR},
+			xstaff=#{xstaff, jdbcType=VARCHAR},
+			xnote=#{xnote, jdbcType=VARCHAR},
+			xpornum=#{xpornum, jdbcType=VARCHAR},
+			xtypetrn=#{xtypetrn, jdbcType=VARCHAR},
+			xtrn=#{xtrn, jdbcType=VARCHAR},
+			xchalanref=#{xchalanref, jdbcType=VARCHAR},
+			batchcreated=#{batchcreated, jdbcType=BOOLEAN},
+			productioncompleted=#{productioncompleted, jdbcType=BOOLEAN},
+			invoicecreated=#{invoicecreated, jdbcType=BOOLEAN},
+			xfunction=#{xfunction, jdbcType=VARCHAR},
+			xtotguest=#{xtotguest, jdbcType=INTEGER},
+			xbookdate=#{xbookdate, jdbcType=DATE},
+			xfuncdate=#{xfuncdate, jdbcType=DATE},
+			xstarttime=#{xstarttime, jdbcType=VARCHAR},
+			xendtime=#{xendtime, jdbcType=VARCHAR},
+			xfacamt=#{xfacamt, jdbcType=DECIMAL},
+			xfoodamt=#{xfoodamt, jdbcType=DECIMAL},
+			xhallamt=#{xhallamt, jdbcType=DECIMAL},
+			xdiscamt=#{xdiscamt, jdbcType=DECIMAL},
+			xtotamt=#{xtotamt, jdbcType=DECIMAL},
+			xgrandtot=#{xgrandtot, jdbcType=DECIMAL},
+			xadvamt=#{xadvamt, jdbcType=DECIMAL},
+			xcheckindate=#{xcheckindate, jdbcType=DATE},
+			xcheckoutdate=#{xcheckoutdate, jdbcType=DATE},
+			xroomamt=#{xroomamt, jdbcType=DECIMAL},
+			xdornum=#{xdornum, jdbcType=VARCHAR},
+			xtornum=#{xtornum, jdbcType=VARCHAR},
+			xstartdate=#{xstartdate, jdbcType=DATE},
+			xenddate=#{xenddate, jdbcType=DATE},
+			xfunctionamt=#{xfunctionamt, jdbcType=DECIMAL},
+			xvatait=#{xvatait, jdbcType=VARCHAR},
+			xvatamt=#{xvatamt, jdbcType=DECIMAL},
+			xaitamt=#{xaitamt, jdbcType=DECIMAL},
+			xpaymenttype=#{xpaymenttype, jdbcType=VARCHAR},
+			xpaystatus=#{xpaystatus, jdbcType=VARCHAR},
+			xpaid=#{xpaid, jdbcType=DECIMAL},
+			xdue=#{xdue, jdbcType=DECIMAL},
+			suggestionCreated=#{suggestionCreated, jdbcType=BOOLEAN},
+			rawxtornum=#{rawxtornum, jdbcType=VARCHAR},
+			finishedxtornum=#{finishedxtornum, jdbcType=VARCHAR},
+			rawtocomp=#{rawtocomp, jdbcType=BOOLEAN},
+			finishedtocomp=#{finishedtocomp, jdbcType=BOOLEAN},
+			xreqnum=#{xreqnum, jdbcType=VARCHAR},
+			xtype=#{xtype, jdbcType=VARCHAR},
+			xwh=#{xwh, jdbcType=VARCHAR},
+			xhwh=#{xhwh, jdbcType=VARCHAR},
+			xreqitemtype=#{xreqitemtype, jdbcType=VARCHAR},
+
+			zuuserid=#{zuuserid, jdbcType=VARCHAR},
+			zuip=#{zuip, jdbcType=VARCHAR},
+			zactive=#{zactive, jdbcType=VARCHAR},
+			zutime=#{zutime, jdbcType=TIMESTAMP}
+		WHERE
+			xordernum=#{xordernum, jdbcType=VARCHAR}
+			AND zid=#{zid, jdbcType=VARCHAR}
+	</update>
+
+	<insert id="saveOpordDetail" parameterType="Oporddetail">
+		<selectKey keyProperty="xrow" resultType="Integer" order="BEFORE">
+			SELECT COALESCE(Max(xrow), 0) + 1 FROM Oporddetail WHERE xordernum=#{xordernum} AND zid=#{zid}
+		</selectKey>
+		INSERT INTO Oporddetail
+		(
+			xordernum,
+			xrow,
+			xunit,
+			xitem,
+			xqtyord,
+			xrate,
+			xcomtype,
+			xqtydel,
+			xlong,
+			xlineamt,
+			xdesc,
+			xgitem,
+			xcatitem,
+			xparentrow,
+			xtype,
+			xdocrow,
+			xcfsel,
+			xunitsel,
+			
+			zid,
+			zauserid,
+			zuuserid,
+			zaip,
+			zuip,
+			zactive,
+			ztime,
+			zutime
+		)
+		VALUES
+		(
+			#{xordernum, jdbcType=VARCHAR},
+			#{xrow, jdbcType=INTEGER},
+			#{xunit, jdbcType=VARCHAR},
+			#{xitem, jdbcType=VARCHAR},
+			#{xqtyord, jdbcType=DECIMAL},
+			#{xrate, jdbcType=DECIMAL},
+			#{xcomtype, jdbcType=VARCHAR},
+			#{xqtydel, jdbcType=DECIMAL},
+			#{xlong, jdbcType=VARCHAR},
+			#{xlineamt, jdbcType=DECIMAL},
+			#{xdesc, jdbcType=VARCHAR},
+			#{xgitem, jdbcType=VARCHAR},
+			#{xcatitem, jdbcType=VARCHAR},
+			#{xparentrow, jdbcType=INTEGER},
+			#{xtype, jdbcType=VARCHAR},
+			#{xdocrow, jdbcType=INTEGER},
+			#{xcfsel, jdbcType=DECIMAL},
+			#{xunitsel, jdbcType=VARCHAR},
+			
+			#{zid, jdbcType=VARCHAR},
+			#{zauserid, jdbcType=VARCHAR},
+			#{zuuserid, jdbcType=VARCHAR},
+			#{zaip, jdbcType=VARCHAR},
+			#{zuip, jdbcType=VARCHAR},
+			#{zactive, jdbcType=VARCHAR},
+			#{ztime, jdbcType=TIMESTAMP},
+			#{zutime, jdbcType=TIMESTAMP}
+		) 
+	</insert>
+
+	<update id="updateOpordDetail" parameterType="Oporddetail">
+		UPDATE 
+			Oporddetail
+		SET
+			xunit=#{xunit, jdbcType=VARCHAR},
+			xitem=#{xitem, jdbcType=VARCHAR},
+			xqtyord=#{xqtyord, jdbcType=DECIMAL},
+			xrate=#{xrate, jdbcType=DECIMAL},
+			xcomtype=#{xcomtype, jdbcType=VARCHAR},
+			xqtydel=#{xqtydel, jdbcType=DECIMAL},
+			xlong=#{xlong, jdbcType=VARCHAR},
+			xlineamt=#{xlineamt, jdbcType=DECIMAL},
+			xdesc=#{xdesc, jdbcType=VARCHAR},
+			xgitem=#{xgitem, jdbcType=VARCHAR},
+			xcatitem=#{xcatitem, jdbcType=VARCHAR},
+			xparentrow=#{xparentrow, jdbcType=INTEGER},
+			xtype=#{xtype, jdbcType=VARCHAR},
+			xdocrow=#{xdocrow, jdbcType=INTEGER},
+			xcfsel=#{xcfsel, jdbcType=DECIMAL},
+			xunitsel=#{xunitsel, jdbcType=VARCHAR},
+			
+			zuuserid=#{zuuserid, jdbcType=VARCHAR},
+			zaip=#{zaip, jdbcType=VARCHAR},
+			zuip=#{zuip, jdbcType=VARCHAR},
+			zactive=#{zactive, jdbcType=VARCHAR},
+			ztime=#{ztime, jdbcType=TIMESTAMP},
+			zutime=#{zutime, jdbcType=TIMESTAMP}
+		WHERE
+			xordernum=#{xordernum, jdbcType=VARCHAR}
+			AND xrow=#{xrow, jdbcType=INTEGER}
+			AND zid=#{zid, jdbcType=VARCHAR}
+	</update>
+
+	<delete id="deleteOpordDetail" parameterType="Oporddetail">
+		DELETE
+		FROM
+			OPORDDETAIL
+		WHERE
+			xordernum=#{xordernum, jdbcType=VARCHAR}
+			AND xrow=#{xrow, jdbcType=INTEGER}
+			AND zid=#{zid, jdbcType=VARCHAR}
+	</delete>
+
+	<select id="findOpordHeaderByXordernum" resultType="Opordheader">
+		SELECT 
+			opordheader.*,
+			spell_number(opordheader.xtotamt) as spellword,
+			spell_number(substr(to_char(opordheader.xtotamt-floor(opordheader.xtotamt)),2,2)) as xprimeword,
+			cacus.xorg,
+			x.xlong as storeName,
+			y.xlong as projectName
+		FROM 
+			opordheader 
+			LEFT JOIN cacus ON cacus.xcus = opordheader.xcus AND cacus.zid = opordheader.zid AND cacus.zactive='1'
+			left join xcodes x on x.xcode=opordheader.xwh and x.zid=opordheader.zid and x.zactive=1 AND x.xtype='Store'
+			left join xcodes y on y.xcode = opordheader.xhwh and y.zid= opordheader.zid and y.xtype='Project'
+		WHERE 
+			opordheader.xordernum=#{xordernum} 
+			AND opordheader.zid=#{zid}
+	</select>
+
+	<select id="findOporddetailByXordernumAndXrow" resultType="Oporddetail">
+		SELECT 
+		    od.*,
+		    ca.xdesc,
+		    ca.xgitem,
+		    ca.xcatitem ,
+		    ca.xdesc as itemname
+		FROM 
+		    oporddetail od, caitem ca
+		WHERE 
+		    od.xordernum=#{xordernum} 
+		    and od.xitem=ca.xitem
+		    AND od.xrow=#{xrow} 
+			AND od.zid=#{zid}
+			AND ca.zid=#{zid}
+			AND ca.zactive='1'
+	</select>
+
+	<select id="findOporddetailByXordernum" resultType="Oporddetail">
+			SELECT 
+			    distinct
+			    oporddetail.*,
+			    caitem.xdesc as itemname,
+			    caitem.xgitem as xgroup,
+			    caitem.xcatitem as xcategory,
+			    xcodes.seqn
+			FROM
+			    oporddetail 
+			    LEFT JOIN caitem ON caitem.xitem = oporddetail.xitem AND caitem.zid=oporddetail.zid AND caitem.zactive='1'
+			    LEFT JOIN xcodes ON xcodes.xcode = caitem.xcatitem AND xcodes.zid = caitem.zid and xcodes.zactive='1'
+			WHERE 
+			    oporddetail.xordernum=#{xordernum}
+			    AND oporddetail.zid=#{zid}
+			ORDER BY
+			    xcodes.seqn, caitem.xcatitem, oporddetail.xitem
+	</select>
+
+	<select id="getAllOpordheader" resultType="Opordheader">
+		SELECT 
+			Opordheader.*,
+			y.xlong as projectName
+		FROM 
+			Opordheader 
+			left join xcodes y on y.xcode = opordheader.xhwh and y.zid= opordheader.zid and y.xtype='Project'
+		WHERE 
+			Opordheader.zid=#{zid} 
+		ORDER BY 
+			Opordheader.XORDERNUM DESC
+	</select>
+
+	<select id="findOpordHeaderByXtypetrnAndXpornumAndXdateAndXcus" resultType="Opordheader">
+		SELECT 
+			* 
+		FROM 
+			Opordheader 
+		WHERE 
+			xtypetrn=#{xtypetrn}
+			AND xpornum=#{xpornum}
+			AND xcus=#{xcus}
+			AND TO_CHAR(xdate,'yyyy-MM-dd')=#{xdate}
+			AND zid=#{zid} 
+		ORDER BY
+			XORDERNUM DESC
+	</select>
+
+	<select id="findOpordHeaderByXtypetrnAndXtrnAndXdate" resultType="Opordheader">
+		SELECT 
+			* 
+		FROM 
+			Opordheader 
+		WHERE 
+			xtypetrn=#{xtypetrn}
+			AND xtrn=#{xtrn}
+			AND TO_CHAR(xdate,'yyyy-MM-dd')=#{xdate}
+			AND zid=#{zid} 
+		ORDER BY
+			XORDERNUM DESC
+	</select>
+
+	<select id="findAllOpordHeaderByXtypetrnAndXtrnAndXdate" resultType="Opordheader">
+		SELECT 
+			opordheader.*,
+			zbusiness.zorg AS "branchname"
+		FROM 
+			opordheader
+			LEFT JOIN zbusiness ON zbusiness.zid = opordheader.xcus
+		WHERE 
+			opordheader.xtypetrn=#{xtypetrn}
+			AND opordheader.xtrn=#{xtrn}
+			AND TO_CHAR(opordheader.xdate,'yyyy-MM-dd')=#{xdate}
+			AND opordheader.zid=#{zid} 
+		ORDER BY
+			OPORDHEADER.XORDERNUM DESC
+	</select>
+
+	<select id="findAllProductionCompletedChalan" resultType="Opordheader">
+		SELECT 
+			*
+		FROM 
+			opordheader
+		WHERE 
+			xtypetrn=#{xtypetrn}
+			AND xtrn=#{xtrn}
+			AND zid=#{zid} 
+			AND productioncompleted='1'
+		ORDER BY
+			XORDERNUM DESC
+	</select>
+
+	<select id="findAllOpordHeaderByXtypetrnAndXtrnAndXdateAndXstatus" resultType="Opordheader">
+		SELECT 
+			opordheader.*,
+			zbusiness.zorg AS "branchname"
+		FROM 
+			opordheader
+			LEFT JOIN zbusiness ON zbusiness.zid = opordheader.xcus
+		WHERE 
+			opordheader.xtypetrn=#{xtypetrn}
+			AND opordheader.xtrn=#{xtrn}
+			AND opordheader.xstatus=#{xstatus}
+			AND opordheader.zid=#{zid} 
+		ORDER BY
+			OPORDHEADER.XORDERNUM DESC
+	</select>
+
+	<select id="findOporddetailByXordernumAndXitem" resultType="Oporddetail">
+		SELECT 
+			* 
+		FROM 
+			oporddetail 
+		WHERE 
+			xordernum=#{xordernum}
+			AND xitem=#{xitem}
+			AND zid=#{zid} 
+		ORDER BY
+			XROW DESC
+	</select>
+
+	<select id="getSalesOrderMatrxi" resultType="com.asl.model.BranchesRequisitions">
+		SELECT
+			ZBUSINESS.ZORG,
+			OPORDDETAIL.XITEM,
+			OPORDDETAIL.XUNIT AS "XUNITPUR",
+			OPORDDETAIL.XQTYORD,
+			CAITEM.XCATITEM,
+			CAITEM.XDESC,
+			XCODES.SEQN
+		FROM
+			OPORDHEADER
+			LEFT JOIN OPORDDETAIL ON OPORDDETAIL.XORDERNUM = OPORDHEADER.XORDERNUM AND OPORDHEADER.zid=OPORDDETAIL.zid
+			LEFT JOIN CAITEM ON CAITEM.XITEM = OPORDDETAIL.XITEM AND CAITEM.ZID=#{zid} AND CAITEM.ZACTIVE = '1'
+			LEFT JOIN CACUS.XCUS = OPORDHEADER.XCUS AND CACUS.ZID = OPORDHEADER.ZID AND CACUS.ZACTIVE='1'
+			LEFT JOIN XCODES ON XCODES.XCODE = CAITEM.XCATITEM AND XCODES.ZID = CAITEM.ZID AND XCODES.ZACTIVE='1'
+		WHERE
+			OPORDHEADER.ZID=#{zid}
+			AND OPORDHEADER.XTYPETRN='Sales Order'
+			AND TO_CHAR(OPORDHEADER.XDATE,'yyyy-MM-dd')=#{xdate}
+		ORDER BY
+			ZBUSINESS.ZORG, OPORDDETAIL.XITEM ASC
+	</select>
+
+	<select id="findAllOpordHeaderByXtypetrnAndXtrn" resultType="Opordheader">
+		SELECT
+			OPORDHEADER.*,
+			cacus.xorg,
+			y.xlong as projectName
+		FROM 
+			OPORDHEADER
+			LEFT JOIN cacus ON cacus.xcus = opordheader.xcus AND cacus.zid = opordheader.zid AND cacus.zactive='1'
+			left join xcodes y on y.xcode = opordheader.xhwh and y.zid= opordheader.zid and y.xtype='Project'
+		WHERE
+			OPORDHEADER.ZID=#{zid}
+			AND OPORDHEADER.XTYPETRN=#{xtypetrn}
+			AND OPORDHEADER.XTRN=#{xtrn}
+		ORDER BY
+			OPORDHEADER.XORDERNUM DESC
+	</select>
+
+	<select id="findAllOpenOpordHeaderByXtypetrnAndXtrn" resultType="Opordheader">
+		SELECT
+			OPORDHEADER.*,
+			cacus.xorg
+		FROM 
+			OPORDHEADER
+			LEFT JOIN cacus ON cacus.xcus = opordheader.xcus AND cacus.zid = opordheader.zid AND cacus.zactive='1'
+		WHERE
+			OPORDHEADER.ZID=#{zid}
+			AND OPORDHEADER.XTYPETRN=#{xtypetrn}
+			AND OPORDHEADER.XTRN=#{xtrn}
+			AND OPORDHEADER.xstatusord='Open'
+		ORDER BY
+			OPORDHEADER.XORDERNUM DESC
+	</select>
+	<select id="findAllOpenOpordHeaderByRawMaterials" resultType="Opordheader">
+		SELECT
+			OPORDHEADER.*,
+			cacus.xorg
+		FROM 
+			OPORDHEADER
+			LEFT JOIN cacus ON cacus.xcus = opordheader.xcus AND cacus.zid = opordheader.zid AND cacus.zactive='1'
+		WHERE
+			OPORDHEADER.ZID=#{zid}
+			AND OPORDHEADER.XTYPETRN=#{xtypetrn}
+			AND OPORDHEADER.XTRN=#{xtrn}
+			AND OPORDHEADER.xstatusord='Open'
+			AND xreqitemtype='Raw Materials'
+		ORDER BY
+			OPORDHEADER.XORDERNUM DESC
+	</select>
+
+	<select id="findAllSalesOrder" resultType="Opordheader">
+		SELECT 
+			OPORDHEADER.*,
+			cacus.xorg AS "branchname"
+		FROM 
+			OPORDHEADER
+			LEFT JOIN cacus ON cacus.xcus = OPORDHEADER.xcus AND cacus.zid = OPORDHEADER.zid AND cacus.zactive='1'
+		WHERE
+			OPORDHEADER.ZID=#{zid}
+			AND OPORDHEADER.XTYPETRN=#{xtypetrn}
+			AND OPORDHEADER.XTRN=#{xtrn}
+			AND OPORDHEADER.XSTATUSORD=#{xstatusord}
+			AND TO_CHAR(OPORDHEADER.XDATE,'yyyy-MM-dd')=#{xdate}
+			AND opordheader.xreqitemtype='Raw Materials'
+		ORDER BY
+			OPORDHEADER.XORDERNUM DESC
+	</select>
+
+	<select id="findAllSalesOrderByChalan" resultType="Opordheader">
+		SELECT 
+			OPORDHEADER.*,
+			cacus.xorg AS "branchname"
+		FROM 
+			OPORDHEADER
+			LEFT JOIN cacus ON cacus.xcus = OPORDHEADER.xcus AND cacus.zid = OPORDHEADER.zid AND cacus.zactive='1'
+		WHERE
+			OPORDHEADER.ZID=#{zid}
+			AND OPORDHEADER.XTYPETRN=#{xtypetrn}
+			AND OPORDHEADER.XTRN=#{xtrn}
+			AND OPORDHEADER.XCHALANREF=#{xchalanref}
+		ORDER BY
+			OPORDHEADER.XORDERNUM DESC
+	</select>
+
+	<select id="searchOpordheaderByXtypetrnAndXtrnAndXordernum" resultType="Opordheader">
+		SELECT 
+			* 
+		FROM 
+			OPORDHEADER 
+		WHERE 
+			(UPPER(XORDERNUM) LIKE '%' || #{xordernum} || '%') 
+			AND ZID=#{zid} 
+			AND XTYPETRN=#{xtypetrn}
+			AND XTRN=#{xtrn}
+			AND XSTATUS=#{xstatus}
+	</select>
+	
+	<select id="searchXpornum" resultType="Opordheader">
+		SELECT * FROM OPORDHEADER WHERE (UPPER(xpornum) LIKE '%' || #{xpornum} || '%') AND zid=#{zid} AND zactive='1' ORDER BY xpornum
+	</select>
+	
+	<select id="findAvailableRoomsByDate" resultType="Caitem">
+		SELECT item.* FROM CAITEM item WHERE item.xitem LIKE 'ICRM-%' 
+			AND item.xitem NOT IN 
+				(SELECT opd.xitem FROM OPORDHEADER oph
+					LEFT JOIN OPORDDETAIL opd ON opd.xordernum = oph.xordernum
+						WHERE oph.xcheckindate &lt;= CAST(#{xcheckindate} AS DATE) 
+							AND oph.xcheckoutdate &gt; CAST(#{xcheckindate} AS DATE) and oph.zid=#{zid})
+			AND item.zid=#{zid}
+	</select>
+	
+	<select id="findBookedRoomsByXordernum" resultType="Oporddetail">
+		SELECT 
+			od.*,
+			caitem.xdesc,
+			caitem.xgitem,
+			caitem.xcatitem 
+		FROM 
+			oporddetail od
+			LEFT JOIN caitem ON caitem.xitem = od.xitem AND caitem.zid=#{zid} AND caitem.zactive='1'
+		WHERE 
+			od.xordernum=#{xordernum}
+			AND od.xitem LIKE 'ICRM-%'
+			AND od.zid=#{zid} 
+		ORDER BY
+			od.xitem DESC
+	</select>
+	
+	<select id="findAvailableHallsByDate" resultType="Caitem">
+		SELECT item.* FROM CAITEM item WHERE item.xitem LIKE 'ICHL-%' 
+			AND item.xitem NOT IN 
+				(SELECT opd.xitem FROM OPORDHEADER oph
+					LEFT JOIN OPORDDETAIL opd ON opd.xordernum = oph.xordernum
+						WHERE oph.xfuncdate = CAST(#{xfuncdate} AS DATE) and oph.zid=#{zid})
+			AND item.zid=#{zid}
+	</select>
+	
+	<select id="findBookedHallsByXordernum" resultType="Oporddetail">
+	
+		SELECT 
+			od.*,
+			caitem.xdesc,
+			caitem.xgitem,
+			caitem.xcatitem 
+		FROM 
+			oporddetail od
+			left JOIN caitem ON caitem.xitem = od.xitem AND caitem.zid=#{zid} AND caitem.zactive='1'
+		WHERE 
+			od.xordernum=#{xordernum}
+			AND od.xitem LIKE 'ICHL-%'
+			AND od.zid=#{zid} 
+		ORDER BY
+			od.xitem DESC
+		
+	</select>
+	
+	<select id="findBookedRoomsByDate" resultType="Caitem">
+		SELECT item.* FROM CAITEM item WHERE item.xitem LIKE 'ICRM-%' 
+			AND item.xitem IN 
+				(SELECT opd.xitem FROM OPORDHEADER oph
+					LEFT JOIN OPORDDETAIL opd ON opd.xordernum = oph.xordernum
+						WHERE oph.xcheckindate &lt;= CAST(#{xcheckindate} AS DATE) 
+							AND oph.xcheckoutdate &gt; CAST(#{xcheckindate} AS DATE) and oph.zid=#{zid})
+			AND item.zid=#{zid}
+	</select>
+	
+	<select id="findBookedHallsByXfuncdate" resultType="Caitem">
+		SELECT item.* FROM CAITEM item WHERE item.xitem LIKE 'ICHL-%' 
+			AND item.xitem IN 
+				(SELECT opd.xitem FROM OPORDHEADER oph
+					LEFT JOIN OPORDDETAIL opd ON opd.xordernum = oph.xordernum
+						WHERE oph.xfuncdate = CAST(#{xfuncdate} AS DATE) and oph.zid=#{zid})
+			AND item.zid=#{zid}
+	</select>
+
+	<update id="updateOpordHeaderTotalAmtAndGrandTotalAmt">
+		UPDATE 
+			opordheader oph
+		SET 
+			oph.xtotamt=NVL(Func_GetTotalAmtOpordDetails(oph.xordernum, oph.zid), 0),
+			oph.xroomamt=NVL(Func_GetTotalOpordDetailsXcat(oph.xordernum, 'Room', oph.zid), 0),
+			oph.xfacamt=NVL(Func_GetTotalOpordDetailsXcat(oph.xordernum, 'Facilities', oph.zid), 0),
+			oph.xfoodamt=NVL(Func_GetTotalOpordDetailsXcat(oph.xordernum, 'Food', oph.zid), 0),
+			oph.xvatamt=NVL((Func_GetTotalAmtOpordDetails(oph.xordernum, oph.zid) * (SELECT v.xvat FROM vatait v WHERE v.xvatait=oph.xvatait AND v.zid=oph.zid AND v.zactive='1'))/100, 0),
+			oph.xaitamt=NVL((Func_GetTotalAmtOpordDetails(oph.xordernum, oph.zid) * (SELECT v.xait FROM vatait v WHERE v.xvatait=oph.xvatait AND v.zid=oph.zid AND v.zactive='1'))/100, 0),
+			oph.xgrandtot=NVL(Func_GetTotalAmtOpordDetails(oph.xordernum, oph.zid) 
+							+ ((Func_GetTotalAmtOpordDetails(oph.xordernum, oph.zid) * (SELECT v.xvat FROM vatait v WHERE v.xvatait=oph.xvatait AND v.zid=oph.zid AND v.zactive='1'))/100)
+							+ ((Func_GetTotalAmtOpordDetails(oph.xordernum, oph.zid) * (SELECT v.xait FROM vatait v WHERE v.xvatait=oph.xvatait AND v.zid=oph.zid AND v.zactive='1'))/100)
+							- oph.xdiscamt, 0),
+			oph.xdue=NVL(Func_GetTotalAmtOpordDetails(oph.xordernum, oph.zid) 
+							+ ((Func_GetTotalAmtOpordDetails(oph.xordernum, oph.zid) * (SELECT v.xvat FROM vatait v WHERE v.xvatait=oph.xvatait AND v.zid=oph.zid AND v.zactive='1'))/100)
+							+ ((Func_GetTotalAmtOpordDetails(oph.xordernum, oph.zid) * (SELECT v.xait FROM vatait v WHERE v.xvatait=oph.xvatait AND v.zid=oph.zid AND v.zactive='1'))/100)
+							- oph.xdiscamt, 0) - NVL(oph.xpaid, 0)
+		WHERE
+			oph.xordernum=#{xordernum} 
+			AND oph.zid=#{zid} 
+	</update>
+
+	<update id="archiveAllOporddetailByXordernum">
+		UPDATE
+			oporddetail
+		SET
+			zactive='0'
+		WHERE
+			xordernum=#{xordernum} 
+			AND zid=#{zid} 
+			AND zactive='1'
+	</update>
+
+	<select id="allBookedHallsInDateRange" resultType="String">
+		select
+			oh.xordernum
+		from 
+			opordheader oh
+		where
+			oh.zid=#{zid}
+			and oh.zactive='1'
+			and 
+				(((to_char(oh.xstartdate, 'dd-MON-yyyy') || ' ' || oh.xstarttime) &lt;= #{xstartdate} and (to_char(oh.xenddate, 'dd-MON-yyyy') || ' ' || oh.xendtime) &gt;= #{xstartdate})
+				OR
+				((to_char(oh.xstartdate, 'dd-MON-yyyy') || ' ' || oh.xstarttime) &lt;= #{xenddate} and (to_char(oh.xenddate, 'dd-MON-yyyy') || ' ' || oh.xendtime) &gt;= #{xenddate}))
+	</select>
+
+	<select id="allBookedHallsInDateRange2" resultType="ConventionBookedDetails">
+		select
+			oh.xordernum,
+			oh.xstartdate,
+			oh.xstarttime,
+			oh.xenddate,
+			oh.xendtime,
+			oh.xstatus,
+			opd.xitem,
+			opd.xdesc
+		from 
+			oporddetail opd
+			join opordheader oh on oh.xordernum = opd.xordernum and oh.zid = opd.zid and oh.zactive='1'
+		where
+			opd.zid=#{zid}
+			and opd.zactive='1'
+			and 
+				(((to_char(oh.xstartdate, 'dd-MON-yyyy') || ' ' || oh.xstarttime) &gt;= #{xstartdate} AND (to_char(oh.xstartdate, 'dd-MON-yyyy') || ' ' || oh.xstarttime) &lt;= #{xenddate})
+				OR
+				((to_char(oh.xenddate, 'dd-MON-yyyy') || ' ' || oh.xendtime) &gt;= #{xstartdate} AND (to_char(oh.xenddate, 'dd-MON-yyyy') || ' ' || oh.xendtime) &lt;= #{xenddate}))
+	</select>
+
+	<select id="findAllSubitemDetail" resultType="Oporddetail">
+		SELECT
+			*
+		FROM
+			oporddetail
+		WHERE
+			zid=#{zid}
+			AND xordernum=#{xordernum}
+			AND xtype=#{xtype}
+			AND xparentrow=#{xparentrow}
+	</select>
+
+	<delete id="deleteSubItems">
+		DELETE
+		FROM
+			oporddetail
+		WHERE
+			zid=#{zid}
+			AND xordernum=#{xordernum}
+			AND xtype=#{xtype}
+			AND xparentrow=#{xparentrow}
+	</delete>
+
+	<delete id="deleteOpordHeader">
+		DELETE
+		FROM
+			opordheader
+		WHERE
+			zid=#{zid}
+			AND xordernum=#{xordernum}
+	</delete>
+
+	<select id="searchSalesOrderAvailableItem" resultType="Oporddetail">
+		SELECT 
+			oporddetail.*,
+			caitem.xdesc as itemname 
+		FROM 
+			oporddetail 
+			LEFT JOIN caitem ON caitem.xitem = oporddetail.xitem AND caitem.zid = oporddetail.zid AND caitem.zactive='1'
+		WHERE 
+			oporddetail.xordernum=#{xordernum}
+			AND (UPPER(oporddetail.xitem) LIKE '%' || #{xitem} || '%') 
+			AND oporddetail.zid=#{zid} 
+			AND oporddetail.xqtydel != oporddetail.xqtyord
+		ORDER BY 
+			oporddetail.xitem
+	</select>
+</mapper>

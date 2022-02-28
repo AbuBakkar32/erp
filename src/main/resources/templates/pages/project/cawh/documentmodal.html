@@ -1,0 +1,139 @@
+<!-- Modal -->
+<div id="documentmodal" th:fragment="documentmodal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="true" xmlns:th="http://www.thymeleaf.org">
+	<div class="modal-dialog modal-lg">
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h4 class="modal-title">Add/Update Document</h4>
+			</div>
+			
+			<div class="modal-body">
+				<div class="row">
+				<form id="mainform-modal" class="form-horizontal"  th:action="@{/project/cawh/document/save}" method="post" th:object="${document}" enctype="multipart/form-data">
+				<input type="hidden" th:if="${xrow ne 0}" th:field="*{xrow}"/>
+				<input type="hidden" th:field="*{xtypetrn}"/>
+				<input type="hidden" th:field="*{xdoc}"/>
+				<input type="hidden" th:field="*{xwh}"/>
+				<input type="hidden" th:field="*{xproject}"/>
+					<div class="row">
+						<div class="col-md-12">
+							<div class="row">
+								<div class="col-md-12">
+									<div class="section-header sectionbartoggle">
+										<h1></h1>
+									</div>
+								</div>
+							</div>
+						</div>
+						</div><br>
+						<div class="row">
+							<div class="col-md-12">
+								<div class="row">
+									<div class="col-md-6">
+									<div class="form-group" th:if="${#strings.isEmpty(document.xdoc)}">
+										<label class="control-label col-md-4" for="xtrn" th:text="#{li.modal2.label.xtrn}">Document ID </label>
+										<div class="col-md-7">
+											<select class="form-control" th:field="*{xtrn}">
+												<option th:each="d : ${prefixes}" th:value="${d.xtrn}" th:text="${d.xtrn}"></option>
+											</select>
+										</div>
+									</div>
+
+									<div class="form-group" th:if="${not #strings.isEmpty(document.xdoc)}">
+										<label class="control-label col-md-4" for="xdoc" th:text="#{li.modal2.label.xdoc}">Document ID</label>
+										<div class="col-md-7">
+											<input type="text" class="form-control" th:value="*{xdoc}" maxlength="100" disabled="disabled"/>
+										</div>
+									</div>
+
+									<div class="form-group">
+										<label class="control-label col-md-4" for="xname">Document Name</label>
+										<div class="col-md-7">
+											<input type="text" class="form-control" th:field="*{xname}"/>
+										</div>
+									</div>
+
+									<div class="form-group">
+										<label class="control-label col-md-4" for="xdesc">Document Description</label>
+										<div class="col-md-7">
+											<textarea class="form-control" rows="2" th:field="*{xdesc}"></textarea>
+										</div>
+									</div>
+									
+								</div>
+								<div class="col-md-6">
+									<div class="form-group">
+										<label class="control-label col-md-4" for="xdoctype">Type</label>
+										<div class="col-md-7">
+											<select class="form-control" th:field="*{xdoctype}">
+												<option value="">-- Select --</option>
+												<option th:each="wh : ${dt}" th:value="${wh.xcode}" th:text="${wh.xcode}"></option>
+											</select>
+										</div>
+									</div>
+									
+									<div class="form-group">
+										<label class="control-label col-sm-4" for="selectPhoto" th:text="#{li.modal2.label.xdocument}">Add Document</label>
+										<div class="input-group col-sm-7">
+											<label class="input-group-btn">
+												<span class="btn btn-default brows-btn">
+													Brows &hellip; <input type="file" name="file" id="fileuploader" style="display: none;" required="required">
+												</span>
+											</label>
+											<input type="text" class="form-control filepath-input" readonly="readonly" required>
+										</div>
+									</div>
+
+									<div class="form-group">
+										<label class="control-label col-md-4" for="xnote" th:text="#{li.modal2.label.xnote}">Remarks</label>
+										<div class="col-md-7">
+											<textarea class="form-control" rows="3" th:field="*{xnote}" placeholder="Note"></textarea>
+										</div>
+									</div>
+									</div>
+									<div class="col-md-6">
+									</div>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-success btn-sm confirm-btn-modal">Submit</button>
+				<button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript" th:src="@{/assets/js/ck-ui/ck-functions.js}"></script>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			// Init ui for modal
+			ck.ui.config.buttonevent();
+			
+			$(function () {
+				// We can attach the `fileselect` event to all file inputs on the page
+				$(document).on('change', ':file', function () {
+					var input = $(this),
+					numFiles = input.get(0).files ? input.get(0).files.length : 1,
+					label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+					input.trigger('fileselect', [numFiles, label]);
+				});
+				// We can watch for our custom `fileselect` event like this
+				$(document).ready(function () {
+					$(':file').on('fileselect', function (event, numFiles, label) {
+						var input = $(this).parents('.input-group').find(':text'),
+						log = numFiles > 1 ? numFiles + ' files selected' : label;
+						if (input.length) {
+							input.val(log);
+						} else {
+							if (log)
+							alert(log);
+						}
+					});
+				});
+			});
+		});
+	</script>
+</div>

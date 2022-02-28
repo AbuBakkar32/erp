@@ -1,0 +1,194 @@
+<ul class="nav navbar-nav navbar-right" th:fragment="dashboard-menu" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+	<li><a th:href="@{/userprofile}"><i class="fas fa-user"></i> Profile</a></li>
+	<li><a th:href="@{/logout}"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+	<li class="dropdown ckbigmenucontainer">
+		<a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="fas fa-th"></i></a>
+		<ul class="dropdown-menu ckbigmenu">
+			<meta th:if="${isKhanas or isPg or isIdeal}" th:remove="tag" th:include="pages/dashboard/dashboard-khanas :: mainmenu"/>
+			<meta th:if="${isTcc}" th:remove="tag" th:include="pages/dashboard/dashboard-tcc :: mainmenu"/>
+			<meta th:if="${isBoshila}" th:remove="tag" th:include="pages/dashboard/dashboard-boshila :: mainmenu"/>
+			<meta th:if="${isIdeal}" th:remove="tag" th:include="pages/dashboard/dashboard-ideal :: mainmenu"/>
+			<meta th:if="${isASL}" th:remove="tag" th:include="pages/dashboard/dashboard-asl :: mainmenu"/>
+			<meta th:if="${isDev}" th:remove="tag" th:include="pages/dashboard/dashboard :: mainmenu"/>
+			<!-- <li class="ckbigmenu-li">
+				<a th:href="@{/}">
+					<span class="ckbigmenu-icon" style="background: blue;">
+						<i class="fas fa-home"></i>
+					</span>
+					<span class="ckbigmenu-text">Home</span>
+				</a>
+			</li>
+			<li class="ckbigmenu-li" th:if="${isCentral and menuProfile.M0700 ne null and menuProfile.M0700.display}">
+				<a th:href="@{/report}">
+					<span class="ckbigmenu-icon" style="background:  #f76109;">
+						<i class="fas fa-file-pdf"></i>
+					</span>
+					<span class="ckbigmenu-text" th:text="${menuProfile.M0700.screenprompt}">Report</span>
+				</a>
+			</li>
+			<li class="ckbigmenu-li">
+				<a th:href="@{/logout}">
+					<span class="ckbigmenu-icon" style="background: red;">
+						<i class="fas fa-sign-out-alt"></i>
+					</span>
+					<span class="ckbigmenu-text">Logout</span>
+				</a>
+			</li>
+			<span th:if="${(isDev or isKhanas or isTcc) and not isBranch}">
+				<li class="ckbigmenu-li" th:if="${menuProfile.M0607 ne null and menuProfile.M0607.display}">
+					<a th:href="@{/inventory/stocklist}">
+						<span class="ckbigmenu-icon" style="background:  green;">
+							<i class="fas fa-layer-group"></i>
+						</span>
+						<span class="ckbigmenu-text" th:text="${menuProfile.M0607.screenprompt}">Stock List</span>
+					</a>
+				</li>
+			</span>
+			<span th:if="${isDev or isKhanas or isTcc}">
+				<li class="ckbigmenu-li" th:if="${isBranch and menuProfile.M0311 ne null and menuProfile.M0311.display}">
+					<a th:href="@{/procurement/requisition}">
+						<span class="ckbigmenu-icon" style="background:  #961b39;">
+							<i class="fas fa-shopping-basket"></i>
+						</span>
+						<span class="ckbigmenu-text" th:text="${menuProfile.M0311.screenprompt}">Order Requisition</span>
+					</a>
+				</li>
+				<li class="ckbigmenu-li" th:if="${isBranch and menuProfile.M0311 ne null and menuProfile.M0311.display}">
+					<a th:href="@{/procurement/requisition?reqtype=Packaging Item}">
+						<span class="ckbigmenu-icon" style="background:  #961b39;">
+							<i class="fas fa-box-open"></i>
+						</span>
+						<span class="ckbigmenu-text" th:text="${menuProfile.M0311.screenprompt} + ' (Packaging Item)'">Order Requisition</span>
+					</a>
+				</li>
+				<li class="ckbigmenu-li" th:if="${isBranch and menuProfile.M0313 ne null and menuProfile.M0313.display}">
+					<a th:href="@{/procurement/requisition/allrequisition}">
+						<span class="ckbigmenu-icon" style="background:  #961b39;">
+							<i class="fas fa-th-list"></i>
+						</span>
+						<span class="ckbigmenu-text" th:text="${menuProfile.M0313.screenprompt}">All Order Requisitions</span>
+					</a>
+				</li>
+			</span>
+			<span th:if="${isDev or isKhanas or isTcc}">
+				<li class="ckbigmenu-li" th:if="${isCentral and menuProfile.M0300 ne null and menuProfile.M0300.display}">
+					<a th:href="@{/purchasing}">
+						<span class="ckbigmenu-icon" style="background:  #961b39;">
+							<i class="fas fa-shopping-basket"></i>
+						</span>
+						<span class="ckbigmenu-text" th:text="${menuProfile.M0300.screenprompt}">Procurements</span>
+					</a>
+				</li>
+			</span>
+			<span th:if="${isDev or isKhanas or isTcc}">
+				<li class="ckbigmenu-li" th:if="${isCentral and menuProfile.M0400 ne null and menuProfile.M0400.display}">
+					<a th:href="@{/salesninvoice}">
+						<span class="ckbigmenu-icon" style="background:  #961b39;">
+							<i class="fas fa-file-invoice-dollar"></i>
+						</span>
+						<span class="ckbigmenu-text" th:text="${menuProfile.M0400.screenprompt}">Sales & Invoice</span>
+					</a>
+				</li>
+			</span>
+			<span th:if="${isDev or isKhanas}">
+				<li class="ckbigmenu-li" th:if="${isCentral and menuProfile.M0500 ne null and menuProfile.M0500.display}">
+					<a th:href="@{/production}">
+						<span class="ckbigmenu-icon" style="background:  #961b39;">
+							<i class="fas fa-industry"></i>
+						</span>
+						<span class="ckbigmenu-text" th:text="${menuProfile.M0500.screenprompt}">Production</span>
+					</a>
+				</li>
+			</span>
+			<span th:if="${isDev or isKhanas or isTcc}">
+				<li class="ckbigmenu-li" th:if="${isCentral and menuProfile.M0600 ne null and menuProfile.M0600.display}">
+					<a th:href="@{/inventory}">
+						<span class="ckbigmenu-icon" style="background:  #961b39;">
+							<i class="fas fa-warehouse"></i>
+						</span>
+						<span class="ckbigmenu-text" th:text="${menuProfile.M0600.screenprompt}">Inventory Management</span>
+					</a>
+				</li>
+			</span>
+			<span th:if="${isDev or isTcc}">
+				<li class="ckbigmenu-li">
+					<a th:href="@{/conventionmanagement/hallbooking}">
+						<span class="ckbigmenu-icon" style="background:  #961b39;">
+							<i class="fas fa-hotel"></i>
+						</span>
+						<span class="ckbigmenu-text">Convention Hall Booking</span>
+					</a>
+				</li>
+				<li class="ckbigmenu-li">
+					<a th:href="@{/roommanagement}">
+						<span class="ckbigmenu-icon" style="background:  #961b39;">
+							<i class="fas fa-person-booth"></i>
+						</span>
+						<span class="ckbigmenu-text">Room Management</span>
+					</a>
+				</li>
+				<li class="ckbigmenu-li">
+					<a th:href="@{/pos}">
+						<span class="ckbigmenu-icon" style="background:  #961b39;">
+							<i class="fas fa-desktop"></i>
+						</span>
+						<span class="ckbigmenu-text">POS</span>
+					</a>
+				</li>
+			</span>
+
+			<li class="ckbigmenu-showall">Show all</li>
+
+			<li class="ckbigmenu-li hidable-menu nodisplay" th:if="${isCentral and menuProfile.M0201 ne null and menuProfile.M0201.display}">
+				<a th:href="@{/mastersetup/partymaster}">
+					<span class="ckbigmenu-icon" style="background: green;">
+						<i class="fas fa-truck"></i>
+					</span>
+					<span class="ckbigmenu-text" th:text="${menuProfile.M0201.screenprompt}">Party Master</span>
+				</a>
+			</li>
+
+			<li class="ckbigmenu-li hidable-menu nodisplay" th:if="${isCentral and menuProfile.M0202 ne null and menuProfile.M0202.display}">
+				<a th:href="@{/mastersetup/itemmaster}">
+					<span class="ckbigmenu-icon" style="background: green;">
+						<i class="fas fa-box-open"></i>
+					</span>
+					<span class="ckbigmenu-text" th:text="${menuProfile.M0202.screenprompt}">Item Master</span>
+				</a>
+			</li>
+
+			<li class="ckbigmenu-li hidable-menu nodisplay" th:if="${menuProfile.M0203 ne null and menuProfile.M0203.display}">
+				<a th:href="@{/mastersetup/cap}">
+					<span class="ckbigmenu-icon" style="background: green;">
+						<i class="fas fa-qrcode"></i>
+					</span>
+					<span class="ckbigmenu-text">Code & Parameters</span>
+				</a>
+			</li>
+			<li class="ckbigmenu-li hidable-menu nodisplay" th:if="${isCentral and menuProfile.M0204 ne null and menuProfile.M0204.display}">
+				<a th:href="@{/mastersetup/vataitmaster}">
+					<span class="ckbigmenu-icon" style="background: green;">
+						<i class="fas fa-funnel-dollar"></i>
+					</span>
+					<span class="ckbigmenu-text" th:text="${menuProfile.M0204.screenprompt}">Vat & Tax</span>
+				</a>
+			</li>
+			<li class="ckbigmenu-li hidable-menu nodisplay" th:if="${menuProfile.M0101 ne null and menuProfile.M0101.display}">
+				<a th:href="@{/system/usersentry}">
+					<span class="ckbigmenu-icon" style="background: green;">
+						<i class="fas fa-users-cog"></i>
+					</span>
+					<span class="ckbigmenu-text" th:text="${menuProfile.M0101.screenprompt}">User & Profile</span>
+				</a>
+			</li> -->
+			<!-- <li class="ckbigmenu-li hidable-menu nodisplay">
+				<a th:href="@{/system/aslprocerror}">
+					<span class="ckbigmenu-icon" style="background: green;">
+						<i class="fas fa-bug"></i>
+					</span>
+					<span class="ckbigmenu-text">PROC Errors</span>
+				</a>
+			</li> -->
+		</ul>
+	</li>
+</ul>

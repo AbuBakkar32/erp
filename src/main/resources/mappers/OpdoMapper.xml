@@ -1,0 +1,555 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.asl.mapper.OpdoMapper">
+
+	<insert id="saveOpdoHeader" parameterType="Opdoheader">
+ 		<selectKey keyProperty="xdornum" resultType="String" order="BEFORE">
+			SELECT Func_GetTrn('${zid}', '${xtypetrn}', '${xtrn}', 6) FROM DUAL
+		</selectKey>
+		INSERT INTO Opdoheader
+		(
+			xdornum,
+			xdocnum,
+			xdate,
+			xcus,
+			xtotamt,
+			xvatamt,
+			xgrandtot,
+			xperson,
+			xpaymenttype,
+			xdiscamt,
+			xordernum,
+			xstatusord,
+			xstatusjv,
+			xpaid,
+			xref,
+			xnote,
+			xchange,
+			xpaystatus,
+			xtype,
+			xstatusar,
+			xstaff,
+			xwh,
+			xhwh,
+			xdatecom,
+			xdatedue,
+			xcur,
+			xexch,
+			xvoucher,
+			xtypetrn,
+			xtrn,
+			xchalancreated,
+			requisitionnumber,
+			xvatait,
+			xait,
+			xland,
+			xpurpose,
+			xreqnum,
+			xaitamt,
+			
+			zid,
+			zauserid,
+			zaip,
+			zactive,
+			ztime
+		)
+		VALUES
+		(
+			#{xdornum, jdbcType=VARCHAR},
+			#{xdocnum, jdbcType=VARCHAR},
+			#{xdate, jdbcType=DATE},
+			#{xcus, jdbcType=VARCHAR},
+			#{xtotamt, jdbcType=DECIMAL},
+			#{xvatamt, jdbcType=DECIMAL},
+			#{xgrandtot, jdbcType=DECIMAL},
+			#{xperson, jdbcType=VARCHAR},
+			#{xpaymenttype, jdbcType=VARCHAR},
+			#{xdiscamt, jdbcType=DECIMAL},
+			#{xordernum, jdbcType=VARCHAR},
+			#{xstatusord, jdbcType=VARCHAR},
+			#{xstatusjv, jdbcType=VARCHAR},
+			#{xpaid, jdbcType=DECIMAL},
+			#{xref, jdbcType=VARCHAR},
+			#{xnote, jdbcType=VARCHAR},
+			#{xchange, jdbcType=DECIMAL},
+			#{xpaystatus, jdbcType=VARCHAR},
+			#{xtype, jdbcType=VARCHAR},
+			#{xstatusar, jdbcType=VARCHAR},
+			#{xstaff, jdbcType=VARCHAR},
+			#{xwh, jdbcType=VARCHAR},
+			#{xhwh, jdbcType=VARCHAR},
+			#{xdatecom, jdbcType=DATE},
+			#{xdatedue, jdbcType=DATE},
+			#{xcur, jdbcType=VARCHAR},
+			#{xexch, jdbcType=DECIMAL},
+			#{xvoucher, jdbcType=VARCHAR},
+			#{xtypetrn, jdbcType=VARCHAR},
+			#{xtrn, jdbcType=VARCHAR},
+			#{xchalancreated, jdbcType=BOOLEAN},
+			#{requisitionnumber, jdbcType=VARCHAR},
+			#{xvatait, jdbcType=DECIMAL},
+			#{xait, jdbcType=DECIMAL},
+			#{xland, jdbcType=VARCHAR},
+			#{xpurpose, jdbcType=VARCHAR},
+			#{xreqnum, jdbcType=VARCHAR},
+			#{xaitamt, jdbcType=DECIMAL},
+			
+			#{zid, jdbcType=VARCHAR},
+			#{zauserid, jdbcType=VARCHAR},
+			#{zaip, jdbcType=VARCHAR},
+			#{zactive, jdbcType=VARCHAR},
+			#{ztime, jdbcType=TIMESTAMP}
+		) 
+	</insert>
+	
+	
+	<update id="updateOpdoHeader" parameterType="Opdoheader">
+		UPDATE
+			Opdoheader
+		SET
+			xdocnum=#{xdocnum, jdbcType=VARCHAR},
+			xdate=#{xdate, jdbcType=DATE},
+			xcus=#{xcus, jdbcType=VARCHAR},
+			xtotamt=#{xtotamt, jdbcType=DECIMAL},
+			xvatamt=#{xvatamt, jdbcType=DECIMAL},
+			xgrandtot=#{xgrandtot, jdbcType=DECIMAL},
+			xperson=#{xperson, jdbcType=VARCHAR},
+			xpaymenttype=#{xpaymenttype, jdbcType=VARCHAR},
+			xdiscamt=#{xdiscamt, jdbcType=DECIMAL},
+			xordernum=#{xordernum, jdbcType=VARCHAR},
+			xstatusord=#{xstatusord, jdbcType=VARCHAR},
+			xstatusjv=#{xstatusjv, jdbcType=VARCHAR},
+			xpaid=#{xpaid, jdbcType=DECIMAL},
+			xref=#{xref, jdbcType=VARCHAR},
+			xnote=#{xnote, jdbcType=VARCHAR},
+			xchange=#{xchange, jdbcType=DECIMAL},
+			xpaystatus=#{xpaystatus, jdbcType=VARCHAR},
+			xtype=#{xtype, jdbcType=VARCHAR},
+			xstatusar=#{xstatusar, jdbcType=VARCHAR},
+			xstaff=#{xstaff, jdbcType=VARCHAR},
+			xwh=#{xwh, jdbcType=VARCHAR},
+			xhwh=#{xhwh, jdbcType=VARCHAR},
+			xdatecom=#{xdatecom, jdbcType=DATE},
+			xdatedue=#{xdatedue, jdbcType=DATE},
+			xcur=#{xcur, jdbcType=VARCHAR},
+			xexch=#{xexch, jdbcType=DECIMAL},
+			xvoucher=#{xvoucher, jdbcType=VARCHAR},
+			xchalancreated=#{xchalancreated, jdbcType=BOOLEAN},
+			requisitionnumber=#{requisitionnumber, jdbcType=VARCHAR},
+			xvatait=#{xvatait, jdbcType=DECIMAL},
+			xait=#{xait, jdbcType=DECIMAL},
+			xland=#{xland, jdbcType=VARCHAR},
+			xpurpose=#{xpurpose, jdbcType=VARCHAR},
+			xreqnum=#{xreqnum, jdbcType=VARCHAR},
+			xaitamt=#{xaitamt, jdbcType=DECIMAL},
+			
+			zuuserid=#{zuuserid, jdbcType=VARCHAR},
+			zuip=#{zuip, jdbcType=VARCHAR},
+			zactive=#{zactive, jdbcType=VARCHAR},
+			zutime=#{zutime, jdbcType=TIMESTAMP}
+		WHERE
+			xdornum=#{xdornum, jdbcType=VARCHAR}
+			AND zid=#{zid, jdbcType=VARCHAR}
+	</update>
+
+	<insert id="saveOpdoDetail" parameterType="Opdodetail">
+		<selectKey keyProperty="xrow" resultType="Integer" order="BEFORE">
+			SELECT COALESCE(Max(xrow), 0) + 1 FROM Opdodetail WHERE xdornum=#{xdornum} AND zactive='1' AND zid=#{zid}
+		</selectKey>
+		INSERT INTO Opdodetail
+		(
+			xrow,
+			xdornum,
+			xitem,
+			xland,
+			xserial,
+			xunitsel,
+			xqtyord,
+			xrate,
+			xlineamt,
+			xcomtype,
+			xdorrow,
+			xlong,
+			xrategrn,
+			xqtycrn,
+			xtype,
+			xparentrow,
+			xvatrate,
+			xvatamt,
+			xopreqrow,
+			xaitamt,
+			xcfsel,
+			xqtydel,
+			
+			zid,
+			zauserid,
+			zaip,
+			zactive,
+			ztime
+		)
+		VALUES
+		(
+			#{xrow},
+			#{xdornum, jdbcType=VARCHAR},
+			#{xitem, jdbcType=VARCHAR},
+			#{xland, jdbcType=VARCHAR},
+			#{xserial, jdbcType=VARCHAR},
+			#{xunitsel, jdbcType=VARCHAR},
+			#{xqtyord, jdbcType=DECIMAL},
+			#{xrate, jdbcType=DECIMAL},
+			#{xlineamt, jdbcType=DECIMAL},
+			#{xcomtype, jdbcType=VARCHAR},
+			#{xdorrow, jdbcType=INTEGER},
+			#{xlong, jdbcType=VARCHAR},
+			#{xrategrn, jdbcType=DECIMAL},
+			#{xqtycrn, jdbcType=DECIMAL},
+			#{xtype, jdbcType=VARCHAR},
+			#{xparentrow, jdbcType=INTEGER},
+			#{xvatrate, jdbcType=DECIMAL},
+			#{xvatamt, jdbcType=DECIMAL},
+			#{xopreqrow, jdbcType=INTEGER},
+			#{xaitamt, jdbcType=DECIMAL},
+			#{xcfsel, jdbcType=DECIMAL},
+			#{xqtydel, jdbcType=DECIMAL},
+			
+			#{zid, jdbcType=VARCHAR},
+			#{zauserid, jdbcType=VARCHAR},
+			#{zaip, jdbcType=VARCHAR},
+			#{zactive, jdbcType=VARCHAR},
+			#{ztime, jdbcType=TIMESTAMP}
+		)
+		
+	</insert>
+
+	<update id="updateOpdoDetail" parameterType="Opdodetail">
+		UPDATE 
+			Opdodetail
+		SET
+			xunitsel=#{xunitsel, jdbcType=VARCHAR},
+			xitem=#{xitem, jdbcType=VARCHAR},
+			xland=#{xland, jdbcType=VARCHAR},
+			xserial=#{xserial, jdbcType=VARCHAR},
+			xqtyord=#{xqtyord, jdbcType=DECIMAL},
+			xrate=#{xrate, jdbcType=DECIMAL},
+			xlineamt=#{xlineamt, jdbcType=DECIMAL},
+			xcomtype=#{xcomtype, jdbcType=VARCHAR},
+			xdorrow=#{xdorrow, jdbcType=INTEGER},
+			xlong=#{xlong, jdbcType=VARCHAR},
+			xrategrn=#{xrategrn, jdbcType=DECIMAL},
+			xqtycrn=#{xqtycrn, jdbcType=DECIMAL},
+			xtype=#{xtype, jdbcType=VARCHAR},
+			xparentrow=#{xparentrow, jdbcType=INTEGER},
+			xvatrate=#{xvatrate, jdbcType=DECIMAL},
+			xvatamt=#{xvatamt, jdbcType=DECIMAL},
+			xopreqrow=#{xopreqrow, jdbcType=INTEGER},
+			xaitamt=#{xaitamt, jdbcType=DECIMAL},
+			xcfsel=#{xcfsel, jdbcType=DECIMAL},
+			xqtydel=#{xqtydel, jdbcType=DECIMAL},
+			
+			zuuserid=#{zuuserid, jdbcType=VARCHAR},
+			zuip=#{zuip, jdbcType=VARCHAR},
+			zactive=#{zactive, jdbcType=VARCHAR},
+			zutime=#{zutime, jdbcType=TIMESTAMP}
+		WHERE
+			xrow=#{xrow, jdbcType=INTEGER}
+			AND xdornum=#{xdornum, jdbcType=VARCHAR}
+			AND zid=#{zid, jdbcType=VARCHAR}
+	</update>
+	
+	<delete id="deleteOpdoDetail" parameterType="Opdodetail">
+		DELETE 
+		FROM 
+			opdodetail 
+		WHERE 
+			xdornum=#{xdornum} 
+			AND xrow=#{xrow} 
+			AND zid=#{zid}
+	</delete>
+	
+	<update id="updateOpdoHeaderTotalAmt">
+		UPDATE 
+			Opdoheader
+		SET
+			xtotamt=(SELECT SUM(xlineamt) FROM Opdodetail WHERE xdornum=#{xdornum} AND zid=#{zid} AND zactive='1')
+		WHERE 
+			xdornum=#{xdornum} AND zid=#{zid} AND zactive='1'
+	</update>
+	
+	<update id="updateOpdoHeaderGrandTotalAmt">
+		UPDATE 
+			Opdoheader
+		SET
+			xgrandtot=(SELECT SUM(xtotamt + xvatamt) FROM Opdoheader WHERE xdornum=#{xdornum} AND zid=#{zid} AND zactive='1')
+		WHERE
+			xdornum=#{xdornum} AND zid=#{zid} AND zactive='1'
+	</update>
+
+	<update id="updateOpdoHeaderTotalAmtAndGrandTotalAmt">
+		UPDATE 
+			opdoheader oph
+		SET
+			oph.xtotamt=(SELECT SUM(NVL(xlineamt, 0)) FROM opdodetail WHERE xdornum=#{xdornum} AND zid=#{zid}),
+			
+			oph.xvatamt=(SELECT SUM(NVL(xvatamt, 0)) FROM opdodetail WHERE xdornum=#{xdornum} AND zid=#{zid}),
+			oph.xdiscamt= NVL(oph.xdiscamt, 0),
+			oph.xgrandtot=((SELECT SUM(NVL(xlineamt, 0)) FROM opdodetail WHERE xdornum=#{xdornum} AND zid=#{zid})
+							+ (SELECT SUM(NVL(xvatamt, 0)) FROM opdodetail WHERE xdornum=#{xdornum} AND zid=#{zid}))
+							- NVL(oph.xdiscamt, 0),
+			oph.xchange=((SELECT SUM(NVL(xlineamt, 0)) FROM opdodetail WHERE xdornum=#{xdornum} AND zid=#{zid})
+							+ (SELECT SUM(NVL(xvatamt, 0)) FROM opdodetail WHERE xdornum=#{xdornum} AND zid=#{zid})
+							- NVL(oph.xdiscamt, 0))-NVL(oph.xpaid, 0)
+		WHERE
+			oph.xdornum=#{xdornum} 
+			AND oph.zid=#{zid} 
+	</update>
+
+	<select id="findOpdoHeaderByXdornum" resultType="Opdoheader">
+		SELECT 
+			oh.*, 
+			cacus.xorg, 
+			cacus.xphone ,
+			spell_number(oh.xgrandtot) as spellword,
+    		spell_number(substr(to_char(oh.xgrandtot-floor(oh.xgrandtot)),2,2)) as xprimeword,
+    		spell_number(oh.xtotamt) as spellword2,
+    		spell_number(substr(to_char(oh.xtotamt-floor(oh.xtotamt)),2,2)) as xprimeword2,
+    		y.xlong as projectName
+		FROM 
+			Opdoheader oh 
+			LEFT JOIN cacus on cacus.xcus = oh.xcus AND cacus.zid=#{zid} 
+			left join xcodes y on y.xcode = oh.xhwh and y.zid= oh.zid and y.xtype='Project'
+		WHERE 
+			oh.xdornum=#{xdornum} AND oh.zid=#{zid} AND oh.zactive='1'
+	</select>	
+	
+	<select id="getAllOpdoHeader" resultType="Opdoheader">
+		SELECT oh.*, cacus.xorg, cacus.xphone FROM Opdoheader oh
+		JOIN cacus on cacus.xcus = oh.xcus AND cacus.zid=#{zid}
+		WHERE oh.zid=#{zid} AND oh.zactive='1' 
+		ORDER BY oh.xdornum DESC
+	</select>
+	
+	<select id="getAllRandomOpdoHeader" resultType="Opdoheader">
+		SELECT oh.*, cacus.xorg, cacus.xphone FROM Opdoheader oh
+		JOIN cacus on cacus.xcus = oh.xcus AND cacus.zid=#{zid}
+		WHERE oh.zid=#{zid} AND oh.zactive='1' AND cacus.xisrandom = '1'
+		ORDER BY oh.xdornum DESC
+	</select>
+
+	<select id="getAllDirectOpdoHeader" resultType="Opdoheader">
+		SELECT
+			oh.*,
+			c.xorg
+		FROM
+			Opdoheader oh
+			left join cacus c on c.xcus = oh.xcus AND c.zid = oh.zid and c.zactive='1'
+		WHERE
+			oh.zid=#{zid}
+			AND oh.xtype='Direct'
+		ORDER BY
+			oh.xdornum DESC
+	</select>
+	<select id="findOpdoDetailByXdornumAndXrow" resultType="Opdodetail">
+		SELECT 
+			opdodetail.*,
+			caitem.xdesc AS "xitemdesc" 
+		FROM 
+			opdodetail 
+			left join caitem on caitem.xitem = opdodetail.xitem and caitem.zid = opdodetail.zid and caitem.zactive='1'
+		WHERE 
+			opdodetail.xdornum=#{xdornum} 
+			AND opdodetail.xrow=#{xrow} 
+			AND opdodetail.zid=#{zid}
+	</select>
+	
+	<select id="findOpdoDetailByXdornumAndXitem" resultType="Opdodetail">
+		SELECT * FROM Opdodetail WHERE xdornum=#{xdornum} AND xitem=#{xitem} AND zid=#{zid} AND zactive='1'
+	</select>
+
+	<select id="findOpdoDetailByXdornum" resultType="Opdodetail">
+		SELECT 
+			distinct
+			od.*,
+			caitem.xdesc,
+			caitem.xgitem,
+			caitem.xcatitem
+		FROM 
+			opdodetail od
+			left JOIN caitem ON caitem.xitem = od.xitem AND caitem.zid=#{centralzid} and caitem.zactive='1'
+		WHERE 
+			od.xdornum=#{xdornum} 
+			AND od.zid=#{zid} 
+		ORDER BY 
+			XROW ASC
+	</select>
+	
+	
+	<select id="searchOpdoHeader" resultType="Opdoheader">
+		SELECT * FROM Opdoheader WHERE (UPPER(xdornum) LIKE '%' || #{xdornum} || '%') AND xtypetrn=#{xtypetrn} AND zid=#{zid} AND zactive='1'
+	</select>
+	
+	<select id="searchOpdoHeaderWithSatus" resultType="Opdoheader">
+		SELECT * FROM Opdoheader WHERE (UPPER(xdornum) LIKE '%' || #{xdornum} || '%') AND xstatusord=#{xstatusord} AND xtypetrn=#{xtypetrn} AND zid=#{zid} AND zactive='1'
+	</select>
+	
+	<select id="findOpdoXdornum" resultType="Opdoheader">
+		SELECT * FROM Opdoheader WHERE (UPPER(xdornum) LIKE '%' || #{xdornum} || '%') AND zid=#{zid} AND zactive='1'
+	</select>
+	
+	
+	<select id = "procConfirmDO" statementType = "CALLABLE">
+		{call OP_confirmDO(#{zid, jdbcType = VARCHAR, mode = IN}, #{user, jdbcType = VARCHAR, mode = IN}, #{xdornum, jdbcType = VARCHAR, mode = IN}, #{p_seq, jdbcType = VARCHAR, mode = IN})}
+	</select>
+	
+	<select id = "procIssuePricing" statementType = "CALLABLE">
+		{call PROC_Issue_Pricing(#{zid, jdbcType = VARCHAR, mode = IN}, #{user, jdbcType = VARCHAR, mode = IN}, #{xdornum, jdbcType = VARCHAR, mode = IN}, #{xwh, jdbcType = VARCHAR, mode = IN},#{p_screen, jdbcType = VARCHAR, mode = IN},#{p_seq, jdbcType = VARCHAR, mode = IN})}
+	</select>
+	
+	<select id = "procTransferOPtoAR" statementType = "CALLABLE">
+		{call OP_transferOPtoAR(#{zid, jdbcType = VARCHAR, mode = IN}, #{user, jdbcType = VARCHAR, mode = IN}, #{xdornum, jdbcType = VARCHAR, mode = IN}, #{p_screen, jdbcType = VARCHAR, mode = IN}, #{p_seq, jdbcType = VARCHAR, mode = IN})}
+	</select>
+	
+	<select id = "procTransferOPtoGL" statementType = "CALLABLE">
+		{call OP_transferOPtoGL(#{zid, jdbcType = VARCHAR, mode = IN}, #{user, jdbcType = VARCHAR, mode = IN}, #{xdornum, jdbcType = VARCHAR, mode = IN}, #{p_screen, jdbcType = VARCHAR, mode = IN}, #{p_seq, jdbcType = VARCHAR, mode = IN})}
+	</select>
+	
+	<select id = "procrequpdate" statementType = "CALLABLE">
+		{call OPREQ_update_delivery_from_DO(#{zid, jdbcType = VARCHAR, mode = IN}, #{xdornum, jdbcType = VARCHAR, mode = IN})}
+	</select>
+	
+	<select id="findAllOpdoHeaderByXtypetrnAndXtrn" resultType="Opdoheader">
+		SELECT
+			OPDOHEADER.*,
+			cacus.xorg
+		FROM 
+			OPDOHEADER
+			left join cacus on cacus.xcus = OPDOHEADER.xcus and cacus.zid = OPDOHEADER.zid and cacus.zactive='1'
+		WHERE
+			OPDOHEADER.ZID=#{zid}
+			AND OPDOHEADER.XTYPETRN=#{xtypetrn}
+			AND OPDOHEADER.XTRN=#{xtrn}
+		ORDER BY
+			OPDOHEADER.xstatusord DESC, OPDOHEADER.xdornum  DESC
+	</select>
+	
+	<select id="findAllDirectOpdoHeaderByXtypetrnAndXtrn" resultType="Opdoheader">
+		SELECT
+			oh.*,
+			c.xorg
+		FROM
+			Opdoheader oh
+			left join cacus c on c.xcus = oh.xcus AND c.zid = oh.zid and c.zactive='1'
+		WHERE
+			oh.zid=#{zid}
+			AND oh.xtype='Direct'
+		ORDER BY
+			oh.xdornum DESC
+	</select>
+
+	<select id="findAllInvoiceOrder" resultType="Opdoheader">
+		SELECT 
+			OPDOHEADER.*
+			<!-- ZBUSINESS.ZORG AS "branchname" -->
+		FROM 
+			OPDOHEADER
+			<!-- JOIN ZBUSINESS ON ZBUSINESS.ZID = OPDOHEADER.XCUS -->
+		WHERE
+			OPDOHEADER.ZID=#{zid}
+			AND OPDOHEADER.ZACTIVE='1'
+			AND OPDOHEADER.XTYPETRN=#{xtypetrn}
+			AND OPDOHEADER.XTRN=#{xtrn}
+			AND OPDOHEADER.XSTATUSORD=#{xstatusord}
+			AND OPDOHEADER.XCHALANCREATED = '0'
+			AND TO_CHAR(OPDOHEADER.XDATE,'yyyy-MM-dd')=#{xdate}
+		ORDER BY
+			XDORNUM DESC
+	</select>
+
+	<select id="findAllInvoiceOrderByChalan" resultType="Opdoheader">
+		SELECT 
+			OPDOHEADER.*,
+			spell_number(OPDOHEADER.xtotamt) as spellword2,
+    		spell_number(substr(to_char(OPDOHEADER.xtotamt-floor(OPDOHEADER.xtotamt)),2,2)) as xprimeword2
+		FROM 
+			OPDOHEADER
+		WHERE
+			OPDOHEADER.ZID=#{zid}
+			AND OPDOHEADER.ZACTIVE='1'
+			AND OPDOHEADER.XTYPETRN=#{xtypetrn}
+			AND OPDOHEADER.XTRN=#{xtrn}
+			AND OPDOHEADER.XDOCNUM = #{xchalanref}
+		ORDER BY
+			XDORNUM DESC
+	</select>
+
+	<select id="findPoordHeaderByXordernum" resultType="Opdoheader">
+		SELECT 
+			*
+		FROM 
+			OPDOHEADER
+		WHERE
+			ZID=#{zid}
+			AND ZACTIVE='1'
+			AND xordernum=#{xordernum}
+	</select>
+
+	<select id="findPoordHeaderByXordernumAndRequisitionnumber" resultType="Opdoheader">
+		SELECT 
+			*
+		FROM 
+			OPDOHEADER
+		WHERE
+			ZID=#{zid}
+			AND ZACTIVE='1'
+			AND xordernum=#{xordernum}
+			AND requisitionnumber=#{requisitionnumber}
+	</select>
+
+	<select id="getSalesInvoiceMatrxi" resultType="com.asl.model.BranchesRequisitions">
+		SELECT
+			ZBUSINESS.ZORG,
+			OPDODETAIL.XITEM,
+			OPDODETAIL.XUNITSEL AS "XUNITPUR",
+			OPDODETAIL.XQTYORD,
+			CAITEM.XDESC
+		FROM
+			OPDOHEADER
+			JOIN OPDODETAIL ON OPDODETAIL.XDORNUM = OPDOHEADER.XDORNUM AND OPDOHEADER.zid=OPDODETAIL.zid
+			JOIN CAITEM ON CAITEM.XITEM = OPDODETAIL.XITEM AND CAITEM.ZID=#{zid}
+			JOIN CACUS ON CACUS.XCUS = OPDOHEADER.XCUS AND CACUS.ZID=OPDOHEADER.ZID
+			JOIN ZBUSINESS ON ZBUSINESS.ZID = CACUS.XCUSZID
+		WHERE
+			OPDOHEADER.ZID=#{zid}
+			AND OPDOHEADER.ZACTIVE='1'
+			AND OPDOHEADER.XTYPETRN='Sales &amp; Invoice Number'
+			AND OPDOHEADER.XTRN='DO--'
+			AND TO_CHAR(OPDOHEADER.XDATE,'yyyy-MM-dd')=#{xdate}
+			AND CAITEM.XPRODITEM='1'
+		ORDER BY
+			ZBUSINESS.ZORG, CAITEM.XSEQN, OPDODETAIL.XITEM ASC
+	</select>
+
+	<select id="findOpdoheaderByXordernum" resultType="Opdoheader">
+		SELECT 
+			opdoheader.*,
+			cacus.xorg 
+		FROM
+			opdoheader
+			left join cacus on cacus.xcus = opdoheader.xcus and cacus.zid = opdoheader.zid and cacus.zactive='1'
+		WHERE
+			opdoheader.zid=#{zid}
+			AND opdoheader.xordernum=#{xordernum}
+		ORDER BY
+			opdoheader.xstatusord DESC, opdoheader.xdornum DESC 
+	</select>
+
+	<delete id="deleteOpdoHeader">
+		DELETE
+		FROM 
+			opdoheader
+		WHERE
+			xdornum=#{xdornum}
+			AND zid=#{zid}
+	</delete>
+
+</mapper>

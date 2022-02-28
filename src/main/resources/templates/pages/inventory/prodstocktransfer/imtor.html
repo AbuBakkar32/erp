@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<title>Purchase Order</title>
+		<meta th:remove="tag" th:include="commons :: common-meta" />
+		<meta th:remove="tag" th:include="commons :: common-css" />
+		<meta th:remove="tag" th:include="commons :: common-js" />
+	</head>
+	<body>
+		<!-- Header section -->
+		<div class="header-section" th:include="commons :: header-section"></div>
+
+		<!-- Menu section -->
+		<div th:if="${menuVersion != null and menuVersion eq 'MENU_V2'}" class="menuv2" th:include="commons :: main-menu"></div>
+
+		<div th:if="${menuVersion == null or menuVersion eq 'MENU_V1'}" class="navbar-inverse menu-section">
+			<div class="container-fluid">
+				<div class="row">
+					<nav class="navbar navbar-inverse">
+						<div class="container-fluid">
+							<div class="row">
+								<div class="navbar-header">
+									<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+										<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+									</button>
+								</div>
+								<div class="collapse navbar-collapse" id="myNavbar">
+									<div class="nav navbar-nav">
+										<li><a th:href="@{/}">Dashboard</a></li>
+										<li><a th:href="@{/inventory}">Inventory</a></li>
+										<li class="active"><a th:href="@{/inventory/transferorder}">Transfer Order</a></li>
+									</div>
+									<ul class="nav navbar-nav navbar-right" th:include="ckbigmenu :: dashboard-menu"></ul>
+								</div>
+							</div>
+						</div>
+					</nav>
+				</div>
+			</div>
+		</div>
+		
+		
+		<!-- Content section -->
+		<div>
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-md-12 content-area">
+
+						<div class="row">
+							<div class="col-md-6">
+								<!-- Section list head -->
+								<section id="data-maintenance" style="margin-top: 30px;">
+									<div class="section-header sectionbartoggle">
+										<h1>Stock transfer order</h1>
+									</div>
+									<div class="form-action-button">
+										<a th:href="@{/inventory/transferorder}" class="btn btn-sm btn-default"><i class="fas fa-plus"></i> New</a>
+										<a th:if="${#strings.isEmpty(imtorheader.xtornum)}" th:href="@{/inventory/transferorder}" class="btn btn-sm btn-success confirm-btn"><i class="fas fa-save"></i> Create Order</a>
+										<a th:if="${not #strings.isEmpty(imtorheader.xtornum) and imtorheader.zactive == true}" href="#" class="btn btn-sm btn-success update-btn"><i class="fas fa-edit"></i> Update</a>
+										<a th:if="${not #strings.isEmpty(imtorheader.xtornum) and imtorheader.xstatustor != 'Confirmed' and imtorheader.zactive == true}" th:href="@{/inventory/transferorder/confirmimtor/} + ${imtorheader.xtornum}" class="btn btn-sm btn-success confirmimtor-btn-link"><i class="fas fa-tick-alt"></i> Confirm</a>
+										<a th:if="${not #strings.isEmpty(imtorheader.xtornum) and imtorheader.zactive == true}" th:href="@{/inventory/transferorder/archive/} + ${imtorheader.xtornum}" class="btn btn-sm btn-danger archive-btn-link"><i class="fas fa-trash-alt"></i> Archive</a>
+										<a th:if="${not #strings.isEmpty(imtorheader.xtornum) and imtorheader.zactive == false}" th:href="@{/inventory/transferorder/restore/} + ${imtorheader.xtornum}" class="btn btn-sm btn-success restore-btn-link"><i class="fas fa-trash-restore-alt"></i> Restore</a>
+									</div>
+									<div class="section-body section-border">
+										<form id="mainform" class="form-horizontal" th:action="@{/inventory/transferorder/save}" th:object="${imtorheader}" method="post" th:with="df=${'E, dd-MMM-yyyy'}">
+											<input type="hidden" id="xtornum" th:if="${not #strings.isEmpty(imtorheader.xtornum)}" class="form-control" th:field="*{xtornum}">
+											<div class="row">
+												<div class="col-md-6">
+
+													<div class="form-group" th:if="${#strings.isEmpty(imtorheader.xtornum)}">
+														<label class="control-label col-md-4" for="xtrntor">Prefix : </label>
+														<div class="col-md-6">
+															<select class="form-control" th:field="*{xtrntor}">
+																<option th:each="prefix : ${imtorprefix}" th:value="${prefix.xtrn}" th:text="${prefix.xtrn}"></option>
+															</select>
+														</div>
+													</div>
+
+													<div class="form-group" th:if="${not #strings.isEmpty(imtorheader.xtornum)}">
+														<label class="control-label col-md-4" for="xtornum">T.O. Number : </label>
+														<div class="col-md-8">
+															<input type="text" class="form-control" th:field="*{xtornum}" disabled="disabled">
+														</div>
+													</div>
+													
+													<div class="form-group">
+														<label class="control-label col-md-4" for="xchalanref">Chalan Ref: </label>
+														<div class="col-md-8">
+															<input type="text" class="form-control" th:field="*{xchalanref}">
+														</div>
+													</div>
+													
+													<div class="form-group datepicker">
+														<label class="control-label col-md-4" for="xdate">Date : </label>
+														<div class="input-group date col-md-7 datepicker">
+															<input 	type="datepicker" 
+																	class="form-control" 
+																	id="xdate"
+																	name="xdate"
+																	th:value="${imtorheader.xdate == null ? #dates.format(#dates.createNow(), df) : #dates.format(imtorheader.xdate, df)}"/>
+															<div class="input-group-addon">
+																<span class="glyphicon glyphicon-calendar"></span>
+															</div>
+														</div>
+													</div>
+
+													<div class="form-group">
+														<label class="control-label col-md-4" for="xfwh">From Warehouse : </label>
+														<div class="col-md-8">
+															<select class="form-control" th:field="*{xfwh}">
+																<option th:each="wh : ${warehouses}" th:value="${wh.xcode}" th:text="${wh.xcode}"></option>
+															</select>
+														</div>
+													</div>
+													
+													<div class="form-group">
+														<label class="control-label col-md-4" for="xtwh">To Warehouse : </label>
+														<div class="col-md-8">
+															<select class="form-control" th:field="*{xtwh}">
+																<option th:each="wh : ${warehouses}" th:value="${wh.xcode}" th:text="${wh.xcode}"></option>
+															</select>
+														</div>
+													</div>
+
+												</div>
+												<div class="col-md-6">
+
+													<div class="form-group">
+														<label class="control-label col-md-4" for="xref">Ref : </label>
+														<div class="col-md-8">
+															<input type="text" class="form-control" th:field="*{xref}">
+														</div>
+													</div>
+
+													<div class="form-group">
+														<label class="control-label col-md-4" for="xlong">Note : </label>
+														<div class="col-md-8">
+															<textarea class="form-control" th:field="*{xlong}" rows="3"></textarea>
+														</div>
+													</div>
+
+												</div>
+											</div>
+										</form>
+									</div>
+								</section>
+							</div>
+							<div class="col-md-6">
+								<section id="list-manager" style="margin-top: 30px;">
+									<div class="section-header sectionbartoggle">
+										<h1>All Transfer Orders</h1>
+									</div>
+									<div class="section-body">
+										<table class="table table-striped table-bordered datatable nowrap">
+											<thead>
+												<tr>
+													<th>Transfer Order</th>
+													<th>Date</th>
+													<th>From</th>
+													<th>To</th>
+													<th>Status</th>
+												</tr>
+											</thead>
+											<tbody th:with="df=${'E, dd-MMM-yyyy'}">
+												<tr th:each="imtor : ${allImtorHeaders}">
+													<td>
+														<a th:href="@{/inventory/transferorder/} + ${imtor.xtornum}" th:text="${imtor.xtornum}"></a>
+													</td>
+													<td  th:text="${#dates.format(imtor.xdate, df)}"></td>
+													<td th:text="${imtor.xfwh}"></td>
+													<td th:text="${imtor.xtwh}"></td>
+													<td th:text="${imtor.xstatustor}"></td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</section>
+
+							</div>
+						</div>
+						
+					</div>
+
+					<div class="col-md-12">
+						<!-- imtordetail section -->
+						<section th:if="${not #strings.isEmpty(imtorheader.xtornum)}" id="data-maintenance" style="margin-top: 30px;">
+							<a id="listlines-url" th:href="@{/inventory/transferorder/imtordetails/} + ${imtorheader.xtornum}"></a>
+							<div class="section-header sectionbartoggle">
+								<h1>Transfer Order Details</h1>
+							</div>
+							<div class="section-body">
+								<table class="table table-striped table-bordered datatable nowrap" id="imtordetailtable" th:fragment="imtordetailtable">
+									<thead>
+										<tr>
+											<th>Row</th>
+											<th>Item Code</th>
+											<th>Qty</th>
+											<th>Unit</th>
+											<th>Rate</th>
+											<th data-nosort="Y" style="text-align: right;">
+												<button type="button" class="btn btn-success btn-add" th:attr="data-url=@{/inventory/transferorder/} + ${imtorheader.xtornum} + '/imtordetail/new/show', data-target-modal='imtordetailmodal'"><i class="fas fa-plus"></i></button>
+											</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr th:each="d : ${imtordetailsList}">
+											<td th:text="${dStat.index +1}"></td>
+											<td th:text="${d.xitem}"></td>
+											<td th:text="${d.xqtyord}"></td>
+											<td th:text="${d.xunit}"></td>
+											<td th:text="${d.xrate}"></td>
+											<td data-nosort="Y" style="text-align: right; font-size: 11px;">
+												<button type="button" class="btn btn-default btn-edit editmode" th:attr="data-url=@{/inventory/transferorder/} + ${imtorheader.xtornum} + '/imtordetail/' + ${d.xrow} + '/show', data-target-modal='imtordetailmodal'"><i class="fas fa-edit"></i></button>
+												<button type="button" class="btn btn-danger btn-delete editmode" th:attr="data-url=@{/inventory/transferorder/} + ${imtorheader.xtornum} + '/imtordetail/' + ${d.xrow} + '/delete'"><i class="fas fa-trash"></i></button>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</section>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Modal -->
+		<div id="imtordetailmodal-section"></div>
+
+		<!-- Footer section -->
+		<div class="footer-section" th:include="commons :: footer-section"></div>
+	</body>
+	
+	<script>
+		$(document).ready(function(){
+			$('a.confirmimtor-btn-link').off('click').on('click', function(e){
+				e.preventDefault();
+				var tornum = $("#xtornum").val();
+				
+				$.ajax({
+					url: getBasepath() + "/inventory/transferorder/confirmimtor/" + tornum,
+					success: function(result){
+						var status = result.status.toLowerCase();
+						
+						if(status == "success")
+							showMessage("success", "Transfer Order Confirmed");
+						else if(status == "error")
+							showMessage("error", result.message);
+						//location.reload(true);
+						setTimeout(() => {
+							location.reload(true);
+						}, 1200);
+					}
+				});
+			});
+		});
+		
+	</script>
+</html>

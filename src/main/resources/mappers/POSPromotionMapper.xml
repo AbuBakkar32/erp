@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.asl.mapper.POSPromotionMapper">
+
+	<insert id="savePOSPromotion" parameterType="POSPromotion">
+		INSERT INTO pospromotion
+		(
+			xpromono,
+			xstartdate,
+			xenddate,
+			xstarttime,
+			xendtime,
+			xdisc,
+			xname,
+			xdisctype,
+			xtype,
+			zactive,
+			zauserid,
+			zid,
+			ztime,
+			zutime,
+			zuuserid
+		)
+		VALUES
+		(
+			#{xpromono , jdbcType=VARCHAR},
+			#{xstartdate, jdbcType=DATE},
+			#{xenddate, jdbcType=DATE},
+			#{xstarttime, jdbcType=VARCHAR},
+			#{xendtime, jdbcType=VARCHAR},
+			#{xdisc, jdbcType=DECIMAL},
+			#{xname, jdbcType=VARCHAR},
+			#{xdisctype, jdbcType=VARCHAR},
+			#{xtype, jdbcType=VARCHAR},
+			#{zactive, jdbcType=VARCHAR},
+			#{zauserid, jdbcType=VARCHAR},
+			#{zid, jdbcType=VARCHAR},
+			#{ztime, jdbcType=TIMESTAMP},
+			#{zutime, jdbcType=TIMESTAMP},
+			#{zuuserid, jdbcType=VARCHAR}
+
+		)
+	</insert>
+
+	<update id="updatePOSPromotion" parameterType="POSPromotion">
+		UPDATE 
+			pospromotion
+		SET
+			xstartdate=#{xstartdate, jdbcType=DATE},
+			xenddate=#{xenddate, jdbcType=DATE},
+			xstarttime=#{xstarttime, jdbcType=VARCHAR},
+			xendtime=#{xendtime, jdbcType=VARCHAR},
+			xdisc=#{xdisc, jdbcType=DECIMAL},
+			xname=#{xname, jdbcType=VARCHAR},
+			xdisctype=#{xdisctype, jdbcType=VARCHAR},
+			xtype=#{xtype, jdbcType=VARCHAR},
+			zactive=#{zactive, jdbcType=VARCHAR},
+			zauserid=#{zauserid, jdbcType=VARCHAR},
+			ztime=#{ztime, jdbcType=TIMESTAMP},
+			zutime=#{zutime, jdbcType=TIMESTAMP},
+			zuuserid=#{zuuserid, jdbcType=VARCHAR}
+		WHERE
+			xpromono=#{xpromono , jdbcType=VARCHAR}
+			AND zid=#{zid, jdbcType=VARCHAR}
+	</update>
+
+	<select id="getAllPOSPromotion" resultType="POSPromotion">
+		SELECT * FROM pospromotion WHERE zid=#{zid} order by ztime desc
+	</select>
+	
+	<select id="findByPOSPromotion" resultType="POSPromotion">
+		SELECT 
+			* 
+		FROM 
+			pospromotion 
+		WHERE 
+			zid=#{zid} 
+			AND xpromono=#{xpromono}
+	</select>
+</mapper>

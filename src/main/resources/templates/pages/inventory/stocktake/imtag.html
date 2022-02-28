@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<title th:text="#{st.page.title}">Stock Adjustment</title>
+		<meta th:remove="tag" th:include="commons :: common-meta" />
+		<meta th:remove="tag" th:include="commons :: common-css" />
+		<meta th:remove="tag" th:include="commons :: common-js" />
+	</head>
+	<body>
+		<!-- Header section -->
+		<div class="header-section" th:include="commons :: header-section"></div>
+
+		<!-- Menu section -->
+		<div th:if="${menuVersion != null and menuVersion eq 'MENU_V2'}" class="menuv2" th:include="commons :: main-menu"></div>
+
+		<div th:if="${menuVersion == null or menuVersion eq 'MENU_V1'}" class="navbar-inverse menu-section">
+			<div class="container-fluid">
+				<div class="row">
+					<nav class="navbar navbar-inverse">
+						<div class="container-fluid">
+							<div class="row">
+								<div class="navbar-header">
+									<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+										<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+									</button>
+								</div>
+								<div class="collapse navbar-collapse" id="myNavbar">
+									<div class="nav navbar-nav">
+										<li><a th:href="@{/}"><i class="fas fa-home"></i> Home</a></li>
+										<li class="active"><a th:href="@{/inventory/stocktake}">Stock Adjustment</a></li>
+									</div>
+									<ul class="nav navbar-nav navbar-right" th:include="ckbigmenu :: dashboard-menu"></ul>
+								</div>
+							</div>
+						</div>
+					</nav>
+				</div>
+			</div>
+		</div>
+
+		<!-- Content section -->
+		<div>
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-md-12 content-area">
+						<div class="row">
+							<h1 class="text-center" th:text="#{st.page.heading}">Stock Adjustment</h1>
+						</div>
+
+						<div class="row">
+							<div class="col-md-6">
+								<!-- Section list head -->
+								<section id="data-maintenance" style="margin-top: 30px;">
+									<div class="section-header sectionbartoggle">
+									</div>
+									<div class="form-action-button">
+										<a th:href="@{/inventory/stocktake}" class="btn btn-sm btn-default"><i class="fas fa-redo-alt"></i> <span style="margin-left:2px;" th:text="#{button.value.xclear}"> Clear</span></a>
+										<a th:if="${#strings.isEmpty(imtag.xtagnum)}" th:href="@{/inventory/stocktake}" class="btn btn-sm btn-success confirm-btn"><i class="fas fa-save"></i> <span style="margin-left:2px;" th:text="#{button.value.xsave}"> Submit</span></a>
+										<a th:if="${not #strings.isEmpty(imtag.xtagnum) and imtag.zactive == true and imtag.xstatustag != 'Confirmed'}" href="#" class="btn btn-sm btn-success update-btn"><i class="fas fa-edit"></i> <span style="margin-left:2px;" th:text="#{button.value.xupdate}"> Update</span></a>
+										<a th:if="${not #strings.isEmpty(imtag.xtagnum) and imtag.xstatustag != 'Confirmed' and imtag.zactive == true}" th:href="@{/inventory/stocktake/confirmstocktake/} + ${imtag.xtagnum}" class="btn btn-sm btn-primary confirm-btn-link"><i class="fas fa-paper-plane"></i> <span style="margin-left:2px;" th:text="#{button.value.xconfirm}"> Confirm</span></a>
+										<a th:if="${not #strings.isEmpty(imtag.xtagnum) and imtag.zactive == true and imtag.xstatustag != 'Confirmed' }" th:href="@{/inventory/stocktake/delete/} + ${imtag.xtagnum}" class="btn btn-sm btn-danger archive-btn-link"><i class="fas fa-trash-alt"></i> <span style="margin-left:2px;" th:text="#{button.value.xdelete}"> Delete</span></a>
+										<a th:if="${not #strings.isEmpty(imtag.xtagnum)}" th:href="@{/inventory/stocktake/print/} + ${imtag.xtagnum}" class="btn btn-sm btn-primary print-btn-link" target="_blank"><i class="fas fa-print"></i> Print</a>
+										<!--<a th:if="${not #strings.isEmpty(imtag.xtagnum) and imtag.zactive == true}" th:href="@{/inventory/stocktake/archive/} + ${imtag.xtagnum}" class="btn btn-sm btn-danger archive-btn-link"><i class="fas fa-trash-alt"></i> Archive</a>
+										<a th:if="${not #strings.isEmpty(imtag.xtagnum) and imtag.zactive == false}" th:href="@{/inventory/stocktake/restore/} + ${imtag.xtagnum}" class="btn btn-sm btn-success restore-btn-link"><i class="fas fa-trash-restore-alt"></i> Restore</a>-->
+									</div>
+									<div class="section-body section-border">
+										<form id="mainform" class="form-horizontal" th:action="@{/inventory/stocktake/save}" th:object="${imtag}" method="post" th:with="df=${'E, dd-MMM-yyyy'}">
+											<input type="hidden" th:field="*{xtype}"/>
+											<input type="hidden" th:field="*{xtypetrn}">
+											<input type="hidden" th:if="${not #strings.isEmpty(imtag.xtagnum)}" class="form-control" th:field="*{xtagnum}">
+											<div class="row">
+												<div class="col-md-12">
+
+													<div class="form-group" th:if="${#strings.isEmpty(imtag.xtagnum)}">
+														<label class="control-label col-md-4" for="xtrn" th:text="#{st.form.label.xtrn}">Prefix : </label>
+														<div class="col-md-3">
+															<select class="form-control" th:field="*{xtrn}">
+																<option th:each="prefix : ${imtagprefix}" th:value="${prefix.xtrn}" th:text="${prefix.xtrn}"></option>
+															</select>
+														</div>
+													</div>
+
+													<div class="form-group" th:if="${not #strings.isEmpty(imtag.xtagnum)}">
+														<label class="control-label col-md-4" for="xtagnum" th:text="#{st.form.label.xtagnum}">TAG Number : </label>
+														<div class="col-md-5">
+															<input type="text" class="form-control" th:value="*{xtagnum}" disabled="disabled">
+														</div>
+													</div>
+
+													<div class="form-group datepicker">
+														<label class="control-label col-md-4" for="xdate" th:text="#{st.form.label.xdate}">Date : </label>
+														<div class="input-group date col-md-4 datepicker">
+															<input 	type="datepicker" 
+																	class="form-control" 
+																	id="xdate"
+																	name="xdate"
+																	required="required"
+																	th:value="${imtag.xdate == null ? #dates.format(#dates.createNow(), df) : #dates.format(imtag.xdate, df)}"/>
+															<div class="input-group-addon">
+																<span class="glyphicon glyphicon-calendar"></span>
+															</div>
+														</div>
+													</div>
+
+													<!--<div class="form-group">
+														<label class="control-label col-md-4" for="xwh" th:text="#{st.form.label.xwh}">Warehouse : </label>
+														<div class="col-md-5">
+															<select class="form-control" th:field="*{xwh}">
+																<option th:each="wh : ${warehouses}" th:value="${wh.xcode}" th:text="${wh.xcode} + ' - ' + ${wh.xlong}"></option>
+															</select>
+														</div>
+													</div>-->
+													
+													<div class="form-group">
+														<label class="control-label col-md-4" for="xhwh">Project/Business</label>
+														<div class="col-sm-5">
+															<input 	type="text" 
+																class="form-control searchsuggest xhwhsearch" 
+																placeholder="Search..." 
+																th:value="${#strings.isEmpty(imtag.xhwh) ? '' : imtag.xhwh + '-' + imtag.projectName}" 
+																th:attr="search-url='search/allproject'"
+																/>
+															<input type="hidden" class="required" id="search-val" th:field="*{xhwh}" value=""/>
+															<input type="hidden" id="search-des" th:value="*{xhwh}"/>
+														</div>
+													</div>
+
+													<div class="form-group">
+														<label class="control-label col-sm-4" for="xwh" >Site/Store</label>
+														<div class="col-sm-5">
+															<select th:field="*{xwh}" class="form-control">
+																<option value="">-- Select --</option>
+																<option th:each="s : ${allcodes}" th:value="${s.xcode}" th:text="${s.xcode + ' - ' + s.xcodename}"></option>
+															</select>
+														</div>
+													</div>
+
+													<div class="form-group">
+														<label class="control-label col-md-4" for="xstatustag" th:text="#{st.form.label.xstatustag}">Tag Status : </label>
+														<div class="col-md-5">
+															<input type="hidden" class="form-control" th:field="*{xstatustag}"/>
+															<input type="text" class="form-control" th:value="*{xstatustag}" disabled="disabled"/>
+														</div>
+													</div>
+
+													<div class="form-group">
+														<label class="control-label col-md-4" for="xref" th:text="#{st.form.label.xref}">Ref : </label>
+														<div class="col-md-5">
+															<input type="text" class="form-control" th:field="*{xref}">
+														</div>
+													</div>
+
+												</div>
+												
+											</div>
+										</form>
+									</div>
+								</section>
+							</div>
+							<div class="col-md-6">
+								<section id="list-manager" style="margin-top: 30px;">
+									<div class="section-header sectionbartoggle">
+										<h1>All Transfer Orders</h1>
+									</div>
+									<div class="section-body">
+										<table class="table table-striped table-bordered datatable nowrap">
+											<thead>
+												<tr>
+													<th th:text="#{st.table.header.xtagnum}">TAG Number</th>
+													<th th:text="#{st.table.header.xdate}">Date</th>
+													<th th:text="#{st.table.header.xwh}">Site/Store</th>
+													<th th:text="#{st.table.header.xstatustag}">Status</th>
+												</tr>
+											</thead>
+											<tbody th:with="df=${'E, dd-MMM-yyyy'}">
+												<tr th:each="tag : ${allimtags}">
+													<td>
+														<a th:href="@{/inventory/stocktake/} + ${tag.xtagnum}" th:text="${tag.xtagnum}"></a>
+													</td>
+													<td  th:text="${#dates.format(tag.xdate, df)}"></td>
+													<!-- <td th:text="${tag.xwh}"></td> -->
+													<td th:text="${#strings.isEmpty(tag.xwh)? '' : tag.xwh + ' - ' + tag.storeName}"></td>
+													<td th:text="${tag.xstatustag}"></td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</section>
+
+							</div>
+						</div>
+						
+					</div>
+
+					<div class="col-md-12">
+						<!-- imtordetail section -->
+						<section th:if="${not #strings.isEmpty(imtag.xtagnum)}" id="data-maintenance" style="margin-top: 30px;">
+							<a id="listlines-url" th:href="@{/inventory/stocktake/imtagdetails/} + ${imtag.xtagnum}"></a>
+							<div class="section-header sectionbartoggle">
+								<h1>Stock Adjustment Entry Details of <span th:text="${imtag.xtagnum}"></span></h1>
+							</div>
+							<div class="section-body">
+								<table class="table table-striped table-bordered datatable nowrap" id="imtagdetailtable" th:fragment="imtagdetailtable">
+									<thead>
+										<tr>
+											<th th:text="#{st.modal.table.heading.xrow}">Row</th>
+											<th th:text="#{st.modal.table.heading.xitem}">Item Code</th>
+											<th th:text="#{st.modal.table.heading.xunit}">Unit</th>
+											<th th:text="#{st.modal.table.heading.xqty}">Qty</th>
+											<th data-nosort="Y" style="text-align: right;" th:if="${imtag.xstatustag == 'Open'}">
+												<button type="button" class="btn btn-success btn-add" th:attr="data-url=@{/inventory/stocktake/} + ${imtag.xtagnum} + '/imtagdetail/new/show', data-target-modal='imtagdetailmodal'"><i class="fas fa-plus"></i></button>
+											</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr th:each="d : ${imtagDetailsList}">
+											<td th:text="${dStat.index+1}"></td>
+											<td>
+												<a th:href="@{/mastersetup/caitem/} + ${d.xitem}" target="_blank" th:text="${d.xitem} + ' - ' + ${d.itemname}"></a>
+											</td>
+											<td th:text="${d.xunit}"></td>
+											<td th:text="${d.xqty}"></td>
+											<td data-nosort="Y" style="text-align: right; font-size: 11px;" th:if="${imtag.xstatustag == 'Open'}">
+												<button type="button" class="btn btn-default btn-edit editmode" th:attr="data-url=@{/inventory/stocktake/} + ${imtag.xtagnum} + '/imtagdetail/' + ${d.xrow} + '/show', data-target-modal='imtagdetailmodal'"><i class="fas fa-edit"></i></button>
+												<button type="button" class="btn btn-danger btn-delete editmode" th:attr="data-url=@{/inventory/stocktake/} + ${imtag.xtagnum} + '/imtagdetail/' + ${d.xrow} + '/delete'"><i class="fas fa-trash"></i></button>
+											</td>
+										</tr>
+									</tbody>
+									<tfoot>
+										<th colspan="3" class="text-right"  th:text="#{st.modal.table.heading.xtotal}">Total</th>
+										<th class="text-right" th:text="${totalQuantity}">0</th>
+										<th></th>
+									</tfoot>
+								</table>
+							</div>
+						</section>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Modal -->
+		<div id="imtagdetailmodal-section"></div>
+
+		<!-- Footer section -->
+		<div class="footer-section" th:include="commons :: footer-section"></div>
+	</body>
+	
+	<script type="text/javascript">
+		$(document).ready(function(){
+			// Init ui for modal
+			ck.ui.config.buttonevent();
+
+			$('.xhwhsearch').on('blur', function(){
+				setTimeout(() => {
+					if($('input[name="xhwh"]').val() == ''){
+						$("#xwh option").remove(); 
+						var mySelect = $('#xwh');
+						mySelect.append(
+							$('<option></option>').val("").html("-- Select --")
+						);
+						return;
+					}
+
+
+					loadingMask2.show();
+					$.ajax({
+						url : getBasepath() + '/inventory/openingentry/allcodesbyproject/' + $('input[name="xhwh"]').val(),
+						type : 'GET',
+						success : function(data) {
+							loadingMask2.hide();
+							if(data == undefined || data == null) return;
+
+							$("#xwh option").remove(); 
+							var mySelect = $('#xwh');
+							mySelect.append(
+								$('<option></option>').val("").html("-- Select --")
+							);
+							$.each(data, function(val, obj) {
+								mySelect.append(
+									$('<option></option>').val(obj.xcode).html(obj.xcode + ' - ' + obj.xcodename)
+								);
+							});
+
+						},
+						error : function(jqXHR, status, errorThrown){
+							showMessage(status, "Something went wrong .... ");
+							loadingMask2.hide();
+						}
+					})
+				}, 1000);
+			});
+		});
+	</script>
+	
+</html>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.asl.mapper.ImstockMapper">
+
+	<select id="findByXitem" resultType="Imstock">
+		SELECT * FROM imstock WHERE xitem=#{xitem} AND zid=#{zid} ORDER BY xwh
+	</select>
+
+	<select id="findByXitemAndXwh" resultType="Imstock">
+		SELECT * FROM imstock WHERE xitem=#{xitem} AND XWH=#{xwh} AND zid=#{zid} ORDER BY xwh
+	</select>
+
+	<select id="searchXitem" resultType="Imstock">
+		SELECT DISTINCT xitem FROM imstock WHERE (UPPER(xitem) LIKE '%' || #{xitem} || '%') AND zid=#{zid} ORDER BY xitem
+	</select>
+
+	<select id="search" resultType="Imstock">
+		SELECT
+			distinct
+			IM.*,
+			xcodes.xdescdet
+		FROM
+			IMSTOCK IM
+			LEFT JOIN xcodes on xcodes.xcode = IM.xwh AND xcodes.zid = IM.zid AND xcodes.zactive='1' AND xcodes.xtype='Store'
+		WHERE
+			IM.ZID=#{zid}
+			<if test="xitem != null and xitem != ''">
+			AND XITEM=#{xitem}
+			</if>
+			<if test="xwh != null and xwh != ''">
+			AND XWH=#{xwh}
+			</if>
+		ORDER BY 
+			IM.XWH, IM.XITEM, IM.XCATITEM
+	</select>
+</mapper>

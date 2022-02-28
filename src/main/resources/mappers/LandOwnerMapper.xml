@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.asl.mapper.LandOwnerMapper">
+
+	<insert id="saveLandOwner" parameterType="LandOwner">
+		INSERT INTO landowner
+		(
+			xland,
+			xperson,
+			xtype,
+			xnote,
+			xqty, 
+			xunit, 
+			zactive,
+			zauserid,
+			zid,
+			ztime,
+			zutime,
+			zuuserid
+		)
+		VALUES
+		(
+			#{xland, jdbcType=VARCHAR},
+			#{xperson, jdbcType=VARCHAR},
+			#{xtype, jdbcType=VARCHAR},
+			#{xnote, jdbcType=VARCHAR},
+			#{xqty, jdbcType=INTEGER},
+			#{xunit, jdbcType=VARCHAR},
+			#{zactive, jdbcType=VARCHAR},
+			#{zauserid, jdbcType=VARCHAR},
+			#{zid, jdbcType=VARCHAR},
+			#{ztime, jdbcType=TIMESTAMP},
+			#{zutime, jdbcType=TIMESTAMP},
+			#{zuuserid, jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<update id="updateLandOwner" parameterType="LandOwner">
+		UPDATE 
+			landowner
+		SET
+			xtype=#{xtype, jdbcType=VARCHAR},
+			xnote=#{xnote, jdbcType=VARCHAR},
+			xqty=#{xqty, jdbcType=INTEGER},
+			xunit=#{xunit, jdbcType=VARCHAR},
+			zactive=#{zactive, jdbcType=VARCHAR},
+			zauserid=#{zauserid, jdbcType=VARCHAR},
+			zid=#{zid, jdbcType=VARCHAR},
+			ztime=#{ztime, jdbcType=TIMESTAMP},
+			zutime=#{zutime, jdbcType=TIMESTAMP},
+			zuuserid=#{zuuserid, jdbcType=VARCHAR}
+		WHERE
+			xland=#{xland, jdbcType=VARCHAR}
+			AND xperson=#{xperson, jdbcType=VARCHAR}
+			AND zid=#{zid, jdbcType=VARCHAR}
+	</update>
+
+	<select id="getAllLandOwner" resultType="LandOwner">
+		SELECT 
+			* 
+		FROM 
+			landowner 
+		WHERE 
+			zid=#{zid} 
+			AND zactive='1'
+		order by 
+			ztime desc
+	</select>
+
+	<select id="findByXlandAndXperson" resultType="LandOwner">
+		SELECT 
+			* 
+		FROM 
+			landowner 
+		WHERE 
+			zid=#{zid} 
+			AND xland=#{xland} 
+			AND xperson=#{xperson}
+	</select>
+
+	<select id="searchLandId" resultType="LandInfo">
+		SELECT xland FROM landinfo WHERE (UPPER(xland) LIKE '%' || #{xland} || '%') AND zid=#{zid} AND zactive='1'
+	</select>
+
+	<select id="searchPersonId" resultType="LandPerson">
+		SELECT xperson FROM landperson WHERE (UPPER(xperson) LIKE '%' || #{xperson} || '%') AND zid=#{zid} AND zactive='1'
+	</select>
+	
+	<select id="searchPersonName" resultType="LandPerson">
+		SELECT xname FROM landperson WHERE (UPPER(xname) LIKE '%' || #{xname} || '%') AND zid=#{zid} AND zactive='1'
+	</select>
+</mapper>

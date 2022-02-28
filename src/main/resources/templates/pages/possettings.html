@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+	<head>
+		<title>POS Settings</title>
+		<meta th:remove="tag" th:include="commons :: common-meta"/>
+		<meta th:remove="tag" th:include="commons :: common-css"/>
+		<meta th:remove="tag" th:include="commons :: common-js"/>
+	</head>
+	<body>
+
+		<!-- Header section -->
+		<div class="header-section" th:include="commons :: header-section"></div>
+
+
+		<!-- Menu section -->
+		<div th:if="${menuVersion != null and menuVersion eq 'MENU_V2'}" class="menuv2" th:include="commons :: main-menu"></div>
+
+		<div th:if="${menuVersion == null or menuVersion eq 'MENU_V1'}" class="navbar-inverse menu-section">
+			<div class="container-fluid">
+				<div class="row">
+					<nav class="navbar navbar-inverse">
+						<div class="container-fluid">
+							<div class="row">
+								<div class="navbar-header">
+									<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+										<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+									</button>
+								</div>
+								<div class="collapse navbar-collapse" id="myNavbar">
+									<div class="nav navbar-nav">
+										<li><a th:href="@{/}">Dashboard</a></li>
+										<li class="active"><a th:href="@{/possettings}">POS Settings</a></li>
+									
+									</div>
+								
+								</div>
+							</div>
+						</div>
+					</nav>
+				</div>
+			</div>
+		</div>
+		
+		
+		<!-- Content section -->
+		<div>
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-md-12 content-area">
+
+						<div class="row">
+							<!-- Section list head -->
+								<section id="data-maintenance" style="margin-top: 30px;">
+									<div id="possettingform" th:fragment="possettingform">
+										<div class="section-header sectionbartoggle">
+											<h1>POS Settings</h1>
+										</div>
+										<div class="form-action-button">
+										</div>
+										<div class="section-body section-border">
+											<form id="mainform" class="form-horizontal" method="post" th:action="@{/possettings/save}" th:object="${settings}">
+												<div class="row">
+													<div class="col-md-4">
+														<div class="row">
+															<div class="col-md-12">
+																<div class="form-group input2">
+																	<div class="col-sm-8 col-sm-offset-4">
+																		<div class="checkbox">
+																			<label><input type="checkbox" class="form-control-input2 poscheck" th:checked="${imageView}" data-prompt="Image View"/>Item Image</label>
+																		</div>
+																	</div>
+																</div>
+															</div>
+														</div>
+														<div class="row">
+															<div class="col-md-12">
+																<div class="form-group input2">
+																	<div class="col-sm-8 col-sm-offset-4">
+																		<div class="checkbox">
+																			<label><input type="checkbox" class="form-control-input2 poscheck" th:checked="${liveItemSearch}" data-prompt="Live Item Search"/>Live Search</label>
+																		</div>
+																	</div>
+																</div>
+															</div>
+														</div>
+														
+														<div class="row">
+															<div class="col-md-12">
+																<div class="form-group input2">
+																	<div class="col-sm-8 col-sm-offset-4">
+																		<div class="checkbox">
+																			<label><input type="checkbox" class="form-control-input2 poscheck" th:checked="${livePromotion}" data-prompt="Live Promotion"/>Promotion</label>
+																		</div>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+													<div class="col-md-4">
+														<div class="row">
+															<div class="col-md-12">
+																<div class="form-group input2">
+																	<div class="col-sm-8 col-sm-offset-4">
+																		<div class="checkbox">
+																			<label><input type="checkbox" class="form-control-input2 poscheck" th:checked="${liveBackgroundColor}" data-prompt="Live Background Color"/>Show Background Color</label>
+																		</div>
+																	</div>
+																</div>
+															</div>
+														</div>
+														<div class="row">
+															<div class="col-md-12">
+																<div class="form-group input2">
+																	<div class="col-sm-8 col-sm-offset-4">
+																		<div class="checkbox">
+																			<label><input type="checkbox" class="form-control-input2 poscheck" th:checked="${liveManualToken}" data-prompt="Live Manual Token"/>Manual Token</label>
+																		</div>
+																	</div>
+																</div>
+															</div>
+														</div>
+														
+														<div class="row">
+															<div class="col-md-12">
+																<div class="form-group input2">
+																	<div class="col-sm-8 col-sm-offset-4">
+																		<div class="checkbox">
+																			<label><input type="checkbox" class="form-control-input2 poscheck" th:checked="${liveKOTPrinter}" data-prompt="Live KOT Printer"/>KOT Printer</label>
+																		</div>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+													<div class="col-md-4">
+														<div class="row">
+															<div class="col-md-12">
+																<div class="form-group input2">
+																	<div class="col-sm-8 col-sm-offset-4">
+																		<div class="checkbox">
+																			<label><input type="checkbox" class="form-control-input2 poscheck" th:checked="${liveShortCode}" data-prompt="Live Short Code"/>Search by Short Code</label>
+																		</div>
+																	</div>
+																</div>
+															</div>
+														</div>
+														<div class="row">
+															<div class="col-md-12">
+																<div class="form-group input2">
+																	<div class="col-sm-8 col-sm-offset-4">
+																		<div class="checkbox">
+																			<label><input type="checkbox" class="form-control-input2 poscheck" th:checked="${liveHoldBill}" data-prompt="Live Hold Bill"/>Hold Bill</label>
+																		</div>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+											</form>
+										</div>
+										<script type="text/javascript">
+											$(document).ready(function(){
+												
+												$('.poscheck').off('click').on('click', function(e){
+													
+													
+													console.log($(this).data('prompt'));
+													console.log($(this).prop("checked"));
+													
+													loadingMask2.show();
+													$.ajax({
+														url : getBasepath() + '/possettings/save',
+														type : 'POST',
+														data : {
+															name : $(this).data('prompt'),
+															status : $(this).prop("checked") 
+														},
+														success : function(data) {
+															loadingMask2.hide();
+															if(data.status == 'SUCCESS'){
+																showMessage(data.status.toLowerCase(), data.message);
+																if(data.triggermodalurl){
+																	modalLoader(getBasepath() + data.triggermodalurl, data.modalid);
+																} else {
+																	if(data.reloadurl){
+																		doSectionReloadWithNewData(data);
+																	} else if(data.redirecturl){
+																		setTimeout(() => {
+																			window.location.replace(getBasepath() + data.redirecturl);
+																		}, 1000);
+																	}
+																}
+															} else {
+																showMessage(data.status.toLowerCase(), data.message);
+															}
+														}, 
+														error : function(jqXHR, status, errorThrown){
+															loadingMask2.hide();
+															showMessage(status, "Something went wrong .... ");
+														}
+													});
+												});
+											})
+										</script>
+									</div>
+								</section>
+						
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		
+		<!-- Footer section -->
+		<div class="footer-section" th:include="commons :: footer-section"></div>
+	</body>
+</html>

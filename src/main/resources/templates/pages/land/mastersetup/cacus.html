@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<title>Party Entry</title>
+		<meta th:remove="tag" th:include="commons :: common-meta"/>
+		<meta th:remove="tag" th:include="commons :: common-css"/>
+		<meta th:remove="tag" th:include="commons :: common-js"/>
+	</head>
+	<body>
+
+		<!-- Header section -->
+		<div class="header-section" th:include="commons :: header-section"></div>
+
+		<!-- Menu section -->
+		<div th:if="${menuVersion != null and menuVersion eq 'MENU_V2'}" class="menuv2" th:include="commons :: main-menu"></div>
+
+		<div th:if="${menuVersion == null or menuVersion eq 'MENU_V1'}" class="navbar-inverse menu-section">
+			<div class="container-fluid">
+				<div class="row">
+					<nav class="navbar navbar-inverse">
+						<div class="container-fluid">
+							<div class="row">
+								<div class="navbar-header">
+									<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+										<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+									</button>
+								</div>
+								<div class="collapse navbar-collapse" id="myNavbar">
+									<div class="nav navbar-nav">
+										<li class="active"><a th:href="@{/}"><i class="fas fa-home"></i> Home</a></li>
+										<li><a th:href="@{/mastersetup/partymaster}">Party Master</a></li>
+										<li th:if="${cacusType eq 'SUP'}" class="active"><a th:href="@{/mastersetup/cacus?cacusType=SUP}">Supplier Entry</a></li>
+										<li th:if="${cacusType eq 'CUS'}" class="active"><a th:href="@{/mastersetup/cacus?cacusType=CUS}">Customer Entry</a></li>
+									</div>
+									<ul class="nav navbar-nav navbar-right" th:include="ckbigmenu :: dashboard-menu"></ul>
+								</div>
+							</div>
+						</div>
+					</nav>
+				</div>
+			</div>
+		</div>
+
+		<!-- Content section -->
+		<div>
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-md-12 content-area">
+
+						<div class="row">
+							<div class="col-md-6">
+								<!-- Section list head -->
+								<section id="data-maintenance" style="margin-top: 30px;">
+									<div class="section-header sectionbartoggle">
+										<h1 th:text="${cacusType eq 'SUP'? 'Supplier Entry' : 'Customer Entry'}"></h1>
+									</div>
+									<div class="form-action-button">
+										<a th:href="@{/mastersetup/cacus?cacusType=} + ${cacusType}" class="btn btn-sm btn-default"><i class="fas fa-redo-alt"></i> New</a>
+										<a th:if="${#strings.isEmpty(cacus.xcus)}" th:href="@{/mastersetup/cacus}" class="btn btn-sm btn-success confirm-btn"><i class="fas fa-save"></i> Add</a>
+										<a th:if="${not #strings.isEmpty(cacus.xcus) and cacus.zactive == true}" href="#" class="btn btn-sm btn-success update-btn"><i class="fas fa-edit"></i> Update</a>
+										<a th:if="${not #strings.isEmpty(cacus.xcus) and cacus.zactive == true}" th:href="@{/mastersetup/cacus/archive/} + ${cacus.xcus} + '/' + ${cacusType}" class="btn btn-sm btn-danger archive-btn-link"><i class="fas fa-trash-alt"></i> Archive</a>
+										<a th:if="${not #strings.isEmpty(cacus.xcus) and cacus.zactive == false}" th:href="@{/mastersetup/cacus/restore/} + ${cacus.xcus} + '/' + ${cacusType}" class="btn btn-sm btn-success restore-btn-link"><i class="fas fa-trash-restore-alt"></i> Restore</a>
+									</div>
+									<div class="section-body section-border">
+										<form id="mainform" class="form-horizontal" th:action="@{/mastersetup/cacus/save}" th:object="${cacus}" method="post">
+											<input type="hidden" th:if="${not #strings.isEmpty(cacus.copyid)}" id="copyid" name= "copyid"/>
+											<input type="hidden" th:field="*{xtype}"/>
+											<input type="hidden" th:if="${not #strings.isEmpty(cacus.xcus)}" th:field="*{xcustype}"/>
+											<input type="hidden" th:if="${not #strings.isEmpty(cacus.xcus)}" th:field="*{xcus}"/>
+											<input type="hidden" id="cacusType" name="cacusType" th:value="${cacusType}"/>
+											<div class="row">
+												<div class="col-md-6">
+													<div class="form-group">
+														<label class="control-label col-sm-4" for="xcustype" th:text="${cacusType eq 'SUP' ? 'Supplier Code' : 'Customer Code'}">Supplier Code: </label>
+														<div class="col-sm-8">
+															<select class="form-control" th:field="*{xcustype}" th:disabled="${not #strings.isEmpty(cacus.xcus)}">
+																<option th:each="type : ${cacusType eq 'SUP' ? supplierTypes : customerTypes}" th:value="${type.xtrn}" th:text="${type.xtrn}"></option>
+															</select>
+														</div>
+													</div>
+													<div class="form-group" th:if="${not #strings.isEmpty(cacus.xcus)}">
+														<label class="control-label col-sm-4" for="xcus" th:text="${cacusType eq 'SUP' ? 'Supplier Number: ' : 'Customer Number: '}">Number: </label>
+														<div class="col-sm-8">
+															<input type="text" class="form-control" th:field="*{xcus}" disabled="disabled"/>
+														</div>
+													</div>
+													<div class="form-group">
+														<label class="control-label col-sm-4" for="xorg">Company / Name: </label>
+														<div class="col-sm-8">
+															<input type="text" class="form-control" th:field="*{xorg}" />
+														</div>
+													</div>
+													
+													<!-- <div class="form-group" th:if="${cacusType eq 'CUS'}">
+														<label class="control-label col-md-4" for="xperson">Person Id:</label>
+														<div class="col-sm-8">
+															<input 	type="text" 
+																	class="form-control searchsuggest" 
+																	placeholder="Search..." 
+																	th:value="${cacus.xperson}" 
+																	th:attr="search-url='search/personId'"/>
+															<input type="hidden" id="search-val" th:field="*{xperson}"/>
+															<input type="hidden" id="search-des" th:value="*{xperson}"/>
+														</div>
+													</div> -->
+													
+													<div class="form-group">
+														<label class="control-label col-sm-4" for="xmadd">Address: </label>
+														<div class="col-sm-8">
+															<textarea rows="3" cols="" class="form-control" th:field="*{xmadd}"></textarea>
+														</div>
+													</div>
+													<div class="form-group">
+														<label class="control-label col-sm-4" for="xcontact">Contact: </label>
+														<div class="col-sm-8">
+															<input type="text" class="form-control" th:field="*{xcontact}"/>
+														</div>
+													</div>
+													<div class="form-group">
+														<label class="control-label col-sm-4" for="xphone">Phone: </label>
+														<div class="col-sm-8">
+															<input type="text" class="form-control" th:field="*{xphone}"/>
+														</div>
+													</div>
+												</div>
+												<div class="col-md-6">
+													<div class="form-group">
+														<label class="control-label col-sm-4" for="xcrlimit">Credit Limit: </label>
+														<div class="col-sm-8">
+															<input type="number" class="form-control" th:field="*{xcrlimit}" min="0"/>
+														</div>
+													</div>
+													<div class="form-group">
+														<label class="control-label col-sm-4" for="xvatregno">Vat RegN: </label>
+														<div class="col-sm-8">
+															<input type="text" class="form-control" th:field="*{xvatregno}"/>
+														</div>
+													</div>
+													<div class="form-group">
+														<label class="control-label col-sm-4" for="xstatuscus" th:text="${cacusType eq 'SUP' ? 'Supplier Status: ' : 'Customer Status: '}">Status: </label>
+														<div class="col-sm-8">
+															<select class="form-control" th:field="*{xstatuscus}">
+																<option th:if="${cacusType eq 'SUP'}" th:each="sg : ${supplierStatus}" th:text="${sg.xcode}" th:value="${sg.xcode}"></option>
+																<option th:if="${cacusType eq 'CUS'}" th:each="sg : ${customerStatus}" th:text="${sg.xcode}" th:value="${sg.xcode}"></option>
+															</select>
+														</div>
+													</div>
+													<div class="form-group" th:if="${cacusType eq 'SUP'}">
+														<label class="control-label col-sm-4" for="xgcus">Supplier Group: </label>
+														<div class="col-sm-8">
+															<select class="form-control" th:field="*{xgcus}" required="required">
+																<option value="">Select</option>
+																<option th:each="sg : ${supplierGroups}" th:text="${sg.xcode}" th:value="${sg.xcode}"></option>
+															</select>
+														</div>
+													</div>
+													<div class="form-group" th:if="${cacusType eq 'CUS'}">
+														<label class="control-label col-sm-4" for="xgcus">Customer Group: </label>
+														<div class="col-sm-8">
+															<select class="form-control" th:field="*{xgcus}" required="required">
+																<option value="">Select</option>
+																<option th:each="cu : ${customerGroups}" th:text="${cu.xcode}" th:value="${cu.xcode}"></option>
+															</select>
+														</div>
+													</div>
+													<div class="form-group branch-selection nodisplay" th:if="${cacusType ne 'SUP'}">
+														<label class="control-label col-sm-4" for="xcuszid">Select Branch : </label>
+														<div class="col-sm-8">
+															<select class="form-control" th:field="*{xcuszid}">
+																<option th:each="br : ${branchesList}" th:text="${br.zorg}" th:value="${br.zid}"></option>
+															</select>
+														</div>
+													</div>
+
+												</div>
+											</div>
+										</form>
+									</div>
+								</section>
+							</div>
+							<div class="col-md-6">
+								<section style="margin-top: 30px;">
+									<div class="section-header sectionbartoggle">
+										<h1>All <span th:text="${cacusType eq 'SUP' ? 'Suppliers' : 'Customers'}"></span></h1>
+									</div>
+									<div class="section-body">
+										<table class="table table-striped table-bordered datatable nowrap">
+											<thead>
+												<tr>
+													<th th:text="${cacusType eq 'SUP' ? 'Supplier No' : 'Customer No'}"></th>
+													<th>Company/Name</th>
+													<th th:if="${cacusType eq 'CUS'}">Person</th>
+													<th>Address</th>
+													<th>Active</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr th:each="c : ${cacusType eq 'SUP' ? suppliersList : customersList}">
+													<td>
+														<a th:href="@{/mastersetup/cacus/} + ${c.xcus} + '?cacusType=' + ${cacusType}" th:text="${c.xcus}"></a>
+													</td>
+													<td th:text="${c.xorg}"></td>
+													<td th:if="${cacusType eq 'CUS'}" th:text="${c.xperson}"></td>
+													<td th:text="${c.xmadd}"></td>
+													<td th:text="${c.zactive == true ? 'Y' : 'N'}"></td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</section>
+							</div>
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Footer section -->
+		<div class="footer-section" th:include="commons :: footer-section"></div>
+
+		<script type="text/javascript">
+			$(document).ready(function(){
+
+				if($('#xgcus').val() == 'Branch'){
+					$('.branch-selection').removeClass('nodisplay');
+				}
+
+				$('#xgcus').on('change', function(e){
+					e.preventDefault();
+					if($(this).val() == 'Branch'){
+						$('.branch-selection').removeClass('nodisplay');
+					} else {
+						$('#xcuszid').val("");
+						$('.branch-selection').addClass('nodisplay');
+					}
+				})
+			})
+		</script>
+		
+	</body>
+</html>

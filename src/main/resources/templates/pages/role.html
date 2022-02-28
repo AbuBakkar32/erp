@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+	<head>
+		<title>Role</title>
+		<meta th:remove="tag" th:include="commons :: common-meta"/>
+		<meta th:remove="tag" th:include="commons :: common-css"/>
+		<meta th:remove="tag" th:include="commons :: common-js"/>
+	</head>
+	<body>
+
+		<!-- Header section -->
+		<div class="header-section" th:include="commons :: header-section"></div>
+
+		<!-- Menu section -->
+		<div th:if="${menuVersion != null and menuVersion eq 'MENU_V2'}" class="menuv2" th:include="commons :: main-menu"></div>
+
+		<div th:if="${menuVersion == null or menuVersion eq 'MENU_V1'}" class="navbar-inverse menu-section">
+			<div class="container-fluid">
+				<div class="row">
+					<nav class="navbar navbar-inverse">
+						<div class="container-fluid">
+							<div class="row">
+								<div class="navbar-header">
+									<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+										<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+									</button>
+								</div>
+								<div class="collapse navbar-collapse" id="myNavbar">
+									<div class="nav navbar-nav">
+										<li><a th:href="@{/}">Dashboard</a></li>
+										<li class="active"><a th:href="@{/role}">Role</a></li>
+									</div>
+								</div>
+							</div>
+						</div>
+					</nav>
+				</div>
+			</div>
+		</div>
+		
+		<!-- Content section -->
+		<div>
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-md-12 content-area">
+						<div class="row">
+							<div class="col-md-6">
+								<!-- Section list head -->
+								<section id="data-maintenance" style="margin-top: 30px;">
+									<div class="section-header sectionbartoggle">
+										<h1>Role</h1>
+									</div>
+									<div class="form-action-button">
+										<a th:href="@{/role}" class="btn btn-sm btn-default"><i class="fas fa-redo-alt"></i> New</a>
+										<a th:if="${roles.newdata}" href="#" class="btn btn-sm btn-success confirm-btn"><i class="fas fa-save"></i> Save</a>
+										<a th:if="${not roles.newdata}" href="#" class="btn btn-sm btn-success confirm-btn"><i class="fas fa-save"></i> Update</a>
+									</div>
+									<div class="section-body section-border">
+										<form id="mainform" class="form-horizontal" method="post" th:action="@{/role/save}" th:object="${roles}">
+											<input type="hidden" th:field="*{newdata}">
+											<input th:if="${not #strings.isEmpty(roles.xrole)}" type="hidden" th:field="*{xrole}">
+											<div class="row">
+												<div class="col-md-12">
+													<div class="row">
+														<div class="col-md-6">
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xrole">Name</label>
+																	<div class="col-md-8">
+																		<input type="text" class="form-control" th:field="*{xrole}" maxlength="100" th:disabled="${not #strings.isEmpty(roles.xrole)}"/>
+																	</div>
+															</div>
+															<div class="form-group input2">
+																<label class="control-label col-sm-4" for="zactive">Active ?</label>
+																<div class="col-sm-8">
+																	<div class="checkbox">
+																		<label><input type="checkbox" th:field="*{zactive}" class="form-control-input2"/></label>
+																	</div>
+																</div>
+															</div>
+														</div>
+														<div class="col-md-6">
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xmaxdisc">Discount Limit(%)</label>
+																<div class="col-md-8">
+																	<input type="number" class="form-control" th:field="*{xmaxdisc}" min="0" placeholder="0"/>
+																</div>
+															</div>
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xmaxdiscf">SP Discount Limit</label>
+																<div class="col-md-8">
+																	<input type="number" class="form-control" th:field="*{xmaxdiscf}" min="0" placeholder="0"/>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</form>
+									</div>
+								</section>
+							</div>
+							<div class="col-md-6">
+								<section id="list-manager" style="margin-top: 30px;">
+									<div class="section-header sectionbartoggle">
+										<h1>All Items</h1>
+									</div>
+									<div class="section-body">
+										<div style="overflow-x: auto;">
+											<table class="table table-striped table-bordered datatable nowrap">
+												<thead>
+													<tr>
+														<th>Name</th>
+														<th>Discount Limit</th>
+														<th>Sp Discount Limit</th>
+														<th>Active Status</th>
+													</tr>
+												</thead>
+												<tbody>
+													<tr th:each="ar : ${allRole}">
+														<td><a th:href="@{/role/} + ${ar.xrole}" th:text="${ar.xrole}"></a></td>
+														<td th:text="${ar.xmaxdisc}"></td>
+														<td th:text="${ar.xmaxdiscf}"></td>
+														<td th:text="${ar.zactive ? 'Y' : 'N'}"></td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</section>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		  <!-- Footer section -->
+		<div class="footer-section" th:include="commons :: footer-section"></div>
+	</body>
+</html>

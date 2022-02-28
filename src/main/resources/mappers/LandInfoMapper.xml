@@ -1,0 +1,565 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.asl.mapper.LandInfoMapper">
+
+	<insert id="saveLandInfo" parameterType="LandInfo">
+		<!-- <selectKey keyProperty="xland" resultType="String" order="BEFORE">
+			SELECT Func_GetTrn('${zid}', '${xtypetrn}', '${xtrn}', 6) FROM DUAL
+		</selectKey> -->
+		INSERT INTO calandinfo
+		(
+			xland,
+			xlname,
+			xblock,
+			xroad,
+			xlandqty, 
+			xlandunit, 
+			xlandgrsqty, 
+			xlanggrsunit,
+			xlanddedroad, 
+			xlanddedother, 
+			xlandnetqty,
+			xlandnetunit, 
+			xriversideqty, 
+			xriversideunit, 
+			xnote, 
+			xlandparent,  
+			xstatus,
+			xroadred,
+			xotherred,
+			xdateborn,
+			xtypetrn,
+			xtrn,
+			xcus,
+			xtotded,
+			xtotrem,
+			xlandqtyd,
+			xlandqtyk,
+			xtotdedprice,
+			xamtar,
+			xamtrv,
+			xlandqtydsg,
+			xlandqtydsn,
+			xsurveyor,
+			xdatesrv,
+			xnote2,
+			
+			zactive,
+			zauserid,
+			zid,
+			ztime,
+			zutime,
+			zuuserid
+		)
+		VALUES
+		(
+			#{xland, jdbcType=VARCHAR},
+			#{xlname, jdbcType=VARCHAR},
+			#{xblock, jdbcType=VARCHAR},
+			#{xroad, jdbcType=VARCHAR},
+			#{xlandqty, jdbcType=DECIMAL},
+			#{xlandunit, jdbcType=VARCHAR},
+			#{xlandgrsqty, jdbcType=DECIMAL},
+			#{xlanggrsunit, jdbcType=VARCHAR},
+			#{xlanddedroad, jdbcType=INTEGER},
+			#{xlanddedother, jdbcType=INTEGER},
+			#{xlandnetqty, jdbcType=DECIMAL},
+			#{xlandnetunit, jdbcType=VARCHAR},
+			#{xriversideqty, jdbcType=DECIMAL},
+			#{xriversideunit, jdbcType=VARCHAR},
+			#{xnote, jdbcType=VARCHAR},
+			#{xlandparent, jdbcType=VARCHAR},
+			#{xstatus, jdbcType=VARCHAR},
+			#{xroadred, jdbcType=DECIMAL},
+			#{xotherred, jdbcType=DECIMAL},
+			#{xdateborn,jdbcType=DATE},
+			#{xtypetrn, jdbcType=VARCHAR},
+			#{xtrn, jdbcType=VARCHAR},
+			#{xcus, jdbcType=VARCHAR},
+			#{xtotded, jdbcType=DECIMAL},
+			#{xtotrem, jdbcType=DECIMAL},
+			#{xlandqtyd, jdbcType=DECIMAL},
+			#{xlandqtyk, jdbcType=DECIMAL},
+			#{xtotdedprice, jdbcType=DECIMAL},
+			#{xamtar, jdbcType=DECIMAL},
+			#{xamtrv, jdbcType=DECIMAL},
+			#{xlandqtydsg, jdbcType=DECIMAL},
+			#{xlandqtydsn, jdbcType=DECIMAL},
+			#{xsurveyor, jdbcType=VARCHAR},
+			#{xdatesrv, jdbcType=DATE},
+			#{xnote2, jdbcType=VARCHAR},
+			
+			#{zactive, jdbcType=VARCHAR},
+			#{zauserid, jdbcType=VARCHAR},
+			#{zid, jdbcType=VARCHAR},
+			#{ztime, jdbcType=TIMESTAMP},
+			#{zutime, jdbcType=TIMESTAMP},
+			#{zuuserid, jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<update id="updateLandInfo" parameterType="LandInfo">
+		UPDATE 
+			calandinfo
+		SET
+			xlname=#{xlname, jdbcType=VARCHAR},
+			xblock=#{xblock, jdbcType=VARCHAR},
+			xroad=#{xroad, jdbcType=VARCHAR},
+			xlandqty=#{xlandqty, jdbcType=DECIMAL},
+			xlandunit=#{xlandunit, jdbcType=VARCHAR},
+			xlandgrsqty=#{xlandgrsqty, jdbcType=DECIMAL},
+			xlanggrsunit=#{xlanggrsunit,jdbcType=VARCHAR},
+			xlanddedroad=#{xlanddedroad, jdbcType=INTEGER},
+			xlanddedother=#{xlanddedother, jdbcType=INTEGER},
+			xlandnetqty=#{xlandnetqty, jdbcType=DECIMAL},
+			xlandnetunit=#{xlandnetunit, jdbcType=VARCHAR},
+			xriversideqty=#{xriversideqty, jdbcType=DECIMAL},
+			xriversideunit=#{xriversideunit, jdbcType=VARCHAR},
+			xnote=#{xnote, jdbcType=VARCHAR},
+			xlandparent=#{xlandparent, jdbcType=VARCHAR},
+			xstatus=#{xstatus, jdbcType=VARCHAR},
+			xroadred=#{xroadred, jdbcType=DECIMAL},
+			xotherred=#{xotherred, jdbcType=DECIMAL},
+			xdateborn=#{xdateborn,jdbcType=DATE},
+			xtypetrn=#{xtypetrn, jdbcType=VARCHAR},
+			xtrn=#{xtrn, jdbcType=VARCHAR},
+			xcus=#{xcus, jdbcType=VARCHAR},
+			xtotded=#{xtotded, jdbcType=DECIMAL},
+			xtotrem=#{xtotrem, jdbcType=DECIMAL},
+			xlandqtyd=#{xlandqtyd, jdbcType=DECIMAL},
+			xlandqtyk=#{xlandqtyk, jdbcType=DECIMAL},
+			xtotdedprice=#{xtotdedprice, jdbcType=DECIMAL},
+			xamtar=#{xamtar, jdbcType=DECIMAL},
+			xamtrv=#{xamtrv, jdbcType=DECIMAL},
+			xlandqtydsg=#{xlandqtydsg, jdbcType=DECIMAL},
+			xlandqtydsn=#{xlandqtydsn, jdbcType=DECIMAL},
+			xsurveyor=#{xsurveyor, jdbcType=VARCHAR},
+			xdatesrv=#{xdatesrv, jdbcType=DATE},
+			xnote2=#{xnote2, jdbcType=VARCHAR},
+			
+			zactive=#{zactive, jdbcType=VARCHAR},
+			zauserid=#{zauserid, jdbcType=VARCHAR},
+			ztime=#{ztime, jdbcType=TIMESTAMP},
+			zutime=#{zutime, jdbcType=TIMESTAMP},
+			zuuserid=#{zuuserid, jdbcType=VARCHAR}
+		WHERE
+			xland=#{xland , jdbcType=VARCHAR}
+			AND zid=#{zid, jdbcType=VARCHAR}
+	</update>
+
+	<delete id="deleteLandInfo" parameterType="LandInfo">
+		DELETE FROM calandinfo WHERE  xland=#{xland} AND zactive='1' AND zid=#{zid}
+	</delete>
+	
+	<select id="getAllLandInfo" resultType="LandInfo">
+		SELECT 
+			calandinfo.*,
+			cacus.xorg as xmemname 
+		FROM 
+			calandinfo 
+			left join cacus on cacus.xcus = calandinfo.xcus and cacus.zid=calandinfo.zid and cacus.zactive='1'
+		WHERE 
+			calandinfo.zid=#{zid} 
+			AND calandinfo.zactive='1'
+		order by 
+			calandinfo.ztime desc
+	</select>
+
+	<update id="updatexamtar">
+		update calandinfo
+		set xamtar=(SELECT sum(xprime*xsign)
+			FROM 
+				arhed 
+			WHERE 
+				zid=#{zid}
+				AND xland=#{xland}
+				AND xcus=#{xcus}
+				AND xsign='1'
+				AND xtype='AR--'
+				AND xstatus='Confirmed'
+				AND xtypetrn='Sale')
+			WHERE 
+				zid=#{zid}
+				AND xland=#{xland}
+				AND xcus=#{xcus}	
+	</update>
+	
+	
+	<!-- <select id="getAllLandInfo" resultType="LandInfo">
+		SELECT 
+			calandinfo.*,
+			cacus.xorg 
+		FROM 
+			calandinfo 
+			left join cacus on cacus.xcus = calandinfo.xcus and cacus.zid=calandinfo.zid and cacus.zactive='1'
+		WHERE 
+			calandinfo.zid=#{zid} 
+			AND calandinfo.zactive='1'
+		
+	</select> -->
+	<select id="findByLandInfo" resultType="LandInfo">
+		SELECT 
+			calandinfo.*,
+			cacus.xorg as xmemname,
+			casurveyor.xname as xsername
+		FROM 
+			calandinfo 
+			left join cacus on cacus.xcus = calandinfo.xcus and cacus.zid=calandinfo.zid and cacus.zactive='1'
+			LEFT JOIN casurveyor on casurveyor.xsurveyor = calandinfo.xsurveyor AND casurveyor.zid=#{zid}
+		WHERE 
+			calandinfo.zid=#{zid} 
+			AND calandinfo.xland=#{xland}
+	</select>
+	
+	<select id="searchLandId" resultType="LandInfo">
+		SELECT * FROM calandinfo WHERE (UPPER(xland) LIKE '%' || #{xland} || '%') AND zid=#{zid} AND zactive='1'
+	</select>
+	
+	<select id="getMemLand" resultType="LandInfo">
+		SELECT xland, xlname FROM calandinfo WHERE xcus=#{xcus} AND zid=#{zid} AND zactive='1'
+	</select>
+
+	<insert id="saveLandOwner" parameterType="LandOwner">
+	
+	    <selectKey keyProperty="xrow" resultType="Integer" order="BEFORE">
+			SELECT COALESCE(Max(xrow), 0) + 1 FROM calandowner WHERE zactive='1' AND zid=#{zid}
+		</selectKey>
+		INSERT INTO calandowner
+		(
+			xland,
+			xrow,
+			xperson,
+			xtype,
+			xnote,
+			xqty, 
+			xunit, 
+			zactive,
+			zauserid,
+			zid,
+			ztime,
+			zutime,
+			zuuserid
+		)
+		VALUES
+		(
+			#{xland, jdbcType=VARCHAR},
+			#{xrow},
+			#{xperson, jdbcType=VARCHAR},
+			#{xtype, jdbcType=VARCHAR},
+			#{xnote, jdbcType=VARCHAR},
+			#{xqty, jdbcType=DECIMAL},
+			#{xunit, jdbcType=VARCHAR},
+			#{zactive, jdbcType=VARCHAR},
+			#{zauserid, jdbcType=VARCHAR},
+			#{zid, jdbcType=VARCHAR},
+			#{ztime, jdbcType=TIMESTAMP},
+			#{zutime, jdbcType=TIMESTAMP},
+			#{zuuserid, jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<update id="updateLandOwner" parameterType="LandOwner">
+		UPDATE 
+			calandowner
+		SET
+			xperson=#{xperson, jdbcType=VARCHAR},
+			xtype=#{xtype, jdbcType=VARCHAR},
+			xnote=#{xnote, jdbcType=VARCHAR},
+			xqty=#{xqty, jdbcType=DECIMAL},
+			xunit=#{xunit, jdbcType=VARCHAR},
+			zactive=#{zactive, jdbcType=VARCHAR},
+			zauserid=#{zauserid, jdbcType=VARCHAR},
+			zid=#{zid, jdbcType=VARCHAR},
+			ztime=#{ztime, jdbcType=TIMESTAMP},
+			zutime=#{zutime, jdbcType=TIMESTAMP},
+			zuuserid=#{zuuserid, jdbcType=VARCHAR}
+		WHERE
+			xland=#{xland, jdbcType=VARCHAR}
+			AND xrow=#{xrow, jdbcType=INTEGER}
+			AND zid=#{zid, jdbcType=VARCHAR}
+	</update>
+
+	<select id="getAllLandOwner" resultType="LandOwner">
+		SELECT 
+			* 
+		FROM 
+			calandowner 
+		WHERE 
+			zid=#{zid} 
+			AND zactive='1'
+		order by 
+			ztime desc
+	</select>
+
+	<select id="findByLandOwner" resultType="LandOwner">
+	select 
+		calandowner.xrow,
+		caperson.xperson,
+		caperson.xname as xpername,
+		calandowner.*
+		
+	from
+		calandowner
+		LEFT JOIN caperson on caperson.xperson = calandowner.xperson AND caperson.zid=#{zid}
+	where
+		calandowner.xland=#{xland} 
+		AND calandowner.zid=#{zid} 
+		AND calandowner.zactive='1' 
+	</select>
+
+	<select id="findLandOwnerByXlandAndXrow" resultType="LandOwner">
+		SELECT 
+			calandowner.xrow,
+			caperson.xperson,
+			caperson.xname as xpername,
+			calandowner.*
+		FROM 
+			calandowner
+			LEFT JOIN caperson on caperson.xperson = calandowner.xperson AND caperson.zid=#{zid}
+		WHERE 
+			calandowner.xland=#{xland} 
+			AND calandowner.xrow=#{xrow} 
+			AND calandowner.zid=#{zid} 
+			AND calandowner.zactive='1'
+	</select>
+
+	<select id="findByXlandAndXperson" resultType="LandOwner">
+		SELECT * FROM calandowner WHERE zid=#{zid}  AND xland=#{xland} AND xperson=#{xperson}
+	</select>
+
+	<delete id="deleteLandOwner" parameterType="LandOwner">
+		DELETE FROM calandowner WHERE xrow=#{xrow} AND xland=#{xland} AND zactive='1' AND zid=#{zid}
+	</delete>
+	
+	
+	
+	<insert id="saveLandDagDetails" parameterType="LandDagDetails">
+	
+	    <selectKey keyProperty="xrow" resultType="Integer" order="BEFORE">
+			SELECT COALESCE(Max(xrow), 0) + 1 FROM calanddag WHERE zactive='1' AND zid=#{zid}
+		</selectKey>
+		INSERT INTO calanddag
+		(
+			xrow,
+			xland,
+			xdagtype,
+			xdagnum,
+			xtype,
+			xqty, 
+			xunit, 
+			zactive,
+			zauserid,
+			zid,
+			ztime,
+			zutime,
+			zuuserid
+		)
+		VALUES
+		(
+			
+			#{xrow},
+			#{xland, jdbcType=VARCHAR},
+			#{xdagtype, jdbcType=VARCHAR},
+			#{xdagnum, jdbcType=INTEGER},
+			#{xtype, jdbcType=VARCHAR},
+			#{xqty, jdbcType=DECIMAL},
+			#{xunit, jdbcType=VARCHAR},
+			#{zactive, jdbcType=VARCHAR},
+			#{zauserid, jdbcType=VARCHAR},
+			#{zid, jdbcType=VARCHAR},
+			#{ztime, jdbcType=TIMESTAMP},
+			#{zutime, jdbcType=TIMESTAMP},
+			#{zuuserid, jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<update id="updateLandDagDetails" parameterType="LandDagDetails">
+		UPDATE 
+			calanddag
+		SET
+			xdagtype=#{xdagtype, jdbcType=VARCHAR},
+			xdagnum=#{xdagnum, jdbcType=INTEGER},
+			xtype=#{xtype, jdbcType=VARCHAR},
+			xqty=#{xqty, jdbcType=DECIMAL},
+			xunit=#{xunit, jdbcType=VARCHAR},
+			zactive=#{zactive, jdbcType=VARCHAR},
+			zauserid=#{zauserid, jdbcType=VARCHAR},
+			zid=#{zid, jdbcType=VARCHAR},
+			ztime=#{ztime, jdbcType=TIMESTAMP},
+			zutime=#{zutime, jdbcType=TIMESTAMP},
+			zuuserid=#{zuuserid, jdbcType=VARCHAR}
+		WHERE
+			xland=#{xland, jdbcType=VARCHAR}
+			AND xrow=#{xrow, jdbcType=INTEGER}
+			AND zid=#{zid, jdbcType=VARCHAR}
+	</update>
+
+	<select id="getAllLandDagDetails" resultType="LandDagDetails">
+		SELECT 
+			* 
+		FROM 
+			calanddag 
+		WHERE 
+			zid=#{zid} 
+			AND zactive='1'
+		order by 
+			ztime desc
+	</select>
+
+	<select id="findByLandDagDetails" resultType="LandDagDetails">
+		SELECT * FROM calanddag WHERE xland=#{xland} AND zid=#{zid} AND zactive='1'
+	</select>
+
+	<select id="findlandDagDetailsByXlandAndXrow" resultType="LandDagDetails">
+		SELECT * FROM calanddag WHERE xland=#{xland} AND xrow=#{xrow} AND zid=#{zid} AND zactive='1'
+	</select>
+	
+	<delete id="deleteLandDagDetails" parameterType="LandDagDetails">
+		DELETE FROM calanddag WHERE xrow=#{xrow} AND xland=#{xland} AND zactive='1' AND zid=#{zid}
+	</delete>
+
+	<!-- for Land Events -->
+	<insert id="saveLandEvents" parameterType="LandEvents">
+		<selectKey keyProperty="xrow" resultType="Integer" order="BEFORE">
+			SELECT COALESCE(Max(xrow), 0) + 1 FROM calandevent WHERE zactive='1' AND zid=#{zid}
+		</selectKey>
+		INSERT INTO calandevent
+		(
+			xrow,
+			xland,
+			xperson,
+			xdate,
+			xplace, 
+			xnote, 
+			xtype,
+			zactive,
+			zauserid,
+			zid,
+			ztime,
+			zutime,
+			zuuserid
+		)
+		VALUES
+		(
+			
+			#{xrow},
+			#{xland, jdbcType=VARCHAR},
+			#{xperson, jdbcType=VARCHAR},
+			#{xdate, jdbcType=DATE},
+			#{xplace, jdbcType=VARCHAR},
+			#{xnote, jdbcType=VARCHAR},
+			#{xtype, jdbcType=VARCHAR},
+			#{zactive, jdbcType=VARCHAR},
+			#{zauserid, jdbcType=VARCHAR},
+			#{zid, jdbcType=VARCHAR},
+			#{ztime, jdbcType=TIMESTAMP},
+			#{zutime, jdbcType=TIMESTAMP},
+			#{zuuserid, jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<update id="updateLandEvents" parameterType="LandEvents">
+		UPDATE 
+			calandevent
+		SET
+			xperson=#{xperson, jdbcType=VARCHAR},
+			xdate=#{xdate, jdbcType=DATE},
+			xplace=#{xplace, jdbcType=VARCHAR},
+			xnote=#{xnote, jdbcType=VARCHAR},
+			xtype= #{xtype, jdbcType=VARCHAR},
+			zactive=#{zactive, jdbcType=VARCHAR},
+			zauserid=#{zauserid, jdbcType=VARCHAR},
+			zid=#{zid, jdbcType=VARCHAR},
+			ztime=#{ztime, jdbcType=TIMESTAMP},
+			zutime=#{zutime, jdbcType=TIMESTAMP},
+			zuuserid=#{zuuserid, jdbcType=VARCHAR}
+		WHERE
+			xland=#{xland, jdbcType=VARCHAR}
+			AND xrow=#{xrow, jdbcType=INTEGER}
+			AND zid=#{zid, jdbcType=VARCHAR}
+	</update>
+
+	<select id="getAllLandEvents" resultType="LandEvents">
+		SELECT * FROM calandevent WHERE zid=#{zid} AND zactive='1' order by ztime desc
+	</select>
+
+	<select id="findByLandEvents" resultType="LandEvents">
+		SELECT 
+			calandevent.xrow,
+			caperson.xperson,
+			caperson.xname as xpername,
+			calandevent.xdate as formatedDate,
+			calandevent.* 
+		FROM 
+			calandevent
+			LEFT JOIN caperson on caperson.xperson = calandevent.xperson AND caperson.zid=#{zid} 
+		WHERE 
+			calandevent.xland=#{xland} 
+			AND calandevent.zid=#{zid} 
+			AND calandevent.zactive='1'
+	</select>
+
+	<select id="findLandEventsByXlandAndXrow" resultType="LandEvents">
+		SELECT 
+			calandevent.xrow,
+			caperson.xperson,
+			caperson.xname as xpername,
+			calandevent.* 
+		FROM 
+			calandevent 
+			LEFT JOIN caperson on caperson.xperson = calandevent.xperson AND caperson.zid=#{zid} 
+		WHERE 
+			calandevent.xland=#{xland} 
+			AND calandevent.xrow=#{xrow} 
+			AND calandevent.zid=#{zid} 
+			AND calandevent.zactive='1'
+	</select>
+	
+	<delete id="deleteLandEvents" parameterType="LandEvents">
+		DELETE FROM calandevent WHERE xrow=#{xrow} AND xland=#{xland} AND zactive='1' AND zid=#{zid}
+	</delete>
+
+	<!-- <select id="getLandInfoReportData" >
+		SELECT 
+			calandinfo.xland,
+			calandinfo.xlname,
+			calandinfo.xblock,
+			calandinfo.xroad,
+			calandinfo.xlandqty,
+			calandinfo.xlandunit,
+			calandinfo.xlanddedroad,
+			calandinfo.xlanddedother,
+			calandinfo.xriversideqty,
+			calandinfo.xriversideunit,
+			calandinfo.xdateborn,
+			calandinfo.xnote,
+			
+			calandowner.xperson as ownerid,
+			caperson.xname as ownername,
+			calandowner.xtype as ownertype,
+			calandowner.xqty as ownerqty,
+			calandowner.xunit as ownerunit,
+			calandowner.xnote as ownernote,
+			
+			calanddag.xdagtype,
+			calanddag.xdagnum as dagnumber,
+			calanddag.xtype as dagtype,
+			calanddag.xqty as dagqty,
+			calanddag.xunit as dagunit,
+			
+			calanservey.xsurveyor,
+			calanservey.xdate as survdate,
+			calanservey.xnote as survnote
+
+		FROM
+			calandinfo 
+			LEFT JOIN calandowner ON calandowner.xland = calandinfo.xland AND calandowner.zid = calandinfo.zid
+			LEFT JOIN calanddag ON calanddag.xland = calandinfo.xland AND calanddag.zid = calandinfo.zid
+			LEFT JOIN caperson ON caperson.xperson = calandowner.xperson AND caperson.zid = calandowner.zid
+			LEFT JOIN calanservey ON calanservey.xland = calandinfo.xland AND calanservey.zid = calandinfo.zid
+		WHERE
+			calandinfo.zid=#{zid}
+			AND calandinfo.zactive='1'
+	</select> -->
+</mapper>

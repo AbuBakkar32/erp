@@ -1,0 +1,132 @@
+<!-- Modal -->
+<div id="voucherdetailmodal" th:fragment="voucherdetailmodal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="true" xmlns:th="http://www.thymeleaf.org">
+	<div class="modal-dialog modal-lg">
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h4 class="modal-title" th:text="'Add/Update Voucher Detail of ' + ${acdetail.xvoucher}"></h4>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<form id="mainform-modal" th:action="@{/account/voucher/voucherdetail/save}" method="post" class="form-horizontal" th:object="${acdetail}">
+						<input type="hidden" th:field="*{xvoucher}"/>
+						<input type="hidden" th:field="*{xrow}"/>
+						<input type="hidden" th:field="*{xwh}"/>
+						<div class="row">
+							<div class="col-md-12">
+								<div class="col-md-6">
+									<div class="form-group">
+										<label class="control-label col-sm-4" for="xacc">Account</label>
+										<div class="col-sm-8">
+											<input 	type="text" 
+													class="form-control searchsuggest xitemsearch" 
+													placeholder="Search..." 
+													th:value="${#strings.isEmpty(acdetail.xacc) ? '' : acdetail.xacc + ' - ' + acdetail.accountname}" 
+													th:attr="search-url='search/account'"/>
+											<input type="hidden" id="search-val" th:field="*{xacc}" class="search-xitem" value=""/>
+											<input type="hidden" id="search-des" th:value="${acdetail.xacc}"/>
+										</div>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group">
+										<label class="control-label col-sm-4" for="xsub">Sub Account</label>
+										<div class="col-sm-8">
+											<select th:field="*{xsub}" class="form-control">
+												<option value="">-- Select --</option>
+												<option th:each="s : ${subaccounts}" th:value="${s.xsub}" th:text="${s.xsub + ' - ' + s.xorg}"></option>
+											</select>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-12">
+								<div class="col-md-6">
+									<div class="form-group">
+										<label class="control-label col-sm-4" for="xdebit">Debit</label>
+										<div class="col-sm-8">
+											<input type="number" th:field="*{xdebit}" class="form-control"/>
+										</div>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group">
+										<label class="control-label col-sm-4" for="xcredit">Credit</label>
+										<div class="col-sm-8">
+											<input type="number" th:field="*{xcredit}" class="form-control"/>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-12">
+								<div class="col-md-6" style="overflow-x: hidden;">
+									<div class="form-group">
+										<label class="control-label col-sm-4" for="xlong">Note</label>
+										<div class="col-sm-8">
+											<textarea rows="6" cols="" class="form-control" th:field="*{xlong}"></textarea>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-success btn-sm confirm-btn-modal">Submit</button>
+				<button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+		<script type="text/javascript" th:src="@{/assets/js/ck-ui/ck-search-suggest.js}"></script>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				// Init ui for modal
+				ck.ui.config.buttonevent();
+
+				$('.xitemsearch').on('blur', function(){
+					setTimeout(() => {
+						if($('input[name="xacc"]').val() == ''){
+							$("#xsub option").remove(); 
+							var mySelect = $('#xsub');
+							mySelect.append(
+								$('<option></option>').val("").html("-- Select --")
+							);
+							return;
+						}
+
+						loadingMask2.show();
+						$.ajax({
+							url : getBasepath() + '/account/voucher/subaccount/' + $('input[name="xacc"]').val(),
+							type : 'GET',
+							success : function(data) {
+								loadingMask2.hide();
+								if(data == undefined || data == null) return;
+
+								$("#xsub option").remove(); 
+								var mySelect = $('#xsub');
+								mySelect.append(
+									$('<option></option>').val("").html("-- Select --")
+								);
+								$.each(data, function(val, obj) {
+									mySelect.append(
+										$('<option></option>').val(obj.xsub).html(obj.xsub + ' - ' + obj.xorg)
+									);
+								});
+
+							},
+							error : function(jqXHR, status, errorThrown){
+								showMessage(status, "Something went wrong .... ");
+								loadingMask2.hide();
+							}
+						})
+					}, 1000);
+				});
+			});
+		</script>
+	</div>
+</div>

@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<title th:text="#{laae.page.title}">Loans & Advance Entry</title>
+		<meta th:remove="tag" th:include="commons :: common-meta" />
+		<meta th:remove="tag" th:include="commons :: common-css" />
+		<meta th:remove="tag" th:include="commons :: common-js" />
+	</head>
+	<body>
+		<!-- Header section -->
+		<div class="header-section" th:include="commons :: header-section"></div>
+
+		<!-- Menu section -->
+		<div th:if="${menuVersion != null and menuVersion eq 'MENU_V2'}" class="menuv2" th:include="commons :: main-menu"></div>
+
+		<div th:if="${menuVersion == null or menuVersion eq 'MENU_V1'}" class="navbar-inverse menu-section">
+			<div class="container-fluid">
+				<div class="row">
+					<nav class="navbar navbar-inverse">
+						<div class="container-fluid">
+							<div class="row">
+								<div class="navbar-header">
+									<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+										<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+									</button>
+								</div>
+								<div class="collapse navbar-collapse" id="myNavbar">
+									<div class="nav navbar-nav">
+										<li><a th:href="@{/}">Dashboard</a></li>
+										<li class="active"><a th:href="@{/payroll/pdloantrn}">Loans & Advance Entry</a></li>
+									</div>
+									<ul class="nav navbar-nav navbar-right" th:include="ckbigmenu :: dashboard-menu"></ul>
+								</div>
+							</div>
+						</div>
+					</nav>
+				</div>
+			</div>
+		</div>
+		
+		<!-- Content section -->
+		<div>
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-md-12 content-area">
+
+						<div class="row">
+							<div class="col-md-6">
+								<!-- Section list head -->
+								<section id="data-maintenance" style="margin-top: 30px;">
+									<div class="section-header sectionbartoggle">
+										<h1 th:text="#{laae.page.heading}">Loans & Advance Entry</h1>
+									</div>
+									<div class="form-action-button">
+										<a th:href="@{/payroll/pdloantrn}" class="btn btn-sm btn-default"><i class="fas fa-redo-alt"></i> <span style="margin-left:2px;" th:text="#{button.value.xclear}"> Clear</span></a>
+										<a th:if="${#strings.isEmpty(loantrn.xvoucher)}" th:href="@{/payroll/pdloantrn}" class="btn btn-sm btn-success confirm-btn"><i class="fas fa-save"></i> <span style="margin-left:2px;" th:text="#{button.value.xsave}"> Save</span></a>
+										<a th:if="${not #strings.isEmpty(loantrn.xvoucher) and loantrn.zactive == true}" class="btn btn-sm btn-success confirm-btn"><i class="fas fa-save"></i> <span style="margin-left:2px;" th:text="#{button.value.xupdate}"> Update</span></a>
+										<a th:if="${not #strings.isEmpty(loantrn.xvoucher) and loantrn.zactive == true}" th:href="@{/payroll/pdloantrn/delete/} + ${loantrn.xvoucher}" class="btn btn-sm btn-danger archive-btn-link"><i class="fas fa-trash-alt"></i>  <span style="margin-left:2px;" th:text="#{button.value.xdelete}"> Delete</span></a>
+										<a th:if="${not #strings.isEmpty(loantrn.xvoucher)}" th:href="@{/payroll/pdloantrn/print/} + ${loantrn.xvoucher}" class="btn btn-sm btn-primary print-btn-link" target="_blank"><i class="fas fa-print"></i> Print Loan</a>
+									</div>
+									<div class="section-body section-border">
+										<form id="mainform" class="form-horizontal" th:action="@{/payroll/pdloantrn/save}" th:object="${loantrn}" method="post" th:with="df=${'E, dd-MMM-yyyy'}">
+											<input type="hidden" th:field="*{xtypetrn}"/>
+											
+											<div class="row">
+												<div class="col-md-6">
+													
+													<div class="form-group" th:if="${#strings.isEmpty(loantrn.xvoucher)}">
+														<label class="control-label col-md-4" for="xtrn" th:text="#{laae.form.label.xtrn}">Loan Number </label>
+														<div class="col-md-4">
+															<select class="form-control" th:field="*{xtrn}">
+																<option th:each="prefix : ${prefixes}" th:value="${prefix.xtrn}" th:text="${prefix.xtrn}"></option>
+															</select>
+														</div>
+													</div>
+													
+													<div class="form-group" th:if="${not #strings.isEmpty(loantrn.xvoucher)}">
+														<label class="control-label col-md-4" for="xvoucher" th:text="#{laae.form.label.xvoucher}">Loan Number</label>
+														<div class="col-md-8">
+															<input type="hidden" th:field="*{xvoucher}"/>
+															<input type="text" class="form-control" th:field="*{xvoucher}" disabled="disabled">
+														</div>
+													</div>
+													
+													<div class="form-group datepicker">
+														<label class="control-label col-md-4" for="xdate" th:text="#{laae.form.label.xdate}">Date</label>
+														<div class="input-group date col-md-7 datepicker">
+															<input 	type="datepicker" 
+																	class="form-control" 
+																	id="xdate"
+																	name="xdate"
+																	th:value="${loantrn.xdate == null ? #dates.format(#dates.createNow(), df) : #dates.format(loantrn.xdate, df)}"/>
+															<div class="input-group-addon">
+																<span class="glyphicon glyphicon-calendar"></span>
+															</div>
+														</div>
+													</div>
+													<div class="form-group">
+														<label class="control-label col-md-4" for="xstaff" th:text="#{laae.form.label.xstaff}">Employee ID</label>
+														<div class="col-sm-8">
+															<input 	type="text" 
+																	class="form-control searchsuggest" 
+																	placeholder="Search..." 
+																	th:value="${#strings.isEmpty(loantrn.xstaff) ? '' : loantrn.xstaff + ' - ' + loantrn.xename}" 
+																	th:attr="search-url='search/payrollstaff'"/>
+															<input type="hidden" class="required" id="search-val" th:field="*{xstaff}" value=""/>
+															<input type="hidden" id="search-des" th:value="*{xstaff}"/>
+														</div>
+													</div>
+													<div class="form-group">
+														<label class="control-label col-md-4" for="xtype" th:text="#{laae.form.label.xtype}">Loan Type </label>
+														<div class="col-md-8">
+															<select class="form-control" th:field="*{xtype}">
+																<option value="Loan and Advance">Loan and Advance</option>
+															</select>
+														</div>
+													</div>
+													<div class="form-group">
+														<label class="control-label col-md-4" for="xloanamt" th:text="#{laae.form.label.xloanamt}">Loan Amount</label>
+														<div class="col-md-8">
+															<input type="text" class="form-control" th:field="*{xloanamt}" min="0" >
+														</div>
+													</div>
+													<div class="form-group">
+														<label class="control-label col-md-4" for="xinstallment" th:text="#{laae.form.label.xinstallment}">No of Installment</label>
+														<div class="col-md-8">
+															<input type="number" class="form-control" th:field="*{xinstallment}" min="0">
+														</div>
+													</div>
+													
+													<div class="form-group">
+														<label class="control-label col-md-4" for="xinsamt" th:text="#{laae.form.label.xinsamt}"> Installment Amount</label>
+														<div class="col-md-8">
+															<input type="text" class="form-control" th:field="*{xinsamt}" >
+														</div>
+													</div>
+													
+													<div class="form-group datepicker">
+														<label class="control-label col-md-4" for="xdateeff" th:text="#{laae.form.label.xdateeff}">Effective Date</label>
+														<div class="input-group date col-md-7 datepicker">
+															<input 	type="datepicker" 
+																	class="form-control" 
+																	id="xdateeff"
+																	name="xdateeff"
+																	th:value="${loantrn.xdateeff == null ? #dates.format(#dates.createNow(), df) : #dates.format(loantrn.xdateeff, df)}"/>
+															<div class="input-group-addon">
+																<span class="glyphicon glyphicon-calendar"></span>
+															</div>
+														</div>
+													</div>
+												</div>
+												<div class="col-md-6">
+												
+													<div class="form-group">
+														<label class="control-label col-md-4" for="xlastinsamt" th:text="#{laae.form.label.xlastinsamt}">Last Installment Amount</label>
+														<div class="col-md-8">
+															<input type="text" class="form-control" th:field="*{xlastinsamt}" min="0" disabled="disabled">
+														</div>
+													</div>
+													
+													<div class="form-group">
+														<label class="control-label col-md-4" for="xpaid" th:text="#{laae.form.label.xpaid}">Paid Amount</label>
+														<div class="col-md-8">
+															<input type="text"  class="form-control" th:field="*{xpaid}" min="0" disabled="disabled">
+														</div>
+													</div>	
+													<div class="form-group">
+														<label class="control-label col-md-4" for="xstatus" th:text="#{laae.form.label.xstatus}">Status</label>
+														<div class="col-md-8">
+															<input type="text" class="form-control" th:field="*{xstatus}" min="0" disabled="disabled">
+														</div>
+													</div>
+													<div class="form-group">
+														<label class="control-label col-md-4" for="xstatustag" th:text="#{laae.form.label.xstatustag}">Write Off Status</label>
+														<div class="col-md-8">
+															<input type="text" class="form-control" th:field="*{xstatustag}" disabled="disabled">
+															
+														</div>
+													</div>
+													<div class="form-group">
+														<label class="control-label col-md-4" for="xamount" th:text="#{laae.form.label.xamount}">Settlement Amount</label>
+														<div class="col-md-8">
+															<input type="text" class="form-control" th:field="*{xamount}" disabled="disabled">
+														</div>
+													</div>	
+													<div class="form-group balance">
+														<label class="control-label col-md-4" th:text="#{laae.form.label.xblamt}">Balanced Amount</label>
+														<div class="col-md-8">
+															<input type="text" class="form-control balance"  disabled="disabled" >
+														</div>
+													</div>
+													
+													<div class="form-group">
+														<label class="control-label col-md-4" for="xnote" th:text="#{laae.form.label.xnote}">Remarks</label>
+														<div class="col-md-8">
+															<textarea class="form-control" rows="3" th:field="*{xnote}" placeholder="Note"></textarea>
+														</div>
+													</div>	
+												
+												</div>
+											</div>
+										</form>
+									</div>
+								</section>
+							</div>
+		
+									
+							<div class="col-md-6">
+								<section id="list-manager" style="margin-top: 30px;">
+									<div class="section-header sectionbartoggle">
+										<h1>All Loans & Advance Entries</h1>
+									</div>
+									<div class="section-body">
+										<table class="table table-striped table-bordered datatable nowrap">
+											<thead>
+												<tr>
+													<th th:text="#{laae.table.heading.xloanamt}">Loan Number</th>
+													<th th:text="#{laae.table.heading.xstaff}">Employee ID</th>
+													<th th:text="#{laae.table.heading.xtype}">Loan Type</th>
+													<th th:text="#{laae.table.heading.xloanamt}">Loan Amount</th>
+													<th th:text="#{laae.table.heading.xdate}">Date</th>
+													
+												</tr>
+											</thead>
+											<tbody th:with="df=${'E, dd-MMM-yyyy'}">
+												<tr th:each="pd: ${allLoantrns}">
+													<td>
+														<a th:href="@{/payroll/pdloantrn/} + ${pd.xvoucher}" th:text="${pd.xvoucher}"></a>
+													</td>
+													<td th:text="${pd.xstaff} + ' - ' + ${pd.xename}">></td>
+													<td th:text="${pd.xtype}"></td>
+													<td th:text="${pd.xloanamt}"></td>
+													<td th:text="${#dates.format(pd.xdate, df)}"></td>
+													
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</section>
+							</div>
+
+							<div class="col-md-12">
+								<section th:if="${not #strings.isEmpty(loantrn.xvoucher)}" id="data-maintenance" style="margin-top: 30px;">
+								<div class="section-header sectionbartoggle">
+									<h1>Loan Write Off Info of <span th:text="${loantrn.xvoucher}"></span> </h1>			
+								</div>
+									<div class="section-body" style="overflow-y:scroll;height:200px;">
+										<table class="table table-striped table-bordered normal-table" id="loanwriteofftable" th:fragment="loanwriteofftable">
+											<thead>
+												<tr>
+													<th th:text="#{laae.modal.table.heading.count}">SL#</th>
+													<th th:text="#{laae.modal.table.heading.xdate}">Date </th>
+													<th th:text="#{laae.modal.table.heading.xloanamt}">Loan Amount</th>
+													<th th:text="#{laae.modal.table.heading.xstatus}">Status</th>
+													<th th:text="#{laae.modal.table.heading.xstatustag}">Write Off Status</th>
+													<th th:text="#{laae.modal.table.heading.xnote}">Note</th>
+													<th data-nosort="Y" style="text-align: right;">
+														<button type="button" class="btn btn-success btn-add" th:attr="data-url=@{/payroll/pdloantrn/} + ${loantrn.xvoucher} + '/loanwriteoff/new/show', data-target-modal='loanwriteoffmodal'"><i class="fas fa-plus"></i></button>
+													</th>
+												</tr>
+											</thead>
+											<tbody th:with="df=${'E, dd-MMM-yyyy'}">
+												<tr th:each="d, n : ${lwolist}">
+													<td th:text="${n.count}"></td>
+													<td th:text="${#dates.format(d.xdate, df)}"></td>
+													<td th:text="${d.xloanamt}"></td>
+													<td th:text="${d.xstatus}"></td>
+													<td th:text="${d.xstatustag}"></td>
+													<td th:text="${d.xnote}"></td>
+													<td data-nosort="Y" style="text-align: right; font-size: 11px;">
+														<button type="button" class="btn btn-default btn-edit editmode" th:attr="data-url=@{/payroll/pdloantrn/} + ${loantrn.xvoucher} + '/loanwriteoff/' + ${d.xrow} + '/show', data-target-modal='loanwriteoffmodal'"><i class="fas fa-edit"></i></button>
+														<button type="button" class="btn btn-danger btn-delete editmode" th:attr="data-url=@{/payroll/pdloantrn/} + ${loantrn.xvoucher} + '/loanwriteoff/' + ${d.xrow} + '/delete'"><i class="fas fa-trash"></i></button>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</section>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Modal -->
+		<div id="loanwriteoffmodal-section"></div>
+				<!-- Footer section -->
+		<div class="footer-section" th:include="commons :: footer-section"></div>
+	</body>
+	<script>
+		$(document).ready(function(){
+			$("input[name='xloanamt'], input[name='xpaid']").off('blur').on('blur', function(e){
+				if($(this).val() == '' || isNaN($(this).val())){
+					$(this).val(0);
+				}
+				calculate();
+			});
+
+			
+			function calculate(){
+				var xloanamt = parseFloat($("input[name='xloanamt']").val());
+				var xpaid =parseFloat($("input[name='xpaid']").val());
+				var blancedAmt = xloanamt - xpaid;
+
+				$('.balance').val(blancedAmt);
+				if ($('.balance').val() == '' || isNaN($('.balance').val())){
+					$('.balance').val('0');
+				}
+				
+			}
+
+			calculate();
+		});
+	</script>
+	
+</html>

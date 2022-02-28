@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.asl.mapper.AralcMapper">
+	<insert id="saveAralc" parameterType="Aralc">
+	
+		INSERT INTO Aralc
+		(
+			xvoucher,
+			xrow,
+			xinvnum,
+			xdate,
+			xdatedue,
+			xbalance,
+			xamount,
+			xdornum,
+			xpornum,
+			xgrnnum,
+			xprimebuyer,
+			xbase,
+			zid,
+			ztime,
+			zutime,
+			zauserid,
+			zuuserid
+
+		)
+		VALUES
+		(
+			#{xvoucher, jdbcType=VARCHAR},
+			#{xrow, jdbcType=INTEGER},
+			#{xinvnum, jdbcType=VARCHAR},
+			#{xdate, jdbcType=DATE},
+			#{xdatedue, jdbcType=DATE},
+			#{xbalance, jdbcType=INTEGER},
+			#{xamount, jdbcType=INTEGER},
+			#{xdornum, jdbcType=VARCHAR},
+			#{xpornum, jdbcType=VARCHAR},
+			#{xgrnnum, jdbcType=VARCHAR},
+			#{xprimebuyer, jdbcType=INTEGER},
+			#{xbase, jdbcType=INTEGER},
+			#{zid, jdbcType=VARCHAR},
+			#{ztime, jdbcType=TIMESTAMP},
+			#{zutime, jdbcType=TIMESTAMP},
+			#{zauserid, jdbcType=VARCHAR},
+			#{zuuserid, jdbcType=VARCHAR}
+			
+		)
+	</insert>
+
+	<update id="updateAralc" parameterType="Aralc">
+		UPDATE 
+			Aralc 
+		SET
+			xvoucher=#{xvoucher, jdbcType=VARCHAR},
+			xrow=#{xrow, jdbcType=INTEGER},
+			xinvnum=#{xinvnum, jdbcType=VARCHAR},
+			xdate=#{xdate, jdbcType=DATE},
+			xdatedue=#{xdatedue, jdbcType=DATE},
+			xbalance=#{xbalance, jdbcType=INTEGER},
+			xamount=#{xamount, jdbcType=INTEGER},
+			xdornum=#{xdornum, jdbcType=VARCHAR},
+			xpornum=#{xpornum, jdbcType=VARCHAR},
+			xgrnnum=#{xgrnnum, jdbcType=VARCHAR},
+			xprimebuyer=#{xprimebuyer, jdbcType=INTEGER},
+			xbase=#{xbase, jdbcType=INTEGER},
+			zid=#{zid, jdbcType=VARCHAR},
+			ztime=#{ztime, jdbcType=TIMESTAMP},
+			zutime=#{zutime, jdbcType=TIMESTAMP},
+			zauserid=#{zauserid, jdbcType=VARCHAR},
+			zuuserid=#{zuuserid, jdbcType=VARCHAR}
+		WHERE
+			zid=#{zid, jdbcType=VARCHAR}
+	</update>
+
+</mapper>

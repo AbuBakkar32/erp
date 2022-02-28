@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.asl.mapper.ZbusinessMapper">
+	<insert id="save" parameterType="Zbusiness">
+	
+		INSERT INTO Zbusiness
+		(
+			xmadd,
+			xphone,
+			xpadd,
+			xfax,
+			xcontact,
+			xcity,
+			xemail,
+			xsignatory,
+			xcur,
+			xstate,
+			xzip,
+			xdformat,
+			xdsep,
+			xurl,
+			xtin,
+			xcountry,
+			xvatregno,
+			xcustom,
+			xtimage,
+			xbimage,
+			xoutlet,
+			xshopno,
+			xterminalno,
+			xmusakno,
+			xdine,
+			centralzid,
+			central,
+			branch,
+			ximage,
+			xresource,
+			zid,
+			zorg,
+			zemail,
+			zauserid,
+			zuuserid,
+			zaip,
+			zuip,
+			zactive,
+			ztime,
+			zutime
+		)
+		VALUES
+		(
+			
+			#{xmadd, jdbcType=VARCHAR},
+			#{xphone, jdbcType=VARCHAR},
+			#{xpadd, jdbcType=VARCHAR},
+			#{xfax, jdbcType=VARCHAR},
+			#{xcontact, jdbcType=VARCHAR},
+			#{xcity, jdbcType=VARCHAR},
+			#{xemail, jdbcType=VARCHAR},
+			#{xsignatory, jdbcType=VARCHAR},
+			#{xcur, jdbcType=VARCHAR},
+			#{xstate, jdbcType=VARCHAR},
+			#{xzip, jdbcType=VARCHAR},
+			#{xdformat, jdbcType=VARCHAR},
+			#{xdsep, jdbcType=VARCHAR},
+			#{xurl, jdbcType=VARCHAR},
+			#{xtin, jdbcType=VARCHAR},
+			#{xcountry, jdbcType=VARCHAR},
+			#{xvatregno, jdbcType=VARCHAR},
+			#{xcustom, jdbcType=VARCHAR},
+			#{xtimage, jdbcType=VARCHAR},
+			#{xbimage, jdbcType=VARCHAR},
+			#{xoutlet, jdbcType=VARCHAR},
+			#{xshopno, jdbcType=VARCHAR},
+			#{xterminalno, jdbcType=VARCHAR},
+			#{xmusakno, jdbcType=VARCHAR},
+			#{xdine, jdbcType=VARCHAR},
+			#{centralzid, jdbcType=VARCHAR},
+			#{central, jdbcType=BOOLEAN},
+			#{branch, jdbcType=BOOLEAN},
+			#{ximage, jdbcType=BLOB},
+			#{xresource, jdbcType=VARCHAR},
+			#{zid, jdbcType=VARCHAR},
+			#{zorg, jdbcType=VARCHAR},
+			#{zemail, jdbcType=VARCHAR},
+			#{zauserid, jdbcType=VARCHAR},
+			#{zuuserid, jdbcType=VARCHAR},
+			#{zaip, jdbcType=VARCHAR},
+			#{zuip, jdbcType=VARCHAR},
+			#{zactive, jdbcType=VARCHAR},
+			#{ztime, jdbcType=TIMESTAMP},
+			#{zutime, jdbcType=TIMESTAMP}
+			
+		) 
+	</insert>
+
+	<update id="update" parameterType="Zbusiness">
+		UPDATE Zbusiness
+		SET
+			xmadd=#{xmadd, jdbcType=VARCHAR},
+			xphone=#{xphone, jdbcType=VARCHAR},
+			xpadd=#{xpadd, jdbcType=VARCHAR},
+			xfax=#{xfax, jdbcType=VARCHAR},
+			xcontact=#{xcontact, jdbcType=VARCHAR},
+			xcity=#{xcity, jdbcType=VARCHAR},
+			xemail=#{xemail, jdbcType=VARCHAR},
+			xsignatory=#{xsignatory, jdbcType=VARCHAR},
+			xcur=#{xcur, jdbcType=VARCHAR},
+			xstate=#{xstate, jdbcType=VARCHAR},
+			xzip=#{xzip, jdbcType=VARCHAR},
+			xdformat=#{xdformat, jdbcType=VARCHAR},
+			xdsep=#{xdsep, jdbcType=VARCHAR},
+			xurl=#{xurl, jdbcType=VARCHAR},
+			xtin=#{xtin, jdbcType=VARCHAR},
+			xcountry=#{xcountry, jdbcType=VARCHAR},
+			xvatregno=#{xvatregno, jdbcType=VARCHAR},
+			xcustom=#{xcustom, jdbcType=VARCHAR},
+			xtimage=#{xtimage, jdbcType=VARCHAR},
+			xbimage=#{xbimage, jdbcType=VARCHAR},
+			xoutlet=#{xoutlet, jdbcType=VARCHAR},
+			xshopno=#{xshopno, jdbcType=VARCHAR},
+			xterminalno=#{xterminalno, jdbcType=VARCHAR},
+			xmusakno=#{xmusakno, jdbcType=VARCHAR},
+			xdine=#{xdine, jdbcType=VARCHAR},
+			centralzid=#{centralzid, jdbcType=VARCHAR},
+			central=#{central, jdbcType=BOOLEAN},
+			branch=#{branch, jdbcType=BOOLEAN},
+			ximage=#{ximage, jdbcType=BLOB},
+			xresource=#{xresource, jdbcType=VARCHAR},
+			zid=#{zid, jdbcType=VARCHAR},
+			zorg=#{zorg, jdbcType=VARCHAR},
+			zemail=#{zemail, jdbcType=VARCHAR},
+			zauserid=#{zauserid, jdbcType=VARCHAR},
+			zuuserid=#{zuuserid, jdbcType=VARCHAR},
+			zaip=#{zaip, jdbcType=VARCHAR},
+			zuip=#{zuip, jdbcType=VARCHAR},
+			zactive=#{zactive, jdbcType=VARCHAR},
+			ztime=#{ztime, jdbcType=TIMESTAMP},
+			zutime=#{zutime, jdbcType=TIMESTAMP}
+			
+		WHERE
+			zid=#{zid, jdbcType=VARCHAR}
+	</update>
+
+	<select id="findByZid" resultType="Zbusiness">
+		SELECT * FROM Zbusiness WHERE zid=#{zid} AND zactive='1'
+	</select>
+	<select id="findfromZid" resultType="Zbusiness">
+		SELECT * FROM Zbusiness WHERE zid=#{zid} AND zactive='1'	
+	</select>
+	
+	<select id="getAllBranchBusiness" resultType="Zbusiness">
+		SELECT * FROM Zbusiness WHERE centralzid=#{zid} AND branch='1' AND zactive='1'
+	</select>
+	
+	<select id="getBranchBusiness" resultType="Zbusiness">
+		SELECT * FROM Zbusiness WHERE zid=#{zid} AND zactive='1'
+	</select>
+
+	<select id="getCentralBusiness" resultType="Zbusiness">
+		SELECT * FROM Zbusiness WHERE zid=#{centralzid} AND central='1' AND zactive='1'
+	</select>
+	
+	<select id="getBusinessName" resultType="Cacus">
+		SELECT * FROM cacus WHERE (UPPER(xcus) LIKE '%' || #{hint} || '%') and zid=#{zid} and xcus like '%CUS%'
+	</select>
+
+</mapper>

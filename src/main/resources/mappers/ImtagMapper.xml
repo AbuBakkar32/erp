@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.asl.mapper.ImtagMapper">
+	<insert id="saveImtag" parameterType="Imtag">
+		<selectKey keyProperty="xtagnum" resultType="String" order="BEFORE">
+			SELECT Func_GetTrn('${zid}', '${xtypetrn}', '${xtrn}', 6) FROM DUAL
+		</selectKey>
+		INSERT INTO Imtag
+		(
+			xtagnum,
+			xdate,
+			xdatecom,
+			xref,
+			xwh,
+			xstatustag,
+			xtype,
+			xtypetrn,
+			xtrn,
+			xhwh,			
+				
+			zid,
+			zauserid,
+			zuuserid,
+			zaip,
+			zuip,
+			zactive,
+			ztime,
+			zutime
+		)
+		VALUES
+		(
+			#{xtagnum, jdbcType=VARCHAR},
+			#{xdate, jdbcType=DATE},
+			#{xdatecom, jdbcType=DATE},
+			#{xref, jdbcType=VARCHAR},
+			#{xwh, jdbcType=INTEGER},
+			#{xstatustag, jdbcType=VARCHAR},
+			#{xtype, jdbcType=VARCHAR},
+			#{xtypetrn, jdbcType=VARCHAR},
+			#{xtrn, jdbcType=VARCHAR},
+			#{xhwh, jdbcType=VARCHAR},		
+			
+			#{zid, jdbcType=VARCHAR},
+			#{zauserid, jdbcType=VARCHAR},
+			#{zuuserid, jdbcType=VARCHAR},
+			#{zaip, jdbcType=VARCHAR},
+			#{zuip, jdbcType=VARCHAR},
+			#{zactive, jdbcType=VARCHAR},
+			#{ztime, jdbcType=TIMESTAMP},
+			#{zutime, jdbcType=TIMESTAMP}
+		) 
+	</insert>
+	
+	<update id="updateImtag" parameterType="Imtag">
+		UPDATE
+			Imtag
+		SET
+			xdate=#{xdate, jdbcType=DATE},
+			xdatecom=#{xdatecom, jdbcType=DATE},
+			xref=#{xref, jdbcType=VARCHAR},
+			xwh=#{xwh, jdbcType=INTEGER},
+			xstatustag=#{xstatustag, jdbcType=VARCHAR},
+			xtype=#{xtype, jdbcType=VARCHAR},
+			xtypetrn=#{xtypetrn, jdbcType=VARCHAR},
+			xtrn=#{xtrn, jdbcType=VARCHAR},
+			xhwh=#{xhwh, jdbcType=VARCHAR},
+			
+			zuuserid=#{zuuserid, jdbcType=VARCHAR},
+			zaip=#{zaip, jdbcType=VARCHAR},
+			zuip=#{zuip, jdbcType=VARCHAR},
+			zactive=#{zactive, jdbcType=VARCHAR},
+			ztime=#{ztime, jdbcType=TIMESTAMP},
+			zutime=#{zutime, jdbcType=TIMESTAMP}
+		WHERE
+			xtagnum=#{xtagnum, jdbcType=VARCHAR}
+			AND zid=#{zid, jdbcType=VARCHAR}
+	</update>
+	
+	<insert id="saveImtdet" parameterType="Imtdet">
+		<selectKey keyProperty="xrow" resultType="Integer" order="BEFORE">
+			SELECT COALESCE(Max(xrow), 0) + 1 FROM Imtdet WHERE xtagnum=#{xtagnum} AND zactive='1' AND zid=#{zid}
+		</selectKey>
+		INSERT INTO Imtdet
+		(
+			xtagnum,
+			xrow,
+			xitem,
+			xunit,
+			xqty,
+			xstatustag,
+			
+			
+			zid,
+			zauserid,
+			zuuserid,
+			zaip,
+			zuip,
+			zactive,
+			ztime,
+			zutime
+		)
+		VALUES
+		(
+			#{xtagnum, jdbcType=VARCHAR},
+			#{xrow},
+			#{xitem, jdbcType=VARCHAR},
+			#{xunit, jdbcType=VARCHAR},
+			#{xqty, jdbcType=DECIMAL},
+			#{xstatustag, jdbcType=VARCHAR},
+			
+			#{zid, jdbcType=VARCHAR},
+			#{zauserid, jdbcType=VARCHAR},
+			#{zuuserid, jdbcType=VARCHAR},
+			#{zaip, jdbcType=VARCHAR},
+			#{zuip, jdbcType=VARCHAR},
+			#{zactive, jdbcType=VARCHAR},
+			#{ztime, jdbcType=TIMESTAMP},
+			#{zutime, jdbcType=TIMESTAMP}
+		) 
+	</insert>
+	
+	<update id="updateImtdet" parameterType="Imtdet">
+		UPDATE 
+			Imtdet
+		SET
+			xitem=#{xitem, jdbcType=VARCHAR},
+			xunit=#{xunit, jdbcType=VARCHAR},
+			xqty=#{xqty, jdbcType=DECIMAL},
+			xstatustag=#{xstatustag, jdbcType=VARCHAR},
+			zuuserid=#{zuuserid, jdbcType=VARCHAR},
+			zaip=#{zaip, jdbcType=VARCHAR},
+			zuip=#{zuip, jdbcType=VARCHAR},
+			zactive=#{zactive, jdbcType=VARCHAR},
+			ztime=#{ztime, jdbcType=TIMESTAMP},
+			zutime=#{zutime, jdbcType=TIMESTAMP}
+		WHERE
+			xtagnum=#{xtagnum, jdbcType=VARCHAR}
+			AND xrow=#{xrow, jdbcType=INTEGER}
+			AND zid=#{zid, jdbcType=VARCHAR}
+	</update>
+	
+	<delete id="deleteImtag" parameterType="Imtag">
+		DELETE FROM Imtag WHERE xtagnum=#{xtagnum} AND zid=#{zid} AND zactive='1'
+	</delete>
+	
+	<delete id="deleteImtdet" parameterType="Imtdet">
+		DELETE FROM Imtdet WHERE xtagnum=#{xtagnum} AND xrow=#{xrow} AND zactive='1' AND zid=#{zid}
+	</delete>
+	
+	<select id="findImtagByXtagnum" resultType="Imtag">
+		SELECT 
+			Imtag.*,
+			y.xlong as projectName,
+			x.xlong as storeName 
+		FROM 
+			Imtag 
+			left join xcodes y on y.xcode = Imtag.xhwh and y.zid= Imtag.zid and y.xtype='Project' 
+			left join xcodes x on x.xcode = Imtag.xwh and x.zid = Imtag.zid and x.zactive='1'
+		WHERE 
+			Imtag.xtagnum=#{xtagnum} 
+			AND Imtag.zid=#{zid} 
+			AND Imtag.zactive='1'
+	</select>
+	
+	<select id="getAllImTag" resultType="Imtag">
+		SELECT 
+		    distinct
+		    Imtag.*,
+		    x.xlong,
+		    x.xlong as storeName 
+		FROM 
+    		Imtag 
+    		left join xcodes x on x.xcode = Imtag.xwh and x.zid = Imtag.zid and x.zactive='1'
+    	WHERE 
+    		Imtag.zid=#{zid} 
+    		AND Imtag.zactive='1' 
+    	order by Imtag.xtagnum desc
+	</select>
+	
+	<select id="findImtdetByXtagnumAndXrow" resultType="Imtdet">
+		SELECT 
+			Imtdet.*,
+			caitem.xdesc as itemname
+		FROM 
+			Imtdet
+			left join caitem ON caitem.xitem = Imtdet.xitem AND caitem.zid= Imtdet.zid
+		WHERE 
+			Imtdet.xtagnum=#{xtagnum} 
+			AND Imtdet.xrow=#{xrow} 
+			AND Imtdet.zid=#{zid} 
+			AND Imtdet.zactive='1'
+	</select>
+	
+	<select id="findImtdetByXtagnumAndXitem" resultType="Imtdet">
+		SELECT * FROM Imtdet WHERE xtagnum=#{xtagnum} AND xitem=#{xitem} AND zid=#{zid} AND zactive='1'
+	</select>
+	
+	<select id="findImtdetByXtagnum" resultType="Imtdet">
+		SELECT 
+			imt.*,
+			caitem.xdesc as itemname,
+			caitem.xgitem,
+			caitem.xcatitem 
+		FROM 
+			Imtdet imt 
+			JOIN caitem ON caitem.xitem = imt.xitem AND caitem.zid=#{zid}
+		WHERE  
+			imt.xtagnum=#{xtagnum} 
+			AND imt.zid=#{zid} 
+			AND imt.zactive='1'
+	</select>
+	
+	<select id = "procStockTake" statementType = "CALLABLE">
+		{call IM_processStockTake(#{zid, jdbcType = VARCHAR, mode = IN}, #{user, jdbcType = VARCHAR, mode = IN}, #{xdate, jdbcType = DATE, mode = IN}, #{xtagnum, jdbcType = VARCHAR, mode = IN}, #{p_seq, jdbcType = VARCHAR, mode = IN})}
+	</select>
+</mapper>

@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+	<head>
+		<title th:text="${module.pageTitle}"></title>
+		<meta th:remove="tag" th:include="commons :: common-meta"/>
+		<meta th:remove="tag" th:include="commons :: common-css"/>
+		<meta th:remove="tag" th:include="commons :: common-js"/>
+		<link rel="stylesheet" type="text/css" th:href="@{/assets/css/importexport/importexport.css}"/>
+	</head>
+	<body>
+
+		<!-- Header section -->
+		<div class="header-section" th:include="commons :: header-section"></div>
+
+		<!-- Menu section -->
+		<div th:if="${menuVersion != null and menuVersion eq 'MENU_V2'}" class="menuv2" th:include="commons :: main-menu"></div>
+
+		<div th:if="${menuVersion == null or menuVersion eq 'MENU_V1'}" class="navbar-inverse menu-section">
+			<div class="container-fluid">
+				<div class="row">
+					<nav class="navbar navbar-inverse">
+						<div class="container-fluid">
+							<div class="row">
+								<div class="navbar-header">
+									<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+										<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+									</button>
+								</div>
+								<div class="collapse navbar-collapse" id="myNavbar">
+									<div class="nav navbar-nav">
+										<li><a th:href="@{/}"><i class="fas fa-home"></i> Home</a></li>
+										<li class="active"><a th:href="@{/importexport/listimportexport}" th:text="${module.pageTitle}">List Import/Export</a></li>
+									</div>
+									<ul class="nav navbar-nav navbar-right" th:include="ckbigmenu :: dashboard-menu"></ul>
+								</div>
+							</div>
+						</div>
+					</nav>
+				</div>
+			</div>
+		</div>
+
+		<!-- Content section -->
+		<div>
+			<input type="hidden" class="modulename" th:value="${module.moduleName}"/>
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-md-12 content-area">
+						<div class="row">
+							<h1 class="text-center" th:text="${module.pageTitle}"></h1>
+						</div>
+
+						<!-- Section data maintenance -->
+						<div class="row">
+							<div class="col-md-12">
+								<section id="data-maintenance" style="margin-top: 10px;">
+									<div class="section-header"></div>
+									<div class="section-body togglebox">
+
+										<div class="col-md-4 nodisplay upload-progress-satus pull-right" style="padding: 0px;">
+											<div class="progress">
+												<div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100" style="width: 10%">0% Complete</div>
+											</div>
+										</div>
+
+										<div class="row">
+											<div class="col-md-6">
+												<!-- Column Details -->
+												<div class="col-md-12 columns-details-box">
+													<ul class="column-ul">
+														<li th:each="mc : ${module.moduleColumns}">
+															<span class="column-name text-right" th:text="${mc.columnName} + ' - ' + ${mc.column}"></span>
+															<span class="column-description">
+																<span th:class="${mc.cssClass}" th:text="${mc.columnType}"></span>
+																<span th:text="${mc.columnDescription}"></span>
+															</span>
+														</li>
+													</ul>
+												</div>
+											</div>
+											<div class="col-md-6">
+
+												<ul class="nav nav-tabs" style="display: inline-block;">
+													<li th:if="${module.showExportTab}"><a href="#export" data-toggle="tab" th:text="${module.exportTabPrompt}">Export</a></li>
+													<li th:if="${module.showImportTab}" class="active"><a href="#import" data-toggle="tab" th:text="${module.importTabPrompt}">Import</a></li>
+												</ul>
+
+												<div class="tab-content" style="padding-top: 20px;">
+													<!-- Export -->
+													<div th:if="${module.showExportTab}" id="export" class="tab-pane fade col-md-12">
+														<div class="row">
+															<form id="exportform" class="form-horizontal" th:action="@{/importexport/download/} + ${module.moduleName}" method="post">
+																<div class="col-md-8">
+																	<span th:each="op, stat : ${module.downloadOption}">
+																		<div class="form-group" th:classappend="${op.hiddenAndChecked} ? 'nodisplay' : ''">
+																			<label th:for="${op.id}" class="control-label col-sm-5" th:text="${op.promt}">Export All? :</label>
+																			<div class="col-sm-7">
+																				<div class="checkbox">
+																					<label>
+																						<input 	th:checked="${op.hiddenAndChecked}" 
+																								th:id="${op.id}" 
+																								th:name="downloadOption[__${stat.index}__] + '.name'" 
+																								value="downloadAll" 
+																								type="checkbox" 
+																								class="checkboxcontrolled">
+																					</label>
+																				</div>
+																			</div>
+																		</div>
+	
+																		<div class="form-group" th:if="${not #strings.isEmpty(op.dependentPromt)}" th:attr="data-toggledby=${op.id}">
+																			<label class="control-label col-sm-5" th:for="${op.dependentName}" th:text="${op.dependentPromt}">Select List Code :</label>
+																			<div class="col-sm-7">
+																				<select class ="search-select form-control" th:name="downloadOption[__${stat.index}__] + '.selectedData'">
+																					<option th:each="ob : ${op.dependentOptions}" th:value="${ob.key}" th:text="${ob.value}"></option>
+																				</select>
+																			</div>
+																		</div>
+
+																	</span>
+																</div>
+																<div class="col-md-4 text-right">
+																	<a th:href="@{/importexport/download/} + ${module.moduleName}" target="_blank" class="btn btn-sm btn-primary download-btn export-btn"><i class="fas fa-cloud-download-alt"></i> Download</a>
+																</div>
+															</form>
+														</div>
+													</div>
+
+													<!-- Import -->
+													<div th:if="${module.showImportTab}" id="import" class="tab-pane fade in active col-md-12">
+														<div class="row">
+
+															<div class="col-md-8">
+																<form id="importform" class="form-horizontal">
+																	<div th:if="${module.showFileDelimiter}" class="form-group">
+																		<label class="control-label col-sm-5" for="fileDelimiter">File delimiter :</label>
+																		<div class="col-sm-7">
+																			<select id="fileDelimiter" name="fileDelimiter" class="form-control input-sm">
+																				<option th:each="delimeter : ${T(com.asl.enums.CSVFileDelimiter).values()}" th:value="${delimeter.character}" th:text="${delimeter.code} + ' ( ' + ${delimeter.character} + ' ) '"></option>
+																			</select>
+																		</div>
+																	</div>
+																	<div th:if=${module.showIgnoreFirstRow} class="form-group">
+																		<label class="control-label col-sm-5" for="ignoreFirstRow">Ignore first row? :</label>
+																		<div class="col-sm-7">
+																			<div class="checkbox">
+																				<label><input id="ignoreFirstRow" name="ignoreFirstRow" type="checkbox"></label>
+																			</div>
+																		</div>
+																	</div>
+																	<div th:if="${module.showUpdateExistingRecord}" class="form-group">
+																		<label class="control-label col-sm-5" for="updateExisting" th:text="${module.updateExistingRecordPrompt}">Update existing record? :</label>
+																		<div class="col-sm-7">
+																			<div class="checkbox">
+																				<label><input id="updateExisting" name="updateExisting" type="checkbox"></label>
+																			</div>
+																		</div>
+																	</div>
+																</form>
+															</div>
+
+															<div class="col-md-4 text-right">
+																<a th:href="@{/importexport/downloadtemplate/} + ${module.moduleName}" class="btn btn-sm btn-primary"><i class="fas fa-file-download"></i> Download template</a>
+															</div>
+
+															<div class="col-md-4 text-right">
+																<span class="btn btn-sm btn-success fileinput-button" style="margin-top: 10px; clear: both;"> 
+																	<i class="fas fa-plus"></i>
+																	<span>Browse...</span> <input type="file" id="file" name="file" accept=".csv">
+																</span>
+															</div>
+
+															<!-- <div class="col-md-12" style="margin-bottom: 60px;">
+																<div th:if="${module.showNotes}" class="alert alert-info">
+																	<strong>Note!</strong> <br/>
+																	<p th:each="note : ${module.notes}" th:text="${note}">To update existing record will update previous data</p>
+																</div>
+															</div> -->
+
+														</div>
+														<div class="row">
+															<div class="col-md-12 pull-right nodisplay upload-result-satus" style="margin-top: 20px; padding-top: 20px;">
+																<p class="status-table-filename">uploaded.csv (2Kb)</p>
+																<table class="status-table table table-striped table-bordered">
+																	<tr>
+																		<td>Number of created</td>
+																		<td class="status-table-created">1</td>
+																	</tr>
+																	<tr>
+																		<td>Number of Updated</td>
+																		<td class="status-table-updated">1</td>
+																	</tr>
+																	<tr>
+																		<td>Number of Deleted</td>
+																		<td class="status-table-deleted">1</td>
+																	</tr>
+																	<tr>
+																		<td>Total rows</td>
+																		<td class="status-table-total">1</td>
+																	</tr>
+																</table>
+																<div class="text-right" style="margin-top: -10px;">
+																	<button class="btn btn-sm btn-danger import-cancel-btn">Cancel</button>
+																	<button class="btn btn-sm btn-primary import-btn">Import</button>
+																</div>
+															</div>
+														</div>
+														<div class="row">
+															<div class="col-md-12 nodisplay upload-error-satus" style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #DDD;">
+																<table id="upload-error-satus-table" class="table table-striped table-bordered">
+																	<thead>
+																		<tr>
+																			<th>Line no</th>
+																			<th>Column</th>
+																			<th>Reason</th>
+																		</tr>
+																	</thead>
+																	<tbody></tbody>
+																</table>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+		
+										
+									</div>
+								</section>
+							</div>
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Footer section -->
+		<div class="footer-section" th:include="commons :: footer-section"></div>
+
+		<script type="text/javascript" th:src="@{/assets/js/importexport/importexport.js}"></script>
+	</body>
+</html>

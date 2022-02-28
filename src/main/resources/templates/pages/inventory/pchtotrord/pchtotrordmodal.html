@@ -1,0 +1,85 @@
+<!-- Modal -->
+<div id="pchtotrordmodal" th:fragment="pchtotrordmodal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="true" xmlns:th="http://www.thymeleaf.org">
+	<div class="modal-dialog modal-lg">
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h4 class="modal-title">Create Transfer Order</h4>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<form id="mainform-modal" class="form-horizontal" th:action="@{/inventory/pchtotrord/createto}" th:object="${imtorheader}" method="post" th:with="df=${'E, dd-MMM-yyyy'}">
+						<input type="hidden" class="form-control" th:field="*{xtypetrn}">
+						<input type="hidden" class="form-control" th:field="*{xstatustor}"/>
+						<div class="row">
+							<div class="col-md-6">
+
+								<div class="form-group">
+									<label class="control-label col-md-4" for="xtrn">Prefix : </label>
+									<div class="col-md-6">
+										<select class="form-control" th:field="*{xtrn}">
+											<option th:each="prefix : ${imtorprefix}" th:value="${prefix.xtrn}" th:text="${prefix.xtrn}"></option>
+										</select>
+									</div>
+								</div>
+
+								<div class="form-group">
+									<label class="control-label col-md-4" for="xchalanref">Chalan Ref: </label>
+									<div class="col-md-8">
+										<input type="hidden" class="form-control" th:field="*{xchalanref}"/>
+										<input type="text" class="form-control" th:value="*{xchalanref}" disabled="disabled"/>
+									</div>
+								</div>
+
+								<div class="form-group datepicker">
+									<label class="control-label col-md-4" for="xdate">Date : </label>
+									<div class="input-group date col-md-7 datepicker">
+										<input 	type="datepicker" 
+												class="form-control" 
+												id="xdate"
+												name="xdate"
+												required="required"
+												th:value="${imtorheader.xdate == null ? #dates.format(#dates.createNow(), df) : #dates.format(imtorheader.xdate, df)}"/>
+										<div class="input-group-addon">
+											<span class="glyphicon glyphicon-calendar"></span>
+										</div>
+									</div>
+								</div>
+
+								<div class="form-group">
+									<label class="control-label col-md-4" for="xfwh">From Warehouse : </label>
+									<div class="col-md-8">
+										<select class="form-control" th:field="*{xfwh}">
+											<option th:each="wh : ${warehouses}" th:value="${wh.xcode}" th:text="${wh.xcode}"></option>
+										</select>
+									</div>
+								</div>
+
+								<div class="form-group">
+									<label class="control-label col-md-4" for="xtwh">To Warehouse : </label>
+									<div class="col-md-8">
+										<select class="form-control" th:field="*{xtwh}">
+											<option th:each="wh : ${warehouses}" th:value="${wh.xcode}" th:text="${wh.xcode}"></option>
+										</select>
+									</div>
+								</div>
+
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-success btn-sm confirm-btn-modal">Submit</button>
+				<button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				// Init ui for modal
+				ck.ui.config.buttonevent();
+			});
+		</script>
+	</div>
+</div>

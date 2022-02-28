@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+	<head>
+		<title>Dashboard</title>
+		<meta th:remove="tag" th:include="commons :: common-meta"/>
+		<meta th:remove="tag" th:include="commons :: common-css"/>
+		<meta th:remove="tag" th:include="commons :: common-js"/>
+	</head>
+	<body>
+
+		<!-- Header section -->
+		<div class="header-section" th:include="commons :: header-section"></div>
+
+		<!-- Menu section -->
+		<div th:if="${menuVersion != null and menuVersion eq 'MENU_V2'}" class="menuv2" th:include="commons :: main-menu"></div>
+
+		<div th:if="${menuVersion == null or menuVersion eq 'MENU_V1'}" class="navbar-inverse menu-section">
+			<div class="container-fluid">
+				<div class="row">
+					<nav class="navbar navbar-inverse">
+						<div class="container-fluid">
+							<div class="row">
+								<div class="navbar-header">
+									<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+										<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+									</button>
+								</div>
+								<div class="collapse navbar-collapse" id="myNavbar">
+									<div class="nav navbar-nav">
+										<li class="active"><a th:href="@{/}"><i class="fas fa-home"></i> Home</a></li>
+									</div>
+									<ul class="nav navbar-nav navbar-right" th:include="ckbigmenu :: dashboard-menu"></ul>
+								</div>
+							</div>
+						</div>
+					</nav>
+				</div>
+			</div>
+		</div>
+
+		<!-- Content section -->
+		<div>
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-md-12 content-area">
+						<!-- Section data maintenance -->
+						<section id="data-maintenance" style="margin-top: 30px;">
+							<div class="section-header sectionbartoggle">
+							</div>
+							<div class="section-body" th:fragment="mainmenu">
+								<table class="table dashboard-menu-table">
+								
+								<!-- SYSTEM -->
+									<span sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_SYSTEM_ADMIN')" th:if="${menuProfile.M0100 ne null and menuProfile.M0100.display}">
+										<tr>
+											<td colspan="2" th:text="${menuProfile.M0100.screenprompt}">Administration</td>
+										</tr>
+
+										<span th:if="${menuProfile.M0101 ne null and menuProfile.M0101.display}">
+										<tr>
+											<td colspan="2" style="padding-left: 30px !important;" th:text="${menuProfile.M0101.screenprompt}">Users</td>
+										</tr>
+										<tr th:if="${menuProfile.M0102 ne null and menuProfile.M0102.display}">
+											<td><a class="sub2" th:href="@{/system/xusers}" th:text="${menuProfile.M0102.screenprompt}">Manage Users</a></td>
+											<td>
+												<a th:href="@{/system/xusers}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										<tr th:if="${menuProfile.M0103 ne null and menuProfile.M0103.display}">
+											<td><a class="sub2" th:href="@{/system/profile}" th:text="${menuProfile.M0103.screenprompt}">Manage Access Profile</a></td>
+											<td>
+												<a th:href="@{/system/profile}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										<tr th:if="${menuProfile.M0104 ne null and menuProfile.M0104.display}">
+											<td><a class="sub2" th:href="@{/system/profileallocation}" th:text="${menuProfile.M0104.screenprompt}">Profile Allocation to Users</a></td>
+											<td>
+												<a th:href="@{/system/profileallocation}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										</span>
+
+										<span th:if="${menuProfile.M0105 ne null and menuProfile.M0105.display}">
+										<tr>
+											<td colspan="2" style="padding-left: 30px !important;">System Administration</td>
+										</tr>
+										<tr>
+											<td colspan="2" style="padding-left: 30px !important;" th:text="${menuProfile.M0105.screenprompt}">System Administration</td>
+										</tr>
+										<tr th:if="${menuProfile.M0106 ne null and menuProfile.M0106.display}">
+											<td><a class="sub2" th:href="@{/mastersetup/xcodes}" th:text="${menuProfile.M0106.screenprompt}">Codes & Parameters</a></td>
+											<td>
+												<a th:href="@{/mastersetup/xcodes}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										<tr th:if="${menuProfile.M0107 ne null and menuProfile.M0107.display}">
+											<td><a class="sub2" th:href="@{/mastersetup/xtrn}" th:text="${menuProfile.M0107.screenprompt}">Transaction Codes</a></td>
+											<td>
+												<a th:href="@{/mastersetup/xtrn}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										<tr th:if="${menuProfile.M0119 ne null and menuProfile.M0119.display}">
+											<td><a class="sub2" th:href="@{/mastersetup/xtrnp}" th:text="${menuProfile.M0119.screenprompt}">Related Transaction Codes</a></td>
+											<td>
+												<a th:href="@{/mastersetup/xtrn}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										<tr sec:authorize="hasRole('ROLE_SYSTEM_ADMIN')" th:if="${menuProfile.M0108 ne null and menuProfile.M0108.display}">
+											<td><a class="sub2" th:href="@{/system/list}" th:text="${menuProfile.M0108.screenprompt}">List Maintenance</a></td>
+											<td>
+												<a th:href="@{/system/list}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										<tr th:if="${menuProfile.M0109 ne null and menuProfile.M0109.display}">
+											<td><a class="sub2" th:href="@{/system/businessprof}" th:text="${menuProfile.M0109.screenprompt}">Business Profile</a></td>
+											<td>
+												<a th:href="@{/system/businessprof}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										<tr th:if="${isCentral and menuProfile.M1012 ne null and menuProfile.M1012.display}">
+											<td><a class="sub2" th:href="@{/account/cusgroup}" th:text="${menuProfile.M1012.screenprompt}">Customer Group (Accounts)</a></td>
+											<td>
+												<a th:href="@{/account/cusgroup}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										<tr th:if="${isCentral and menuProfile.M1013 ne null and menuProfile.M1013.display}">
+											<td><a class="sub2" th:href="@{/account/supgroup}" th:text="${menuProfile.M1013.screenprompt}">Supplier Group (Accounts)</a></td>
+											<td>
+												<a th:href="@{/account/supgroup}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										</span>
+
+										<span th:if="${menuProfile.M0110 ne null and menuProfile.M0110.display}">
+										<tr sec:authorize="hasRole('ROLE_SYSTEM_ADMIN')">
+											<td colspan="2" style="padding-left: 30px !important;" th:text="${menuProfile.M0110.screenprompt}">Logs</td>
+										</tr>
+										<tr sec:authorize="hasRole('ROLE_SYSTEM_ADMIN')" th:if="${menuProfile.M0111 ne null and menuProfile.M0111.display}">
+											<td><a class="sub2" th:href="@{/system/aslprocerror}" th:text="${menuProfile.M0111.screenprompt}">Error Logs</a></td>
+											<td>
+												<a th:href="@{/system/aslprocerror}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										</span>
+									</span>
+
+									<!-- MASTER SETUP -->
+									<span th:if="${menuProfile.M0200 ne null and menuProfile.M0200.display}">
+										<tr>
+											<td colspan="2" th:text="${menuProfile.M0200.screenprompt}">Master Setup</td>
+										</tr>
+										<tr th:if="${isCentral and menuProfile.M0201 ne null and menuProfile.M0201.display}">
+											<td><a th:href="@{/mastersetup/caitem}" th:text="${menuProfile.M0201.screenprompt}">Item Master</a></td>
+											<td>
+												<a th:href="@{/mastersetup/caitem}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										<tr th:if="${isCentral and menuProfile.M0202 ne null and menuProfile.M0202.display}">
+											<td><a th:href="@{/mastersetup/cacus?cacusType=SUP}" th:text="${menuProfile.M0202.screenprompt}">Supplier Master</a></td>
+											<td>
+												<a th:href="@{/mastersetup/cacus?cacusType=SUP}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										<tr th:if="${isCentral and menuProfile.M0203 ne null and menuProfile.M0203.display}">
+											<td><a th:href="@{/mastersetup/cacus?cacusType=CUS}" th:text="${menuProfile.M0203.screenprompt}">Customer Master</a></td>
+											<td>
+												<a th:href="@{/mastersetup/cacus?cacusType=CUS}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										<tr>
+											<td><a th:href="@{/system/staff}">Staff</a></td>
+											<td>
+												<a th:href="@{/system/staff}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										<tr>
+											<td><a th:href="@{/employeeinfo}">Employee Information</a></td>
+											<td>
+												<a th:href="@{/employeeinfo}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										<tr th:if="${isCentral and menuProfile.M0206 ne null and menuProfile.M0206.display}">
+											<td><a th:href="@{/account/bankentry}" th:text="${menuProfile.M0206.screenprompt}">Bank Entry</a></td>
+											<td>
+												<a th:href="@{/account/bankentry}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										<tr>
+											<td><a th:href="@{/production/bom}">BOM/Recipe Master</a></td>
+											<td>
+												<a th:href="@{/production/bom}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										<tr>
+											<td><a th:href="@{/cadag}">Dag Master</a></td>
+											<td>
+												<a th:href="@{/cadag}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										<tr th:if="${isCentral and menuProfile.M0207 ne null and menuProfile.M0207.display}">
+											<td><a th:href="@{/mastersetup/termsdef}" th:text="${menuProfile.M0207.screenprompt}">Default Terms & Conditions</a></td>
+											<td>
+												<a th:href="@{/mastersetup/termsdef}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										<!--For Garments-->
+										<tr>
+											<td><a th:href="@{/recipemaster}">Recipe Master</a></td>
+											<td>
+												<a th:href="@{/recipemaster}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										<tr>
+											<td><a th:href="@{/cabom}">Bill Of Material (BOM) Setting For RMG FInishing</a></td>
+											<td>
+												<a th:href="@{/cabom}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										<tr>
+											<td><a th:href="@{/mastersetup/cacus?cacusType=CUS}">Buyer Master</a></td>
+											<td>
+												<a th:href="@{/mastersetup/cacus?cacusType=CUS}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										<tr>
+											<td><a th:href="@{/caagent}">Agent Master</a></td>
+											<td>
+												<a th:href="@{/caagent}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										<tr>
+											<td><a th:href="@{/machinemas}">Machine Master</a></td>
+											<td>
+												<a th:href="@{/machinemas}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+									</span>
+									
+									<span>
+										<tr>
+											<td colspan="2">Import/Export</td>
+										</tr>
+										<tr>
+											<td><a th:href="@{/importexport/listimportexport}">List Import/Export</a></td>
+											<td>
+												<a th:href="@{/importexport/listimportexport}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										<tr>
+											<td><a th:href="@{/importexport/transactioncodeimportexport}">Transaction Code Import/Export</a></td>
+											<td>
+												<a th:href="@{/importexport/transactioncodeimportexport}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										<tr>
+											<td><a th:href="@{/importexport/codesimportexport}">Codes & Parameters Import/Export</a></td>
+											<td>
+												<a th:href="@{/importexport/codesimportexport}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+									</span>
+
+									<!-- Branch Activities Customer Wise -->
+									<span>
+										<tr>
+											<td colspan="2" >Branch Activities</td>
+										</tr>
+										<tr>
+											<td><a th:href="@{/salesninvoice/opreqcus}">Requisition</a></td>
+											<td>
+												<a th:href="@{/salesninvoice/opreqcus}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+									</span>	
+
+									<!-- ACCOUNTS RECEIVABLE -->
+									<span th:if="${isCentral and menuProfile.M0800 ne null and menuProfile.M0800.display}">
+										<tr>
+											<td colspan="2" th:text="${menuProfile.M0800.screenprompt}">Accounts Receivable</td>
+										</tr>
+										<tr>
+											<td><a th:href="@{/arentry}">Receivable Entry</a></td>
+											<td>
+												<a th:href="@{/arentry}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										<tr th:if="${menuProfile.M0801 ne null and menuProfile.M0801.display}">
+											<td><a th:href="@{/salesninvoice/moneyreceipt}" th:text="${menuProfile.M0801.screenprompt}">Money Receipt</a></td>
+											<td>
+												<a th:href="@{/salesninvoice/moneyreceipt}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										<tr th:if="${menuProfile.M0802 ne null and menuProfile.M0802.display}">
+											<td><a th:href="@{/cusadjustment}" th:text="${menuProfile.M0802.screenprompt}">Customer Adjustment</a></td>
+											<td>
+												<a th:href="@{/cusadjustment}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										<tr th:if="${menuProfile.M0803 ne null and menuProfile.M0803.display}">
+											<td><a th:href="@{/cusopening}" th:text="${menuProfile.M0803.screenprompt}">Customer Opening</a></td>
+											<td>
+												<a th:href="@{/cusopening}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+									</span>
+
+
+
+									<!-- ACCOUNTS PAYABLE-->
+									<span th:if="${isCentral and menuProfile.M0900 ne null and menuProfile.M0900.display}">
+										<tr>
+											<td colspan="2" th:text="${menuProfile.M0900.screenprompt}">Accounts Payable</td>
+										</tr>
+										<tr th:if="${menuProfile.M0901 ne null and menuProfile.M0901.display}">
+											<td><a th:href="@{/purchasing/supplierpayment}" th:text="${menuProfile.M0901.screenprompt}">Supplier Payment</a></td>
+											<td>
+												<a th:href="@{/purchasing/supplierpayment}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										<tr th:if="${menuProfile.M0902 ne null and menuProfile.M0902.display}">
+											<td><a th:href="@{/supplieradjustment}" th:text="${menuProfile.M0902.screenprompt}">Supplier Adjustment</a></td>
+											<td>
+												<a th:href="@{/supplieradjustment}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										<tr th:if="${menuProfile.M0903 ne null and menuProfile.M0903.display}">
+											<td><a th:href="@{/supopening}" th:text="${menuProfile.M0903.screenprompt}">Supplier Opening</a></td>
+											<td>
+												<a th:href="@{/supopening}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+									</span>
+
+
+
+									<!-- PROCUREMENTS -->
+									<span>
+										<tr>
+											<td colspan="2">Procurement</td>
+										</tr>
+										<tr>
+											<td><a th:href="@{/procurements/poord}">Purchase Order</a></td>
+											<td>
+												<a th:href="@{/procurements/poord}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										<tr>
+											<td><a th:href="@{/procurements/pogrn}">GRN</a></td>
+											<td>
+												<a th:href="@{/procurements/pogrn}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										<tr>
+											<td><a th:href="@{/procurements/pogrndirect}">Direct Purchase</a></td>
+											<td>
+												<a th:href="@{/procurements/pogrndirect}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										<tr>
+											<td><a th:href="@{/procurements/purchasereturn}">Purchase Return</a></td>
+											<td>
+												<a th:href="@{/procurements/purchasereturn}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										<tr>
+											<td><a th:href="@{/procurement/requisition}">Purchase Requisition</a></td>
+											<td>
+												<a th:href="@{/procurement/requisition}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										<tr>
+											<td><a th:href="@{/procurement/requisition?reqtype=Packaging Item}">Packaging Item Requisition</a></td>
+											<td>
+												<a th:href="@{/procurement/requisition?reqtype=Packaging Item}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										<tr>
+											<td><a th:href="@{/procurement/requisition/allrequisition}">All Order Requisitions</a></td>
+											<td>
+												<a th:href="@{/procurement/requisition/allrequisition}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										<tr>
+											<td><a th:href="@{/procurement/poreqheader}">Service Requisition</a></td>
+											<td>
+												<a th:href="@{/procurement/poreqheader}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										<tr>
+											<td><a th:href="@{/procurement/poreqapprove}">Service Requisition Approval</a></td>
+											<td>
+												<a th:href="@{/procurement/poreqapprove}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										<tr>
+											<td><a th:href="@{/procurement/workorder}">Work Order</a></td>
+											<td>
+												<a th:href="@{/procurement/workorder}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+									</span>
+
+
+
+									<!-- SALES AND INVOICING -->
+									<span>
+										<span>
+											<tr>
+												<td colspan="2">Sales & Invoicing</td>
+											</tr>
+
+											<span>
+											<tr>
+												<td colspan="2" style="padding-left: 30px !important;">Branch Requisition</td>
+											</tr>
+											<tr>
+												<td><a class="sub2" th:href="@{/purchasing/bqls/details}">Requisitions Matrix</a></td>
+												<td>
+													<a th:href="@{/purchasing/bqls/details}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+												</td>
+											</tr>
+											<tr>
+												<td><a class="sub2" th:href="@{/purchasing/bqls}">Requisitions to Sales Order</a></td>
+												<td>
+													<a th:href="@{/purchasing/bqls}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+												</td>
+											</tr>
+											</span>
+
+											<tr>
+												<td><a th:href="@{/salesninvoice/opord}">Sales Order</a></td>
+												<td>
+													<a th:href="@{/salesninvoice/opord}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+												</td>
+											</tr>
+											<tr>
+												<td><a th:href="@{/salesninvoice/opreq}">Sales Requisition Order</a></td>
+												<td>
+													<a th:href="@{/salesninvoice/opreq}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+												</td>
+											</tr>
+									
+											<tr>
+												<td><a th:href="@{/salesninvoice/salesandinvoice}">Invoice Entry</a></td>
+												<td>
+													<a th:href="@{/salesninvoice/salesandinvoice}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+												</td>
+											</tr>
+											<tr>
+												<td><a th:href="@{/salesninvoice/directsales}">Direct Sales</a></td>
+												<td>
+													<a th:href="@{/salesninvoice/directsales}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+												</td>
+											</tr>
+											<tr>
+												<td><a th:href="@{/salesninvoice/deliveryorderchalan}">Delivery Chalan (Group)</a></td>
+												<td>
+													<a th:href="@{/salesninvoice/deliveryorderchalan}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+												</td>
+											</tr>
+											<tr>
+												<td><a th:href="@{/salesninvoice/salesreturn}">Sales Return</a></td>
+												<td>
+													<a th:href="@{/salesninvoice/salesreturn}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+												</td>
+											</tr>
+
+											<!-- <tr>
+												<td><a th:href="@{/inventory/productissue}">Product Issue Entry</a></td>
+												<td>
+													<a th:href="@{/inventory/productissue}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+												</td>
+											</tr> -->
+											
+											<span>
+											<tr>
+												<td colspan="2" style="padding-left: 30px !important;">Report</td>
+											</tr>
+											<tr>
+												<td><a class="sub2" th:href="@{/salesninvoice/ddisr}" target="_blank">Daily Distribution Report</a></td>
+												<td>
+													<a th:href="@{/salesninvoice/ddisr}" target="_blank" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+												</td>
+											</tr>
+											</span>
+										</span>
+									</span>
+
+
+									<!-- INVENTORY -->
+									<span>
+										<span>
+											<tr>
+												<td colspan="2">Inventory</td>
+											</tr>
+											<tr>
+												<td><a th:href="@{/inventory/imtrn}">Inventory</a></td>
+												<td>
+													<a th:href="@{/inventory/imtrn}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+												</td>
+											</tr>
+											<tr>
+												<td><a th:href="@{/inventory/openingentry}">Stock Opening Entry</a></td>
+												<td>
+													<a th:href="@{/inventory/openingentry}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+												</td>
+											</tr>
+											<tr>
+												<td><a th:href="@{/inventory/issueentry}">Damage/Issue Entry</a></td>
+												<td>
+													<a th:href="@{/inventory/issueentry}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+												</td>
+											</tr>
+											<tr>
+												<td><a th:href="@{/inventory/stocktake}">Stock Take</a></td>
+												<td>
+													<a th:href="@{/inventory/stocktake}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+												</td>
+											</tr>
+											<tr>
+												<td><a th:href="@{/inventory/transferorder}">Store Transfer Order</a></td>
+												<td>
+													<a th:href="@{/inventory/transferorder}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+												</td>
+											</tr>
+											<tr>
+												<td><a th:href="@{/inventory/asset}">Asset Transfer to Branch</a></td>
+												<td>
+													<a th:href="@{/inventory/asset}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+												</td>
+											</tr>
+											<tr>
+												<td><a th:href="@{/inventory/stocklist}">Stock List</a></td>
+												<td>
+													<a th:href="@{/inventory/stocklist}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+												</td>
+											</tr>
+											<tr>
+												<td><a th:href="@{/inventory/ mption}">Inventory Consumption Process</a></td>
+												<td>
+													<a th:href="@{/inventory/consumption}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+												</td>
+											</tr>
+											<tr th:if="${menuProfile.M0606 ne null and menuProfile.M0606.display}">
+												<td><a th:href="@{/inventory/storereq}" th:text="${menuProfile.M0606.screenprompt}">Store Requisition</a></td>
+												<td>
+													<a th:href="@{/inventory/storereq}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+												</td>
+											</tr>
+											<tr th:if="${menuProfile.M0607 ne null and menuProfile.M0607.display}">
+												<td><a th:href="@{/inventory/approvereq}" th:text="${menuProfile.M0607.screenprompt}">Approve Store Requisition</a></td>
+												<td>
+													<a th:href="@{/inventory/approvereq}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+												</td>
+											</tr>
+											<tr th:if="${menuProfile.M0608 ne null and menuProfile.M0608.display}">
+												<td><a th:href="@{/inventory/storeacknow}" th:text="${menuProfile.M0608.screenprompt}">Store Acknowledgement</a></td>
+												<td>
+													<a th:href="@{/inventory/storeacknow}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+												</td>
+											</tr>
+										</span>
+									</span>
+
+
+
+									<!-- PRODUCTION -->
+									<span>
+										<span>
+											<tr>
+												<td colspan="2">Service</td>
+											</tr>
+											<!--<tr>
+												<td><a th:href="@{/service/poreqheader}">Service Requisition</a></td>
+												<td>
+													<a th:href="@{/service/poreqheader}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+												</td>
+											</tr>
+											<tr>
+												<td><a th:href="@{/service/poreqapprove}">Service Requisition Approval</a></td>
+												<td>
+													<a th:href="@{/service/poreqapprove}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+												</td>
+											</tr>-->
+											<tr>
+										</span>
+									</span>	
+
+
+									<!-- PRODUCTION -->
+									<span>
+										<span>
+											<tr>
+												<td colspan="2">Production</td>
+											</tr>
+											<tr>
+												<td><a th:href="@{/production/suggestion}">Production Planning</a></td>
+												<td>
+													<a th:href="@{/production/suggestion}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+												</td>
+											</tr>
+											<tr>
+												<td><a th:href="@{/salesninvoice/salesorderchalan}">Production Chalan</a></td>
+												<td>
+													<a th:href="@{/salesninvoice/salesorderchalan}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+												</td>
+											</tr>
+											<tr>
+												<td><a th:href="@{/production/batch}">Production Process</a></td>
+												<td>
+													<a th:href="@{/production/batch}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+												</td>
+											</tr>
+											
+										</span>
+									</span>	
+
+
+									<!-- HOUSING MANAGEMENT -->
+									<span>
+										<tr>
+											<td colspan="2">Housing Management</td>
+										</tr>
+										<tr>
+											<td><a th:href="@{/landperson}">Personal Info</a></td>
+											<td>
+												<a th:href="@{/landperson}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td> 
+										</tr>
+										<tr>
+											<td><a th:href="@{/cacus}">Member Info</a></td>
+											<td>
+												<a th:href="@{/cacus}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										<tr>
+											<td><a th:href="@{/landsurveyor}">Surveyor Info</a></td>
+											<td>
+												<a th:href="@{/landsurveyor}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										<tr>
+											<td><a th:href="@{/landinfo}">Land Info</a></td>
+											<td>
+												<a th:href="@{/landinfo}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										<tr>
+											<td><a th:href="@{/landcommitteeinfo}">Committee Info</a></td>
+											<td>
+												<a th:href="@{/landcommitteeinfo}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										<tr>
+											<td><a th:href="@{/landevents}">Committee Events</a></td>
+											<td>
+												<a th:href="@{/landevents}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										<tr>
+											<td><a th:href="@{/landotherevents}">Other Events</a></td>
+											<td>
+												<a th:href="@{/landotherevents}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+									</span>
+									
+									<!--TRISHAL CONVENTION CENTER-->
+									<span>
+										<tr>
+											<td colspan="2">Convention Hall Module</td>
+										</tr>
+										<tr>
+											<td><a th:href="@{/conventionmanagement/hallbooking}">Convention Hall Booking</a></td>
+											<td>
+												<a th:href="@{/conventionmanagement/hallbooking}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										<tr>
+											<td><a th:href="@{/roommanagement}">Room Management</a></td>
+											<td>
+												<a th:href="@{/roommanagement}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+									</span>
+									
+									<!--POS MANAGEMENT-->
+									<span>
+										<tr>
+											<td colspan="2">POS</td>
+										</tr>
+										<tr>
+											<td><a th:href="@{/pos}">POS</a></td>
+											<td>
+												<a th:href="@{/pos}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										<tr>
+											<td><a th:href="@{/possettings}">POS Settings</a></td>
+											<td>
+												<a th:href="@{/possettings}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+
+										<tr>
+											<td><a th:href="@{/printsettings}">Print Settings</a></td>
+											<td>
+												<a th:href="@{/printsettings}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										<tr>
+											<td><a th:href="@{/shiftsettings}">Shift Settings</a></td>
+											<td>
+												<a th:href="@{/shiftsettings}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										<tr>
+											<td><a th:href="@{/tablesettings}">Table Settings</a></td>
+											<td>
+												<a th:href="@{/tablesettings}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										<tr>
+											<td><a th:href="@{/role}">Role</a></td>
+											<td>
+												<a th:href="@{/role}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										<tr>
+											<td><a th:href="@{/card}">Card</a></td>
+											<td>
+												<a th:href="@{/card}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										<tr>
+											<td><a th:href="@{/deliveryservice}">Delivery Service</a></td>
+											<td>
+												<a th:href="@{/deliveryservice}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										<tr>
+											<td><a th:href="@{/servicecharge}">Service Charge</a></td>
+											<td>
+												<a th:href="@{/servicecharge}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										<tr>
+											<td><a th:href="@{/unitofmeasurement}">Unit of Measurement</a></td>
+											<td>
+												<a th:href="@{/unitofmeasurement}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										<tr>
+											<td><a th:href="@{/permissions}">Permissions</a></td>
+											<td>
+												<a th:href="@{/permissions}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										<tr>
+											<td><a th:href="@{/promotion}">Promotion</a></td>
+											<td>
+												<a th:href="@{/promotion}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										<tr>
+											<td><a th:href="@{/posbusiness}">Business</a></td>
+											<td>
+												<a th:href="@{/posbusiness}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										<tr>
+											<td><a th:href="@{/posdashboard}">POS Dashboard</a></td>
+											<td>
+												<a th:href="@{/posdashboard}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+									</span>
+									
+									<!--GARMENTS MANAGEMENT SYSTEM-->
+									
+									<span>
+										<tr>
+											<td colspan="2">Merchandising </td>
+										</tr>
+										<tr>
+											<td><a th:href="@{/cafile}">Filewise FO Entry</a></td>
+											<td>
+												<a th:href="@{/cafile}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+									
+										<tr>
+											<td><a th:href="@{/pientry}">Buyer Order</a></td>
+											<td>
+												<a th:href="@{/pientry}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										<tr>
+											<td><a th:href="@{/pientry}">Budget Entry</a></td>
+											<td>
+												<a th:href="@{/pientry}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										<tr>
+											<td><a th:href="@{/pofodesn}">Fabric Order(FO)</a></td>
+											<td>
+												<a th:href="@{/pofodesn}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										<tr>
+											<td><a th:href="@{/pientry}">PI Entry</a></td>
+											<td>
+												<a th:href="@{/pientry}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										<tr>
+											<td><a th:href="@{/cateam}">Team Entry & Role Assign</a></td>
+											<td>
+												<a th:href="@{/cateam}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+									</span>
+
+									<span>
+										<tr>
+											<td colspan="2">Knit Production Plan</td>
+										</tr>
+										<tr>
+											<td><a th:href="@{/proplan}">Knit Production Plan</a></td>
+											<td>
+												<a th:href="@{/proplan}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										<tr>
+											<td><a th:href="@{/productionde}">Knit Production Transaction</a></td>
+											<td>
+												<a th:href="@{/productionde}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+									</span>
+
+									<span>
+										<tr>
+											<td colspan="2">RMG Batch Plan </td>
+										</tr>
+										<tr>
+											<td><a th:href="@{/batchplan}">Batch Plan Entry</a></td>
+											<td>
+												<a th:href="@{/batchplan}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										<tr>
+											<td><a th:href="@{/batchentry}">Batch Transaction</a></td>
+											<td>
+												<a th:href="@{/batchentry}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+									</span>
+
+									<span>
+										<tr>
+											<td colspan="2">Knit Dyeing</td>
+										</tr>
+										<tr>
+											<td><a th:href="@{/prplandy}">Dyeing Plan Entry </a></td>
+											<td>
+												<a th:href="@{/prplandy}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										<tr>
+											<td><a th:href="@{/prdying}">Dyeing Transaction Entry</a></td>
+											<td>
+												<a th:href="@{/prdying}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										<tr>
+											<td><a th:href="@{/prdyfin}">Dyeing Finishing Transaction</a></td>
+											<td>
+												<a th:href="@{/prdyfin}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										<tr>
+											<td><a th:href="@{/prqc}">QC Inspection Entry </a></td>
+											<td>
+												<a th:href="@{/prqc}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+									</span>
+
+									<span>
+										<tr>
+											<td colspan="2">Knit Dyeing Reprocess</td>
+										</tr>
+										<tr>
+											<td><a th:href="@{/prplandyr}">Dyeing Plan Entry (Reprocess) </a></td>
+											<td>
+												<a th:href="@{/prplandyr}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										<tr>
+											<td><a th:href="@{/prdyingr}">Dyeing Transaction Entry (Reprocess) </a></td>
+											<td>
+												<a th:href="@{/prdyingr}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										<tr>
+											<td><a th:href="@{/prdyfinr}">Dyeing Finishing Transaction (Reprocess) </a></td>
+											<td>
+												<a th:href="@{/prdyfinr}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										<tr>
+											<td><a th:href="@{/prqcre}">QC Inspection Entry (Reprocess)</a></td>
+											<td>
+												<a th:href="@{/prqcre}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+									</span>
+
+									<span>
+										<tr>
+											<td colspan="2">RMG Production</td>
+										</tr>
+										<tr>
+											<td><a th:href="@{/prcutplan}">Cutting Plan Entry </a></td>
+											<td>
+												<a th:href="@{/prcutplan}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										<tr>
+											<td><a th:href="@{/prcutng}">Cutting Transaction Entry </a></td>
+											<td>
+												<a th:href="@{/prcutng}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										<tr>
+											<td><a th:href="@{/prsewplan}">Sewing Plan Entry </a></td>
+											<td>
+												<a th:href="@{/prsewplan}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										<tr>
+											<td><a th:href="@{/prswng}">Sewing Transaction Entry</a></td>
+											<td>
+												<a th:href="@{/prswng}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										<tr>
+											<td><a th:href="@{/prqcfin}">QC Inpection Entry</a></td>
+											<td>
+												<a th:href="@{/prqcfin}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										<tr>
+											<td><a th:href="@{/prplanfin}">RMG Finishing Plan Entry </a></td>
+											<td>
+												<a th:href="@{/prplanfin}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										<tr>
+											<td><a th:href="@{/prfinshng}">RMG Finishing Transaction Entry</a></td>
+											<td>
+												<a th:href="@{/prfinshng}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										<tr>
+											<td><a th:href="@{/finlqc}">RMG Finished Goods Inspection </a></td>
+											<td>
+												<a th:href="@{/finlqc}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+									</span>
+									
+									<span>
+										<span>
+											<tr>
+												<td colspan="2">Requisition</td>
+											</tr>
+											<tr>
+												<td><a th:href="@{/purchasing/bqls}">Branches Requisition</a></td>
+												<td>
+													<a th:href="@{/purchasing/bqls}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+												</td>
+											</tr>
+											<tr>
+												<td><a th:href="@{/purchasing/bqls/details}">Branches Requisition Details</a></td>
+												<td>
+													<a th:href="@{/purchasing/bqls/details}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+												</td>
+											</tr>
+											<tr>
+												<td><a th:href="@{/purchasing/bqls/allopenreq}">All Open Requisitions of Branches</a></td>
+												<td>
+													<a th:href="@{/purchasing/bqls/allopenreq}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+												</td>
+											</tr>
+											<tr>
+												<td><a th:href="@{/procurement/requisition}">Order Requisition</a></td>
+												<td>
+													<a th:href="@{/procurement/requisition}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+												</td>
+											</tr>
+											<tr>
+												<td><a th:href="@{/procurement/requisition?reqtype=Packaging Item}">Order Requisition (Packaging Item)</a></td>
+												<td>
+													<a th:href="@{/procurement/requisition?reqtype=Packaging Item}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+												</td>
+											</tr>
+											<tr>
+												<td><a th:href="@{/procurement/requisition/allrequisition}">All Order Requisition</a></td>
+												<td>
+													<a th:href="@{/procurement/requisition/allrequisition}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+												</td>
+											</tr>
+										</span>
+									</span>
+
+									<!--ACCOUNTING-->
+									<span th:if="${menuProfile.M1000 ne null and menuProfile.M1000.display}">
+									<tr>
+										<td colspan="2" th:text="${menuProfile.M1000.screenprompt}">Accounting</td>
+									</tr>
+									<tr th:if="${isCentral and menuProfile.M1001 ne null and menuProfile.M1001.display}">
+										<td><a th:href="@{/account/accdefault}" th:text="${menuProfile.M1001.screenprompt}">Account Default</a></td>
+										<td>
+											<a th:href="@{/account/accdefault}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+										</td>
+									</tr>
+									<tr th:if="${isCentral and menuProfile.M1002 ne null and menuProfile.M1002.display}">
+										<td><a th:href="@{/account/acgroup?level=1}" th:text="${menuProfile.M1002.screenprompt}">Account Group</a></td>
+										<td>
+											<a th:href="@{/account/acgroup?level=1}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+										</td>
+									</tr>
+									<tr th:if="${isCentral and menuProfile.M1003 ne null and menuProfile.M1003.display}">
+										<td><a th:href="@{/account/coa}" th:text="${menuProfile.M1003.screenprompt}">Chart Of Account</a></td>
+										<td>
+											<a th:href="@{/account/coa}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+										</td>
+									</tr>
+									<tr th:if="${isCentral and menuProfile.M1004 ne null and menuProfile.M1004.display}">
+										<td><a th:href="@{/account/acsub}" th:text="${menuProfile.M1004.screenprompt}">Sub Account</a></td>
+										<td>
+											<a th:href="@{/account/acsub}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+										</td>
+									</tr>
+									<tr th:if="${isCentral and menuProfile.M1005 ne null and menuProfile.M1005.display}">
+										<td><a th:href="@{/account/voucher}" th:text="${menuProfile.M1005.screenprompt}">Voucher Entry</a></td>
+										<td>
+											<a th:href="@{/account/voucher}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+										</td>
+									</tr>
+									<tr th:if="${isCentral and menuProfile.M1006 ne null and menuProfile.M1006.display}">
+										<td><a th:href="@{/system/acyearend}" th:text="${menuProfile.M1006.screenprompt}">Year End Processing</a></td>
+										<td>
+											<a th:href="@{/system/acyearend}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+										</td>
+									</tr>
+									<tr th:if="${isCentral and menuProfile.M1007 ne null and menuProfile.M1007.display}">
+										<td><a th:href="@{/inventory/consumption}" th:text="${menuProfile.M1007.screenprompt}">Inventory Consumption Process</a></td>
+										<td>
+											<a th:href="@{/inventory/consumption}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+										</td>
+									</tr>
+									<!--GL INTERFACES-->
+									<span th:if="${menuProfile.M1008 ne null and menuProfile.M1008.display}">
+										<tr>
+											<td colspan="2" style="padding-left: 30px !important;" th:text="${menuProfile.M1008.screenprompt}">GL Interfaces</td>
+										</tr>
+										<tr th:if="${isCentral and menuProfile.M1009 ne null and menuProfile.M1009.display}">
+										<td><a class="sub2" th:href="@{/system/potoapi}" th:text="${menuProfile.M1009.screenprompt}">PO to GL Interface</a></td>
+										<td>
+											<a th:href="@{/system/potoapi}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+										</td>
+										</tr>
+										<tr th:if="${isCentral and menuProfile.M1010 ne null and menuProfile.M1010.display}">
+											<td><a class="sub2" th:href="@{/system/optoari}" th:text="${menuProfile.M1010.screenprompt}">OP to GL Interface</a></td>
+											<td>
+												<a th:href="@{/system/optoari}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										<tr th:if="${isCentral and menuProfile.M1011 ne null and menuProfile.M1011.display}">
+											<td><a class="sub2" th:href="@{/system/imtogli}" th:text="${menuProfile.M1011.screenprompt}">IM to GL Interface</a></td>
+											<td>
+												<a th:href="@{/system/imtogli}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										</span>	
+									</span>
+									
+									<!--HR AND PAYROLL-->
+									<span>
+										<tr>
+											<td colspan="2">HR & Payroll</td>
+										</tr>
+										<tr>
+											<td colspan="2">Master Setup</td>
+										</tr>
+										<tr>
+											<td><a th:href="@{/defaultset}">Default Setting</a></td>
+											<td>
+												<a th:href="@{/defaultset}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										<span>
+										<tr>
+											<td colspan="2">HR</td>
+										</tr>
+										<tr>
+											<td><a th:href="@{/hrpersonal}" >Personal Information</a></td>
+											<td>
+												<a th:href="@{/hrpersonal}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										</span>
+
+										<span>
+										<tr>
+											<td colspan="2">Payroll</td>
+										</tr>
+										<tr>
+											<td><a th:href="@{/paypersonal}">Personal Information</a></td>
+											<td>
+												<a th:href="@{/paypersonal}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										
+										<tr>
+											<td><a th:href="@{/system/pdtranstype}">PD Transaction Types</a></td>
+											<td>
+												<a th:href="@{/system/pdtranstype}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										<tr>
+											<td><a th:href="@{/payroll/pdloantrn}" >Loans & Advance Entry</a></td>
+											<td>
+												<a th:href="@{/payroll/pdloantrn}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										</span>
+									</span>
+									
+									<!--Landed Cost Management-->
+									<span>
+										<tr>
+											<td colspan="2">Landed Cost Management</td>
+										</tr>
+										<tr>
+											<td><a th:href="@{/cost/poordheader}">Purchase Order (LCM)</a></td>
+											<td>
+												<a th:href="@{/cost/poordheader}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										<tr>
+											<td><a th:href="@{/cost/pogrnheader}">Document Retirement Entry</a></td>
+											<td>
+												<a pogrnheader="@{/cost/pogrnheader}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										<tr>
+											<td><a th:href="@{/cost/lcinfo}">Import LC Info</a></td>
+											<td>
+												<a pogrnheader="@{/cost/lcinfo}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+									</span>
+
+
+									<!-- PROJECT MANAGEMENT -->
+									<span>
+										<tr>
+											<td colspan="2">Project Management</td>
+										</tr>
+										<tr>
+											<td><a th:href="@{/project/caproject}">Project Master</a></td>
+											<td>
+												<a th:href="@{/project/caproject}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										<tr>
+											<td><a th:href="@{/project/cawh}">Site Master</a></td>
+											<td>
+												<a th:href="@{/project/cawh}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										<tr>
+											<td><a th:href="@{/project/cawhbudget}">Budget Entry(Site)</a></td>
+											<td>
+												<a th:href="@{/project/cawhbudget}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+										<tr>
+											<td><a th:href="@{/project/imissueheader }">Item Consumption (Site)</a></td>
+											<td>
+												<a th:href="@{/project/imissueheader }" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+									</span>
+
+									<!-- REPORT -->
+									<span>
+										<tr>
+											<td colspan="2">Report</td>
+										</tr>
+										<tr>
+											<td><a th:href="@{/report}">All Report</a></td>
+											<td>
+												<a th:href="@{/report}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+									</span>
+
+									<span>
+										<tr>
+											<td><a th:href="@{/logout}" style="color: red !important; font-weight: bold; margin-left: 0px;">Logout</a></td>
+											<td>
+												<a th:href="@{/logout}" class="btn btn-sm btn-default pull-right"> <i class="fas fa-chevron-right"></i></a>
+											</td>
+										</tr>
+									</span>
+
+								</table>
+							</div>
+						</section>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Footer section -->
+		<div class="footer-section" th:include="commons :: footer-section"></div>
+	</body>
+</html>

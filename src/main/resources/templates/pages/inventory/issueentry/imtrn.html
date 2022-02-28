@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<title th:text="#{die.page.title}">Damage/Issue Entry</title>
+		<meta th:remove="tag" th:include="commons :: common-meta" />
+		<meta th:remove="tag" th:include="commons :: common-css" />
+		<meta th:remove="tag" th:include="commons :: common-js" />
+		<script>
+				function multiply() {
+	  			var qty = document.getElementById('qty').value;
+	  			var cost = document.getElementById('cost').value;
+	  			var mul = 0;
+          			mul = cost*qty;
+	  				document.getElementById('total').value = mul;
+	  				document.getElementById('totalamt').value = mul;
+				}	
+		</script>
+	</head>
+	<body>
+		<!-- Header section -->
+		<div class="header-section" th:include="commons :: header-section"></div>
+
+		<!-- Menu section -->
+		<div th:if="${menuVersion != null and menuVersion eq 'MENU_V2'}" class="menuv2" th:include="commons :: main-menu"></div>
+
+		<div th:if="${menuVersion == null or menuVersion eq 'MENU_V1'}" class="navbar-inverse menu-section">
+			<div class="container-fluid">
+				<div class="row">
+					<nav class="navbar navbar-inverse">
+						<div class="container-fluid">
+							<div class="row">
+								<div class="navbar-header">
+									<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+										<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+									</button>
+								</div>
+								<div class="collapse navbar-collapse" id="myNavbar">
+									<div class="nav navbar-nav">
+										<li><a th:href="@{/}"><i class="fas fa-home"></i> Home</a></li>
+										<li class="active"><a th:href="@{/inventory/issueentry}">Damage/Issue Entry</a></li>
+									</div>
+									<ul class="nav navbar-nav navbar-right" th:include="ckbigmenu :: dashboard-menu"></ul>
+								</div>
+							</div>
+						</div>
+					</nav>
+				</div>
+			</div>
+		</div>
+		
+		
+		<!-- Content section -->
+		<div>
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-md-12 content-area">
+
+						<div class="row">
+							<div class="col-md-6">
+								<!-- Section list head -->
+								<section id="data-maintenance" style="margin-top: 30px;">
+									<div class="section-header sectionbartoggle">
+										<h1 th:text="#{die.page.heading}">Damage/Issue Entry</h1>
+									</div>
+									<div class="form-action-button">
+										<a th:href="@{/inventory/issueentry}" class="btn btn-sm btn-default"><i class="fas fa-redo-alt"></i> <span style="margin-left:2px;" th:text="#{button.value.xclear}"> Clear</span></a>
+										<a th:if="${#strings.isEmpty(imtrn.ximtrnnum)}" th:href="@{/inventory/issueentry}" class="btn btn-sm btn-success confirm-btn"><i class="fas fa-save"></i> <span style="margin-left:2px;" th:text="#{button.value.xsave}"> Save</span></a>
+										<!--<a th:if="${not #strings.isEmpty(imtrn.ximtrnnum) and imtrn.zactive == true}" href="#" class="btn btn-sm btn-success update-btn"><i class="fas fa-edit"></i> <span style="margin-left:2px;" th:text="#{button.value.xupdate}"> Update</span></a>
+										<a th:if="${not #strings.isEmpty(imtrn.ximtrnnum) and imtrn.zactive == true}" th:href="@{/inventory/issueentry/archive/} + ${imtrn.ximtrnnum}" class="btn btn-sm btn-danger archive-btn-link"><i class="fas fa-trash-alt"></i> <span style="margin-left:2px;" th:text="#{button.value.xdelete}"> Delete</span></a>-->
+									</div>
+									<div class="section-body section-border">
+										<form id="mainform" class="form-horizontal" th:action="@{/inventory/issueentry/save}" th:object="${imtrn}" method="post" th:with="df=${'E, dd-MMM-yyyy'}">
+											<input type="hidden" th:field="*{xtype}"/>
+											<input type="hidden" th:if="${not #strings.isEmpty(imtrn.ximtrnnum)}" class="form-control" th:field="*{ximtrnnum}">
+											<div class="row">
+												<div class="col-md-6">
+													<div class="form-group" th:if="${#strings.isEmpty(imtrn.ximtrnnum)}">
+														<label class="control-label col-md-4" for="xtrnimtrn" th:text="#{die.form.label.xtrnimtrn}">Prefix : </label>
+														<div class="col-md-5">
+															<select class="form-control" th:field="*{xtrn}">
+																<option th:each="prefix : ${imtrnprefix}" th:value="${prefix.xtrn}" th:text="${prefix.xtrn}"></option>
+															</select>
+														</div>
+													</div>
+
+													<div class="form-group" th:if="${not #strings.isEmpty(imtrn.ximtrnnum)}">
+														<label class="control-label col-md-4" for="ximtrnnum" th:text="#{die.form.label.ximtrnnum}">Imt Number : </label>
+														<div class="col-md-8">
+															<input type="text" class="form-control" th:value="*{ximtrnnum}" disabled="disabled">
+														</div>
+													</div>
+
+													<div class="form-group datepicker">
+														<label class="control-label col-md-4" for="xdate" th:text="#{die.form.label.xdate}">Date : </label>
+														<div class="input-group date col-md-6 datepicker">
+															<input 	type="datepicker" 
+																	class="form-control" 
+																	id="xdate"
+																	name="xdate"
+																	required="required"
+																	th:value="${imtrn.xdate == null ? #dates.format(#dates.createNow(), df) : #dates.format(imtrn.xdate, df)}"/>
+															<div class="input-group-addon">
+																<span class="glyphicon glyphicon-calendar"></span>
+															</div>
+														</div>
+													</div>
+
+													<!--<div class="form-group">
+														<label class="control-label col-md-4" for="xwh" th:text="#{die.form.label.xwh}">Warehouse : </label>
+														<div class="col-md-8">
+															<select class="form-control" th:field="*{xwh}">
+																<option th:each="wh : ${warehouses}" th:value="${wh.xcode}" th:text="${wh.xcode}+'-'+${wh.xlong}"></option>
+															</select>
+														</div>
+													</div>-->
+													
+													<div class="form-group">
+														<label class="control-label col-md-4" for="xhwh">Project/Business</label>
+														<div class="col-sm-8">
+															<input 	type="text" 
+																class="form-control searchsuggest xhwhsearch" 
+																placeholder="Search..." 
+																th:value="${#strings.isEmpty(imtrn.xhwh) ? '' : imtrn.xhwh + '-' + imtrn.projectName}" 
+																th:attr="search-url='search/allproject'"
+																/>
+															<input type="hidden" class="required" id="search-val" th:field="*{xhwh}" value=""/>
+															<input type="hidden" id="search-des" th:value="*{xhwh}"/>
+														</div>
+													</div>
+
+													<div class="form-group">
+														<label class="control-label col-sm-4" for="xwh" >Site/Store</label>
+														<div class="col-sm-8">
+															<select th:field="*{xwh}" class="form-control">
+																<option value="">-- Select --</option>
+																<option th:each="s : ${allcodes}" th:value="${s.xcode}" th:text="${s.xcode + ' - ' + s.xcodename}"></option>
+															</select>
+														</div>
+													</div>
+
+													<div class="form-group" th:if="${#strings.isEmpty(imtrn.ximtrnnum)}">
+														<label class="control-label col-md-4" for="xitem" th:text="#{die.form.label.xitem}">Item : </label>
+														<div class="col-md-8">
+															<input 	type="text" 
+																	class="form-control searchsuggest xitemsearch" 
+																	placeholder="Search..." 
+																	th:value="${imtrn.xitem}" 
+																	th:attr="search-url='search/caitem'"/>
+															<input type="hidden" id="search-val" th:field="*{xitem}" class="search-xitem" value=""/>
+															<input type="hidden" id="search-des" th:value="*{xitem}"/>
+														</div>
+													</div>
+
+													<div class="form-group" th:if="${not #strings.isEmpty(imtrn.ximtrnnum)}">
+														<label class="control-label col-md-4" for="xitem" th:text="#{die.form.label.xitem}">Item : </label>
+														<div class="col-md-8">
+															<input type="hidden" th:field="*{xitem}" class="form-control"/>
+															<input type="text" th:value="${imtrn.xitem + ' - ' + imtrn.itemdes}" class="form-control" disabled="disabled"/>
+														</div>
+													</div>
+													
+													<div class="form-group">
+														<label class="control-label col-md-4" for="xunit" th:text="#{die.form.label.xunit}">Unit : </label>
+														<div class="col-md-8">
+															<input type="hidden" th:field="*{xunit}" class="form-control"/>
+															<input type="text" th:value="*{xunit}" class="form-control unit" disabled="disabled"/>
+														</div>
+													</div>
+
+													<div class="form-group">
+														<label class="control-label col-md-4" for="xvoucher" th:text="#{die.form.label.xvoucher}">Voucher :</label>
+														<div class="col-md-8">
+															<input type="text" class="form-control" th:field="*{xvoucher}" disabled="disabled">
+														</div>
+													</div> 
+												</div>
+												<div class="col-md-6">
+													<div class="form-group">
+														<label class="control-label col-md-4" for="xqty" th:text="#{die.form.label.xqty}">Quantity : </label>
+														<div class="col-md-5">
+															<input type="text" class="form-control" onblur="multiply()" id="qty" th:field="*{xqty}" min="1">
+														</div>
+													</div>
+
+													<div class="form-group">
+														<label class="control-label col-md-4" for="xrate" th:text="#{die.form.label.xrate}">Rate : </label>
+														<div class="col-md-5">
+															<input type="hidden" class="form-control" id="cost" th:field="*{xrate}"/>
+															<input type="text" class="form-control" onblur="multiply()" id="cost" th:field="*{xrate}" disabled="disabled"/>
+														</div>
+													</div>
+													<div class="form-group">
+														<label class="control-label col-md-4" for="xval" th:text="#{die.form.label.xval}">Amount : </label>
+														<div class="col-md-4">
+															<input type="hidden" class="form-control" id="totalamt" th:field="*{xval}"/>
+															<input type="text" class="form-control" id="total" th:value="*{xval}" disabled="disabled"/>
+														</div>
+													</div>
+												
+													<div class="form-group">
+														<label class="control-label col-md-4" for="xref" th:text="#{die.form.label.xref}">Ref : </label>
+														<div class="col-md-8">
+															<input type="text" class="form-control" th:field="*{xref}">
+														</div>
+													</div>
+																																					
+													<div class="form-group">
+														<label class="control-label col-md-4" for="xnote" th:text="#{die.form.label.xnote}">Note : </label>
+														<div class="col-md-8">
+														    <input type="hidden" class="form-control " th:field="*{xnote}"/>
+															<input type="text" class="form-control" th:value="*{xnote}" disabled="disabled"/>												
+														</div>
+													</div>
+												</div>
+											</div>
+										</form>
+									</div>
+								</section>
+							</div>
+
+							<div class="col-md-6">
+								<section id="list-manager" style="margin-top: 30px;">
+									<div class="section-header sectionbartoggle">
+										<h1>All Inventory Issuse Entries</h1>
+									</div>
+									<div class="section-body">
+										<table class="table table-striped table-bordered datatable nowrap">
+											<thead>
+												<tr>
+													<th th:text="#{die.table.heading.ximtrnnum}">IM Trn No</th>
+													<th th:text="#{die.table.heading.xdate}">Date</th>
+													<th th:text="#{die.table.heading.xitem}">Item</th>
+													<th th:text="#{die.table.heading.xwh}">Site/Store</th>
+													<th th:text="#{die.table.heading.xqty}">Qty</th>
+													<th th:text="#{die.table.heading.xunit}">Unit</th>
+												</tr>
+											</thead>
+											<tbody th:with="df=${'E, dd-MMM-yyyy'}">
+												<tr th:each="imtrn : ${allImtrnlist}">
+													<td>
+														<a th:href="@{/inventory/issueentry/} + ${imtrn.ximtrnnum}" th:text="${imtrn.ximtrnnum}"></a>
+													</td>
+													<td  th:text="${#dates.format(imtrn.xdate, df)}"></td>
+													<td>
+														<a th:href="@{/mastersetup/caitem/} + ${imtrn.xitem}" th:text="${imtrn.itemdes}" target="_blank"></a>
+													</td>
+													<td th:text="${imtrn.xwh + ' - ' + imtrn.storename}"></td>
+													<td th:text="${imtrn.xqty}"></td>
+													<td th:text="${imtrn.xunit}"></td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</section>
+							</div>
+
+							<div class="col-md-12">
+							<section th:if="${not #strings.isEmpty(imtrn.xvoucher)}" id="data-maintenance" style="margin-top: 30px;">
+								<div class="section-header sectionbartoggle">
+									<h1 th:text="'Voucher Details of ' + ${imtrn.xvoucher}"></h1>
+								</div>
+								<div class="section-body">
+									<table class="table table-striped table-bordered normal-table nowrap" id="voucherdetailtable" th:fragment="voucherdetailtable">
+										<thead>
+											<tr>
+												<th th:text="#{die.modal.table.heading.xrow}">SN.</th>
+												<th th:text="#{die.modal.table.heading.xacc}">Account</th>
+												<th th:text="#{die.modal.table.heading.xsub}">Sub Account</th>
+												<th th:text="#{die.modal.table.heading.xlong}">Note</th>
+												<th th:text="#{die.modal.table.heading.xdebit}" class="text-right">Debit</th>
+												<th th:text="#{die.modal.table.heading.xcredit}" class="text-right">Credit</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr th:each="d,n : ${acdetails}">
+												<td th:text="${d.xrow}"></td>
+												<td>
+													<a th:href="@{/account/coa/} + ${d.xacc}" target="_blank" th:text="${d.xacc} + ' - ' + ${d.accountname}"></a>
+												</td>
+												<td th:text="${#strings.isEmpty(d.xsub) ? '' : d.xsub + ' - ' + d.xorg}"></td>
+												<td th:text="${d.xlong}"></td>
+												<td class="text-right" th:text="${d.xdebit}"></td>
+												<td class="text-right" th:text="${d.xcredit}"></td>
+											</tr>
+										</tbody>
+										<tfoot>
+											<th colspan="4" class="text-right" th:text="#{die.modal.table.heading.xtotal}">Total</th>
+											<th class="text-right" th:text="${totalDebit}">0</th>
+											<th class="text-right" th:text="${totalCredit}">0</th>
+										</tfoot>
+									</table>
+								</div>
+							</section>
+						</div>
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Footer section -->
+		<div class="footer-section" th:include="commons :: footer-section"></div>
+
+		<script type="text/javascript" th:src="@{/assets/js/ck-ui/ck-search-suggest.js}"></script>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				$('.xitemsearch').on('blur', function(){
+					setTimeout(() => {
+						loadingMask2.show(),
+						$.ajax({
+							url : getBasepath() + '/inventory/issueentry/itemdetail/' + $('input[name="xitem"]').val(),
+							type : 'GET',
+							success : function(data) {
+								loadingMask2.hide();
+								$('input[name="xunit"]').val(data.xunit);
+								$('.unit').val(data.xunit);
+							},
+							error : function(jqXHR, status, errorThrown){
+								showMessage(status, "Something went wrong .... ");
+								loadingMask2.hide();
+							}
+						})
+					}, 1000);
+				});
+			});
+		</script>
+		
+		<script type="text/javascript">
+			$(document).ready(function(){
+				// Init ui for modal
+				ck.ui.config.buttonevent();
+	
+				$('.xhwhsearch').on('blur', function(){
+					setTimeout(() => {
+						if($('input[name="xhwh"]').val() == ''){
+							$("#xwh option").remove(); 
+							var mySelect = $('#xwh');
+							mySelect.append(
+								$('<option></option>').val("").html("-- Select --")
+							);
+							return;
+						}
+	
+	
+						loadingMask2.show();
+						$.ajax({
+							url : getBasepath() + '/inventory/issueentry/allcodesbyproject/' + $('input[name="xhwh"]').val(),
+							type : 'GET',
+							success : function(data) {
+								loadingMask2.hide();
+								if(data == undefined || data == null) return;
+	
+								$("#xwh option").remove(); 
+								var mySelect = $('#xwh');
+								mySelect.append(
+									$('<option></option>').val("").html("-- Select --")
+								);
+								$.each(data, function(val, obj) {
+									mySelect.append(
+										$('<option></option>').val(obj.xcode).html(obj.xcode + ' - ' + obj.xcodename)
+									);
+								});
+	
+							},
+							error : function(jqXHR, status, errorThrown){
+								showMessage(status, "Something went wrong .... ");
+								loadingMask2.hide();
+							}
+						})
+					}, 1000);
+				});
+			});
+		</script>
+	</body>
+</html>

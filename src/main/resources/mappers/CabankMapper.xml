@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.asl.mapper.CabankMapper">
+	<insert id="save" parameterType="Cabank">
+		<selectKey keyProperty="xbank" resultType="String" order="BEFORE">
+			SELECT Func_GetTrn('${zid}', '${xtypetrn}', '${xtrn}', 2) FROM DUAL
+		</selectKey>
+		INSERT INTO cabank
+		(
+			xbank,
+			zemail,
+			xname,
+			xbranch,
+			xmadd,
+			xacc,
+			xswiftcode,
+			xtypetrn,
+			xtrn,
+
+			zid,
+			zauserid,
+			zaip,
+			zactive,
+			ztime
+		)
+		VALUES
+		(
+			#{xbank, jdbcType=VARCHAR},
+			#{zemail, jdbcType=VARCHAR},
+			#{xname, jdbcType=VARCHAR},
+			#{xbranch, jdbcType=VARCHAR},
+			#{xmadd, jdbcType=VARCHAR},
+			#{xacc, jdbcType=VARCHAR},
+			#{xswiftcode, jdbcType=VARCHAR},
+			#{xtypetrn, jdbcType=VARCHAR},
+			#{xtrn, jdbcType=VARCHAR},
+
+			#{zid, jdbcType=VARCHAR},
+			#{zauserid, jdbcType=VARCHAR},
+			#{zaip, jdbcType=VARCHAR},
+			#{zactive, jdbcType=VARCHAR},
+			#{ztime, jdbcType=TIMESTAMP}
+		) 
+	</insert>
+	
+	<update id="update" parameterType="Cabank">
+		UPDATE
+			cabank
+		SET
+			zemail=#{zemail, jdbcType=VARCHAR},
+			xname=#{xname, jdbcType=VARCHAR},
+			xbranch=#{xbranch, jdbcType=VARCHAR},
+			xmadd=#{xmadd, jdbcType=VARCHAR},
+			xacc=#{xacc, jdbcType=VARCHAR},
+			xswiftcode=#{xswiftcode, jdbcType=VARCHAR},
+			xtypetrn=#{xtypetrn, jdbcType=VARCHAR},
+			xtrn=#{xtrn, jdbcType=VARCHAR},
+
+			zuuserid=#{zuuserid, jdbcType=VARCHAR},
+			zuip=#{zuip, jdbcType=VARCHAR},
+			zactive=#{zactive, jdbcType=VARCHAR},
+			zutime=#{zutime, jdbcType=TIMESTAMP}
+		WHERE
+			xbank=#{xbank, jdbcType=VARCHAR}
+			AND zid=#{zid, jdbcType=VARCHAR}
+	</update>
+
+	<delete id="delete">
+		DELETE
+		FROM
+			cabank
+		WHERE
+			xbank=#{xbank} 
+			AND zid=#{zid} 
+	</delete>
+
+	<select id="findCaBankByXbank" resultType="Cabank">
+		SELECT 
+			cabank.*,
+			acmst.xdesc as accountname 
+		FROM 
+			cabank 
+			left join acmst on acmst.xacc = cabank.xacc and acmst.zid=cabank.zid
+		WHERE 
+			cabank.xbank=#{xbank} 
+			AND cabank.zid=#{zid} 
+	</select>
+
+	<select id="getAllCaBank" resultType="Cabank">
+		SELECT 
+			cabank.*,
+			acmst.xdesc as accountname 
+		FROM 
+			cabank
+			left join acmst on acmst.xacc = cabank.xacc and acmst.zid=cabank.zid 
+		WHERE 
+			cabank.zid=#{zid} 
+	</select>
+	
+	<select id="searchBank" resultType="Cabank">
+		SELECT 
+			* 
+		FROM 
+			cabank 
+		WHERE 
+			(UPPER(xbank) LIKE '%' || #{xbank} || '%' OR UPPER(xname) LIKE '%' || #{xbank} || '%') 
+			AND zid=#{zid} 
+			AND zactive='1'
+	</select>
+	
+	
+</mapper>

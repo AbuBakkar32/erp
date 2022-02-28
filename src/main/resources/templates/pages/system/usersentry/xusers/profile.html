@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+	<head>
+		<title>Profile</title>
+		<meta th:remove="tag" th:include="commons :: common-meta"/>
+		<meta th:remove="tag" th:include="commons :: common-css"/>
+		<meta th:remove="tag" th:include="commons :: common-js"/>
+	</head>
+	<body>
+
+		<!-- Header section -->
+		<div class="header-section" th:include="commons :: header-section"></div>
+
+		<!-- Menu section -->
+		<div th:if="${menuVersion != null and menuVersion eq 'MENU_V2'}" class="menuv2" th:include="commons :: main-menu"></div>
+
+		<div th:if="${menuVersion == null or menuVersion eq 'MENU_V1'}" class="navbar-inverse menu-section">
+			<div class="container">
+				<div class="row">
+					<nav class="navbar navbar-inverse">
+						<div class="container-fluid">
+							<div class="row">
+								<div class="navbar-header">
+									<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+										<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+									</button>
+								</div>
+								<div class="collapse navbar-collapse" id="myNavbar">
+									<div class="nav navbar-nav">
+										<li><a th:href="@{/}">Dashboard</a></li>
+										<li class="active"><a th:href="@{/system/profile}">Profile Maintenance</a></li>
+										<li><a th:href="@{/system/profile/profilemanager}">Profile Manager</a></li>
+									</div>
+									<ul class="nav navbar-nav navbar-right" th:include="ckbigmenu :: dashboard-menu"></ul>
+									<ul class="nav navbar-nav navbar-right navbar-action-buttons">
+										<li th:if="${not #strings.isEmpty(profile.profileId)}" class="add-btn editmode"><a th:href="@{/system/profile}">Add</a></li>
+										<li th:if="${not #strings.isEmpty(profile.profileId) and profile.status.description == 'Live'}" class="update-btn editmode"><a href="#">Update</a></li>
+										<li th:classappend="${not #strings.isEmpty(profile.profileId) ? 'nodisplay' : ''}" class="confirm-btn viewmode"><a href="#">Confirm</a></li>
+										<li th:classappend="${not #strings.isEmpty(profile.profileId) ? 'nodisplay' : ''}" class="cancel-btn viewmode"><a href="#">Cancel</a></li>
+										<li th:if="${not #strings.isEmpty(profile.profileId) and profile.status.description == 'Live'}" class="archive-btn editmode"><a th:href="@{/system/profile/archive/} + ${profile.profileId}" class="archive-btn-link">Archive</a></li>
+										<li th:if="${not #strings.isEmpty(profile.profileId) and profile.status.description == 'Deleted'}" class="restore-btn editmode"><a th:href="@{/system/profile/restore/}  + ${profile.profileId}" class="restore-btn-link">Restore</a></li>
+										<li th:if="${not #strings.isEmpty(profile.profileId) and #strings.isEmpty(profile.copyid) and profile.status.description == 'Live'}" class="copy-btn editmode"><a th:href="@{/system/profile/}  + ${profile.profileId} + '/copy'">Copy</a></li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</nav>
+				</div>
+			</div>
+		</div>
+
+		<!-- Content section -->
+		<div>
+			<div class="container">
+				<div class="row">
+					<div class="col-md-12 content-area">
+
+						<!-- Section list head -->
+						<section id="user-maintenance" style="margin-top: 10px;">
+							<div class="section-header sectionbartoggle">
+								<h1><i class="fas fa-chevron-down"></i> Profile</h1>
+							</div>
+							<div class="section-body togglebox">
+								<form id="mainform" class="form-horizontal" th:action="@{/system/profile/save}" method="post" th:object="${profile}">
+									<input type="hidden" th:field="*{profileId}"/>
+									<div class="row">
+										<div class="col-md-6">
+											<div class="form-group">
+												<label class="control-label col-sm-4" for="profileCode">Profile code: </label>
+												<div class="col-sm-8">
+													<input type="text" class="form-control" th:field="*{profileCode}" maxlength="50" required="required">
+												</div>
+											</div>
+											<div class="form-group">
+												<label class="control-label col-sm-4" for="description">Description: </label>
+												<div class="col-sm-8">
+													<input type="text" class="form-control" th:field="*{description}">
+												</div>
+											</div>
+											<div class="form-group">
+												<label class="control-label col-sm-4" for="profileType">Profile type: </label>
+												<div class="col-sm-8">
+													<div class="radio">
+														<label><input type="radio" class="form-control-input2" th:field="*{profileType}" th:value="${T(com.ibtl.enums.ProfileType).U}" th:disabled="${profile.profileId != null}" required="required"/>User profile</label>
+													</div>
+													<div class="radio">
+														<label><input type="radio" class="form-control-input2" th:field="*{profileType}" th:value="${T(com.ibtl.enums.ProfileType).M}" th:disabled="${profile.profileId != null}" required="required"/>Menu profile</label>
+													</div>
+													<div class="radio">
+														<label><input type="radio" class="form-control-input2" th:field="*{profileType}" th:value="${T(com.ibtl.enums.ProfileType).R}" th:disabled="${profile.profileId != null}" required="required"/>Report profile</label>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</form>
+							</div>
+						</section>
+
+						<section th:if="${profile.profileId != null && profile.profileType == T(com.ibtl.enums.ProfileType).M}">
+							<div class="section-header sectionbartoggle">
+								<h1><i class="fas fa-chevron-down"></i> Menu options</h1>
+							</div>
+							<div class="section-body togglebox">
+								<table class="table table-stripped table-hover" id="profilelinetable" th:fragment="menuProfilelinetable">
+									<thead>
+										<tr>
+											<th>Prompts</th>
+											<th style="text-align: center">Display</th>
+											<th>Menu text</th>
+											<th style="text-align: right;">Action</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr th:each="pl, in : ${menuprofile.profileLines}">
+											<td th:text="${pl.managerPrompt}">Prompts</td>
+											<td style="text-align: center;" th:text="${pl.display ? 'Y' : 'N'}"></td>
+											<td th:text="${pl.screenPrompt}"></td>
+											<td style="text-align: right;">
+												<button type="button" 
+														class="btn btn-default btn-edit editmode"
+														th:attr="data-url=@{/system/profile/profilelinemodal/} + ${pl.profileId} + '/' + ${pl.profileLineId} + '/' + ${pl.profileCode} + '/' + ${pl.profileType} + '/show', data-target-modal='menuprofilelinemodal'"
+														><i class="fas fa-edit"></i></button>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</section>
+
+						<section th:if="${profile.profileId != null && profile.profileType == T(com.ibtl.enums.ProfileType).R}">
+							<div class="section-header sectionbartoggle">
+								<h1><i class="fas fa-chevron-down"></i> Report options</h1>
+							</div>
+							<div class="section-body togglebox">
+								<table class="table table-stripped table-hover" id="profilelinetable" th:fragment="reportProfilelinetable">
+									<thead>
+										<tr>
+											<th>Report Code</th>
+											<th style="text-align: center">Display</th>
+											<th>Report Name</th>
+											<th style="text-align: right;">Action</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr th:each="pl, in : ${reportprofile.profileLines}">
+											<td th:text="${pl.managerPrompt}">Prompts</td>
+											<td style="text-align: center;" th:text="${pl.display ? 'Y' : 'N'}"></td>
+											<td th:text="${pl.screenPrompt}"></td>
+											<td style="text-align: right;">
+												<button type="button" 
+														class="btn btn-default btn-edit editmode"
+														th:attr="data-url=@{/system/profile/profilelinemodal/} + ${pl.profileId} + '/' + ${pl.profileLineId} + '/' + ${pl.profileCode} + '/' + ${pl.profileType} + '/show', data-target-modal='menuprofilelinemodal'"
+														><i class="fas fa-edit"></i></button>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</section>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Modal -->
+		<div id="menuprofilelinemodal-section"></div>
+
+		<!-- Footer section -->
+		<div class="footer-section" th:include="commons :: footer-section"></div>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				bindTableButtonsEvent($('table#profilelinetable'));
+			})
+		</script>
+	</body>
+</html>

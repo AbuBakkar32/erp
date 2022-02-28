@@ -1,0 +1,118 @@
+<!-- Modal -->
+<div id="opdodirectdetailmodal" th:fragment="opdodirectdetailmodal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="true" xmlns:th="http://www.thymeleaf.org">
+	<div class="modal-dialog modal-lg">
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h4 class="modal-title">Add/Update Item</h4>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<form id="mainform-modal" th:action="@{/salesninvoice/directsales/opdodirectdetail/save}" method="post" class="form-horizontal" th:object="${opdodetail}">
+						<input type="hidden" th:field="*{xdornum}"/>
+						<input type="hidden" th:field="*{xrow}"/>
+						<input type="hidden" th:field="*{xdorrow}"/>
+						<input type="hidden" th:field="*{prevqty}"/>
+						<div class="col-md-6">
+							<div class="form-group" th:if="${opdodetail.xrow == 0}">
+								<label class="control-label col-sm-4" for="xitem">Item</label>
+								<div class="col-sm-8">
+									<input 	type="text" 
+											class="form-control searchsuggest xitemsearch" 
+											placeholder="Search..." 
+											th:value="${#strings.isEmpty(opdodetail.xitem) ? '' : opdodetail.xitem + ' - ' + opdodetail.xitemdesc}"
+											th:attr="search-url='search/caitem'"/>
+									<input type="hidden" id="search-val" th:field="*{xitem}" class="search-xitem" value=""/>
+									<input type="hidden" id="search-des" th:value="*{xitem}"/>
+								</div>
+							</div>
+							<div class="form-group" th:if="${opdodetail.xrow != 0}">
+								<label class="control-label col-sm-4" for="xitem">Item</label>
+								<div class="col-sm-8">
+									<input type="hidden" th:field="*{xitem}"/>
+									<input type="text" th:value="${#strings.isEmpty(opdodetail.xitem) ? '' : opdodetail.xitem + ' - ' + opdodetail.xitemdesc}" class="form-control" disabled="disabled"/>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="control-label col-sm-4" for="xunitsel">Unit</label>
+								<div class="col-sm-8">
+									<input type="hidden" th:field="*{xunitsel}"/>
+									<input type="text" th:value="${opdodetail.xunitsel}" class="form-control xunitsel-display" disabled="disabled"/>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="control-label col-sm-4" for="xqtyord">Qty</label>
+								<div class="col-sm-8">
+									<input type="text"  class="form-control qty" th:field="*{xqtyord}" min="0"/>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="control-label col-sm-4" for="xrate">Rate</label>
+								<div class="col-sm-8">
+									<input type="text"  th:field="*{xrate}" class="form-control" min="0"/>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="form-group">
+								<label class="control-label col-sm-4" for="xlong">Note</label>
+								<div class="col-sm-8">
+									<textarea rows="6" cols="" class="form-control" th:field="*{xlong}"></textarea>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-success btn-sm confirm-btn-modal">Submit</button>
+				<button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+		<script type="text/javascript" th:src="@{/assets/js/ck-ui/ck-search-suggest.js}"></script>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				// Init ui for modal
+				ck.ui.config.buttonevent();
+
+				$('.xitemsearch').on('blur', function(){
+					setTimeout(() => {
+						if($('input[name="xitem"]').val() == ''){
+							$('input.xunitsel-display').val('');
+							$('input[name="xrate"]').val('');
+							$("#xdorrow").val(0);
+							$("#prevqty").val(0);
+							$("#xqtyord").val(0);
+							return;
+						}
+
+						loadingMask2.show();
+						$.ajax({
+							url : getBasepath() + '/mastersetup/caitem/itemdetail/' + $('input[name="xitem"]').val().split("|")[0],
+							type : 'GET',
+							success : function(data) {
+								loadingMask2.hide();
+
+								$('input[name="xunitsel"]').val(data.xunitpur);
+								$('input.xunitsel-display').val(data.xunitpur);	
+								$('input[name="xrate"]').val(data.xrate);
+								$(".qty").focus();
+								$("#xdorrow").val($('input[name="xitem"]').val().split("|")[1]);
+								$("#prevqty").val($('input[name="xitem"]').val().split("|")[2]);
+								$("#xqtyord").val($('input[name="xitem"]').val().split("|")[2]);
+							},
+							error : function(jqXHR, status, errorThrown){
+								showMessage(status, "Something went wrong .... ");
+								loadingMask2.hide();
+							}
+						})
+					}, 1000);
+				});
+	
+			});
+		</script>
+	</div>
+</div>

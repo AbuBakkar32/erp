@@ -1,0 +1,395 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.asl.mapper.ArhedMapper">
+	<insert id="saveArhed" parameterType="Arhed">
+		<selectKey keyProperty="xvoucher" resultType="String" order="BEFORE">
+			SELECT Func_GetTrn('${zid}', '${xtrntype}','${xtype}', 6) FROM DUAL
+		</selectKey>
+		INSERT INTO Arhed
+		(
+			xvoucher,
+			xdate,
+			xcus,
+			xbank,
+			xwh,
+			xprime,
+			xbalprime,
+			xpaymenttype,
+			xref,
+			xdateref,
+			xvatait,
+			xvatamt,
+			xaitamt,
+			xstatuschq,
+			xdiscprime,
+			xstatusbnk,
+			xstatusjv,
+			xnote,
+			xdocnum,
+			xtypetrn,
+			xbase,
+			xsign,
+			xtype,
+			xcusledbal,
+			xtrn,
+			xstaff,
+			xstatus,
+			xpaymentterm,
+			xtypeobj,
+			xsub,
+			xtypeadj,
+			xtyperec,
+			xinvnum,
+			xcur,
+			xacc,
+			xland,
+			xpurpose,
+			
+			zid,
+			zauserid,
+			zuuserid,
+			zaip,
+			zuip,
+			zactive,
+			ztime,
+			zutime
+		)
+		VALUES
+		(
+			#{xvoucher},
+			#{xdate, jdbcType=DATE},
+			#{xcus, jdbcType=VARCHAR},
+			#{xbank, jdbcType=VARCHAR},
+			#{xwh, jdbcType=VARCHAR},
+			#{xprime, jdbcType=DECIMAL},
+			#{xbalprime, jdbcType=DECIMAL},
+			#{xpaymenttype, jdbcType=VARCHAR},
+			#{xref, jdbcType=VARCHAR},
+			#{xdateref, jdbcType=DATE},
+			#{xvatait, jdbcType=VARCHAR},
+			#{xvatamt, jdbcType=DECIMAL},
+			#{xaitamt, jdbcType=DECIMAL},
+			#{xstatuschq, jdbcType=VARCHAR},
+			#{xdiscprime, jdbcType=DECIMAL},
+			#{xstatusbnk, jdbcType=VARCHAR},
+			#{xstatusjv, jdbcType=VARCHAR},
+			#{xnote, jdbcType=VARCHAR},
+			#{xdocnum, jdbcType=VARCHAR},
+			#{xtypetrn, jdbcType=VARCHAR},
+			#{xbase, jdbcType=DECIMAL},
+			#{xsign, jdbcType=INTEGER},
+			#{xtype, jdbcType=VARCHAR},
+			#{xcusledbal, jdbcType=DECIMAL},
+			#{xtrn, jdbcType=DECIMAL},
+			#{xstaff, jdbcType=VARCHAR},
+			#{xstatus, jdbcType=VARCHAR},
+			#{xpaymentterm, jdbcType=DECIMAL},
+			#{xtypeobj, jdbcType=DECIMAL},
+			#{xsub, jdbcType=DECIMAL},
+			#{xtypeadj, jdbcType=VARCHAR},
+			#{xtyperec, jdbcType=VARCHAR},
+			#{xinvnum, jdbcType=VARCHAR},
+			#{xcur, jdbcType=VARCHAR},
+			#{xacc, jdbcType=VARCHAR},
+			#{xland, jdbcType=VARCHAR},
+			#{xpurpose, jdbcType=VARCHAR},
+			
+			#{zid, jdbcType=VARCHAR},
+			#{zauserid, jdbcType=VARCHAR},
+			#{zuuserid, jdbcType=VARCHAR},
+			#{zaip, jdbcType=VARCHAR},
+			#{zuip, jdbcType=VARCHAR},
+			#{zactive, jdbcType=VARCHAR},
+			#{ztime, jdbcType=TIMESTAMP},
+			#{zutime, jdbcType=TIMESTAMP}
+		)
+	</insert>
+
+	<update id="updateArhed" parameterType="Arhed">
+		UPDATE 
+			Arhed 
+		SET
+			xdate=#{xdate, jdbcType=DATE},
+			xcus=#{xcus, jdbcType=VARCHAR},
+			xbank=#{xbank, jdbcType=VARCHAR},
+			xwh=#{xwh, jdbcType=VARCHAR},
+			xprime=#{xprime, jdbcType=DECIMAL},
+			xbalprime=#{xbalprime, jdbcType=DECIMAL},
+			xpaymenttype=#{xpaymenttype, jdbcType=VARCHAR},
+			xref=#{xref, jdbcType=VARCHAR},
+			xdateref=#{xdateref, jdbcType=DATE},
+			xvatait=#{xvatait, jdbcType=VARCHAR},
+			xvatamt=#{xvatamt, jdbcType=DECIMAL},
+			xaitamt=#{xaitamt, jdbcType=DECIMAL},
+			xstatuschq=#{xstatuschq, jdbcType=VARCHAR},
+			xdiscprime=#{xdiscprime, jdbcType=DECIMAL},
+			xstatusbnk=#{xstatusbnk, jdbcType=VARCHAR},
+			xstatusjv=#{xstatusjv, jdbcType=VARCHAR},
+			xnote=#{xnote, jdbcType=VARCHAR},
+			xdocnum=#{xdocnum, jdbcType=VARCHAR},
+			xtypetrn=#{xtypetrn, jdbcType=VARCHAR},
+			xbase=#{xbase, jdbcType=DECIMAL},
+			xsign=#{xsign, jdbcType=INTEGER},
+			xtype=#{xtype, jdbcType=VARCHAR},
+			xcusledbal=#{xcusledbal, jdbcType=DECIMAL},
+			xtrn=#{xtrn, jdbcType=DECIMAL},
+			xstaff=#{xstaff, jdbcType=VARCHAR},
+			xstatus=#{xstatus, jdbcType=VARCHAR},
+			xpaymentterm=#{xpaymentterm, jdbcType=DECIMAL},
+			xtypeobj=#{xtypeobj, jdbcType=DECIMAL},
+			xsub=#{xsub, jdbcType=DECIMAL},
+			xtypeadj=#{xtypeadj, jdbcType=VARCHAR},
+			xtyperec=#{xtyperec, jdbcType=VARCHAR},
+			xinvnum=#{xinvnum, jdbcType=VARCHAR},
+			xcur=#{xcur, jdbcType=VARCHAR},
+			xacc=#{xacc, jdbcType=VARCHAR},
+			xland=#{xland, jdbcType=VARCHAR},
+			xpurpose=#{xpurpose, jdbcType=VARCHAR},
+			
+			zid=#{zid, jdbcType=VARCHAR},
+			zuuserid=#{zuuserid, jdbcType=VARCHAR},
+			zaip=#{zaip, jdbcType=VARCHAR},
+			zuip=#{zuip, jdbcType=VARCHAR},
+			zactive=#{zactive, jdbcType=VARCHAR},
+			ztime=#{ztime, jdbcType=TIMESTAMP},
+			zutime=#{zutime, jdbcType=TIMESTAMP}
+		WHERE
+			xvoucher=#{xvoucher}
+			AND zid=#{zid, jdbcType=VARCHAR}
+	</update>
+	
+	<select id="findArhedByXvoucher" resultType="Arhed">
+		SELECT 
+			arhed.*,
+			spell_number(arhed.xprime) as spellword,
+    		spell_number(substr(to_char(arhed.xprime-floor(arhed.xprime)),2,2)) as xprimeword,
+			cacus.xorg,
+			cacus.xmadd as customeraddress,
+			cabank.xname,
+			pdmst.xname as xstaffName,
+			acmst.xdesc as accountname,
+			calandinfo.xlname as landname,
+			x.xlong as siteName,
+			y.xlong as projectName
+		FROM 
+			arhed 
+			left join cacus on cacus.xcus = arhed.xcus and cacus.zid=arhed.zid and cacus.zactive='1'
+			left join cabank on cabank.xbank = arhed.xbank and cabank.zid=arhed.zid and cabank.zactive='1'
+			left join pdmst on pdmst.xstaff = arhed.xstaff and pdmst.zid=arhed.zid and pdmst.zactive='1'
+			left join acmst on acmst.xacc = arhed.xbank and acmst.zid = arhed.zid
+			left join calandinfo on calandinfo.xland = arhed.xland and calandinfo.zid = arhed.zid
+			left join xcodes x on x.xcode = arhed.xwh and x.zid= arhed.zid and x.xtype='Site'
+			left join xcodes y on y.xcode = arhed.xwh and y.zid= arhed.zid and y.xtype='Project'
+		WHERE 
+			arhed.xvoucher=#{xvoucher} 
+			AND arhed.zid=#{zid}
+	</select>
+
+	<select id="getAllArhed" resultType="Arhed">
+		SELECT 
+			* 
+		FROM 
+			arhed 
+		WHERE 
+			zid=#{zid}
+		ORDER BY
+			xstatus, xvoucher DESC
+	</select>
+
+	<select id="getAllArhedByXtrnarhedAndXtype" resultType="Arhed">
+		SELECT 
+			* 
+		FROM 
+			arhed 
+		WHERE 
+			zid=#{zid}
+			AND xtrn=#{xtrnarhed}
+			AND xtype=#{xtype}
+		ORDER BY
+			xstatus, xvoucher DESC
+	</select>
+
+	<select id="findObapByXcus" resultType="Arhed">
+		SELECT * FROM Arhed WHERE (UPPER(xvoucher) LIKE #{xtrn} ||'%') AND xcus=#{xcus} AND zid=#{zid} AND zactive='1'
+	</select>
+	
+	
+	
+	<select id="getAllObaps" resultType="Arhed">
+		SELECT * FROM Arhed WHERE (UPPER(xvoucher) LIKE  '%'|| 'OBAP' ||'%') 
+		AND zid=#{zid} AND zactive='1'
+	</select>
+	
+	<select id="findObarByXcus" resultType="Arhed">
+		SELECT * FROM Arhed WHERE (UPPER(xvoucher) LIKE #{xtrn} ||'%') AND xcus=#{xcus} AND zid=#{zid} AND zactive='1'
+	</select>
+	
+	<select id="getAllObars" resultType="Arhed">
+		SELECT * FROM Arhed WHERE (UPPER(xvoucher) LIKE  '%'|| 'OBAR' ||'%') 
+		AND zid=#{zid} AND zactive='1'
+	</select>
+	
+	<select id="findAdapByXcus" resultType="Arhed">
+		SELECT * FROM Arhed WHERE (UPPER(xvoucher) LIKE #{xtrn} ||'%') AND xcus=#{xcus} AND zid=#{zid} AND zactive='1'
+	</select>
+	
+	<select id="getAllAdaps" resultType="Arhed">
+		SELECT * FROM Arhed WHERE (UPPER(xvoucher) LIKE  '%'|| 'ADAP' ||'%') 
+		AND zid=#{zid} AND zactive='1'
+	</select>
+	
+	<select id="findAdarByXcus" resultType="Arhed">
+		SELECT * FROM Arhed WHERE (UPPER(xvoucher) LIKE #{xtrn} ||'%') AND xcus=#{xcus} AND zid=#{zid} AND zactive='1'
+	</select>
+	
+	<select id="getAllAdars" resultType="Arhed">
+		SELECT * FROM Arhed WHERE (UPPER(xvoucher) LIKE  '%'|| 'ADAR' ||'%') 
+		AND zid=#{zid} AND zactive='1'
+	</select>
+	
+	<select id="getAllArhedByXtrn" resultType="Arhed">
+		SELECT 
+			* 
+		FROM 
+			arhed 
+		WHERE 
+			(UPPER(xvoucher) LIKE #{xtrn} ||'%') 
+			AND zid=#{zid}
+	</select>
+	
+	<!-- <select id="getAllArhedByXtrn" resultType="Arhed">
+		SELECT 
+			arhed.*,
+			cacus.xorg
+		FROM 
+			arhed 
+			left join cacus on cacus.xcus = arhed.xcus and cacus.zid=arhed.zid and cacus.zactive='1'
+		WHERE 
+			(UPPER(arhed.xvoucher)= #{xtrn} ||'%') 
+			AND arhed.zid=#{zid}
+	</select> -->
+	
+	<select id="getAllArhedByXtype" resultType="Arhed">
+		SELECT 
+			arhed.*,
+			cacus.xorg,
+			x.xlong as siteName,
+			y.xlong as projectName
+		FROM 
+			arhed 
+			left join cacus on cacus.xcus = arhed.xcus and cacus.zid=arhed.zid and cacus.zactive='1'
+			left join xcodes x on x.xcode = arhed.xwh and x.zid= arhed.zid and x.xtype='Site'
+			left join xcodes y on y.xcode = arhed.xwh and y.zid= arhed.zid and y.xtype='Project'
+		WHERE 
+			arhed.xtype= #{xtype}
+			AND arhed.zid=#{zid}
+		order by arhed.xvoucher DESC
+	</select>
+	
+	
+	<select id="findByXstaff" resultType="Pdmst">
+		SELECT * FROM pdmst WHERE (UPPER(xstaff) LIKE '%'|| #{xstaff} ||'%') AND zid=#{zid}
+	</select>
+
+	<delete id="deleteVoucher">
+		DELETE
+		FROM
+			arhed
+		WHERE
+			xvoucher=#{xvoucher}
+			AND zid=#{zid}
+	</delete>
+	
+	<select id="findBankHead" resultType="Arhed">
+		SELECT 
+			cabank.xacc as xacc
+		FROM 
+			cabank 
+		WHERE 
+			zid=#{zid}
+			AND xbank=#{xbank}
+	</select>
+	
+	<!-- <update id="findBankHead">
+		UPDATE 
+			arhed
+		SET
+			xacc=(SELECT cabank.xacc FROM cabank WHERE zid=#{zid} AND xbank=#{xbank})
+		WHERE
+			xvoucher=#{xvoucher} AND zid=#{zid}
+	</update> -->
+	
+	<select id = "procTransferARtoGL" statementType = "CALLABLE">
+		{call 
+		AR_transferARtoGL
+		(#{zid, jdbcType = VARCHAR, mode = IN}, 
+		#{user, jdbcType = VARCHAR, mode = IN}, 
+		#{xvoucher, jdbcType = VARCHAR, mode = IN},  
+		#{p_seq, jdbcType = VARCHAR, mode = IN})}
+	</select>
+	
+	<select id = "procTransferARAP_Adjustment" statementType = "CALLABLE">
+		{call 
+		ARAP_Adjustment
+		(#{zid, jdbcType = VARCHAR, mode = IN}, 
+		#{user, jdbcType = VARCHAR, mode = IN}, 
+		#{xvoucher, jdbcType = VARCHAR, mode = IN}, 
+		#{xtrn, jdbcType = VARCHAR, mode = IN},  
+		#{p_seq, jdbcType = VARCHAR, mode = IN})}
+	</select>
+	
+	<select id = "AP_transferAPtoGL" statementType = "CALLABLE">
+		{call 
+			AP_transferAPtoGL(
+				#{zid, jdbcType = VARCHAR, mode = IN}, 
+				#{user, jdbcType = VARCHAR, mode = IN}, 
+				#{xvoucher, jdbcType = VARCHAR, mode = IN},  
+				#{p_seq, jdbcType = VARCHAR, mode = IN}
+			)
+		}
+	</select>
+
+	<select id="searchPurpose" resultType="Arhed">
+		SELECT * FROM arhed WHERE (UPPER(xpurpose) LIKE '%'|| #{xpurpose} ||'%') AND zid=#{zid}
+	</select>
+	
+	<update id="updatexamtar">
+		update calandinfo
+			set xamtar=(SELECT sum(xprime*xsign)
+			FROM 
+				arhed 
+			WHERE 
+				zid=#{zid}
+				AND xland=#{xland}
+				AND xcus=#{xcus}
+				AND xsign='1'
+				AND xtype='AR--'
+				AND xstatus='Confirmed'
+				AND xtypetrn='Sale')
+			WHERE 
+				zid=#{zid}
+				AND xland=#{xland}
+				AND xcus=#{xcus}	
+	</update>
+	
+	<update id="updatexamtrv">
+		update calandinfo
+			set xamtrv=(SELECT sum(xprime*xsign)
+			FROM 
+				arhed 
+			WHERE 
+				zid=#{zid}
+				AND xland=#{xland}
+				AND xcus=#{xcus}
+				AND xsign='-1'
+				AND xtype='MR--'
+				AND xstatus='Confirmed'
+				AND xtypetrn='Sale')
+			WHERE 
+				zid=#{zid}
+				AND xland=#{xland}
+				AND xcus=#{xcus}	
+	</update>
+	
+</mapper>

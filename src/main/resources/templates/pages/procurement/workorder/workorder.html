@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<title>Work Order</title>
+		<meta th:remove="tag" th:include="commons :: common-meta" />
+		<meta th:remove="tag" th:include="commons :: common-css" />
+		<meta th:remove="tag" th:include="commons :: common-js" />
+	</head>
+	<body>
+		<!-- Header section -->
+		<div class="header-section" th:include="commons :: header-section"></div>
+
+		<!-- Menu section -->
+		<div th:if="${menuVersion != null and menuVersion eq 'MENU_V2'}" class="menuv2" th:include="commons :: main-menu"></div>
+
+		<div th:if="${menuVersion == null or menuVersion eq 'MENU_V1'}" class="navbar-inverse menu-section">
+			<div class="container-fluid">
+				<div class="row">
+					<nav class="navbar navbar-inverse">
+						<div class="container-fluid">
+							<div class="row">
+								<div class="navbar-header">
+									<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+										<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+									</button>
+								</div>
+								<div class="collapse navbar-collapse" id="myNavbar">
+									<div class="nav navbar-nav">
+										<li><a th:href="@{/}"><i class="fas fa-home"></i> Home</a></li>
+										<li class="active"><a th:href="@{/procurement/workorder}">Work Order</a></li>
+									</div>
+									<ul class="nav navbar-nav navbar-right" th:include="ckbigmenu :: dashboard-menu"></ul>
+								</div>
+							</div>
+						</div>
+					</nav>
+				</div>
+			</div>
+		</div>
+
+		<!-- Content section -->
+		<div>
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-md-12 content-area">
+						<div class="row">
+							<h1 class="text-center">Work Order</h1>
+						</div>
+
+						<div class="row">
+							<div class="col-md-6" style="padding-left: 30px; padding-right: 30px;">
+								<div class="row">
+									<!-- Section list head -->
+									<section id="data-maintenance" style="margin-top: 30px;">
+										<div class="section-header sectionbartoggle">
+										</div>
+										<div class="form-action-button">
+											<a th:href="@{/procurement/workorder}" class="btn btn-sm btn-default"><i class="fas fa-redo-alt"></i> <span style="margin-left:2px;"> Clear</span></a>
+											<a th:if="${#strings.isEmpty(workorder.xpornum)}" th:href="@{/procurement/workorder}" class="btn btn-sm btn-success confirm-btn"><i class="fas fa-save"></i> <span style="margin-left:2px;"> Save</span></a>
+											<a th:if="${not #strings.isEmpty(workorder.xpornum) and workorder.xstatuspor == 'Open' and workorder.xstatus == 'Open' and workorder.zactive == true}" href="#" class="btn btn-sm btn-success update-btn"><i class="fas fa-edit"></i> <span style="margin-left:2px;"> Update</span></a>
+											<a th:if="${not #strings.isEmpty(workorder.xpornum) and workorder.xstatuspor == 'Open' and workorder.xstatus == 'Open'  and workorder.zactive == true}" th:href="@{/procurement/workorder/delete/} + ${workorder.xpornum}" class="btn btn-sm btn-danger archive-btn-link"><i class="fas fa-trash-alt"></i> <span style="margin-left:2px;"> Delete</span></a>
+											<a th:if="${not #strings.isEmpty(workorder.xpornum) and workorder.xstatuspor == 'Open' and workorder.xstatus == 'Open'  and workorder.zactive == true}" th:href="@{/procurement/workorder/confirm/} + ${workorder.xpornum}" class="btn btn-sm btn-warning confirm-btn-link"><i class="fas fa-paper-plane"></i> <span style="margin-left:2px;"> Confirm</span></a>
+											<a th:if="${not #strings.isEmpty(workorder.xpornum) and workorder.xstatus == 'Open'}" th:href="@{/procurement/workorder/defaultterms/} + ${workorder.xpornum}" class="btn btn-sm btn-info confirm-btn-link"><i class="glyphicon glyphicon-plus"></i> <span style="margin-left:2px;"> Add Default Terms</span></a>
+											<a th:if="${not #strings.isEmpty(workorder.xpornum)}" th:href="@{/procurement/workorder/print/} + ${workorder.xpornum}" class="btn btn-sm btn-primary print-btn-link" target="_blank"><i class="fas fa-print"></i> Print Work Order</a>
+										</div>
+										<div class="form-action-button">
+											<a class="btn btn-sm btn-default"><i class="glyphicon glyphicon-fast-backward"></i> <span style="margin-left:2px;"> Top</span></a>
+											<a class="btn btn-sm btn-default"><i class="glyphicon glyphicon-chevron-left"></i> <span style="margin-left:2px;"> Previous</span></a>
+											<a class="btn btn-sm btn-default"><i class="glyphicon glyphicon-chevron-right"></i> <span style="margin-left:2px;"> Next</span></a>
+											<a class="btn btn-sm btn-default"><i class="glyphicon glyphicon-fast-forward"></i> <span style="margin-left:2px;"> Bottom</span></a>
+										</div>
+										<div class="section-body section-border">
+											<div id="workorderheaderform" th:fragment="workorderheaderform">
+												<form id="mainform" class="form-horizontal" th:action="@{/procurement/workorder/save}" th:object="${workorder}" method="post" th:with="df=${'E, dd-MMM-yyyy HH:mm:ss'}">
+													<input type="hidden" class="form-control" th:field="*{xtypetrn}">
+													<div class="row">
+														<div class="col-md-6">
+
+															<div class="form-group" th:if="${#strings.isEmpty(workorder.xpornum)}">
+																<label class="control-label col-md-4" for="xtrn">Order Number</label>
+																<div class="col-md-6">
+																	<select class="form-control" th:field="*{xtrn}">
+																		<option th:each="prefix : ${prefix}" th:value="${prefix.xtrn}" th:text="${prefix.xtrn}"></option>
+																	</select>
+																</div>
+															</div>
+
+															<div class="form-group" th:if="${not #strings.isEmpty(workorder.xpornum)}">
+																<label class="control-label col-md-4" for="xpornum ">Order Number</label>
+																<div class="col-md-8">
+																	<input type="text" class="form-control" th:value="*{xpornum}" disabled="disabled">
+																	<input type="hidden" class="form-control" th:field="*{xpornum}">
+																</div>
+															</div>
+
+															<div class="form-group datepicker">
+																<label class="control-label col-md-4" for="xdate">Order Date</label>
+																<div class="input-group date col-md-7 datepicker">
+																	<input 	type="datepicker" 
+																			class="form-control" 
+																			id="xdate"
+																			name="xdate"
+																			th:value="${workorder.xdate == null ? #dates.format(#dates.createNow(), df) : #dates.format(workorder.xdate, df)}"/>
+																	<div class="input-group-addon">
+																		<span class="glyphicon glyphicon-calendar"></span>
+																	</div>
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xcus" th:text="#{so.form.label.xcus}">Supplier</label>
+																<div class="col-sm-8">
+																	<input 	type="text" 
+																			class="form-control searchsuggest" 
+																			placeholder="Search..." 
+																			th:value="${#strings.isEmpty(workorder.xcus) ? '' : workorder.xcus + ' - ' + workorder.xorg}" 
+																			th:attr="search-url='search/supplier'"
+																			/>
+																	<input type="hidden" class="required" id="search-val" th:field="*{xcus}" value=""/>
+																	<input type="hidden" id="search-des" th:value="*{xcus}"/>
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xhwh">Project/Business</label>
+																<div class="col-sm-8">
+																	<input 	type="text" 
+																			class="form-control searchsuggest xhwhsearch" 
+																			placeholder="Search..." 
+																			th:value="${#strings.isEmpty(workorder.xhwh) ? '' : workorder.xhwh + '-' + workorder.projectName}" 
+																			th:attr="search-url='search/allproject'"
+																			/>
+																	<input type="hidden" class="required" id="search-val" th:field="*{xhwh}" value=""/>
+																	<input type="hidden" id="search-des" th:value="*{xhwh}"/>
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-sm-4" for="xwh" >Store/Site</label>
+																<div class="col-sm-8">
+																	<select th:field="*{xwh}" class="form-control">
+																		<option value="">-- Select --</option>
+																		<option th:each="s : ${allcodes}" th:value="${s.xcode}" th:text="${s.xcode + ' - ' + s.xcodename}"></option>
+																	</select>
+																</div>
+															</div>
+
+															<!--<div class="form-group" th:if="${#strings.isEmpty(workorder.xpornum)}">
+																<label class="control-label col-md-4" for="xwh">Store/Site</label>
+																<div class="col-md-8">
+																	<select class="form-control" th:field="*{xwh}">
+																		<option th:each="wh : ${warehouses}" th:value="${wh.xcode}" th:text="${wh.xcode} +' - '+${wh.xlong}"></option>
+																	</select>
+																</div>
+															</div>-->
+
+															<!--<div class="form-group" th:if="${not#strings.isEmpty(workorder.xpornum)}">
+																<label class="control-label col-md-4" for="xwh">Store/Site</label>
+																<div class="col-md-8">
+																	<input type="hidden" class="form-control" th:field="*{xwh}">
+																	<input type="text" class="form-control" th:value="${workorder.xwh + ' - ' + workorder.storeName}" disabled="disabled"/>
+																</div>
+															</div>-->
+
+															<div class="form-group">
+																<label class="control-label col-sm-4" for="xquotnum">Quotation Number</label>
+																<div class="col-sm-8">
+																	<input type="text" class="form-control" th:field="*{xquotnum}">
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-sm-4" for="xref">Reference</label>
+																<div class="col-sm-8">
+																	<input type="text" class="form-control" th:field="*{xref}">
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-sm-4" for="xpreparer">Prepared By</label>
+																<div class="col-sm-8">
+																	<input type="hidden" class="form-control" th:field="*{xpreparer}">
+																	<input type="text" class="form-control" th:value="${workorder.xpreparer + ' - ' + workorder.xpreparername}" disabled="disabled"/>
+																</div>
+															</div>
+
+															<div class="form-group datetimepicker">
+																<label class="control-label col-md-4" for="xprepdate">Creation Date</label>
+																<div class="input-group date col-md-7 datetimepicker">
+																	<input 	type="datetimepicker" 
+																			class="form-control" 
+																			id="xprepdate"
+																			name="xprepdate"
+																			disabled="disabled"
+																			th:value="${workorder.xprepdate == null ? #dates.format(#dates.createNow(), df) : #dates.format(workorder.xprepdate, df)}"
+																			/>
+																	<div class="input-group-addon">
+																		<span class="glyphicon glyphicon-calendar"></span>
+																	</div>
+																	<input 	type="hidden" 
+																		class="form-control" 
+																		id="xprepdate"
+																		name="xprepdate"
+																		th:value="${workorder.xprepdate == null ? #dates.format(#dates.createNow(), df) : #dates.format(workorder.xprepdate, df)}"
+																	/>
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xnote">Preparer Note</label>
+																<div class="col-md-8">
+																	<textarea class="form-control" th:field="*{xnote}" rows="3"></textarea>
+																</div>
+															</div>
+
+														</div>
+														<div class="col-md-6">
+
+															<div class="form-group">
+																<label class="control-label col-sm-4" for="xsignatory1">Authorized  By</label>
+																<div class="col-sm-8">
+																	<input type="hidden" class="form-control" th:field="*{xsignatory1}">
+																	<input type="text" class="form-control" th:value="*{xsignatory1}" disabled="disabled"/>
+																</div>
+															</div>
+
+															<div class="form-group datetimepicker" th:if="${not #strings.isEmpty(workorder.xsignatory1)}">
+																<label class="control-label col-md-4" for="xsignatorydate1">Authorization Date</label>
+																<div class="input-group date col-md-7 datetimepicker">
+																	<input 	type="datetimepicker" 
+																			class="form-control" 
+																			id="xsignatorydate1"
+																			name="xsignatorydate1"
+																			disabled="disabled"
+																			th:value="${workorder.xsignatorydate1 == null ? #dates.format(#dates.createNow(), df) : #dates.format(workorder.xsignatorydate1, df)}"
+																			/>
+																	<div class="input-group-addon">
+																		<span class="glyphicon glyphicon-calendar"></span>
+																	</div>
+																	<input 	type="hidden" 
+																		class="form-control" 
+																		id="xsignatorydate1"
+																		name="xsignatorydate1"
+																		th:value="${workorder.xsignatorydate1 == null ? #dates.format(#dates.createNow(), df) : #dates.format(workorder.xsignatorydate1, df)}"
+																	/>
+																</div>
+															</div>
+
+															<div class="form-group" th:if="${#strings.isEmpty(workorder.xsignatory1)}">
+																<label class="control-label col-md-4" for="xsignatorynote1">Authorizer  Date</label>
+																<div class="col-md-8">
+																	<input type="text" class="form-control"  disabled="disabled">
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xsignatorynote1">Authorizer  Note</label>
+																<div class="col-md-8">
+																	<input type="hidden" class="form-control" th:field="*{xsignatorynote1}">
+																	<input type="text" class="form-control" th:value="*{xsignatorynote1}" disabled="disabled">
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xstatus">Status</label>
+																<div class="col-md-8">
+																	<input type="hidden" class="form-control" th:field="*{xstatus}">
+																	<input type="text" class="form-control" th:value="*{xstatus}" disabled="disabled">
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-sm-4" for="xstatuspor">Order Status</label>
+																<div class="col-sm-8">
+																	<input type="hidden" class="form-control" th:field="*{xstatuspor}">
+																	<input type="text" class="form-control" th:value="*{xstatuspor}" disabled="disabled"/>
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-sm-4" for="xtotamt">Total Amount</label>
+																<div class="col-sm-8">
+																	<input type="hidden" class="form-control" th:field="*{xtotamt}">
+																	<input type="text" class="form-control" th:value="*{xtotamt}" disabled="disabled"/>
+																</div>
+															</div>
+
+															<div class="form-group datepicker">
+																<label class="control-label col-md-4" for="xdatedel">Delivery Date</label>
+																<div class="input-group date col-md-7 datepicker">
+																	<input 	type="datepicker" 
+																			class="form-control" 
+																			id="xdatedel"
+																			name="xdatedel"
+																			th:value="${workorder.xdatedel == null ? #dates.format(#dates.createNow(), df) : #dates.format(workorder.xdatedel, df)}"/>
+																	<div class="input-group-addon">
+																		<span class="glyphicon glyphicon-calendar"></span>
+																	</div>
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-sm-4" for="xporeqnum">Requisition Number</label>
+																<div class="col-sm-8" style="top:6px; left:12px">
+																	<a th:href="@{/procurement/poreqapprove/} + ${workorder.xporeqnum}" th:text="${workorder.xporeqnum}"></a>
+																	<input type="hidden" class="form-control" th:field="*{xporeqnum}">
+																</div>
+															</div>	
+
+														</div>
+													</div>
+												</form>
+											</div>
+										</div>
+								</section>
+								</div>
+								<div class="row">
+									<section th:if="${not #strings.isEmpty(workorder.xpornum)}" id="data-maintenance" style="margin-top: 30px;">
+										<a id="listlines-url" th:href="@{/procurement/workorder/workorderdetail/} + ${workorder.xpornum}"></a>
+										<div class="section-header sectionbartoggle">
+											<h1>Work Order Details of <span th:text="${workorder.xpornum}"></span></h1>
+										</div>
+										<div class="section-body">
+											<table class="table table-striped table-bordered normal-table nowrap" id="workorderdetailtable" th:fragment="workorderdetailtable">
+												<thead>
+													<tr>
+														<th>Row</th>
+														<th>Item</th>
+														<th>Purpose</th>
+														<th>Unit</th>
+														<th class="text-right">Qty</th>
+														<th>Unit Price</th>
+														<th>Line Amount</th>
+														<th>CF(Purchase)</th>
+														<th data-nosort="Y" style="text-align: right;" th:if="${workorder.xstatus == 'Open'}">
+															<button type="button" class="btn btn-success btn-add" th:attr="data-url=@{/procurement/workorder/} + ${workorder.xpornum} + '/workorderdetail/new/show', data-target-modal='workorderdetailmodal'"><i class="fas fa-plus"></i></button>
+														</th>
+													</tr>
+												</thead>
+												<tbody>
+													<tr th:each="d : ${workorderdetailList}">
+														<td th:text="${d.xrow}"></td>
+														<td>
+															<a th:href="@{/mastersetup/caitem/} + ${d.xitem}" target="_blank" th:text="${d.xitem} + ' - ' + ${d.itemname}"></a>
+														</td>
+														<td th:text="${d.xpurpose}"></td>
+														<td th:text="${d.xunitpur}"></td>
+														<td class="text-right" th:text="${d.xqtypur}"></td>
+														<td th:text="${d.xrate}"></td>
+														<td th:text="${d.xlineamt}"></td>
+														<td class="text-right" th:text="${d.xcfpur}"></td>
+														<td  data-nosort="Y" style="text-align: right; font-size: 11px;" th:if="${workorder.xstatus == 'Open'}">
+															<button type="button" class="btn btn-default btn-edit editmode" th:attr="data-url=@{/procurement/workorder/} + ${workorder.xpornum} + '/workorderdetail/' + ${d.xrow} + '/show', data-target-modal='workorderdetailmodal'"><i class="fas fa-edit"></i></button>
+															<button type="button" class="btn btn-danger btn-delete editmode" th:attr="data-url=@{/procurement/workorder/} + ${workorder.xpornum} + '/workorderdetail/' + ${d.xrow} + '/delete'"><i class="fas fa-trash"></i></button>
+														</td>
+													</tr>
+												</tbody>
+												<tfoot>
+													<th colspan="4" class="text-right">Total</th>
+													<th class="text-right" th:text="${totalQuantityReceived}">0</th>
+													<th></th>
+													<th class="text-right" th:text="${totalLineAmount}">0</th>
+												</tfoot>
+											</table>
+										</div>
+									</section>
+								</div>
+								<div class="row" th:if="${not #strings.isEmpty(workorder.xpornum)}">
+									<section id="list-manager" style="margin-top: 30px;">
+										<div class="section-header sectionbartoggle">
+											<h1>All Default Terms & Conditions</h1>
+										</div>
+										<div class="section-body">
+											<div style="overflow-x: scroll;">
+												<table class="table table-striped table-bordered normal-table nowrap" id="addtermstable" th:fragment="addtermstable">
+													<thead>
+														<tr>
+															<th>Terms</th>
+															<th>Terms Detail</th>
+															<th>Additional Info</th>
+															<th>View Sequence</th>
+															<!--<th data-nosort="Y" style="text-align: right;" th:if="${workorder.xstatus == 'Open'}">
+																<button type="button" class="btn btn-success btn-add" th:attr="data-url=@{/procurement/workorder/} + ${workorder.xpornum} + '/dftermsdetail/new/show', data-target-modal='dftermsdetailmodal'"><i class="fas fa-plus"></i></button>
+															</th>-->
+														</tr>
+													</thead>
+													<tbody>
+														<tr th:each="ar: ${allTermsdef}">
+															<td th:text="${ar.xterm}"></td>
+															<td th:text="${ar.xdesc}"></td>
+															<td th:text="${ar.xnote}"></td>
+															<td th:text="${ar.xserial}"></td>
+															<!--<td  data-nosort="Y" style="text-align: right; font-size: 11px;" th:if="${workorder.xstatus == 'Open'}">
+																<button type="button" class="btn btn-default btn-edit editmode" th:attr="data-url=@{/procurement/workorder/dftermsdetail/save}, data-target-modal='dftermsdetailmodal'"><i class="fas fa-edit"></i></button>
+																<button type="button" class="btn btn-danger btn-delete editmode" th:attr="data-url=@{/procurement/workorder/dftermsdetail/delete/}+${ar.xterm}+'/'+${ar.xtype}+'/'+ ${workorder.xpornum}"><i class="fas fa-trash"></i></button>
+															</td>-->
+														</tr>
+														
+													</tbody>
+												</table>
+											</div>
+										</div>
+									</section>
+								</div>
+							</div>
+
+							<div class="col-md-6" style="padding-left: 30px; padding-right: 30px; margin-top: 30px;">
+								<div class="row">
+									<section id="list-manager" style="margin-top: 30px;">
+										<div class="section-header sectionbartoggle">
+											<h1>Draft Work Orders</h1>
+										</div>
+										<div class="section-body">
+											<div style="overflow-x: auto">
+												<table class="table table-striped table-bordered datatable" id="workorderheadertable" th:fragment="workorderheadertable">
+													<thead>
+														<tr>
+															<th>Work Order Number</th>
+															<th>Date</th>
+															<th>Supplier</th>
+															<th>Store</th>
+															<th>Total Amount</th>
+														</tr>
+													</thead>
+													<tbody th:with="df=${'E, dd-MMM-yyyy'}">
+														<tr th:if="${por.xstatus == 'Open'}" th:each="por : ${allWorkorder}">
+															<td>
+																<a th:href="@{/procurement/workorder/} + ${por.xpornum}" th:text="${por.xpornum}"></a>
+															</td>
+															<td th:text="${#dates.format(por.xdate, df)}"></td>
+															<td th:text="${#strings.isEmpty(por.xcus)? '' : por.xcus + ' - ' + por.xorg}"></td>
+															<td th:text="${#strings.isEmpty(por.xwh)? '' : por.xwh + ' - ' + por.storeName}"></td>
+															<td th:text="${por.xtotamt}"></td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+										</div>
+									</section>
+								</div>
+								<div class="row">
+									<section id="list-manager" style="margin-top: 30px;">
+										<div class="section-header sectionbartoggle">
+											<h1>Pending For Approval</h1>
+										</div>
+										<div class="section-body">
+											<div style="overflow-x: auto">
+												<table class="table table-striped table-bordered datatable">
+													<thead>
+														<tr>
+															<th>Work Order Number</th>
+															<th>Date</th>
+															<th>Supplier</th>
+															<th>Store</th>
+															<th>Total Amount</th>
+														</tr>
+													</thead>
+													<tbody th:with="df=${'E, dd-MMM-yyyy'}">
+														<tr th:if="${por.xstatus == 'Confirmed' and por.xstatuspor == 'Open'}" th:each="por : ${allWorkorder}">
+															<td>
+																<a th:href="@{/procurement/workorder/} + ${por.xpornum}" th:text="${por.xpornum}"></a>
+															</td>
+															<td th:text="${#dates.format(por.xdate, df)}"></td>
+															<td th:text="${#strings.isEmpty(por.xcus)? '' : por.xcus + ' - ' + por.xorg}"></td>
+															<td th:text="${#strings.isEmpty(por.xwh)? '' : por.xwh + ' - ' + por.storeName}"></td>
+															<td th:text="${por.xtotamt}"></td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+										</div>
+									</section>
+								</div>
+								<div class="row">
+									<section id="list-manager" style="margin-top: 30px;">
+										<div class="section-header sectionbartoggle">
+											<h1>Rejected Work Orders</h1>
+										</div>
+										<div class="section-body">
+											<div style="overflow-x: auto">
+												<table class="table table-striped table-bordered datatable">
+													<thead>
+														<tr>
+															<th>Work Order Number</th>
+															<th>Date</th>
+															<th>Supplier</th>
+															<th>Store</th>
+															<th>Total Amount</th>
+														</tr>
+													</thead>
+													<tbody th:with="df=${'E, dd-MMM-yyyy'}">
+														<tr th:if="${por.xstatus == 'Confirmed' and por.xstatuspor == 'Rejected'}" th:each="por : ${allWorkorder}">
+															<td>
+																<a th:href="@{/procurement/workorder/} + ${por.xpornum}" th:text="${por.xpornum}"></a>
+															</td>
+															<td th:text="${#dates.format(por.xdate, df)}"></td>
+															<td th:text="${#strings.isEmpty(por.xcus)? '' : por.xcus + ' - ' + por.xorg}"></td>
+															<td th:text="${#strings.isEmpty(por.xwh)? '' : por.xwh + ' - ' + por.storeName}"></td>
+															<td th:text="${por.xtotamt}"></td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+										</div>
+									</section>
+								</div>
+								<div class="row">
+									<section id="list-manager" style="margin-top: 30px;">
+										<div class="section-header sectionbartoggle">
+											<h1>Pending For Create QC</h1>
+										</div>
+										<div class="section-body">
+											<div style="overflow-x: auto">
+												<table class="table table-striped table-bordered datatable">
+													<thead>
+														<tr>
+															<th>Work Order Number</th>
+															<th>Date</th>
+															<th>Supplier</th>
+															<th>Store</th>
+															<th>Total Amount</th>
+														</tr>
+													</thead>
+													<tbody th:with="df=${'E, dd-MMM-yyyy'}">
+														<tr th:if="${por.xstatus == 'Confirmed' and por.xstatuspor == 'Approved'}" th:each="por : ${allWorkorder}">
+															<td>
+																<a th:href="@{/procurement/workorder/} + ${por.xpornum}" th:text="${por.xpornum}"></a>
+															</td>
+															<td th:text="${#dates.format(por.xdate, df)}"></td>
+															<td th:text="${#strings.isEmpty(por.xcus)? '' : por.xcus + ' - ' + por.xorg}"></td>
+															<td th:text="${#strings.isEmpty(por.xwh)? '' : por.xwh + ' - ' + por.storeName}"></td>
+															<td th:text="${por.xtotamt}"></td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+										</div>
+									</section>
+								</div>
+								<!--<div class="row">
+									<section id="list-manager" style="margin-top: 30px;">
+										<div class="section-header sectionbartoggle">
+											<h1>QC Created From Work Order</h1>
+										</div>
+										<div class="section-body">
+											<div style="overflow-x: auto">
+												<table class="table table-striped table-bordered datatable">
+													<thead>
+														<tr>
+															<th>Work Order Number</th>
+															<th>Date</th>
+															<th>Supplier</th>
+															<th>Store</th>
+															<th>Total Amount</th>
+														</tr>
+													</thead>
+													<tbody th:with="df=${'E, dd-MMM-yyyy'}">
+														<tr th:if="${por.xstatus == 'Confirmed' and por.xstatuspor == 'QC Created'}" th:each="por : ${allWorkorder}">
+															<td>
+																<a th:href="@{/procurement/workorder/} + ${por.xpornum}" th:text="${por.xpornum}"></a>
+															</td>
+															<td th:text="${#dates.format(por.xdate, df)}"></td>
+															<td th:text="${#strings.isEmpty(por.xcus)? '' : por.xcus + ' - ' + por.xorg}"></td>
+															<td th:text="${#strings.isEmpty(por.xwh)? '' : por.xwh + ' - ' + por.storeName}"></td>
+															<td th:text="${por.xtotamt}"></td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+										</div>
+									</section>
+								</div>-->
+								<div class="row">
+									<section id="list-manager" style="margin-top: 30px;">
+										<div class="section-header sectionbartoggle">
+											<h1>QC Created From Work Order</h1>
+										</div>
+										<div class="section-body">
+											<div style="overflow-x: auto">
+												<table class="table table-striped table-bordered datatable" id="qcheadertable" th:fragment="qcheadertable">
+													<thead>
+														<tr>
+															<th>QC Number</th>
+															<th>Date</th>
+															<th>Supplier</th>
+															<th>Store</th>
+															<th>WO Number</th>
+															<th>Total Amount</th>
+														</tr>
+													</thead>
+													<tbody th:with="df=${'E, dd-MMM-yyyy'}">
+														<tr th:if="${por.xstatusgrn == 'Open'}" th:each="por : ${createdQC}">
+															<td>
+																<a th:href="@{/procurement/qcheader/} + ${por.xgrnnum}" th:text="${por.xgrnnum}"></a>
+															</td>
+															<td th:text="${#dates.format(por.xdate, df)}"></td>
+															<td th:text="${#strings.isEmpty(por.xcus)? '' : por.xcus + ' - ' + por.xorg}"></td>
+															<td th:text="${#strings.isEmpty(por.xwh)? '' : por.xwh + ' - ' + por.storename}"></td>
+															<td th:text="${por.xpornum}"></td>
+															<td th:text="${por.xtotamt}"></td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+										</div>
+									</section>
+								</div>
+							</div>
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Modal -->
+		<div id="workorderdetailmodal-section"></div>
+		<div id="dftermsdetailmodal-section"></div>
+
+		<!-- Footer section -->
+		<div class="footer-section" th:include="commons :: footer-section"></div>
+	</body>
+	
+	<script type="text/javascript">
+		$(document).ready(function(){
+			// Init ui for modal
+			ck.ui.config.buttonevent();
+
+			$('.xhwhsearch').on('blur', function(){
+				setTimeout(() => {
+					if($('input[name="xhwh"]').val() == ''){
+						$("#xwh option").remove(); 
+						var mySelect = $('#xwh');
+						mySelect.append(
+							$('<option></option>').val("").html("-- Select --")
+						);
+						return;
+					}
+
+					loadingMask2.show();
+					$.ajax({
+						url : getBasepath() + '/procurement/workorder/allcodesbyproject/' + $('input[name="xhwh"]').val(),
+						type : 'GET',
+						success : function(data) {
+							loadingMask2.hide();
+							if(data == undefined || data == null) return;
+
+							$("#xwh option").remove(); 
+							var mySelect = $('#xwh');
+							mySelect.append(
+								$('<option></option>').val("").html("-- Select --")
+							);
+							$.each(data, function(val, obj) {
+								mySelect.append(
+									$('<option></option>').val(obj.xcode).html(obj.xcode + ' - ' + obj.xcodename)
+								);
+							});
+
+						},
+						error : function(jqXHR, status, errorThrown){
+							showMessage(status, "Something went wrong .... ");
+							loadingMask2.hide();
+						}
+					})
+				}, 1000);
+			});
+		});
+	</script>
+		
+</html>

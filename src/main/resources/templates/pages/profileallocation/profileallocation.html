@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+	<head>
+		<title>Profile Allocation to User</title>
+		<meta th:remove="tag" th:include="commons :: common-meta"/>
+		<meta th:remove="tag" th:include="commons :: common-css"/>
+		<meta th:remove="tag" th:include="commons :: common-js"/>
+	</head>
+	<body>
+
+		<!-- Header section -->
+		<div class="header-section" th:include="commons :: header-section"></div>
+
+		<!-- Menu section -->
+		<div th:if="${menuVersion != null and menuVersion eq 'MENU_V2'}" class="menuv2" th:include="commons :: main-menu"></div>
+
+		<div th:if="${menuVersion == null or menuVersion eq 'MENU_V1'}" class="navbar-inverse menu-section">
+			<div class="container">
+				<div class="row">
+					<nav class="navbar navbar-inverse">
+						<div class="container-fluid">
+							<div class="row">
+								<div class="navbar-header">
+									<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+										<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+									</button>
+								</div>
+								<div class="collapse navbar-collapse" id="myNavbar">
+									<div class="nav navbar-nav">
+										<li><a th:href="@{/}"><i class="fas fa-home"></i> Home</a></li>
+										<li class="active"><a th:href="@{/system/profileallocation}">Profile Allocation to User</a></li>
+									</div>
+									<ul class="nav navbar-nav navbar-right" th:include="ckbigmenu :: dashboard-menu"></ul>
+								</div>
+							</div>
+						</div>
+					</nav>
+				</div>
+			</div>
+		</div>
+
+		<!-- Content section -->
+		<div>
+			<div class="container">
+				<div class="row">
+					<div class="col-md-12 content-area">
+						<!-- Section data maintenance -->
+						<section id="data-maintenance" style="margin-top: 10px;">
+							<div class="section-header sectionbartoggle">
+								<h1><i class="fas fa-chevron-down"></i> Allocate profile to user</h1>
+							</div>
+							<div class="section-body togglebox">
+								<table class="table table-striped table-bordered datatable" id="patable" th:fragment="patable">
+									<thead>
+										<tr>
+											<th>User</th>
+											<th>Menu Profile</th>
+											<th>Report Profile</th>
+											<th style="text-align: right;">Action</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr th:each="pa : ${profileAllocations}">
+											<td th:text="${pa.username}"></td>
+											<td><a th:href="@{/system/profile/} + ${pa.menuProfileId}" th:text="${pa.menuProfileName}"></a></td>
+											<td><a th:href="@{/system/profile/} + ${pa.reportProfileId}" th:text="${pa.reportProfileName}"></a></td>
+											<td style="text-align: right;">
+												<button type="button" 
+														class="btn btn-default btn-edit editmode"
+														th:attr="data-url=@{/system/profileallocation/pamodal/} + ${pa.username}, data-target-modal='pamodal'"
+														><i class="fas fa-edit"></i></button>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</section>
+
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Modal -->
+		<div id="pamodal-section"></div>
+
+		<!-- Footer section -->
+		<div class="footer-section" th:include="commons :: footer-section"></div>
+		<script>
+			$(document).ready(function(){
+				bindTableButtonsEvent($('table#patable'));
+			})
+		</script>
+	</body>
+</html>

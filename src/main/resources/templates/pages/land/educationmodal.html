@@ -1,0 +1,90 @@
+<!-- Modal -->
+<div id="educationmodal" th:fragment="educationmodal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="true" xmlns:th="http://www.thymeleaf.org">
+	<div class="modal-dialog modal-lg">
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h4 class="modal-title">Add/Update Educational Information</h4>
+			</div>
+			
+			<div class="modal-body">
+				<div class="row">
+				<form id="mainform-modal" class="form-horizontal" th:action="@{/landperson/education/save}" method="post" th:object="${lpe}">
+				<input type="hidden" th:field="*{xperson}"/>
+				<input type="hidden" th:if="${xrow ne 0}" th:field="*{xrow}"/>
+					<div class="row">
+						<div class="col-md-12">
+							<div class="row">
+								<div class="col-md-12">
+									<div class="section-header sectionbartoggle">
+										<h1></h1>
+									</div>
+								</div>
+							</div>
+						</div>
+						</div><br>
+						<div class="row">
+							<div class="col-md-12">
+								<div class="row">
+									<div class="col-md-6">
+										<div class="form-group">
+											<label class="control-label col-md-4" for="xyear" th:text="#{pi.modal.form.label.xyear}">Year</label>
+											<div class="col-md-7">
+												<input type="number" min="1950" max="2021" th:field="*{xyear}" class="form-control" maxlength="100" placeholder="2020"/>
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="control-label col-md-4" for="xexam" th:text="#{pi.modal.form.label.xexam}">Exam Title</label>
+											<div class="col-md-7">
+												<input type="text" th:field="*{xexam}" class="form-control" maxlength="100" placeholder="Required"/>
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="control-label col-md-4" for="xinstitude" th:text="#{pi.modal.form.label.xinstitude}">Institute</label>
+											<div class="col-md-7">
+												<input type="text" th:field="*{xinstitude}" class="form-control" maxlength="100" placeholder="Required"/>
+											</div>
+										</div>
+									</div>
+									<div class="col-md-6">
+										<div class="form-group">
+											<label class="control-label col-md-2" for="xsession" th:text="#{pi.modal.form.label.xsession}">Session</label>
+											<div class="col-md-7">
+												<input type="text" th:field="*{xsession}" class="form-control" maxlength="100" placeholder="Required"/>
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="control-label col-md-2" for="xmajor" th:text="#{pi.modal.form.label.xmajor}">Major/Subject</label>
+											<div class="col-md-7">
+												<input type="text" th:field="*{xmajor}" class="form-control" maxlength="100" placeholder="Required"/>
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="control-label col-md-2" for="xresult" placeholder="Required" th:text="#{pi.modal.form.label.xresult}">Result</label>
+											<div class="col-md-7">
+												<input type="text" th:field="*{xresult}" class="form-control" maxlength="100" placeholder="Required"/>
+											</div>
+										</div>
+									</div>
+									<div class="col-md-6">
+									</div>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-success btn-sm confirm-btn-modal">Submit</button>
+				<button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				// Init ui for modal
+				ck.ui.config.buttonevent();
+			});
+		</script>
+	</div>
+</div>

@@ -1,0 +1,61 @@
+<!-- Modal -->
+<div id="bomdetailmodal" th:fragment="bomdetailmodal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="true">
+	<div class="modal-dialog modal-lg">
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h4 class="modal-title">Add/Update Bom Detail</h4>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<form id="mainform-modal" th:action="@{/production/bom/bomdetail/save}" method="post" class="form-horizontal" th:object="${bomdetail}">
+						<input type="hidden" th:field="*{xbomkey}"/>
+						<input type="hidden" th:field="*{xbomrow}"/>
+						<div class="col-md-6">
+							<div class="form-group">
+								<label class="control-label col-sm-4" for="xitem" th:text="#{bome.modal.form.level.xitem}">Raw Item : </label>
+								<div class="col-sm-8">
+									<input 	type="text" 
+											class="form-control searchsuggest xitemsearch" 
+											placeholder="Search..." 
+											required="required"
+											th:value="${not #strings.isEmpty(bomdetail.xbomcomp) ? bomdetail.xbomcomp + ' - ' + bomdetail.xdesc : ''}" 
+											th:attr="search-url='search/caitem/rawmaterialprod'"/>
+									<input type="hidden" id="search-val" th:field="*{xbomcomp}" value=""/>
+									<input type="hidden" id="search-des" value=""/>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="control-label col-sm-4" for="xqtyord" th:text="#{bome.modal.form.level.xqtyord}">Qty Mix : </label>
+								<div class="col-sm-8">
+									<input type="text"  class="form-control" th:field="*{xqtymix}" min="0"/>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="control-label col-sm-4" for="xunit" th:text="#{bome.modal.form.level.xunit}">Unit : </label>
+								<div class="col-sm-8">
+									<input type="hidden" th:field="*{xunit}"/>
+									<input type="text" th:value="${bomdetail.xunit}" class="form-control xunitpur-display" disabled="disabled"/>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-6">
+						</div>
+					</form>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-success btn-sm confirm-btn-modal" th:text="#{button.value.xsubmit}">Submit</button>
+				<button type="button" class="btn btn-default btn-sm" data-dismiss="modal" th:text="#{button.value.xclose}">Close</button>
+			</div>
+		</div>
+		<script type="text/javascript" th:src="@{/assets/js/ck-ui/ck-search-suggest.js}"></script>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				// Init ui for modal
+				ck.ui.config.buttonevent();
+			})
+		</script>
+	</div>
+</div>

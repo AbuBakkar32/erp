@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<title th:text="#{po.page.title}">Purchase Order</title>
+		<meta th:remove="tag" th:include="commons :: common-meta" />
+		<meta th:remove="tag" th:include="commons :: common-css" />
+		<meta th:remove="tag" th:include="commons :: common-js" />
+	</head>
+	<body>
+		<!-- Header section -->
+		<div class="header-section" th:include="commons :: header-section"></div>
+
+		<!-- Menu section -->
+		<div th:if="${menuVersion != null and menuVersion eq 'MENU_V2'}" class="menuv2" th:include="commons :: main-menu"></div>
+
+		<div th:if="${menuVersion == null or menuVersion eq 'MENU_V1'}" class="navbar-inverse menu-section">
+			<div class="container-fluid">
+				<div class="row">
+					<nav class="navbar navbar-inverse">
+						<div class="container-fluid">
+							<div class="row">
+								<div class="navbar-header">
+									<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+										<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+									</button>
+								</div>
+								<div class="collapse navbar-collapse" id="myNavbar">
+									<div class="nav navbar-nav">
+										<li><a th:href="@{/}"><i class="fas fa-home"></i> Home</a></li>
+										<li class="active"><a th:href="@{/procurements/poord}">Purchase Order</a></li>
+									</div>
+									<ul class="nav navbar-nav navbar-right" th:include="ckbigmenu :: dashboard-menu"></ul>
+								</div>
+							</div>
+						</div>
+					</nav>
+				</div>
+			</div>
+		</div>
+
+		<!-- Content section -->
+		<div>
+			<div class="container-fluid">
+				<div class="row">
+					<h1 class="text-center" th:text="#{po.page.heading}">Purchase Order</h1>
+				</div>
+
+				<div class="row">
+					<div class="col-md-12 content-area">
+						<div class="row">
+							<div class="col-md-12">
+								<!-- Section list head -->
+								<section id="data-maintenance" style="margin-top: 30px;">
+									<div id="poordheaderform" th:fragment="poordheaderform">
+										<div class="section-header sectionbartoggle"></div>
+										<div class="form-action-button">
+											<a th:href="@{/procurements/poord/poordlist}" class="btn btn-sm btn-primary print-btn-link" target="_blank"><i class="fas fa-chevron-left"></i> <span style="margin-left:2px;">Purchase Orders List</span> </a>
+											<a th:href="@{/procurements/poord}" class="btn btn-sm btn-default" data-reloadurl="/procurements/poord/clear" data-reloadelementid="poordheaderform"><i class="fas fa-redo-alt"></i> <span style="margin-left:2px;" th:text="#{button.value.xclear}"> Clear</span></a>
+											<a th:if="${#strings.isEmpty(poordheader.xpornum)}" th:href="@{/procurements/poord}" class="btn btn-sm btn-success confirm-btn"><i class="fas fa-save"></i> <span style="margin-left:2px;" th:text="#{button.value.xsave}"> Save</span></a>
+											<a th:if="${not #strings.isEmpty(poordheader.xpornum) and poordheader.xstatuspor eq 'Open'}" href="#" class="btn btn-sm btn-success update-btn"><i class="fas fa-edit"></i> <span style="margin-left:2px;" th:text="#{button.value.xupdate}"> Update</span></a>
+											<a th:if="${not #strings.isEmpty(poordheader.xpornum) and poordheader.xstatuspor eq 'Open'}" th:href="@{/procurements/poord/archive/} + ${poordheader.xpornum}" class="btn btn-sm btn-danger archive-btn-link"><i class="fas fa-trash-alt"></i> <span style="margin-left:2px;" th:text="#{button.value.xdelete}"> Delete</span></a>
+											<a th:if="${not #strings.isEmpty(poordheader.xpornum) and poordheader.xstatuspor eq 'Open'}" th:href="@{/procurements/poord/confirm/} + ${poordheader.xpornum}" class="btn btn-sm btn-warning confirm-btn-link"><i class="fas fa-check-square"></i> <span style="margin-left:2px;" th:text="#{button.value.xconfirm}"> Confirm</span></a>
+											<a th:if="${not #strings.isEmpty(poordheader.xpornum) and (poordheader.xstatuspor eq 'Confirmed' or poordheader.xstatuspor eq 'GRN Created')}" th:href="@{/procurements/poord/creategrn/} + ${poordheader.xpornum}" class="btn btn-sm btn-warning confirm-btn-link"><i class="fas fa-check-square"></i> Create GRN</a>
+											<a th:if="${not #strings.isEmpty(poordheader.xpornum) and poordheader.xstatuspor ne 'Open'}" th:href="@{/procurements/poord/print/} + ${poordheader.xpornum}" class="btn btn-sm btn-primary print-btn-link" target="_blank"><i class="fas fa-print"></i> <span style="margin-left:2px;" th:text="#{button.value.xprint}"> Print</span> </a>
+											<a th:if="${isKhanas and not #strings.isEmpty(poordheader.xpornum) and (poordheader.xstatuspor eq 'Confirmed' or poordheader.xstatuspor eq 'GRN Created')}" th:href="@{/procurements/poord/createandconfirmgrn/} + ${poordheader.xpornum}" class="btn btn-sm btn-warning confirm-btn-link"><i class="fas fa-check-square"></i> Create & Confirm GRN</a>
+										</div>
+										<div class="section-body section-border">
+											<div id="poordheaderform" th:fragment="poordheaderform">
+												<form id="mainform" class="form-horizontal" th:action="@{/procurements/poord/save}" th:object="${poordheader}" method="post" th:with="df=${'E, dd-MMM-yyyy'}">
+													<input type="hidden" th:field="*{xtypetrn}"/>
+													<input type="hidden" th:field="*{xtype}"/>
+													<div class="row">
+														<div class="col-md-4">
+															<div class="form-group" th:if="${#strings.isEmpty(poordheader.xpornum)}">
+																<label class="control-label col-md-4" for="xtrn" th:text="#{po.form.label.xtype}">P.O. Code</label>
+																<div class="col-md-4">
+																	<select class="form-control" id="xtrn" name="xtrn">
+																		<option th:each="p : ${prefix}" th:value="${p.xtrn}" th:text="${p.xtrn}"></option>
+																	</select>
+																</div>
+															</div>
+
+															<div class="form-group" th:if="${not #strings.isEmpty(poordheader.xpornum)}">
+																<label class="control-label col-md-4" for="xpornum" th:text="#{po.form.label.xpornum}">P.O. Number</label>
+																<div class="col-md-8">
+																	<input type="hidden" class="form-control" th:field="*{xpornum}">
+																	<input type="text" class="form-control" th:value="*{xpornum}" disabled="disabled">
+																</div>
+															</div>
+
+															<div class="form-group datepicker">
+																<label class="control-label col-md-4" for="xdate" th:text="#{po.form.label.xdate}">Date</label>
+																<div class="input-group date col-md-7 datepicker">
+																	<input 	type="datepicker" 
+																			class="form-control" 
+																			id="xdate"
+																			name="xdate"
+																			th:value="${poordheader.xdate == null ? #dates.format(#dates.createNow(), df) : #dates.format(poordheader.xdate, df)}"/>
+																	<div class="input-group-addon">
+																		<span class="glyphicon glyphicon-calendar"></span>
+																	</div>
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xcus" th:text="#{po.form.label.xcus}">Supplier</label>
+																<div class="col-sm-8">
+																	<input 	type="text" 
+																			class="form-control searchsuggest" 
+																			placeholder="Search..." 
+																			th:value="${#strings.isEmpty(poordheader.xcus) ? '' : poordheader.xcus + ' - ' + poordheader.xorg}" 
+																			th:attr="search-url='search/supplier'"/>
+																	<input type="hidden" id="search-val" th:field="*{xcus}"/>
+																	<input type="hidden" id="search-des" th:value="*{xcus}"/>
+																</div>
+															</div>
+															
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xpreparer">Order By</label>
+																<div class="col-sm-8">
+																	<input 	type="text" 
+																			class="form-control searchsuggest" 
+																			placeholder="Search..." 
+																			th:value="${#strings.isEmpty(poordheader.xpreparer) ? '' : poordheader.xpreparer + ' - ' + poordheader.xpreparername}" 
+																			th:attr="search-url='search/staff'"/>
+																	<input type="hidden" class="required" id="search-val" th:field="*{xpreparer}" value=""/>
+																	<input type="hidden" id="search-des" th:value="*{xpreparer}"/>
+																</div>
+															</div>
+															
+														</div>
+
+														<div class="col-md-4">
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xhwh">Project/Business</label>
+																<div class="col-sm-8">
+																	<input 	type="text" 
+																			class="form-control searchsuggest xhwhsearch" 
+																			placeholder="Search..." 
+																			th:value="${#strings.isEmpty(poordheader.xhwh) ? '' : poordheader.xhwh + '-' + poordheader.projectName}" 
+																			th:attr="search-url='search/allproject'"
+																			/>
+																	<input type="hidden" class="required" id="search-val" th:field="*{xhwh}" value=""/>
+																	<input type="hidden" id="search-des" th:value="*{xhwh}"/>
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-sm-4" for="xwh" >Site/Store</label>
+																<div class="col-sm-8">
+																	<select th:field="*{xwh}" class="form-control">
+																		<option value="">-- Select --</option>
+																		<option th:each="s : ${allcodes}" th:value="${s.xcode}" th:text="${s.xcode + ' - ' + s.xcodename}"></option>
+																	</select>
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xref" th:text="#{po.form.label.xref}">Reference</label>
+																<div class="col-md-8">
+																	<input type="text" class="form-control" th:field="*{xref}">
+																</div>
+															</div>
+
+															<!--<div class="form-group">
+																<label class="control-label col-md-4" for="xwh" th:text="#{po.form.label.xwh}">Warehouse</label>
+																<div class="col-md-8">
+																	<select class="form-control" th:field="*{xwh}">
+																		<option value="">-- Select --</option>
+																		<option th:each="wh : ${warehouses}" th:value="${wh.xcode}" th:text="${wh.xcode} + ' - ' + ${wh.xlong}"></option>
+																	</select>
+																</div>
+															</div>-->
+														</div>
+
+														<div class="col-md-4">
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xtotamt" th:text="#{po.form.label.xtotamt}">Total Amount</label>
+																<div class="col-md-8">
+																	<input type="hidden" class="form-control" th:field="*{xtotamt}">
+																	<input type="text" class="form-control" th:value="*{xtotamt}" min="0" disabled="disabled">
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xstatuspor" th:text="#{po.form.label.xstatuspor}">Status</label>
+																<div class="col-md-8">
+																	<input type="hidden" class="form-control" th:field="*{xstatuspor}">
+																	<input type="text" class="form-control" th:value="*{xstatuspor}" disabled="disabled">
+																</div>
+															</div>
+
+															<div class="form-group">
+																<label class="control-label col-md-4" for="xnote" th:text="#{po.form.label.xnote}">Note</label>
+																<div class="col-md-8">
+																	<textarea class="form-control" th:field="*{xnote}" rows="3"></textarea>
+																</div>
+															</div>
+
+															<div class="form-group" th:if="${visiablefields}">
+																<label class="control-label col-md-4" for="xinvnum" th:text="#{grn.form.label.xinvnum}">Supplier Bill No.</label>
+																<div class="col-md-8">
+																	<input type="text" class="form-control" th:field="*{xinvnum}">
+																</div>
+															</div>
+
+														</div>
+													</div>
+												</form>
+												
+												
+											</div>
+										</div>
+										<script type="text/javascript" th:src="@{/assets/js/ck-ui/ck-search-suggest.js}"></script>
+										<script type="text/javascript">
+											$(document).ready(function(){
+												ck.ui.config.editmode();
+												ck.ui.config.dateAndTimepicker();
+											})
+										</script>
+									</div>
+								</section>
+							</div>
+						</div>
+						
+					</div>
+					
+					<div class="row">
+						<div class="col-md-12">
+							<div th:classappend="${visiablefields ? 'col-md-12' : 'col-md-6'}">
+								<section th:if="${not #strings.isEmpty(poordheader.xpornum)}" id="data-maintenance" style="margin-top: 30px;">
+									<a id="listlines-url" th:href="@{/procurements/poord/poorddetails/} + ${poordheader.xpornum}"></a>
+									<div class="section-header sectionbartoggle">
+										<h1 th:text="'Purchase Order Details of ' + ${poordheader.xpornum}"></h1>
+									</div>
+									<div class="section-body">
+									<div class="porow" id="poorddetailtable" th:fragment="poorddetailtable">
+										<button class="btn btn-primary btn-sm pull-right create-grn-btn nodisplay" style="margin-bottom: 10px;"> Create GRN (<span class="pocount">1</span>)</button>
+										<button th:if="${visiablefields}" class="btn btn-primary btn-sm pull-right confirm-grn-btn nodisplay" style="margin-bottom: 10px;"> Create & Confirm GRN (<span class="pocount">1</span>)</button>
+										<table class="table table-striped table-bordered normal-table nowrap potable">
+											<thead>
+												<tr class="porow">
+													<th th:text="#{po.modal.table.heading.xrow}">SL.</th>
+													<th th:text="#{po.modal.table.heading.xitem}">Item</th>
+													<th class="text-right" th:text="#{po.modal.table.heading.xqtypur}">Qty.</th>
+													<th class="text-right" th:text="#{po.modal.table.heading.xrate}">Rate</th>
+													<th th:text="#{po.modal.table.heading.xunitpur}">Unit</th>
+													<th class="text-right" th:text="#{po.modal.table.heading.xlineamt}">Line Amt</th>
+													<th>CF(Purchase)</th>
+													<th th:text="#{po.modal.table.heading.xnote}">Note</th>
+													<th>Completed GRN Qty.</th>
+													<th data-nosort="Y" style="text-align: right;" th:if="${poordheader.xstatuspor == 'Open'}">
+														<button type="button" class="btn btn-success btn-add" th:attr="data-url=@{/procurements/poord/} + ${poordheader.xpornum} + '/poorddetail/new/show', data-target-modal='poorddetailmodal'"><i class="fas fa-plus"></i></button>
+													</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr th:each="d,n : ${poorddetailsList}" class="porow" th:attr="data-row=${d.xrow}, data-qty=${d.xqtypur}, data-qtygrn=${d.xqtygrn}" th:style="${d.xqtypur != d.xqtygrn ? 'color: none' : 'color:balck; background: #f7ccd7'}" >
+													<td th:text="${d.xrow}"></td>
+													<td>
+														<a th:href="@{/mastersetup/caitem/} + ${d.xitem}" target="_blank" th:text="${d.xitem} + ' - ' + ${d.itemname}"></a>
+													</td>
+													<td class="text-right" th:text="${d.xqtypur}"></td>
+													<td class="text-right" th:text="${d.xrate}"></td>
+													<td th:text="${d.xunitpur}"></td>
+													<td class="text-right" th:text="${d.xlineamt}"></td>
+													<td class="text-right" th:text="${d.xcfpur}"></td>
+													<td th:text="${d.xnote}"></td>
+													<td th:text="${#strings.isEmpty(d.xqtygrn)? 0 : d.xqtygrn}"></td>
+													<td data-nosort="Y" style="text-align: right; font-size: 11px;" th:if="${poordheader.xstatuspor == 'Open'}">
+														<button type="button" class="btn btn-default btn-edit editmode" th:attr="data-url=@{/procurements/poord/} + ${poordheader.xpornum} + '/poorddetail/' + ${d.xrow} + '/show', data-target-modal='poorddetailmodal'"><i class="fas fa-edit"></i></button>
+														<button type="button" class="btn btn-danger btn-delete editmode" th:attr="data-url=@{/procurements/poord/} + ${poordheader.xpornum} + '/poorddetail/' + ${d.xrow} + '/delete'"><i class="fas fa-trash"></i></button>
+													</td>
+												</tr>
+											</tbody>
+											<tfoot>
+												<th colspan="5" class="text-right">Total</th>
+												<th class="text-right" th:text="${totalNetAmount}">0</th>
+											</tfoot>
+										</table>
+										
+										<script type="text/javascript">
+											var porow = [];
+											$(document).ready(function(){
+												
+												if($('#xstatuspor').val()!='Open') {
+													$('table.potable tr.porow').off('click').on('click', function(e){
+														e.preventDefault();
+	
+													if ($(this).data('qty') != $(this).data('qtygrn')){
+														$(this).toggleClass("selectedrow");
+													}
+	
+														if(porow.includes($(this).data('row'))){
+															const index = porow.indexOf($(this).data('row'));
+															if (index > -1) {
+																porow.splice(index, 1);
+															}
+														} else if ($(this).data('qty') != $(this).data('qtygrn')) {
+															porow.push($(this).data('row'));
+														}
+	
+														$('.pocount').html(porow.length);
+														console.log(porow);
+	
+														if(porow.length > 0) {
+															$('.create-grn-btn').removeClass('nodisplay');
+															$('.confirm-grn-btn').removeClass('nodisplay');
+														} else {
+															$('.create-grn-btn').addClass('nodisplay');
+															$('.confirm-grn-btn').addClass('nodisplay');
+														}
+	
+													})
+	
+													$('.create-grn-btn').off('click').on('click', function(e){
+														e.preventDefault();
+	
+														loadingMask2.show();
+														$.ajax({
+															url : getBasepath() + '/procurements/poord/createselgrn',
+															type : 'POST',
+															data: {
+																xpornum: $('#xpornum').val(),
+																rows: porow
+															},
+															success : function(data) {
+																loadingMask2.hide();
+																if(data.status == 'SUCCESS'){ 
+																	showMessage(data.status.toLowerCase(), data.message);
+																	if(data.triggermodalurl){
+																		modalLoader(getBasepath() + data.triggermodalurl, data.modalid);
+																	} else {
+																		if(data.reloadurl){
+																			doSectionReloadWithNewData(data);
+																		} else if(data.redirecturl){
+																			setTimeout(() => {
+																				window.location.replace(getBasepath() + data.redirecturl);
+																			}, 1000);
+																		}
+																	}
+																} else {
+																	showMessage(data.status.toLowerCase(), data.message);
+																}
+															},
+															error : function(jqXHR, status, errorThrown){
+																showMessage(status, "Something went wrong .... ");
+																loadingMask2.hide()
+															}
+														});
+													})
+													$('.confirm-grn-btn').off('click').on('click', function(e){
+														e.preventDefault();
+														
+														if($('#xinvnum').val() == ''){
+															showMessage("error", "required");
+															return;
+														}
+	
+														loadingMask2.show();
+														$.ajax({
+															url : getBasepath() + '/procurements/poord/createandconfirmselgrn',
+															type : 'POST',
+															data: {
+																xpornum: $('#xpornum').val(),
+																xinvnum: $('#xinvnum').val(),
+																rows: porow
+															},
+															success : function(data) {
+																loadingMask2.hide();
+																if(data.status == 'SUCCESS'){ 
+																	showMessage(data.status.toLowerCase(), data.message);
+																	if(data.triggermodalurl){
+																		modalLoader(getBasepath() + data.triggermodalurl, data.modalid);
+																	} else {
+																		if(data.reloadurl){
+																			doSectionReloadWithNewData(data);
+																		} else if(data.redirecturl){
+																			setTimeout(() => {
+																				window.location.replace(getBasepath() + data.redirecturl);
+																			}, 1000);
+																		}
+																	}
+																} else {
+																	showMessage(data.status.toLowerCase(), data.message);
+																}
+															},
+															error : function(jqXHR, status, errorThrown){
+																showMessage(status, "Something went wrong .... ");
+																loadingMask2.hide()
+															}
+														});
+													})
+												}
+											})
+										</script>
+										</div>
+									</div>
+								</section>
+							</div>
+							<div class="col-md-6" th:if="${not visiablefields and not #strings.isEmpty(poordheader.xpornum)}">
+								<section id="list-manager" style="margin-top: 30px;">
+									<div class="section-header sectionbartoggle">
+										<h1 th:text="'GRN List of ' + ${poordheader.xpornum}"></h1>
+									</div>
+									<div class="section-body">
+										<div style="overflow-x: auto;">
+											<table class="table table-striped table-bordered datatable nowrap" id="pogrnheadertable" th:fragment="pogrnheadertable">
+												<thead>
+													<tr>
+														<th th:text="#{grn.table.label.xgrnnum}">GRN Number</th>
+														<th th:text="#{grn.table.label.xdate}">Date</th>
+														<th th:text="#{grn.table.label.xcus}">Supplier</th>
+														<th th:text="#{grn.table.label.xwh}">Site/Store</th>
+														<th th:text="#{grn.table.label.xtotamt}">Total Amount</th>
+														<th th:text="#{grn.table.label.xpornum}">Purchase Order</th>
+														<th th:text="#{grn.table.label.xstatusgrn}">Status</th>
+													</tr>
+												</thead>
+												<tbody th:with="df=${'E, dd-MMM-yyyy'}">
+													<tr th:each="g,n : ${grnlist}">
+														<td>
+															<a th:href="@{/procurements/pogrn/} + ${g.xgrnnum}" th:text="${g.xgrnnum}"></a>
+														</td>
+														<td  th:text="${#dates.format(g.xdate, df)}"></td>
+														<td th:text="${g.xcus} + ' - ' + ${g.xorg}"></td>
+														<td th:text="${#strings.isEmpty(g.xwh) ? '' : g.xwh + ' - ' + g.storename}"></td>
+														<td th:text="${g.xtotamt}"></td>
+														<td th:text="${g.xpornum}"></td>
+														<td th:text="${g.xstatusgrn}"></td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</section>
+							</div>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-md-12">
+							<section id="list-manager" style="display:none">
+								<div>
+									<table class="table table-striped table-bordered datatable nowrap">
+										
+									</table>
+								</div>
+								
+							</section>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+
+		<!-- Modal -->
+		<div id="poorddetailmodal-section"></div>
+		
+		<!-- Footer section -->
+		<div class="footer-section" th:include="commons :: footer-section"></div>
+
+		<script type="text/javascript">
+			$(document).ready(function(){
+				// Init ui for modal
+				ck.ui.config.buttonevent();
+	
+				$('.xhwhsearch').on('blur', function(){
+					setTimeout(() => {
+						if($('input[name="xhwh"]').val() == ''){
+							$("#xwh option").remove(); 
+							var mySelect = $('#xwh');
+							mySelect.append(
+								$('<option></option>').val("").html("-- Select --")
+							);
+							return;
+						}
+	
+						loadingMask2.show();
+						$.ajax({
+							url : getBasepath() + '/procurements/poord/allcodesbyproject/' + $('input[name="xhwh"]').val(),
+							type : 'GET',
+							success : function(data) {
+								loadingMask2.hide();
+								if(data == undefined || data == null) return;
+	
+								$("#xwh option").remove(); 
+								var mySelect = $('#xwh');
+								mySelect.append(
+									$('<option></option>').val("").html("-- Select --")
+								);
+								$.each(data, function(val, obj) {
+									mySelect.append(
+										$('<option></option>').val(obj.xcode).html(obj.xcode + ' - ' + obj.xcodename)
+									);
+								});
+	
+							},
+							error : function(jqXHR, status, errorThrown){
+								showMessage(status, "Something went wrong .... ");
+								loadingMask2.hide();
+							}
+						})
+					}, 1000);
+				});
+			});
+		</script>
+	</body>
+</html>

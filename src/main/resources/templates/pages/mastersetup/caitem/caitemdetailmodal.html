@@ -1,0 +1,91 @@
+<!-- Modal -->
+<div id="caitemdetailmodal" th:fragment="caitemdetailmodal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="true" xmlns:th="http://www.thymeleaf.org">
+	<div class="modal-dialog modal-lg">
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h4 class="modal-title">Add/Update Item</h4>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<form id="mainform-modal" th:action="@{/mastersetup/caitem/caitemdetail/save}" method="post" class="form-horizontal" th:object="${caitemDetail}">
+						<input type="hidden" th:field="*{xitem}"/>
+						<div class="col-md-6">
+							<div class="form-group">
+								<label class="control-label col-sm-4" for="xsubitem">Sub Item : </label>
+								<div class="col-sm-8">
+									<input 	type="text" 
+											class="form-control searchsuggest xitemsearch" 
+											placeholder="Search..." 
+											th:value="${caitemDetail.xsubitem}" 
+											th:attr="search-url='search/caitem/' + ${caitemDetail.xitem} + '/subitem'"/>
+									<input type="hidden" id="search-val" th:field="*{xsubitem}" class="search-xitem" value=""/>
+									<input type="hidden" id="search-des" th:value="${caitemDetail.xsubitem}"/>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="control-label col-sm-4" for="xunit">Unit : </label>
+								<div class="col-sm-8">
+									<input type="hidden" th:field="*{xunit}"/>
+									<input type="text" th:value="${caitemDetail.xunit}" class="form-control xunitpur-display" disabled="disabled"/>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="control-label col-sm-4" for="xqtyord">Qty : </label>
+								<div class="col-sm-8">
+									<input type="text"  class="form-control" th:field="*{xqtyord}" min="1"/>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-success btn-sm confirm-btn-modal">Submit</button>
+				<button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+		<script type="text/javascript" th:src="@{/assets/js/ck-ui/ck-search-suggest.js}"></script>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				// Init ui for modal
+				ck.ui.config.buttonevent();
+
+				var olditem = $('input[name="xitem"]').val();
+
+				// Get item purchase unit
+				$('.xitemsearch').on('blur', function(){
+
+					setTimeout(() => {
+						if($('input[name="xsubitem"]').val() == ''){
+							$('input[name="xunit"]').val("");
+							$('input.xunitpur-display').val("");
+							$('input#xqtyord').val("1.00");
+							return;
+						}
+
+						if(olditem != '' && olditem == $('input[name="xsubitem"]').val()) return;
+
+						loadingMask2.show();
+						$.ajax({
+							url : getBasepath() + '/purchasing/requisition/centralitem/purunit/' + $('input[name="xsubitem"]').val(),
+							type : 'GET',
+							success : function(data) {
+								console.log(data);
+								loadingMask2.hide();
+								$('input[name="xunit"]').val(data.xunitpur);
+								$('input.xunitpur-display').val(data.xunitpur);
+								$('input#xqtyord').val(data.xminqty);
+							},
+							error : function(jqXHR, status, errorThrown){
+								showMessage(status, "Something went wrong .... ");
+								loadingMask2.hide()
+							}
+						})
+					}, 1000);
+				})
+			});
+		</script>
+	</div>
+</div>

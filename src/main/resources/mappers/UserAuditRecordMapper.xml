@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.asl.mapper.UserAuditRecordMapper">
+
+	<insert id="save" parameterType="UserAuditRecord" >
+		<selectKey keyProperty="recordId" resultType="Long" order="BEFORE">
+			SELECT COALESCE(Max(recordId), 0) + 1 FROM UserAuditRecord
+		</selectKey>
+		INSERT INTO UserAuditRecord
+		(
+			recordId,
+			userId,
+			businessId,
+			unAuthorizedAccessMessage,
+			ipAddress,
+			loginDate,
+			logoutDate,
+			recordDate
+		)
+		VALUES
+		(
+			#{recordId},
+			#{userId, jdbcType=VARCHAR},
+			#{businessId, jdbcType=VARCHAR},
+			#{unAuthorizedAccessMessage, jdbcType=VARCHAR},
+			#{ipAddress, jdbcType=VARCHAR},
+			#{loginDate, jdbcType=TIMESTAMP},
+			#{logoutDate, jdbcType=TIMESTAMP},
+			#{recordDate, jdbcType=TIMESTAMP}
+		)
+	</insert>
+
+	<select id="getAll" resultType="UserAuditRecord">
+		SELECT * FROM UserAuditRecord WHERE businessId=#{businessId}
+	</select>
+
+	<select id="findByUserId" resultType="UserAuditRecord">
+		SELECT * FROM UserAuditRecord WHERE userId=#{userId} AND businessId=#{businessId}
+	</select>
+
+</mapper>

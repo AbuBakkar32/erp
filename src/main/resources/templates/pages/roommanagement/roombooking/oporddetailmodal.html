@@ -1,0 +1,114 @@
+<!-- Modal -->
+<div id="oporddetailmodal" th:fragment="oporddetailmodal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="true" xmlns:th="http://www.thymeleaf.org">
+	<div class="modal-dialog modal-lg">
+		<link rel="stylesheet" type="text/css" th:href="@{/assets/pages/conventionmanagement/hallbooking/css/oporddetailmodal.css}"/>
+		<script type="text/javascript" th:src="@{/assets/js/ck-ui/ck-search-suggest.js}"></script>
+		<script type="text/javascript" th:src="@{/assets/pages/conventionmanagement/hallbooking/js/oporddetailmodal.js}"></script>
+
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="btn btn-primary pull-right btn-sm rate-btn">Total : 0/-</button>
+				<h4 class="modal-title">Add/Update Item</h4>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<input type="hidden" th:field="*{xordernum}"/>
+
+
+					<div class="col-md-12 item-section" th:each="map : ${itemMap}">
+						<div class="row">
+							<h4 th:text="${map.key}">Functions</h4>
+						</div>
+						<div class="row">
+							<div class="item-container">
+								<a th:if="${not f.booked}" th:attr="data-xitem=${f.xitem},data-xcatitem=${f.xcatitem},data-xrate=${f.xrate}" 
+										th:id="${f.xitem}"
+										class="item-box btn"
+										th:classappend="${f.selected ? 'btn-success' : 'btn-default'}"
+										th:each="f : ${map.value}">
+									<p th:text="${f.xdesc}"></p>
+									<p th:text="${f.xrate} + '/-'"></p>
+								</a>
+								<a th:if="${f.booked}" th:attr="data-xitem=${f.xitem},data-xcatitem=${f.xcatitem},data-xrate=${f.xrate}" 
+										th:id="${f.xitem}"
+										class="item-box2 btn btn-danger"
+										th:each="f : ${map.value}">
+									<p>
+										<span th:text="${f.xdesc}"></span> <span>[Booked]</span>
+									</p>
+									<p th:text="${f.xrate} + '/-'"></p>
+								</a>
+							</div>
+						</div>
+					</div>
+
+					<!-- <div class="col-md-12 item-section">
+						<h4>Functions</h4>
+						<div class="row">
+							<div class="col-md-12 item-container">
+								<button th:attr="data-xitem=${f.xitem},data-xcatitem=${f.xcatitem},data-xrate=${f.xrate}" 
+										th:classappend="${f.xitem}"
+										class="item-box btn btn-default" 
+										th:each="f : ${functions}">
+									<p th:text="${f.xdesc}"></p>
+									<p th:text="${f.xrate} + '/-'"></p>
+								</button>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md-12 item-section">
+						<h4>Halls</h4>
+						<div class="row">
+							<div class="col-md-12 item-container">
+								<button th:attr="data-xitem=${f.xitem},data-xcatitem=${f.xcatitem},data-xrate=${f.xrate}" 
+										th:classappend="${f.xitem}"
+										class="item-box btn btn-default" 
+										th:each="f : ${halls}">
+									<p th:text="${f.xdesc}"></p>
+									<p th:text="${f.xrate} + '/-'"></p>
+								</button>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md-12 item-section">
+						<h4>Facilities</h4>
+						<div class="row">
+							<div class="col-md-12 item-container">
+								<button th:attr="data-xitem=${f.xitem},data-xcatitem=${f.xcatitem},data-xrate=${f.xrate}" 
+										th:classappend="${f.xitem}"
+										class="item-box btn btn-default" 
+										th:each="f : ${facilities}">
+									<p th:text="${f.xdesc}"></p>
+									<p th:text="${f.xrate} + '/-'"></p>
+								</button>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md-12 item-section">
+						<h4>Foods</h4>
+						<div class="row">
+							<div class="col-md-12 item-container">
+								<button th:attr="data-xitem=${f.xitem},data-xcatitem=${f.xcatitem},data-xrate=${f.xrate}" 
+										th:classappend="${f.xitem}"
+										class="item-box btn btn-default" 
+										th:each="f : ${foods}">
+									<p th:text="${f.xdesc}"></p>
+									<p th:text="${f.xrate} + '/-'"></p>
+								</button>
+							</div>
+						</div>
+					</div> -->
+
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-success btn-sm confirm-btn-modal">Submit</button>
+				<button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+	</div>
+</div>

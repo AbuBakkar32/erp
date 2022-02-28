@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.asl.mapper.OrderRequisitionMapper">
+
+	<select id="getAllOpenBranchesRequisitions" resultType="com.asl.model.BranchesRequisitions">
+		SELECT
+			POORDHEADER.XPORNUM,
+			cacus.xcus || ' - ' || cacus.xorg as ZORG,
+			POORDHEADER.XSTATUSPOR,
+			POORDHEADER.XDATE,
+			POORDHEADER.ZID AS "BRANCHZID",
+			POORDHEADER.XORDERNUM
+		FROM 
+			POORDHEADER
+			JOIN ZBUSINESS ON ZBUSINESS.ZID=POORDHEADER.ZID
+			LEFT JOIN cacus ON cacus.xcuszid = POORDHEADER.ZID AND cacus.zactive='1' AND cacus.zid=#{zid}
+		WHERE 
+			ZBUSINESS.CENTRALZID=#{zid}
+			AND POORDHEADER.XTYPE='Requisition Order'
+			AND ZBUSINESS.BRANCH='1'
+			AND XSTATUSPOR='Open'
+		ORDER BY
+			POORDHEADER.ZID, POORDHEADER.XPORNUM DESC
+	</select>
+
+	<select id="getAllBranchesRequisitions" resultType="com.asl.model.BranchesRequisitions">
+		SELECT
+			opreqheader.xdoreqnum as xpornum,
+			cacus.xcus || ' - ' || cacus.xorg as ZORG,
+			opreqheader.xstatus as xstatuspor,
+			opreqheader.XDATE,
+			opreqheader.xordernum,
+			opreqheader.xstatusreq,
+			opordheader.xordernum as xsonumber
+		FROM 
+			opreqheader
+			LEFT JOIN opordheader on opreqheader.xdoreqnum=opordheader.xreqnum and opreqheader.zid=opordheader.zid
+			LEFT JOIN cacus ON cacus.xcus = opreqheader.xcus AND cacus.zactive='1' AND cacus.zid=opreqheader.zid
+		WHERE 
+			TO_CHAR(opreqheader.XDATE,'yyyy-MM-dd')=#{xdate}
+			AND opreqheader.xstatus != 'Open'
+			AND opreqheader.xtypetrn='SRQ Number'
+			AND opreqheader.zid=#{zid}
+			<if test="xcus != null and xcus != ''">
+				AND cacus.xcus = #{xcus}
+			</if>
+		ORDER BY
+			opreqheader.xcus ASC, opreqheader.xdoreqnum DESC
+	</select>
+
+	<select id="getAllBranchesRequisitionDetails" resultType="com.asl.model.BranchesRequisitions">
+		SELECT
+			opreqheader.xdoreqnum as XPORNUM,
+			cacus.xorg as ZORG,
+			opreqdetail.xitem,
+			caitem.xdesc,
+			caitem.xcatitem,
+			opreqdetail.xqtyord,
+			opreqdetail.xunit as XUNITPUR,
+			opreqheader.xstatus as XSTATUSPOR,
+			opreqheader.xdate,
+			xcodes.seqn
+		FROM 
+			opreqheader
+			JOIN opreqdetail ON opreqdetail.xdoreqnum=opreqheader.xdoreqnum AND opreqdetail.zid=opreqheader.zid
+			JOIN cacus ON cacus.xcus=opreqheader.xcus AND cacus.zid=opreqheader.zid AND cacus.zactive='1'
+			JOIN caitem ON caitem.xitem=opreqdetail.xitem AND caitem.zid=#{zid} AND caitem.zactive='1'
+			LEFT JOIN xcodes ON xcodes.xcode = caitem.xcatitem AND xcodes.ZID = caitem.zid AND xcodes.zactive='1' AND xcodes.xtype='Item Category'
+		WHERE 
+			opreqheader.zid=#{zid}
+			AND TO_CHAR(opreqheader.xdate,'yyyy-MM-dd')=#{xdate}
+			AND opreqheader.xtypetrn='SRQ Number'
+			AND opreqheader.xstatusreq in ('Open','SO Created')
+		ORDER BY
+			opreqheader.xdoreqnum, opreqdetail.xitem ASC
+	</select>
+
+	<select id="getDetailListByXpornumAndBranchZid" resultType="Opreqdetail">
+		SELECT 
+			distinct
+			opreqdetail.xdoreqnum,
+			opreqdetail.xrow,
+			opreqdetail.xitem,
+			caitem.xdesc,
+			opreqdetail.xnote,
+			opreqdetail.xunit,
+			opreqdetail.xqtyord,
+			opreqdetail.xrate,
+			opreqdetail.zactive,
+			caitem.xcatitem,
+			caitem.xgitem,
+			xc.seqn
+		FROM 
+			opreqdetail 
+			LEFT JOIN caitem on caitem.xitem=opreqdetail.xitem AND caitem.zid=opreqdetail.zid AND caitem.zactive='1'
+			LEFT JOIN xcodes xc ON xc.xcode = caitem.xcatitem and xc.zid = caitem.zid and xc.zactive='1'
+		WHERE 
+			opreqdetail.xdoreqnum=#{xpornum}
+			AND opreqdetail.zid=#{zid}
+		ORDER BY
+			xc.seqn, caitem.xcatitem, opreqdetail.xitem
+	</select> 
+
+</mapper>

@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<title th:text="#{salm.page.title}">List Configuration</title>
+		<meta th:remove="tag" th:include="commons :: common-meta"/>
+		<meta th:remove="tag" th:include="commons :: common-css"/>
+		<meta th:remove="tag" th:include="commons :: common-js"/>
+	</head>
+	<body>
+
+		<!-- Header section -->
+		<div class="header-section" th:include="commons :: header-section"></div>
+
+		<!-- Menu section -->
+		<div th:if="${menuVersion != null and menuVersion eq 'MENU_V2'}" class="menuv2" th:include="commons :: main-menu"></div>
+
+		<div th:if="${menuVersion == null or menuVersion eq 'MENU_V1'}" class="navbar-inverse menu-section">
+			<div class="container-fluid">
+				<div class="row">
+					<nav class="navbar navbar-inverse">
+						<div class="container-fluid">
+							<div class="row">
+								<div class="navbar-header">
+									<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+										<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+									</button>
+								</div>
+								<div class="collapse navbar-collapse" id="myNavbar">
+									<div class="nav navbar-nav">
+										<li><a th:href="@{/}"><i class="fas fa-home"></i> Home</a></li>
+										<li class="active"><a th:href="@{/system/list}">List Configuration</a></li>
+									</div>
+									<ul class="nav navbar-nav navbar-right" th:include="ckbigmenu :: dashboard-menu"></ul>
+								</div>
+							</div>
+						</div>
+					</nav>
+				</div>
+			</div>
+		</div>
+
+		<!-- Content section -->
+		<div>
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-md-12 content-area">
+						<div class="row">
+							<h1 class="text-center" th:text="#{salm.page.heading}">List Configuration</h1>
+						</div>
+
+						<div class="row">
+							<div class="col-md-6">
+								<!-- Section list head -->
+								<section id="data-maintenance" style="margin-top: 30px;">
+									<div class="section-header sectionbartoggle"></div>
+									<div class="form-action-button">
+										<a th:href="@{/system/list}" class="btn btn-sm btn-default"><i class="fas fa-redo-alt"></i>  <span style="margin-left:2px;" th:text="#{button.value.xclear}"> Clear</span></a>
+										<a th:if="${#strings.isEmpty(listHead.listcode)}" th:href="@{/system/list}" class="btn btn-sm btn-success confirm-btn"><i class="fas fa-save"></i>  <span style="margin-left:2px;" th:text="#{button.value.xsave}"> Save</span></a>
+										<a th:if="${not #strings.isEmpty(listHead.listcode)}" href="#" class="btn btn-sm btn-success update-btn"><i class="fas fa-edit"></i>  <span style="margin-left:2px;" th:text="#{button.value.xupdate}"> Update</span></a>
+										<a th:if="${not #strings.isEmpty(listHead.listcode)}" th:href="@{/system/list/archive/} + ${listHead.listcode}" class="btn btn-sm btn-danger archive-btn-link"><i class="fas fa-trash-alt"></i>  <span style="margin-left:2px;" th:text="#{button.value.xdelete}"> Delete</span></a>
+									</div>
+									<div class="section-body section-border">
+										<form id="mainform" class="form-horizontal" th:action="@{/system/list/save}" th:object="${listHead}" method="post">
+											<input type="hidden" th:field="*{newData}"/>
+											<div class="row">
+												<div class="col-md-6">
+													<div class="form-group">
+														<label class="control-label col-sm-4" for="listcode" th:text="#{salm.form.label.listcode}">List code</label>
+														<div class="col-sm-8">
+															<input th:if="${#strings.isEmpty(listHead.listcode)}" type="text" class="form-control" th:field="*{listcode}" required="required" maxlength="100">
+															<input th:if="${not #strings.isEmpty(listHead.listcode)}" type="text" class="form-control" th:field="*{listcode}" required="required" maxlength="100" disabled="disabled">
+															<input th:if="${not #strings.isEmpty(listHead.listcode)}" type="hidden" class="form-control" th:field="*{listcode}" required="required" maxlength="100">
+														</div>
+													</div>
+													<div class="form-group">
+														<label class="control-label col-sm-4" for="description" th:text="#{salm.form.label.description}">Description</label>
+														<div class="col-sm-8">
+															<input type="text" class="form-control" th:field="*{description}" maxlength="100">
+														</div>
+													</div>
+													<div class="form-group">
+														<label class="control-label col-sm-4" for="notes" th:text="#{salm.form.label.notes}">Note</label>
+														<div class="col-sm-8">
+															<textarea class="form-control" th:field="*{notes}"></textarea>
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="row">
+												<div class="col-md-6">
+													<div class="form-group">
+														<label class="control-label col-sm-4" for="prompt1" th:text="#{salm.form.label.prompt1}">List prompt 1</label>
+														<div class="col-sm-8">
+															<input type="text" class="form-control" th:field="*{prompt1}" maxlength="100"/>
+														</div>
+													</div>
+													<div class="form-group">
+														<label class="control-label col-sm-4" for="prompt2" th:text="#{salm.form.label.prompt2}">List prompt 2</label>
+														<div class="col-sm-8">
+															<input type="text" class="form-control" th:field="*{prompt2}" maxlength="100"/>
+														</div>
+													</div>
+													<div class="form-group">
+														<label class="control-label col-sm-4" for="prompt3" th:text="#{salm.form.label.prompt3}">List prompt 3</label>
+														<div class="col-sm-8">
+															<input type="text" class="form-control" th:field="*{prompt3}" maxlength="100"/>
+														</div>
+													</div>
+													<div class="form-group">
+														<label class="control-label col-sm-4" for="prompt4" th:text="#{salm.form.label.prompt4}">List prompt 4</label>
+														<div class="col-sm-8">
+															<input type="text" class="form-control" th:field="*{prompt4}" maxlength="100"/>
+														</div>
+													</div>
+													<div class="form-group">
+														<label class="control-label col-sm-4" for="prompt5" th:text="#{salm.form.label.prompt5}">List prompt 5</label>
+														<div class="col-sm-8">
+															<input type="text" class="form-control" th:field="*{prompt5}" maxlength="100"/>
+														</div>
+													</div>
+													<div class="form-group">
+														<label class="control-label col-sm-4" for="prompt6" th:text="#{salm.form.label.prompt6}">List prompt 6</label>
+														<div class="col-sm-8">
+															<input type="text" class="form-control" th:field="*{prompt6}" maxlength="100"/>
+														</div>
+													</div>
+													<div class="form-group">
+														<label class="control-label col-sm-4" for="prompt7" th:text="#{salm.form.label.prompt7}">List prompt 7</label>
+														<div class="col-sm-8">
+															<input type="text" class="form-control" th:field="*{prompt7}" maxlength="100"/>
+														</div>
+													</div>
+													<div class="form-group">
+														<label class="control-label col-sm-4" for="prompt8" th:text="#{salm.form.label.prompt8}">List prompt 8</label>
+														<div class="col-sm-8">
+															<input type="text" class="form-control" th:field="*{prompt8}" maxlength="100"/>
+														</div>
+													</div>
+												</div>
+												<div class="col-md-6">
+													<div class="form-group">
+														<label class="control-label col-sm-4" for="prompt9" th:text="#{salm.form.label.prompt9}">List prompt 9</label>
+														<div class="col-sm-8">
+															<input type="text" class="form-control" th:field="*{prompt9}" maxlength="100"/>
+														</div>
+													</div>
+													<div class="form-group">
+														<label class="control-label col-sm-4" for="prompt10" th:text="#{salm.form.label.prompt10}">List prompt 10</label>
+														<div class="col-sm-8">
+															<input type="text" class="form-control" th:field="*{prompt10}" maxlength="100"/>
+														</div>
+													</div>
+													<div class="form-group">
+														<label class="control-label col-sm-4" for="prompt11" th:text="#{salm.form.label.prompt11}">List prompt 11</label>
+														<div class="col-sm-8">
+															<input type="text" class="form-control" th:field="*{prompt11}" maxlength="100"/>
+														</div>
+													</div>
+													<div class="form-group">
+														<label class="control-label col-sm-4" for="prompt12" th:text="#{salm.form.label.prompt12}">List prompt 12</label>
+														<div class="col-sm-8">
+															<input type="text" class="form-control" th:field="*{prompt12}" maxlength="100"/>
+														</div>
+													</div>
+													<div class="form-group">
+														<label class="control-label col-sm-4" for="prompt13" th:text="#{salm.form.label.prompt13}">List prompt 13</label>
+														<div class="col-sm-8">
+															<input type="text" class="form-control" th:field="*{prompt13}" maxlength="100"/>
+														</div>
+													</div>
+													<div class="form-group">
+														<label class="control-label col-sm-4" for="prompt14" th:text="#{salm.form.label.prompt14}">List prompt 14</label>
+														<div class="col-sm-8">
+															<input type="text" class="form-control" th:field="*{prompt14}" maxlength="100"/>
+														</div>
+													</div>
+													<div class="form-group">
+														<label class="control-label col-sm-4" for="prompt15" th:text="#{salm.form.label.prompt15}">List prompt 15</label>
+														<div class="col-sm-8">
+															<input type="text" class="form-control" th:field="*{prompt15}" maxlength="100"/>
+														</div>
+													</div>
+													<div class="form-group">
+														<label class="control-label col-sm-4" for="prompt16" th:text="#{salm.form.label.prompt16}">List prompt 16</label>
+														<div class="col-sm-8">
+															<input type="text" class="form-control" th:field="*{prompt16}" maxlength="100"/>
+														</div>
+													</div>
+												</div>
+											</div>
+										</form>
+									</div>
+								</section>
+							</div>
+							<div class="col-md-6">
+								<section id="list-manager" style="margin-top: 30px;">
+									<div class="section-header sectionbartoggle">
+										<h1 th:text="#{salm.table.heading.title}">All Lists</h1>
+									</div>
+									<div class="section-body">
+										<table class="table table-striped table-bordered datatable nowrap" id="listmanagertable" th:fragment="listmanagertable">
+											<thead>
+												<tr>
+													<th th:text="#{salm.table.heading.listcode}">List Code</th>
+													<th th:text="#{salm.table.heading.description}">Description</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr th:each="lh : ${listHeads}">
+													<td><a th:href="@{/system/list/} + ${lh.listcode}" th:text="${lh.listcode}"></a></td>
+													<td th:text="${lh.description}"></td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</section>
+							</div>
+						</div>
+
+						<!-- Section list line -->
+						<section th:if="${not #strings.isEmpty(listHead.listcode)}" id="data-maintenance" style="margin-top: 30px;">
+							<div class="section-header sectionbartoggle">
+								<h1 th:text="#{salm.modal.table.heading.title}">List Lines</h1>
+							</div>
+							<div class="section-body">
+								<div style="overflow-x: auto;">
+									<table class="table table-striped table-bordered datatable nowrap" id="listtable" th:fragment="listtable">
+										<thead>
+											<tr>
+												<th data-nosort="Y" style="text-align: left;" th:if="${not #strings.isEmpty(listHead.listcode)}">
+													<button type="button" class="btn btn-success btn-add" th:attr="data-url=@{/system/list/} + ${listHead.listcode} + '/listline/new/show', data-target-modal='listmodal'"><i class="fas fa-plus"></i></button>
+												</th>
+												<th th:if="${not #strings.isEmpty(listHead.prompt1)}" th:text="${listHead.prompt1}">id</th>
+												<th th:if="${not #strings.isEmpty(listHead.prompt2)}" th:text="${listHead.prompt2}">id</th>
+												<th th:if="${not #strings.isEmpty(listHead.prompt3)}" th:text="${listHead.prompt3}">id</th>
+												<th th:if="${not #strings.isEmpty(listHead.prompt4)}" th:text="${listHead.prompt4}">id</th>
+												<th th:if="${not #strings.isEmpty(listHead.prompt5)}" th:text="${listHead.prompt5}">id</th>
+												<th th:if="${not #strings.isEmpty(listHead.prompt6)}" th:text="${listHead.prompt6}">id</th>
+												<th th:if="${not #strings.isEmpty(listHead.prompt7)}" th:text="${listHead.prompt7}">id</th>
+												<th th:if="${not #strings.isEmpty(listHead.prompt8)}" th:text="${listHead.prompt8}">id</th>
+												<th th:if="${not #strings.isEmpty(listHead.prompt9)}" th:text="${listHead.prompt9}">id</th>
+												<th th:if="${not #strings.isEmpty(listHead.prompt10)}" th:text="${listHead.prompt10}">id</th>
+												<th th:if="${not #strings.isEmpty(listHead.prompt11)}" th:text="${listHead.prompt11}">id</th>
+												<th th:if="${not #strings.isEmpty(listHead.prompt12)}" th:text="${listHead.prompt12}">id</th>
+												<th th:if="${not #strings.isEmpty(listHead.prompt13)}" th:text="${listHead.prompt13}">id</th>
+												<th th:if="${not #strings.isEmpty(listHead.prompt14)}" th:text="${listHead.prompt14}">id</th>
+												<th th:if="${not #strings.isEmpty(listHead.prompt15)}" th:text="${listHead.prompt15}">id</th>
+												<th th:if="${not #strings.isEmpty(listHead.prompt16)}" th:text="${listHead.prompt16}">id</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr th:each="list : ${listLines}">
+												<td data-nosort="Y" style="text-align: left; font-size: 11px;">
+													<button type="button" class="btn btn-default btn-edit editmode" th:attr="data-url=@{/system/list/} + ${listHead.listcode} + '/listline/' + ${list.listid} + '/show', data-target-modal='listmodal'"><i class="fas fa-edit"></i></button>
+													<button type="button" class="btn btn-danger btn-delete editmode" th:attr="data-url=@{/system/list/} + ${listHead.listcode} + '/listline/' + ${list.listid} + '/archive'"><i class="fas fa-trash"></i></button>
+												</td>
+												<td th:if="${not #strings.isEmpty(listHead.prompt1)}" th:text="${list.listvalue1}">id</td>
+												<td th:if="${not #strings.isEmpty(listHead.prompt2)}" th:text="${list.listvalue2}">id</td>
+												<td th:if="${not #strings.isEmpty(listHead.prompt3)}" th:text="${list.listvalue3}">id</td>
+												<td th:if="${not #strings.isEmpty(listHead.prompt4)}" th:text="${list.listvalue4}">id</td>
+												<td th:if="${not #strings.isEmpty(listHead.prompt5)}" th:text="${list.listvalue5}">id</td>
+												<td th:if="${not #strings.isEmpty(listHead.prompt6)}" th:text="${list.listvalue6}">id</td>
+												<td th:if="${not #strings.isEmpty(listHead.prompt7)}" th:text="${list.listvalue7}">id</td>
+												<td th:if="${not #strings.isEmpty(listHead.prompt8)}" th:text="${list.listvalue8}">id</td>
+												<td th:if="${not #strings.isEmpty(listHead.prompt9)}" th:text="${list.listvalue9}">id</td>
+												<td th:if="${not #strings.isEmpty(listHead.prompt10)}" th:text="${list.listvalue10}">id</td>
+												<td th:if="${not #strings.isEmpty(listHead.prompt11)}" th:text="${list.listvalue11}">id</td>
+												<td th:if="${not #strings.isEmpty(listHead.prompt12)}" th:text="${list.listvalue12}">id</td>
+												<td th:if="${not #strings.isEmpty(listHead.prompt13)}" th:text="${list.listvalue13}">id</td>
+												<td th:if="${not #strings.isEmpty(listHead.prompt14)}" th:text="${list.listvalue14}">id</td>
+												<td th:if="${not #strings.isEmpty(listHead.prompt15)}" th:text="${list.listvalue15}">id</td>
+												<td th:if="${not #strings.isEmpty(listHead.prompt16)}" th:text="${list.listvalue16}">id</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</section>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Modal -->
+		<div id="listmodal-section"></div>
+
+		<!-- Footer section -->
+		<div class="footer-section" th:include="commons :: footer-section"></div>
+	</body>
+</html>

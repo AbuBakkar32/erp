@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.asl.mapper.TermsdefMapper">
+
+	<insert id="saveTermsdef" parameterType="Termsdef">
+	<selectKey keyProperty="xtermid" resultType="Integer" order="BEFORE">
+			SELECT COALESCE(Max(xtermid), 0) + 1 FROM termsdef WHERE zactive='1' AND zid=#{zid}
+	</selectKey>
+	INSERT INTO termsdef
+		(
+			xtermid,
+			xtype,
+			xterm,
+			xdesc,
+			xnote,
+			xserial,
+			
+			zactive,
+			zauserid,
+			zid,
+			ztime,
+			zutime,
+			zuuserid
+		)
+		VALUES
+		(
+			#{xtermid, jdbcType=INTEGER},
+			#{xtype, jdbcType=VARCHAR},
+			#{xterm, jdbcType=VARCHAR},
+			#{xdesc, jdbcType=VARCHAR},
+			#{xnote, jdbcType=VARCHAR},
+			#{xserial, jdbcType=INTEGER},
+			
+			#{zactive, jdbcType=VARCHAR},
+			#{zauserid, jdbcType=VARCHAR},
+			#{zid, jdbcType=VARCHAR},
+			#{ztime, jdbcType=TIMESTAMP},
+			#{zutime, jdbcType=TIMESTAMP},
+			#{zuuserid, jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<update id="updateTermsdef" parameterType="Termsdef">
+		UPDATE 
+			termsdef
+		SET
+			xdesc=#{xdesc, jdbcType=VARCHAR},
+			xnote=#{xnote, jdbcType=VARCHAR},
+			xserial=#{xserial, jdbcType=INTEGER},
+			
+			zactive=#{zactive, jdbcType=VARCHAR},
+			zauserid=#{zauserid, jdbcType=VARCHAR},
+			zid=#{zid, jdbcType=VARCHAR},
+			ztime=#{ztime, jdbcType=TIMESTAMP},
+			zutime=#{zutime, jdbcType=TIMESTAMP},
+			zuuserid=#{zuuserid, jdbcType=VARCHAR}
+		WHERE
+			xtermid=#{xtermid, jdbcType=INTEGER}
+			AND xtype=#{xtype, jdbcType=VARCHAR}
+			AND xterm=#{xterm, jdbcType=VARCHAR}
+			AND zid=#{zid, jdbcType=VARCHAR}
+	</update>
+
+	<delete id="deleteTermsdef" parameterType="Termsdef">
+		DELETE 
+		
+		FROM 
+			termsdef 
+		WHERE 
+			xtype=#{xtype} 
+			AND xterm=#{xterm} 
+			AND zactive='1' 
+			AND zid=#{zid}
+	</delete>
+	
+	<select id="getAllTermsdef" resultType="Termsdef">
+		SELECT 
+			* 
+		FROM 
+			termsdef 
+		WHERE 
+			zid=#{zid} 
+	</select>
+
+	<select id="findTermsdefByXtypeAndXterm" resultType="Termsdef">
+		SELECT 
+			* 
+		FROM 
+			termsdef 
+		WHERE 
+			zid=#{zid} 
+			AND xtype=#{xtype} 
+			AND xterm=#{xterm}
+	</select>
+	
+	<select id="findbyXtermid" resultType="Termsdef">
+		SELECT 
+			* 
+		FROM 
+			termsdef 
+		WHERE 
+			zid=#{zid}  
+			AND xtermid=#{xtermid} 
+			AND zid=#{zid} 
+	</select>
+	
+</mapper>

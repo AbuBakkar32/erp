@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.asl.mapper.ZlogsMapper">
+	<insert id="save" parameterType="Zlogs">
+		<!-- <selectKey keyProperty="ximtrnnum" resultType="String" order="BEFORE">
+			SELECT Func_GetTrn('${zid}', '${xtype}', '${xtrnimtrn}', 6) FROM DUAL
+		</selectKey> -->
+		INSERT INTO Zlogs
+		(
+			zerrorid,
+			zemail,
+			zerrornum,
+			zmessage,
+			zstatement,
+		)
+		VALUES
+		(
+			#{zerrorid, jdbcType=VARCHAR},
+			#{zemail, jdbcType=VARCHAR},
+			#{zerrornum, jdbcType=VARCHAR},
+			#{zmessage, jdbcType=VARCHAR},
+			#{zstatement, jdbcType=VARCHAR},	
+		) 
+	</insert>
+	
+	<update id="update" parameterType="Zlogs">
+		UPDATE
+			Zlogs
+		SET
+			zemail=#{zemail, jdbcType=VARCHAR},
+			zerrornum=#{zerrornum, jdbcType=VARCHAR},
+			zmessage=#{zmessage, jdbcType=VARCHAR},
+			zstatement=#{zstatement, jdbcType=VARCHAR},	
+		WHERE
+			zerrorid=#{zerrorid, jdbcType=VARCHAR}
+	</update>
+	
+	<select id="getAllZlogs" resultType="Zlogs">
+		SELECT * FROM Zlogs WHERE zerrorid=#{zerrorid}
+	</select>
+</mapper>

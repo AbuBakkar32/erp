@@ -1,0 +1,25 @@
+#progressmask {
+	background-color: rgba(255, 255, 255, 0.8);
+	display: none;
+	height: 100%;
+	left: 0;
+	position: fixed;
+	top: 0;
+	width: 100%;
+	z-index: 99999;
+}
+
+.progress-box {
+	left: 36%;
+	position: relative;
+	top: 36%;
+	width: 25%;
+	background: #fff;
+	padding: 50px;
+	border: 1px solid #bcffc3;
+	border-radius: 5px;
+}
+
+.progress{
+	margin-bottom: 0px;
+}

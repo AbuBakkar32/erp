@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.asl.mapper.LandSurveyMapper">
+	
+	<insert id="saveLandSurvey" parameterType="LandSurvey">
+		<selectKey keyProperty="xrow" resultType="Integer" order="BEFORE">
+			SELECT COALESCE(Max(xrow), 0) + 1 FROM calanservey WHERE zactive='1' AND zid=#{zid}
+		</selectKey>
+		INSERT INTO calanservey
+		(
+			xland,
+			xrow,
+			xsurveyor,
+			xdate,
+			xtype,
+			xnote,
+			xlandqtyg,
+			xlandunitg,
+			xlandqtydsg,
+			xlandqtyksg,
+			xlandqtyn,
+			xlandunitn,
+			xlandqtydsn,
+			xlandqtyksn,
+			xstatus,
+			
+			zactive,
+			zauserid,
+			zid,
+			ztime,
+			zutime,
+			zuuserid,
+			zuip,
+			zaip
+		)
+		VALUES
+		(
+			#{xland, jdbcType=VARCHAR},
+			#{xrow},
+			#{xsurveyor, jdbcType=VARCHAR},
+			#{xdate, jdbcType=DATE},
+			#{xtype, jdbcType=VARCHAR},
+			#{xnote, jdbcType=VARCHAR},
+			#{xlandqtyg, jdbcType=DECIMAL},
+			#{xlandunitg, jdbcType=VARCHAR},
+			#{xlandqtydsg, jdbcType=DECIMAL},
+			#{xlandqtyksg, jdbcType=DECIMAL},
+			#{xlandqtyn, jdbcType=DECIMAL},
+			#{xlandunitn, jdbcType=VARCHAR},
+			#{xlandqtydsn, jdbcType=DECIMAL},
+			#{xlandqtyksn, jdbcType=DECIMAL},
+			#{xstatus, jdbcType=VARCHAR},
+			
+			#{zactive, jdbcType=VARCHAR},
+			#{zauserid, jdbcType=VARCHAR},
+			#{zid, jdbcType=VARCHAR},
+			#{ztime, jdbcType=TIMESTAMP},
+			#{zutime, jdbcType=TIMESTAMP},
+			#{zuuserid, jdbcType=VARCHAR},
+			#{zuip, jdbcType=VARCHAR},
+			#{zaip, jdbcType=VARCHAR}
+		) 
+	</insert>
+	
+	<update id="updateLandSurvey" parameterType="LandSurvey">
+		UPDATE 
+			calanservey
+		SET
+			xsurveyor=#{xsurveyor, jdbcType=VARCHAR},
+			xdate=#{xdate, jdbcType=DATE},
+			xtype=#{xtype, jdbcType=VARCHAR},
+			xnote=#{xnote, jdbcType=VARCHAR},
+			xlandqtyg=#{xlandqtyg, jdbcType=DECIMAL},
+			xlandunitg=#{xlandunitg, jdbcType=VARCHAR},
+			xlandqtydsg=#{xlandqtydsg, jdbcType=DECIMAL},
+			xlandqtyksg=#{xlandqtyksg, jdbcType=DECIMAL},
+			xlandqtyn=#{xlandqtyn, jdbcType=DECIMAL},
+			xlandunitn=#{xlandunitn, jdbcType=VARCHAR},
+			xlandqtydsn=#{xlandqtydsn, jdbcType=DECIMAL},
+			xlandqtyksn=#{xlandqtyksn, jdbcType=DECIMAL},
+			xstatus=#{xstatus, jdbcType=VARCHAR},
+			
+			zactive=#{zactive, jdbcType=VARCHAR},
+			zauserid=#{zauserid, jdbcType=VARCHAR},
+			ztime=#{ztime, jdbcType=TIMESTAMP},
+			zutime=#{zutime, jdbcType=TIMESTAMP},
+			zuuserid=#{zuuserid, jdbcType=VARCHAR},
+			zuip=#{zuip, jdbcType=VARCHAR},
+			zaip=#{zaip, jdbcType=VARCHAR}
+		WHERE
+			xland=#{xland, jdbcType=VARCHAR}
+			AND xrow=#{xrow, jdbcType=INTEGER}
+			AND zid=#{zid, jdbcType=VARCHAR}
+	</update>
+	
+	<select id="getAllLandSurvey" resultType="LandSurvey">
+		SELECT * FROM calanservey WHERE zid=#{zid}  AND zactive='1' order by ztime desc
+	</select>
+
+	<select id="findByXlandSurvey" resultType="LandSurvey">
+		SELECT 
+			calanservey.*,
+			calanservey.xdate as formatedDate,
+			casurveyor.xname as xsername
+		FROM 
+			calanservey 
+			LEFT JOIN casurveyor on casurveyor.xsurveyor = calanservey.xsurveyor AND casurveyor.zid=#{zid}
+		WHERE 
+		calanservey.xland=#{xland} 
+		AND calanservey.zid=#{zid} 
+		AND calanservey.zactive='1'
+	</select>
+	
+	<select id="findLandSurveydetailByXlandAndXrow" resultType="LandSurvey">
+		SELECT 
+			calanservey.*,
+			casurveyor.xname as xsername
+		FROM 
+			calanservey 
+			LEFT JOIN casurveyor on casurveyor.xsurveyor = calanservey.xsurveyor AND casurveyor.zid=#{zid}
+		WHERE 
+			calanservey.xland=#{xland} 
+			AND calanservey.xrow=#{xrow} 
+			AND calanservey.zid=#{zid} 
+			AND calanservey.zactive='1'
+	</select>
+	
+
+	<select id="findLandSurveyByXlandAndXsurveyor" resultType="LandSurvey">
+		SELECT * FROM calanservey WHERE xland=#{xland} AND xsurveyor=#{xsurveyor} AND zid=#{zid} AND zactive='1
+
+	</select>
+	
+	<select id="findLandSurveyByXlandAndXperson" resultType="LandSurvey">
+		SELECT * FROM calanservey WHERE xland=#{xland} AND xperson=#{xperson} AND zid=#{zid} AND zactive='1'
+	</select>
+	
+	<delete id="deleteDetail" parameterType="LandSurvey">
+		DELETE FROM calanservey WHERE xrow=#{xrow} AND xland=#{xland} AND zactive='1' AND zid=#{zid}
+	</delete>
+
+	<update id="updatesurveyinfo">
+		update calandinfo 
+			set calandinfo.xlandqtydsg=(select xlandqtydsg from calanservey where calanservey.zid=#{zid} and calanservey.xland=#{xland} and calanservey.xrow=#{xrow}),
+				calandinfo.xlandqtydsn=(select xlandqtydsn from calanservey where calanservey.zid=#{zid} and calanservey.xland=#{xland} and calanservey.xrow=#{xrow}),
+				calandinfo.xsurveyor=(select xsurveyor from calanservey where calanservey.zid=#{zid} and calanservey.xland=#{xland} and calanservey.xrow=#{xrow}),
+				calandinfo.xdatesrv=(select xdate from calanservey where calanservey.zid=#{zid} and calanservey.xland=#{xland} and calanservey.xrow=#{xrow})
+		where 
+			calandinfo.zid=#{zid}
+			and calandinfo.xland=#{xland}
+	</update>
+	
+
+	<update id="updatesurveystatusopen">
+		update 
+			calanservey 
+		set 
+			xstatus='Confirmed'
+		where 
+			zid=#{zid}
+			and xland=#{xland}
+			and xrow=#{xrow}
+	</update>
+
+	<update id="updatesurveystatusconfirmed">
+		update 
+			calanservey 
+		set 
+			xstatus='Open'
+		where 
+			zid=#{zid}
+			and xland=#{xland}
+			and xrow!=#{xrow}
+	</update>
+</mapper>

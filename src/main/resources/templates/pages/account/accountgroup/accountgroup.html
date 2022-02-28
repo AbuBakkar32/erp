@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<title th:text="#{ag.page.title}">Accounts Group</title>
+		<meta th:remove="tag" th:include="commons :: common-meta" />
+		<meta th:remove="tag" th:include="commons :: common-css" />
+		<meta th:remove="tag" th:include="commons :: common-js" />
+	</head>
+	<body>
+		<!-- Header section -->
+		<div class="header-section" th:include="commons :: header-section"></div>
+
+		<!-- Menu section -->
+		<div th:if="${menuVersion != null and menuVersion eq 'MENU_V2'}" class="menuv2" th:include="commons :: main-menu"></div>
+		
+		<div th:if="${menuVersion == null or menuVersion eq 'MENU_V1'}" class="navbar-inverse menu-section">
+			<div class="container-fluid">
+				<div class="row">
+					<nav class="navbar navbar-inverse">
+						<div class="container-fluid">
+							<div class="row">
+								<div class="navbar-header">
+									<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+										<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+									</button>
+								</div>
+								<div class="collapse navbar-collapse" id="myNavbar">
+									<div class="nav navbar-nav">
+										<li><a th:href="@{/}"><i class="fas fa-home"></i> Home</a></li>
+										<li class="active"><a th:href="@{/account/acgroup?level=1}">Accounts Group</a></li>
+									</div>
+									<ul class="nav navbar-nav navbar-right" th:include="ckbigmenu :: dashboard-menu"></ul>
+								</div>
+							</div>
+						</div>
+					</nav>
+				</div>
+			</div>
+		</div>
+
+		<!-- Content section -->
+		<div>
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-md-12 content-area">
+						<div class="row">
+							<h1 class="text-center" th:text="#{ag.page.heading}">Accounts Group</h1>
+						</div>
+
+						<div class="row">
+							<div class="col-md-6">
+								<!-- Section list head -->
+								<section id="data-maintenance" style="margin-top: 30px;">
+									<div class="section-header sectionbartoggle">
+										
+									</div>
+									<div class="form-action-button">
+										<a th:href="@{/account/acgroup?level=} + ${acgroup.xaglevel} + '&asparent=' + ${acgroup.xagparent}" class="btn btn-sm btn-default"><i class="fas fa-redo-alt"></i> <span style="margin-left:2px;" th:text="#{button.value.xclear}"> Clear</span></a>
+										<a th:if="${acgroup.xaglevel eq 1 and #strings.isEmpty(acgroup.xagparent) and #strings.isEmpty(acgroup.xagcode)}" href="#" class="btn btn-sm btn-success confirm-btn"><i class="fas fa-save"></i> <span style="margin-left:2px;" th:text="#{button.value.xsave}"> Save</span></a>
+										<a th:if="${acgroup.xaglevel ne 1 and not #strings.isEmpty(acgroup.xagparent) and #strings.isEmpty(acgroup.xagcode)}" href="#" class="btn btn-sm btn-success confirm-btn"><i class="fas fa-save"></i> <span style="margin-left:2px;" th:text="#{button.value.xsave}"> Save</span></a>
+										<a th:if="${not #strings.isEmpty(acgroup.xagcode)}" href="#" class="btn btn-sm btn-success update-btn"><i class="fas fa-edit"></i> <span style="margin-left:2px;" th:text="#{button.value.xupdate}"> Update</span></a>
+										<a th:if="${not #strings.isEmpty(acgroup.xagcode)}" th:href="@{/account/acgroup/archive/} + ${acgroup.xagcode}" class="btn btn-sm btn-danger archive-btn-link"><i class="fas fa-trash-alt"></i> <span style="margin-left:2px;" th:text="#{button.value.xdelete}"> Delete</span></a>
+
+										<a th:if="${acgroup.xaglevel ne 1}" th:href="@{/account/acgroup/} + ${acgroup.xagparent} + '?level=' + ${acgroup.xaglevel - 1}" class="btn btn-sm btn-primary">Back to Level <span th:text="${acgroup.xaglevel - 1}"></span></a>
+										<a th:if="${acgroup.xaglevel ne 5 and not #strings.isEmpty(acgroup.xagcode)}" th:href="@{/account/acgroup?level=} + ${acgroup.xaglevel + 1} + '&asparent=' + ${acgroup.xagcode}" class="btn btn-sm btn-primary">Level <span th:text="${acgroup.xaglevel + 1}"></span></a>
+									</div>
+									<div class="section-body section-border">
+										<form id="mainform" class="form-horizontal" th:action="@{/account/acgroup/save}" method="POST" th:object="${acgroup}">
+											<input type="hidden" th:field="*{existingRecord}"/>
+											<div class="row">
+												<div class="col-md-12">
+													<div class="form-group">
+														<label class="control-label col-md-2" for="xaglevel" th:text="#{ag.form.label.xaglevel}">Level</label>
+														<div class="col-md-6">
+															<input type="hidden" class="form-control" th:field="*{xaglevel}">
+															<input type="text" class="form-control" th:value="*{xaglevel}" disabled="disabled">
+														</div>
+													</div>
+													<div class="form-group">
+														<label class="control-label col-md-2" for="xagname" th:text="#{ag.form.label.xagname}">Group Name</label>
+														<div class="col-md-6">
+															<input type="text" class="form-control" th:field="*{xagname}" required="required">
+														</div>
+													</div>	
+													<div class="form-group">
+														<label class="control-label col-md-2" for="xagcode" th:text="#{ag.form.label.xagcode}">Group Code</label>
+														<div class="col-md-6">
+															<input th:if="${#strings.isEmpty(acgroup.xagcode)}" type="text" class="form-control" th:field="*{xagcode}" required="required">
+															<input th:if="${not #strings.isEmpty(acgroup.xagcode)}" type="text" class="form-control" th:value="*{xagcode}" disabled="disabled">
+															<input th:if="${not #strings.isEmpty(acgroup.xagcode)}" type="hidden" class="form-control" th:field="*{xagcode}">
+														</div>
+													</div>
+													<div class="form-group">
+														<label class="control-label col-sm-2" for="xagtype" th:text="#{ag.form.label.xagtype}">Group type</label>
+														<div class="col-md-6" th:if="${not #strings.isEmpty(acgroup.xagcode) OR not #strings.isEmpty(acgroup.xagparent)}">
+															<input type="hidden" th:field="*{xagtype}" class="form-control"/>
+															<input type="text" th:value="*{xagtype}" class="form-control" disabled="disabled"/>
+														</div>
+														<div class="col-md-6" th:if="${#strings.isEmpty(acgroup.xagcode) and #strings.isEmpty(acgroup.xagparent)}">
+															<div class="radio">
+																<label><input type="radio" class="form-control-input2" th:field="*{xagtype}" th:value="${T(com.asl.enums.AccountType).ASSET.code}" required="required"/><span th:text="${T(com.asl.enums.AccountType).ASSET.description}"></span></label>
+															</div>
+															<div class="radio">
+																<label><input type="radio" class="form-control-input2" th:field="*{xagtype}" th:value="${T(com.asl.enums.AccountType).LIABILITY.code}" required="required"/><span th:text="${T(com.asl.enums.AccountType).LIABILITY.description}"></span></label>
+															</div>
+															<div class="radio">
+																<label><input type="radio" class="form-control-input2" th:field="*{xagtype}" th:value="${T(com.asl.enums.AccountType).INCOME.code}" required="required"/><span th:text="${T(com.asl.enums.AccountType).INCOME.description}"></span></label>
+															</div>
+															<div class="radio">
+																<label><input type="radio" class="form-control-input2" th:field="*{xagtype}" th:value="${T(com.asl.enums.AccountType).EXPENDITURE.code}" required="required"/><span th:text="${T(com.asl.enums.AccountType).EXPENDITURE.description}"></span></label>
+															</div>
+														</div>
+													</div>
+													<div class="form-group" th:if="${acgroup.xaglevel != 1}">
+														<label class="control-label col-md-2" for="xagparent" th:text="#{ag.form.label.xagparent}">Parent Group</label>
+														<div class="col-md-6">
+															<input type="hidden" class="form-control" th:field="*{xagparent}">
+															<input type="text" class="form-control" th:value="${acgroup.xagparent} + ' - ' + ${acgroup.parentname}" disabled="disabled">
+														</div>
+													</div>
+												</div>
+											</div>
+										</form>
+									</div>
+								</section>
+							</div>
+
+							<div class="col-md-6">
+								<section id="list-manager" style="margin-top: 30px;">
+									<div class="section-header sectionbartoggle">
+										<h1>Accounts Group (Level - <span th:text="${acgroup.xaglevel}"></span>)</h1>
+									</div>
+									<div class="section-body">
+										<table class="table table-striped table-bordered datatable nowrap">
+											<thead>
+												<tr>
+													<th th:text="#{ag.table1.heading.xagname}">Group Name</th>
+													<th th:text="#{ag.table1.heading.xagcode}">Group Code</th>
+													<th th:text="#{ag.table1.heading.xagtype}">Group Type</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr th:each="g,n : ${groups}">
+													<td>
+														<a th:href="@{/account/acgroup/} + ${g.xagcode} + '?level=' + ${g.xaglevel}" th:text="${g.xagname}"></a>
+													</td>
+													<td th:text="${g.xagcode}"></td>
+													<td th:text="${g.xagtype}"></td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</section>
+
+								<section th:if="${not #lists.isEmpty(childgroups)}" id="list-manager" style="margin-top: 30px;">
+									<div class="section-header sectionbartoggle">
+										<h1>Sub Groups of <span th:text="'(' + ${acgroup.xagcode} + ' - ' + ${acgroup.xagname} + ')'"></span> (Level - <span th:text="${acgroup.xaglevel + 1}"></span>)</h1>
+									</div>
+									<div class="section-body">
+										<table class="table table-striped table-bordered datatable nowrap">
+											<thead>
+												<tr>
+													<th th:text="#{ag.table1.heading.xagname}">Group Name</th>
+													<th th:text="#{ag.table1.heading.xagcode}">Group Code</th>
+													<th th:text="#{ag.table1.heading.xagtype}">Group Type</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr th:each="g,n : ${childgroups}">
+													<td>
+														<a th:href="@{/account/acgroup/} + ${g.xagcode} + '?level=' + ${g.xaglevel}" th:text="${g.xagname}"></a>
+													</td>
+													<td th:text="${g.xagcode}"></td>
+													<td th:text="${g.xagtype}"></td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</section>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<!-- Footer section -->
+		<div class="footer-section" th:include="commons :: footer-section"></div>
+		<script type="text/javascript" th:src="@{/assets/js/ck-ui/ck-search-suggest.js}"></script>
+	</body>
+</html>

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<title th:text="#{req.page.title}">Requisition</title>
+		<meta th:remove="tag" th:include="commons :: common-meta" />
+		<meta th:remove="tag" th:include="commons :: common-css" />
+		<meta th:remove="tag" th:include="commons :: common-js" />
+		<style type="text/css">
+			.requisition-table{
+				background: #f1eaea;
+			}
+			.requisition-table th{
+				background: #29af70;
+				color: #fff;
+			}
+			.requisition-table th, .requisition-table td{
+				text-align: center;
+			}
+		</style>
+	</head>
+	<body>
+		<!-- Header section -->
+		<div class="header-section" th:include="commons :: header-section"></div>
+
+		<!-- Menu section -->
+		<div th:if="${menuVersion != null and menuVersion eq 'MENU_V2'}" class="menuv2" th:include="commons :: main-menu"></div>
+
+		<div th:if="${menuVersion == null or menuVersion eq 'MENU_V1'}" class="navbar-inverse menu-section">
+			<div class="container-fluid">
+				<div class="row">
+					<nav class="navbar navbar-inverse">
+						<div class="container-fluid">
+							<div class="row">
+								<div class="navbar-header">
+									<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+										<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+									</button>
+								</div>
+								<div class="collapse navbar-collapse" id="myNavbar">
+									<div class="nav navbar-nav">
+										<li><a th:href="@{/}"><i class="fas fa-home"></i> Home</a></li>
+										<li class="active"><a th:href="@{/procurement/requisition} + '?reqtype=' + ${reqtype}" th:text="${reqtype} + ' Requisition'">Requisition</a></li>
+									</div>
+									<ul class="nav navbar-nav navbar-right" th:include="ckbigmenu :: dashboard-menu"></ul>
+								</div>
+							</div>
+						</div>
+					</nav>
+				</div>
+			</div>
+		</div>
+
+		<!-- Content section -->
+		<div>
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-md-12 content-area">
+
+						<div class="row">
+							<div class="col-md-12">
+								<!-- Section list head -->
+								<section id="data-maintenance" style="margin-top: 30px;">
+									<div class="section-header sectionbartoggle" style="margin-bottom: 20px;">
+										<h1 th:if="${poordheader.xpornum eq 'NEW'}" th:text="#{req.page.heading}">Requisition</h1>
+										<h1 th:if="${poordheader.xpornum ne 'NEW'}" th:with="df=${'E, dd-MMM-yyyy'}" th:text="${poordheader.xpornum} + ' | ' + ${#dates.format(poordheader.xdate, df)} + ' | ' + ${poordheader.xstatuspor}"></h1>
+									</div>
+									<div class="form-action-button">
+										<a th:href="@{/procurement/requisition?reqtype=} + ${poordheader.xreqtype}" class="btn btn-sm btn-default"><i class="fas fa-redo-alt"></i> <span style="margin-left:2px;" th:text="#{button.value.xclear}"> Clear</span></a>
+										<a th:if="${poordheader.xpornum eq 'NEW'}" class="btn btn-sm btn-success req-confirm-btn"><i class="fas fa-save"></i> <span style="margin-left:2px;" th:text="#{button.value.xsave}"> Save</span></a>
+										<a th:if="${poordheader.xpornum ne 'NEW' and poordheader.xstatuspor eq 'Open' and poordheader.zactive == true}" class="btn btn-sm btn-success req-confirm-btn"><i class="fas fa-save"></i> <span style="margin-left:2px;" th:text="#{button.value.xupdate}"> Update</span></a>
+										<a th:if="${poordheader.xpornum ne 'NEW' and not #strings.isEmpty(poordheader.xpornum) and poordheader.zactive == true and poordheader.xstatuspor == 'Open'}" th:href="@{/procurement/requisition/archive/} + ${poordheader.xpornum}" class="btn btn-sm btn-danger archive-btn-link"><i class="fas fa-trash-alt"></i> <span style="margin-left:2px;" th:text="#{button.value.xdelete}"> Delete</span></a>
+									</div>
+									<div class="section-body">
+										<form id="mainform" class="form-horizontal" th:action="@{/procurement/requisition/save}"  method="post" th:with="df=${'E, dd-MMM-yyyy'}">
+											<input type="hidden" th:field="${poordheader.xreqtype}"/>
+											<input type="hidden" th:field="${poordheader.xpornum}"/>
+											<table class="table table-stripped requisition-table">
+												<thead>
+													<tr>
+														<th th:text="#{req.table.heading.xrow}">SN.</th>
+														<th th:text="#{req.table.heading.xitem}">Item</th>
+														<th th:text="#{req.table.heading.xunit}">Unit</th>
+														<th th:text="#{req.table.heading.xqty}">Quantity</th>
+														<th th:text="#{req.table.heading.rate}">Rate</th>
+													</tr>
+												</thead>
+												<tbody>
+													<tr th:each="item, n : ${items}">
+														<td th:text="${n.count}"></td>
+														<td th:text="${item.xdesc}"></td>
+														<td th:text="${item.xunitpur}"></td>
+														<td>
+															<input th:value="${item.xqtyord}" th:attr="data-xunitpur=${item.xunitpur},data-xitemdesc=${item.xdesc},data-xcatitem=${item.xcatitem},data-xgitem=${item.xgitem},data-xrate=${item.xdealerp}" th:id="${item.xitem}" class="form-control item-qty" type="number" min="0"/>
+														</td>
+														<td th:text="${item.xdealerp}"></td>
+													</tr>
+												</tbody>
+											</table>
+										</form>
+									</div>
+								</section>
+							</div>
+							
+						</div>
+
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+		<!-- Modal -->
+		<div id="poorddetailmodal-section"></div>
+
+		<!-- Footer section -->
+		<div class="footer-section" th:include="commons :: footer-section"></div>
+		
+		<script type="text/javascript">
+			$(document).ready(function(){
+				$('.item-qty').off('blur').on('blur', function(){
+					if($(this).val() == '' || isNaN($(this).val() == '') || Number($(this).val()) < 0){
+						$(this).val(0);
+					}
+				})
+
+				$('.req-confirm-btn').off('click').on('click', function(e){
+					e.preventDefault();
+
+					var poordheader = {};
+					poordheader.xpornum = $('#xpornum').val();
+					poordheader.xreqtype = $('#xreqtype').val();
+					
+					var items = [];
+					$('.requisition-table .item-qty').each(function(i, row){
+						items.push({
+							"xitem" : $(row).attr('id'),
+							"xqtyord" : $(row).val(),
+							"xunitpur" : $(row).data('xunitpur'),
+							"xitemdesc" : $(row).data('xitemdesc'),
+							"xcatitem" : $(row).data('xcatitem'),
+							"xgitem" : $(row).data('xgitem'),
+							"xrate" : $(row).data('xrate')
+						});
+					});
+					
+					poordheader.items = items;
+
+					loadingMask2.show();
+					$.ajax({
+						url : getBasepath() + '/procurement/requisition/save',
+						type : 'POST',
+						dataType : 'json', 
+						data: JSON.stringify(poordheader),
+						beforeSend: function(xhr) {
+							xhr.setRequestHeader("Accept", "application/json");
+							xhr.setRequestHeader("Content-Type", "application/json");
+						},
+						success : function(data) {
+							loadingMask2.hide();
+							if(data.status == 'SUCCESS'){
+								$('div.modal').modal('hide');
+								showMessage(data.status.toLowerCase(), data.message);
+								if(data.triggermodalurl){
+									modalLoader(getBasepath() + data.triggermodalurl, data.modalid);
+								} else {
+									if(data.redirecturl){
+										setTimeout(() => {
+											window.location.replace(getBasepath() + data.redirecturl);
+										}, 1000);
+									} else if(data.reloadurl){
+										doSectionReloadWithNewData(data);
+									}
+								}
+							} else {
+								showMessage(data.status.toLowerCase(), data.message);
+							}
+						},
+						error : function(jqXHR, status, errorThrown){
+							showMessage(status, "Something went wrong .... ");
+							loadingMask2.hide()
+						}
+					})
+
+				})
+
+				
+				
+			});
+		</script>
+	</body>
+</html>
